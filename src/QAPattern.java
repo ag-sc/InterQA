@@ -3,6 +3,9 @@ import java.util.List;
 
 public interface QAPattern {
 
-	public List<String> parse(String input);
+	public boolean parses(String input);
+	public List<String> getNext();
+	public String getSPARQLQuery();
+
 	
 }
