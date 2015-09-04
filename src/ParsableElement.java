@@ -14,5 +14,6 @@ public interface ParsableElement {
 	 * @return possible values of the element
 	 */
 	List<String> lookahead(List<String>selections);
-	
+
+	List<String> getInstances();
 }

@@ -65,86 +65,86 @@ public class QueryPattern1 implements QAPattern {
 	 * @param canonicalPlusForm
 	 * @return
 	 */
-	public static List<String> getInstancesForCanonicalPlusForm (String EP, String canonicalPlusForm){
-		//		   String canonicalPlusForm = "movie by";
-		//		   List<LexicalEntry> entries = element3pn.getLexicalEntry(canonicalPlusForm);
-		//		   if (entries != null){ //There are entries for that string (canonicalPlusForm)
-		//			   for (LexicalEntry entry : entries){
-		//				   for (HashSet<SyntacticBehaviour> syns : entry.getSenseBehaviours().values()) {
-		//					   for (SyntacticBehaviour syn : syns ) {
-		//						   //System.out.println(syn);
-		//						   if (syn.getFrame().equals("http://www.lexinfo.net/ontology/2.0/lexinfo#NounPPFrame")) {
-		//							   for (SyntacticArgument arg : syn.getSynArgs()) {
-		//								   if (arg.getPreposition() != null){
-		//									   this.addParseableString(entry.getCanonicalForm() +
-		//													   " " +
-		//													   arg.getPreposition(),
-		//											   entry);
-		//								   }
-		//							   }
-		//
-		//						   }
-		//					   }
-		//				   }
-		//		   }
-		//   String p = entry.getProperty(); //This method does not exists!!
-		//   String dir = entry.getDir();    // This method does not exists!!
-		//   List<String> res = queryInstances(EP, p, dir);     // This method does not exists!!
-		//   // if (dir == reverse) ==> res is a list of URIs
-		//   // if (dir == linear)  ==> res is a list of typed values (e.g. integers) or
-		//                                     a list of Strings or
-		//                                     a list of URIs (resources)
-		//   List<String> texts = getReadableForm(res);  // This method does not exists!!
-		//   return texts;
-		// }
-		String prop = null;
-		String dir  = null;
-		switch (canonicalPlusForm){
-			case "movie by":
-				prop = "producer";
-				dir = "linear";
-				break;
-			case "movie with":
-				prop = "starring";
-				dir = "linear";
-				break;
-			case "capital of":
-				prop = "capital";
-				dir = "reverse";
-				break;
-		}
-		//Make the query to get the instances
-		String queryLinear =  "select ?v where{"+
-	                          "?s " + prop + "?v" +
-							  "}"; //values of triples with that property, I do not mind subjects
-		String queryReverse = "select ?s where{"+
-				              "?s " + prop + "?v" +
-				              "}"; //subjects of triples with that property, I do not mind objects
-		List<String> res = null;
-		//res =  query over the EP with queryLinear
-		//Temporal... meanwhile matool evolves
-		res = new ArrayList<>();
-		if (dir.equals("linear")){
-			switch (canonicalPlusForm){
-				case "movie by":
-					res.add("http://dbpedia.org/resource/Tarantino");
-					res.add("http://dbpedia.org/resource/Almodovar");
-					break;
-				case "movie with":
-					res.add("http://dbpedia.org/resource/John_Travolta");
-					res.add("http://dbpedia.org/resource/Robert_De_Niro");
-					break;
-			}
-		}else{ //Assumes reverse
-			switch (canonicalPlusForm) {
-				case "capital of":
-					res.add("http://dbpedia.org/resource/England");
-					res.add("http://dbpedia.org/resource/Spain");
-					break;
-			}
-		}
-		return res;
-	}
+//	public static List<String> getInstancesForCanonicalPlusForm (String EP, String canonicalPlusForm){
+//		//		   String canonicalPlusForm = "movie by";
+//		//		   List<LexicalEntry> entries = element3pn.getLexicalEntry(canonicalPlusForm);
+//		//		   if (entries != null){ //There are entries for that string (canonicalPlusForm)
+//		//			   for (LexicalEntry entry : entries){
+//		//				   for (HashSet<SyntacticBehaviour> syns : entry.getSenseBehaviours().values()) {
+//		//					   for (SyntacticBehaviour syn : syns ) {
+//		//						   //System.out.println(syn);
+//		//						   if (syn.getFrame().equals("http://www.lexinfo.net/ontology/2.0/lexinfo#NounPPFrame")) {
+//		//							   for (SyntacticArgument arg : syn.getSynArgs()) {
+//		//								   if (arg.getPreposition() != null){
+//		//									   this.addParseableString(entry.getCanonicalForm() +
+//		//													   " " +
+//		//													   arg.getPreposition(),
+//		//											   entry);
+//		//								   }
+//		//							   }
+//		//
+//		//						   }
+//		//					   }
+//		//				   }
+//		//		   }
+//		//   String p = entry.getProperty(); //This method does not exists!!
+//		//   String dir = entry.getDir();    // This method does not exists!!
+//		//   List<String> res = queryInstances(EP, p, dir);     // This method does not exists!!
+//		//   // if (dir == reverse) ==> res is a list of URIs
+//		//   // if (dir == linear)  ==> res is a list of typed values (e.g. integers) or
+//		//                                     a list of Strings or
+//		//                                     a list of URIs (resources)
+//		//   List<String> texts = getReadableForm(res);  // This method does not exists!!
+//		//   return texts;
+//		// }
+//		String prop = null;
+//		String dir  = null;
+//		switch (canonicalPlusForm){
+//			case "movie by":
+//				prop = "producer";
+//				dir = "linear";
+//				break;
+//			case "movie with":
+//				prop = "starring";
+//				dir = "linear";
+//				break;
+//			case "capital of":
+//				prop = "capital";
+//				dir = "reverse";
+//				break;
+//		}
+//		//Make the query to get the instances
+//		String queryLinear =  "select ?v where{"+
+//	                          "?s " + prop + "?v" +
+//							  "}"; //values of triples with that property, I do not mind subjects
+//		String queryReverse = "select ?s where{"+
+//				              "?s " + prop + "?v" +
+//				              "}"; //subjects of triples with that property, I do not mind objects
+//		List<String> res = null;
+//		//res =  query over the EP with queryLinear
+//		//Temporal... meanwhile matool evolves
+//		res = new ArrayList<>();
+//		if (dir.equals("linear")){
+//			switch (canonicalPlusForm){
+//				case "movie by":
+//					res.add("http://dbpedia.org/resource/Tarantino");
+//					res.add("http://dbpedia.org/resource/Almodovar");
+//					break;
+//				case "movie with":
+//					res.add("http://dbpedia.org/resource/John_Travolta");
+//					res.add("http://dbpedia.org/resource/Robert_De_Niro");
+//					break;
+//			}
+//		}else{ //Assumes reverse
+//			switch (canonicalPlusForm) {
+//				case "capital of":
+//					res.add("http://dbpedia.org/resource/England");
+//					res.add("http://dbpedia.org/resource/Spain");
+//					break;
+//			}
+//		}
+//		return res;
+//	}
 
 	/**
 	 * @param input The whole string from the UI E.g."who is the"

@@ -92,4 +92,10 @@ public class ClassNoun implements ParsableElement {
         return QueryPatternCommons.removeLang(new ArrayList(map.keySet()),
                 lang);
     }
+
+	@Override
+	public List<String> getInstances() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

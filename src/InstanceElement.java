@@ -5,19 +5,20 @@ import java.util.Map;
 
 public class InstanceElement implements ParsableElement {
     Map<String, String> mapping;  //"Tarantino" --> "http://dbpedia.org/resourse/Quentin_Tarantino"
-	PropertyNoun pn;
-	int distance;
+	
+    ParsableElement element;
+	
+    int distance;
 
 	/**
 	 *
 	 * @param pn
 	 * @param distance is the number of previous parseable elements to reach the propertyNoun literal
 	 */
-	public InstanceElement(PropertyNoun pn, int distance) {
+	public InstanceElement(ParsableElement element) {
 	   //this();
 		mapping = new HashMap<String, String>();
-	    this.pn = pn;
-		this.distance = distance;
+	    this.element = element;
     }
 
 	public String parse(String string) {
@@ -37,7 +38,10 @@ public class InstanceElement implements ParsableElement {
 	 * @return
 	 */
 	public List<String> lookahead(List<String> previousSelections) {
-//		List<String> instances = new ArrayList<String>();
+
+	// get all necessary info from element	
+		
+		//		List<String> instances = new ArrayList<String>();
 //		if (previousSelections.size() > 0){
 //		    switch (previousSelections.get(previousSelections.size() - distance)){ //last selection
 //				case "movie by":
@@ -50,14 +54,13 @@ public class InstanceElement implements ParsableElement {
 //					break;
 //			}
 //		}
-		List<String> instances = null;
-		if (previousSelections == null){
-			instances = pn.getInstances(null);
-		}else {
-			String lastSelString = previousSelections.get(previousSelections.size() - distance); //last selection
-			instances = pn.getInstances(lastSelString);
-		}
-		return instances;
+			return element.getInstances();
+	}
+
+	@Override
+	public List<String> getInstances() {
+		
+		return element.getInstances();
 	}
 
 }

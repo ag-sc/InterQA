@@ -114,7 +114,7 @@ public class PropertyNoun implements ParsableElement{
 	 * @param canonicalForm
 	 * @return
 	 */
-	public List<String> getInstances(String canonicalForm) {
+	public List<String> getInstances() {
 //		if (map.containsKey(canonicalForm)){
 //			List<LexicalEntry> le = map.get(canonicalForm);
 //			for (LexicalEntry e : le){
@@ -123,17 +123,17 @@ public class PropertyNoun implements ParsableElement{
 //		}
 
 		ArrayList<String> list = new ArrayList<String>();
-		if (canonicalForm == null){
+		if (property == null){
 			list.add("Tarantino");
-			list.add("Almodóvar");
+			list.add("Almodï¿½var");
 			list.add("John Travolta");
 			list.add("Robert De Niro");
 		}else { //If we provide a canonicalForm
-			if (canonicalForm.equals("movie by")) {
+			if (property.equals("movie by")) {
 				list.add("Tarantino");
-				list.add("Almodóvar");
+				list.add("Almodï¿½var");
 			} else {
-				if (canonicalForm.equals("movie with")) {
+				if (property.equals("movie with")) {
 					list.add("John Travolta");
 					list.add("Robert De Niro");
 				} else {
@@ -163,4 +163,5 @@ public class PropertyNoun implements ParsableElement{
 		// TODO Auto-generated method stub
 		
 	}
+
 }

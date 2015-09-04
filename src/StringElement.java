@@ -60,4 +60,11 @@ public class StringElement implements ParsableElement {
 	public List<String> lookahead(List<String> selections) {
 		return elements;
 	}
+
+
+	@Override
+	public List<String> getInstances() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
