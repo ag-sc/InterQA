@@ -1,12 +1,13 @@
+import interQA.QueryPattern1;
 import org.junit.Test;
-import org.junit.Assert;
+
 import java.util.List;
 
 /**
  * Created by Mariano on 26/06/2015.
  */
 public class QueryPattern1Test {
-    private QueryPattern1 qp1 = new QueryPattern1();
+    private QueryPattern1 qp1 = new QueryPattern1("test1.rdf");
 
 
     @Test
@@ -59,10 +60,10 @@ public class QueryPattern1Test {
 
     }
 
-    @Test
-    public void testGetInstancesForCanonicalPlusForm(){
-       List<String> inst = QueryPattern1.getInstancesForCanonicalPlusForm("some URL", "capital of");
-        Assert.assertEquals(inst.toString(), "[http://dbpedia.org/resource/England, http://dbpedia.org/resource/Spain]");
-    }
+//    @Test
+//    public void testGetInstancesForCanonicalPlusForm(){
+//       List<String> inst = interQA.QueryPattern1.getInstancesForCanonicalPlusForm("some URL", "capital of");
+//        Assert.assertEquals(inst.toString(), "[http://dbpedia.org/resource/England, http://dbpedia.org/resource/Spain]");
+//    }
 
 }

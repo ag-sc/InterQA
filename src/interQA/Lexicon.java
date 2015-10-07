@@ -1,3 +1,5 @@
+package interQA;
+
 import java.util.HashMap;
 import java.util.List;
 import de.citec.sc.matoll.core.LexicalEntry;

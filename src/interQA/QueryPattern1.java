@@ -1,6 +1,6 @@
+package interQA;
+
 import de.citec.sc.matoll.core.LexicalEntry;
-import de.citec.sc.matoll.core.SyntacticArgument;
-import de.citec.sc.matoll.core.SyntacticBehaviour;
 import de.citec.sc.matoll.core.Reference;
 
 import java.util.*;
@@ -16,7 +16,7 @@ public class QueryPattern1 implements QAPattern {
     List<String> selections = new ArrayList<String>(); //List of selected elements
 	private int lastElementParsed = -1; //The first element parseable is 0
 	
-	public QueryPattern1()
+	public QueryPattern1(String fileName)
 	{
 		StringElement element0 = new StringElement();      //Element 0
 		element0.add("which");
@@ -36,7 +36,7 @@ public class QueryPattern1 implements QAPattern {
 		element2.add("a");
 		elements.add(element2);
 
-		PropertyNoun element3pn = new PropertyNoun("test1.rdf"); //Element 3
+		PropertyNoun element3pn = new PropertyNoun(fileName); //Element 3
 		elements.add(element3pn); // movies with --> dbpedia:starring
 		                          // movies by --> dbpedia:producer
 		//Now I have to get the property associated to the canonicalForm, and the "direction" of
@@ -50,8 +50,7 @@ public class QueryPattern1 implements QAPattern {
 
 
 
-		InstanceElement element4inst = new InstanceElement(element3pn,  //Element 4.
-				                                           1); //The PN is 1 parseable element back
+		InstanceElement element4inst = new InstanceElement(element3pn);  //Element 4.
 		//element3pn.setInstances(element3pn.getInstances());
 		elements.add(element4inst);
 
@@ -174,7 +173,7 @@ public class QueryPattern1 implements QAPattern {
 	public List<String> getNext(){
 		int currentElem = ++lastElementParsed;
 //		switch (elements.get(currentElem).getClass().toString()){
-//			case "class PropertyNoun": {  //Case for propertyNoun
+//			case "class interQA.PropertyNoun": {  //Case for propertyNoun
 //				       return elements.get(currentElem).lookahead(selections);
 //			        }
 //			default:{

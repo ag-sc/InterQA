@@ -1,8 +1,9 @@
 /**
  * Created by Mariano on 13/07/2015.
  */
+import interQA.QueryPattern1;
+import interQA.QueryPattern2;
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,8 @@ public class QueryPatternManagerTest {
 
     @Test
     public void testSomething() {
-        QueryPattern1 qp1 = new QueryPattern1();
-        QueryPattern2 qp2 = new QueryPattern2();
+        QueryPattern1 qp1 = new QueryPattern1("test1.rdf");
+        QueryPattern2 qp2 = new QueryPattern2("test2.rdf");
         StringBuffer parsedText = new StringBuffer();
 
         List<String> lsElem0qp1 = qp1.getNext(); // Shows "which", "what", "who"...
@@ -43,4 +44,5 @@ public class QueryPatternManagerTest {
         //true qp2 --> go ahead only with this
 
     }
+
 }

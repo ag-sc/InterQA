@@ -1,3 +1,5 @@
+package interQA;
+
 import java.util.*;
 
 import de.citec.sc.matoll.core.LexicalEntry;
@@ -53,7 +55,7 @@ public class PropertyNoun implements ParsableElement{
 	}
 
 	/**
-	 * Constructor from lexicon file. Uses the constructor PropertyNoun(List<LexicalEntry> lexEntries)
+	 * Constructor from lexicon file. Uses the constructor interQA.PropertyNoun(List<LexicalEntry> lexEntries)
 	 * @param fileName
 	 */
 	public PropertyNoun(String fileName){
@@ -61,7 +63,7 @@ public class PropertyNoun implements ParsableElement{
 	}
 
 	/**
-	 * Method used by constructor PropertyNoun(List<LexicalEntry> lexEntries)
+	 * Method used by constructor interQA.PropertyNoun(List<LexicalEntry> lexEntries)
 	 * @param str
 	 * @param entry
 	 */
@@ -84,7 +86,7 @@ public class PropertyNoun implements ParsableElement{
 	}
 
 	/**
-	 * Current it does NOTHING with selections. It returns the canonicalForms in the PropertyNoun
+	 * Current it does NOTHING with selections. It returns the canonicalForms in the interQA.PropertyNoun
 	 * E.g "movies with", "movies by"
 	 * @return
 	 */
@@ -111,7 +113,6 @@ public class PropertyNoun implements ParsableElement{
 	/**
 	 * For a given string (canonicalForm) returns its instances associated.
 	 * If the canonicalForm is null it returns all the instances.
-	 * @param canonicalForm
 	 * @return
 	 */
 	public List<String> getInstances() {

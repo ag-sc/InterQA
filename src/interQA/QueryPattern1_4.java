@@ -1,7 +1,6 @@
+package interQA;
+
 import de.citec.sc.matoll.core.LexicalEntry;
-import de.citec.sc.matoll.core.Lexicon;
-import de.citec.sc.matoll.core.SyntacticArgument;
-import de.citec.sc.matoll.core.SyntacticBehaviour;
 import de.citec.sc.matoll.core.Reference;
 
 import java.util.*;
@@ -150,7 +149,7 @@ public class QueryPattern1_4 implements QAPattern {
 	public List<String> getNext(){
 		int currentElem = ++lastElementParsed;
 //		switch (elements.get(currentElem).getClass().toString()){
-//			case "class PropertyNoun": {  //Case for propertyNoun
+//			case "class interQA.PropertyNoun": {  //Case for propertyNoun
 //				       return elements.get(currentElem).lookahead(selections);
 //			        }
 //			default:{

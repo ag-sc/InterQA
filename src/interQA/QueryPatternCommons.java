@@ -1,3 +1,5 @@
+package interQA;
+
 import de.citec.sc.matoll.core.LexicalEntry;
 
 import java.util.*;
@@ -31,7 +33,7 @@ public class QueryPatternCommons {
      * Utility to add the lang tags
      * @param canonicalPlusForm withOUT @xx (e.g. "movie by")
      * @param lang is "en", "es"...
-     * @return The form as knows by the PropertyNoun (i.e. "movie@en by@en")
+     * @return The form as knows by the interQA.PropertyNoun (i.e. "movie@en by@en")
      */
     static public String addLang(String canonicalPlusForm, String lang){
         //Cut the string by (any) spaces

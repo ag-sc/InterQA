@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+package interQA;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +11,6 @@ public class InstanceElement implements ParsableElement {
 	
     int distance;
 
-	/**
-	 *
-	 * @param pn
-	 * @param distance is the number of previous parseable elements to reach the propertyNoun literal
-	 */
 	public InstanceElement(ParsableElement element) {
 	   //this();
 		mapping = new HashMap<String, String>();
@@ -32,7 +28,7 @@ public class InstanceElement implements ParsableElement {
 	}
 
 	/**
-	 * If previousSelections is null it returns all the instances available for the PropertyNoun associated.
+	 * If previousSelections is null it returns all the instances available for the interQA.PropertyNoun associated.
 	 * If previousSelections is NOT null it returns the instances for the last selection
 	 * @param previousSelections
 	 * @return

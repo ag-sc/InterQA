@@ -1,12 +1,9 @@
-/**
+package interQA; /**
  * Created by Mariano on 13/07/2015.
  */
 import java.util.*;
 
 import de.citec.sc.matoll.core.LexicalEntry;
-import de.citec.sc.matoll.core.SyntacticArgument;
-import de.citec.sc.matoll.core.SyntacticBehaviour;
-import de.citec.sc.matoll.io.LexiconLoader;
 
 /**
  * Manages the class name, and a map of Strings to a list of Lexical entries
@@ -21,9 +18,7 @@ public class ClassNoun implements ParsableElement {
     //           -->LexEntry(schema:Country)
 
     String lang = "en";  //lang of the lexicon
-    String property;
-    StringElement preposition;
-    InstanceElement instance;
+    String className;
 
     /**
      * Constructor for an empty PN
@@ -66,7 +61,7 @@ public class ClassNoun implements ParsableElement {
     }
 
     /**
-     * Constructor from lexicon file. Uses the constructor ClassNoun(List<LexicalEntry> lexEntries)
+     * Constructor from lexicon file. Uses the constructor interQA.ClassNoun(List<LexicalEntry> lexEntries)
      * @param fileName
      */
     public ClassNoun(String fileName){
@@ -83,7 +78,7 @@ public class ClassNoun implements ParsableElement {
     }
 
     /**
-     * Current it does NOTHING with selections. It returns the canonicalForms in the PropertyNoun
+     * Current it does NOTHING with selections. It returns the canonicalForms in the interQA.PropertyNoun
      * E.g "movies with", "movies by"
      * @return
      */

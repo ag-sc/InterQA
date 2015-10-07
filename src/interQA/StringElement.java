@@ -1,8 +1,10 @@
+package interQA;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * StringElement is a valid set of strings. You can add strings, check is a string is valid....
+ * interQA.StringElement is a valid set of strings. You can add strings, check is a string is valid....
  */
 public class StringElement implements ParsableElement {
 
