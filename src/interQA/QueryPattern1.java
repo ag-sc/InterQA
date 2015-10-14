@@ -157,6 +157,7 @@ public class QueryPattern1 implements QAPattern {
 			String eated = input.substring(0, input.length() - rest.length());
 			selections.add(eated); //Asign the selections
 			input = rest;
+			lastElementParsed = i;
 			i++;
             if (input == null){ //The element cannot eat anything
 				return false;
@@ -171,7 +172,7 @@ public class QueryPattern1 implements QAPattern {
 	 * @return A list of strings. Initially to be displayed to the user
 	 */
 	public List<String> getNext(){
-		int currentElem = ++lastElementParsed;
+		int currentElem = lastElementParsed + 1;
 //		switch (elements.get(currentElem).getClass().toString()){
 //			case "class interQA.PropertyNoun": {  //Case for propertyNoun
 //				       return elements.get(currentElem).lookahead(selections);
