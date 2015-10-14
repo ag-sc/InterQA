@@ -34,11 +34,11 @@ public class QueryPatternManager {
     }
 
     /**
-     * String selected by the user. This will reduce the number os query patterns available
+     * Whole sentence entered by the user. This will reduce the number of query patterns available
      * @param str
-     * @return the number of available query patterns
+     * @return the class name (simple) of available query patterns
      */
-    public List<String> userSelects(String str){
+    public List<String> userSentence(String str){
         List<QAPattern> toRemove = new ArrayList<QAPattern>();
         for(QAPattern pat: availableQueryPatterns){
             if (pat.parses(str) == false){ //does not parse str
