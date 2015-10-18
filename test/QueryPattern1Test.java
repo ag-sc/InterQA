@@ -1,4 +1,4 @@
-import interQA.QueryPattern1;
+import interQA.patterns.QueryPattern1;
 import org.junit.Test;
 
 import java.util.List;

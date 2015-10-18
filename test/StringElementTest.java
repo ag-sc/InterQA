@@ -1,4 +1,4 @@
-import interQA.StringElement;
+import interQA.elements.StringElement;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;

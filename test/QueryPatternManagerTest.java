@@ -1,8 +1,8 @@
 /**
  * Created by Mariano on 13/07/2015.
  */
-import interQA.QueryPattern1;
-import interQA.QueryPattern2;
+import interQA.patterns.QueryPattern1;
+import interQA.patterns.QueryPattern2;
 import org.junit.Test;
 
 import java.util.ArrayList;
