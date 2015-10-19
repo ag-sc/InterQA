@@ -47,11 +47,11 @@ public class QueryPatternManager {
     }
 
     /**
-     * String selected by the user. This will reduce the number os query patterns available
+     * String (complete) created by the user, including the last selection made by the user. This will reduce the number os query patterns available
      * @param str
      * @return the number of available query patterns
      */
-    public List<String> userSelects(String str){
+    public List<String> userSentence(String str){
         List<QueryPattern> toRemove = new ArrayList<>();
         for(QueryPattern pat: availableQueryPatterns){
             if (pat.parses(str) == false){ //does not parse str

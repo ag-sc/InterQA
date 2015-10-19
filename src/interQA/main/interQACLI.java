@@ -38,13 +38,14 @@ public class interQACLI {
         // RUN 
         
         Scanner scanner = new Scanner(System.in);
-        StringBuffer sbInternal = new StringBuffer();
-        StringBuffer sbExternal = new StringBuffer();
+        StringBuffer sbWholeSentenceInternal = new StringBuffer();
+        StringBuffer sbWholeSentenceExternal = new StringBuffer();
+        String lastSelection = new String("");
         
         List<String> opts = null;
         
         do {
-            System.out.println("Current sentence: " + sbExternal.toString());
+            System.out.println("Current sentence: " + sbWholeSentenceExternal.toString());
 
             opts = qm.getUIoptions();
             
@@ -57,7 +58,7 @@ public class interQACLI {
             } 
             
             int index = 1;
-            System.out.println("Choose one option (or 'q' to quit):");
+            System.out.println("Choose one option (or 'q' to quit, 'd' to delete the last selection):");
             for (String str : opts) {
                 System.out.println(index++ + ": " + str);
             }
@@ -74,8 +75,13 @@ public class interQACLI {
                     }else{
                         if (scanner.hasNextLine()) {
                             String comm = scanner.nextLine();
-                            if (comm.equals("q")) {
-                                System.exit(0);
+                            if (comm.equals("q") || comm.equals("d")) {
+                                if (comm.equals("q")) {
+                                    System.exit(0);
+                                }
+                                if (comm.equals("d")) {
+                                    num = -1;
+                                }
                             }else {
                                 System.out.println("Invalid command");
                                 throw(new NumberFormatException());
@@ -85,14 +91,28 @@ public class interQACLI {
                     break;
                 } catch (NumberFormatException e) {
                     //if () = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Please, type a number (or 'q' to quit)");
+                    System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
                 }
 
             }
-            String selectedOpt = opts.get(num - 1);
-            sbInternal.append(selectedOpt);
-            sbExternal.append(" " + selectedOpt);
-            List<String> avlPats = qm.userSelects(sbInternal.toString());
+            if (num == -1 ){ //The user selected to delete the last option
+                String renewedInternalSentence = sbWholeSentenceInternal.delete(sbWholeSentenceInternal.length() - lastSelection.length(),
+                        sbWholeSentenceInternal.length())
+                        .toString();
+                sbWholeSentenceInternal.delete(0, sbWholeSentenceInternal.length()); //Empties the buffer
+                sbWholeSentenceInternal.append(renewedInternalSentence);                     //Adds the renewed sentence
+
+                String renewedExternalSentence = sbWholeSentenceExternal.delete(sbWholeSentenceExternal.length() - lastSelection.length() - 1,
+                        sbWholeSentenceExternal.length())
+                        .toString();
+                sbWholeSentenceExternal.delete(0, sbWholeSentenceExternal.length()); //Empties the buffer
+                sbWholeSentenceExternal.append(renewedExternalSentence);
+            }else {  //The user selected one option from the options list
+                lastSelection = opts.get(num - 1);
+                sbWholeSentenceInternal.append(lastSelection);
+                sbWholeSentenceExternal.append(" " + lastSelection);
+            }
+            List<String> avlPats = qm.userSentence(sbWholeSentenceInternal.toString());
             System.out.println("Number of patterns available: " + avlPats.toString());
         }while (opts.size() != 0);
 
