@@ -23,20 +23,15 @@ public class Lexicon {
     
         Model model;
         
-	HashMap<String,List<LexicalEntry>> NOUN_index;
-        HashMap<String,List<LexicalEntry>> VERB_index;
-        HashMap<String,List<LexicalEntry>> ADJECTIVE_index;
+	HashMap<String,List<LexicalEntry>> index;
 	
         Vocabulary vocab = new Vocabulary();
         
 	
 	public Lexicon() {
             
-            model = ModelFactory.createDefaultModel();
-            
-            NOUN_index = new HashMap<>();
-            VERB_index = new HashMap<>();
-            ADJECTIVE_index = new HashMap<>();
+            model = ModelFactory.createDefaultModel();          
+            index = new HashMap<>();
         }
         
         public void load(String filePath) {
@@ -47,23 +42,12 @@ public class Lexicon {
             // TODO collect IntransitiveVerbs
             collectTransitiveVerbs();
             collectIntransitivePPVerbs();
-            // TODO collect NounPPs 
+            collectNounPPs(); 
             // TODO collect NounPossessives
             // TODO collect adjectives
         }
-
-
-        public HashMap<String,List<LexicalEntry>> getNounIndex() {
-            return getSubindex(NOUN_index,null);
-        }
-        public HashMap<String,List<LexicalEntry>> getNounIndex(String frame) {
-            return getSubindex(NOUN_index,frame);
-        }
-        public HashMap<String,List<LexicalEntry>> getVerbIndex(String frame) {
-            return getSubindex(VERB_index,frame);
-        }
         
-        public HashMap<String,List<LexicalEntry>> getSubindex(HashMap<String,List<LexicalEntry>> index, String frame) {
+        public HashMap<String,List<LexicalEntry>> getSubindex(LexicalEntry.POS pos, String frame) {
             
             HashMap<String,List<LexicalEntry>> subindex = new HashMap<>();
             
@@ -73,8 +57,9 @@ public class Lexicon {
                    String key = (String) pair.getKey();
                    List<LexicalEntry> entries = (List<LexicalEntry>) pair.getValue(); 
                    for (LexicalEntry entry : entries) {
-                        if ((entry.getFrame() == null && frame == null) 
-                          || entry.getFrame().equals(frame)) {
+                        if ( entry.getPOS().equals(pos)
+                        && ((entry.getFrame() == null && frame == null) 
+                         || (entry.getFrame() != null && frame != null && entry.getFrame().equals(frame)))) {
                              if (!subindex.containsKey(key)) {
                                   subindex.put(key,new ArrayList<>());
                              }
@@ -117,11 +102,12 @@ public class Lexicon {
                         LexicalEntry entry = new LexicalEntry(); 
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
+                        entry.setPOS(LexicalEntry.POS.NOUN);
 
-                        if (!NOUN_index.containsKey(canonicalForm)) {
-                             NOUN_index.put(canonicalForm,new ArrayList<>());
+                        if (!index.containsKey(canonicalForm)) {
+                             index.put(canonicalForm,new ArrayList<>());
                         }
-                        NOUN_index.get(canonicalForm).add(entry);
+                        index.get(canonicalForm).add(entry);
                     }
                     catch (NullPointerException npe) {
                     }
@@ -169,6 +155,7 @@ public class Lexicon {
                         LexicalEntry entry = new LexicalEntry(); 
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
+                        entry.setPOS(LexicalEntry.POS.VERB);
                         entry.setFrame(vocab.lexinfo + "TransitiveFrame");
                         
                         if (subject.equals(subjOfProp) && directObject.equals(objOfProp)) {
@@ -183,10 +170,10 @@ public class Lexicon {
                             continue;
                         }
                         
-                        if (!VERB_index.containsKey(canonicalForm)) {
-                             VERB_index.put(canonicalForm,new ArrayList<>());
+                        if (!index.containsKey(canonicalForm)) {
+                             index.put(canonicalForm,new ArrayList<>());
                         }
-                        VERB_index.get(canonicalForm).add(entry);
+                        index.get(canonicalForm).add(entry);
                     }
                     catch (NullPointerException npe) {
                     }
@@ -239,6 +226,7 @@ public class Lexicon {
                         LexicalEntry entry = new LexicalEntry(); 
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
+                        entry.setPOS(LexicalEntry.POS.VERB);
                         entry.setFrame(vocab.lexinfo + "IntransitivePPFrame");
                         
                         if (subject.equals(subjOfProp) && prepObject.equals(objOfProp)) {
@@ -257,10 +245,76 @@ public class Lexicon {
                         
                         String form = canonicalForm + " " + marker;
                         
-                        if (!VERB_index.containsKey(form)) {
-                             VERB_index.put(form,new ArrayList<>());
+                        if (!index.containsKey(form)) {
+                             index.put(form,new ArrayList<>());
                         }
-                        VERB_index.get(form).add(entry);
+                        index.get(form).add(entry);
+                    }
+                    catch (NullPointerException npe) {
+                    }
+                }
+            }
+        }
+        
+        private void collectNounPPs() {
+            
+            String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
+                               + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
+                               + "SELECT DISTINCT ?canonicalForm ?reference ?subjOfProp ?objOfProp ?copArg ?prepObject WHERE {"
+                               + " ?lexicon lemon:entry ?entry . "
+                               + " ?entry   lexinfo:partOfSpeech lexinfo:noun . "
+                               + " ?entry   lemon:canonicalForm ?form . " 
+                               + " ?form    lemon:writtenRep ?canonicalForm ."
+                               + " ?entry   lemon:sense ?sense . "
+                               + " ?sense   lemon:reference ?reference ."
+                               + " ?sense   lemon:subjOfProp ?subjOfProp ."
+                               + " ?sense   lemon:objOfProp  ?objOfProp ."
+                               + " ?entry   lemon:synBehavior ?frame ."
+                               + " ?frame   <" + vocab.rdfType + "> lexinfo:NounPPFrame ."
+                               + " ?frame   lexinfo:copulativeArg ?copArg ."
+                               + " ?frame   lexinfo:prepositionalObject ?prepObject ."
+                               + "}";
+            
+            Query query = QueryFactory.create(queryString) ;
+  
+            try (QueryExecution qexec = QueryExecutionFactory.create(query,model)) {
+    
+                ResultSet results = qexec.execSelect() ;
+                                
+                for ( ; results.hasNext() ; ) {
+                    
+                    QuerySolution sol = results.nextSolution() ;
+                    
+                    String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
+                    String reference     = sol.get("reference").toString(); 
+                    String subjOfProp    = sol.get("subjOfProp").toString();
+                    String objOfProp     = sol.get("objOfProp").toString();
+                    String copArg        = sol.get("copArg").toString();
+                    String prepObject    = sol.get("prepObject").toString();
+                    
+                    try {      
+                        LexicalEntry entry = new LexicalEntry(); 
+                        entry.setCanonicalForm(canonicalForm);
+                        entry.setReference(reference);
+                        entry.setPOS(LexicalEntry.POS.NOUN);
+                        entry.setFrame(vocab.lexinfo + "NounPPFrame");
+                        
+                        if (copArg.equals(subjOfProp) && prepObject.equals(objOfProp)) {
+                            entry.addArgumentMapping(LexicalEntry.SynArg.COPULATIVEARG,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                        }
+                        else if (copArg.equals(objOfProp) && prepObject.equals(subjOfProp)) {
+                            entry.addArgumentMapping(LexicalEntry.SynArg.COPULATIVEARG,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                        }
+                        else {
+                            continue;
+                        }
+                        
+                        if (!index.containsKey(canonicalForm)) {
+                             index.put(canonicalForm,new ArrayList<>());
+                        }
+                        index.get(canonicalForm).add(entry);
                     }
                     catch (NullPointerException npe) {
                     }

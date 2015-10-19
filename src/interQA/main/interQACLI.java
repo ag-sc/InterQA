@@ -7,6 +7,8 @@ import interQA.patterns.QueryPatternManager;
 import interQA.patterns.QueryPattern1_1;
 import interQA.patterns.QueryPattern2_1;
 import interQA.patterns.QueryPattern2_2;
+import interQA.patterns.QueryPattern2_3;
+import interQA.patterns.QueryPattern3_1;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -30,6 +32,8 @@ public class interQACLI {
         qm.addQueryPattern(new QueryPattern1_1(lexicon));
         qm.addQueryPattern(new QueryPattern2_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern2_2(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern2_3(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern3_1(lexicon,instances));
         
         // RUN 
         
