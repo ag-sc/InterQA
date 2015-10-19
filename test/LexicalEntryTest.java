@@ -1,5 +1,5 @@
-import de.citec.sc.matoll.core.Language;
-import de.citec.sc.matoll.core.LexicalEntry;
+
+import interQA.lexicon.LexicalEntry;
 import junit.framework.TestCase;
 
 
@@ -8,14 +8,18 @@ import junit.framework.TestCase;
  */
 public class LexicalEntryTest extends TestCase {
 
-    LexicalEntry lexentry = new LexicalEntry(Language.EN);
+    LexicalEntry lexentry = new LexicalEntry();
 
     public void testMatches() throws Exception {
-        final String strTestingCF= "testingCF";
+        
+        final String strTestingCF  = "testingCF";
+        final String strTestingRef = "testingRef";
+        
         lexentry.setCanonicalForm(strTestingCF);
+        lexentry.setReference(strTestingRef);
 
-        assertEquals(lexentry.getLanguage(), Language.EN);
-        assertEquals(lexentry.getCanonicalForm(), strTestingCF);
+        assertEquals(lexentry.getCanonicalForm(),strTestingCF);
+        assertEquals(lexentry.getReference(),strTestingRef);
     }
 
 

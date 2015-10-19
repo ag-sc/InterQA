@@ -17,7 +17,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
     <script src="js/selectize.js"></script>
-    <script src="js/demo.js"></script>
+    <%--<script src="js/demo.js"></script>--%>
 
 
     <title>interQA Web App</title>
@@ -29,6 +29,7 @@
     <div class="demo">
       <h2>Create a query by selecting elements (type in for a quick selection of elements) </h2>
       <div class="control-group">
+        <pre id="log"></pre>
         <label for="select-state">NL query:</label>
         <select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an element...">
           <option value="">Select an element...</option>
@@ -37,7 +38,6 @@
 
           <%
             String fullPath = getServletContext().getRealPath("/") + "WEB-INF" + java.io.File.separator;
-            //application.getResourceAsStream("/WEB-INF/foo.properties")
             String fileName1 = fullPath + "test1.rdf";
             String fileName2 = fullPath + "test2.rdf";
             QueryPatternManager qm = new QueryPatternManager();
@@ -60,9 +60,26 @@
         </select>
       </div>
       <script>
-        $('#select-state').selectize({
-          /*maxItems: 3*/
 
+
+        var eventHandler = function(name) {
+          return function() {
+            console.log(name, arguments);
+            $('#log').append('<div><span class="name">' + name + '</span></div>');
+          };
+        };
+        var $select = $('#select-state').selectize({
+          create          : true,
+          onChange        : eventHandler('onChange'),
+          onItemAdd       : eventHandler('onItemAdd'),
+          onItemRemove    : eventHandler('onItemRemove'),
+          onOptionAdd     : eventHandler('onOptionAdd'),
+          onOptionRemove  : eventHandler('onOptionRemove'),
+          onDropdownOpen  : eventHandler('onDropdownOpen'),
+          onDropdownClose : eventHandler('onDropdownClose'),
+          onFocus         : eventHandler('onFocus'),
+          onBlur          : eventHandler('onBlur'),
+          onInitialize    : eventHandler('onInitialize'),
         });
       </script>
     </div>
