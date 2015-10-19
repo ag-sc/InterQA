@@ -23,40 +23,26 @@ public class QueryPattern1_1Test {
         StringBuffer parsedText = new StringBuffer();
 
         List<String> lsElem0 = qp1.getNext(); // Shows "who", "what"...
-        //UI -> "who"
-        parsedText.append("what");
+        //UI -> "give me"
+        parsedText.append("give me");
         boolean parsesElem0 = qp1.parses(parsedText.toString());
 
         //true --> go ahead
         List<String> lsElem1 = qp1.getNext(); // Shows "is", "was"...
-        //UI --> "is"
-        parsedText.append("is");
+        //UI --> "all"
+        parsedText.append("all");
         boolean parsesElem1 = qp1.parses(parsedText.toString());
 
         //true --> go ahead
         List<String> lsElem2 = qp1.getNext(); // Shows "the", "a"...
-        //UI --> "the"
-        parsedText.append("the");
+        //UI --> "actor"
+        parsedText.append("actor");
         boolean parsesElem2 = qp1.parses(parsedText.toString());
 
         //true --> go ahead
-        List<String> lsElem3 = qp1.getNext(); // Shows "movie by",  "movie with", "capital of"...
-        //UI --> "movie by"
-        parsedText.append("movie by");
-        boolean parsesElem3 = qp1.parses(parsedText.toString());
-
-        //Now I have to get the property associated to the canonical Form, and the "direction" of
-        // the property (linear, reverse). Both from the lexicalEntry
-        //With this information I can query the EP and get the instances (if linear, I get the object
-        // of the triples; if reverse, the subject of the
-
-        //true --> go ahead
-        List<String> lsElem4 = qp1.getNext(); // "Tarantino", "Almodovar" (because the last section was "movie by")
-        parsedText.append("Tarantino");
-        boolean parsesElem4= qp1.parses(parsedText.toString());
-
-        //true --> go ahead
-        if (parsesElem4){
+        List<String> lsElem3 = qp1.getNext(); // Last element ==> returns null
+        //End
+        if (lsElem3 == null){
             List<String> sparql = qp1.buildSPARQLqueries();
             System.out.println(sparql);
         }

@@ -8,14 +8,14 @@ import java.util.ArrayList;
  */
 public class StringElementTest extends TestCase {
 
-    public void testMatches() throws Exception {
-        StringElement element = new StringElement();
-        element.add("which");
-        element.add("what");
-        element.add("who");
-        assertEquals(element.matches("which"), true);
-        assertEquals(element.matches("who"), true);
-    }
+//    public void testMatches() throws Exception {
+//        StringElement element = new StringElement();
+//        element.add("which");
+//        element.add("what");
+//        element.add("who");
+//        assertEquals(element.matches("which"), true);
+//        assertEquals(element.matches("who"), true);
+//    }
 
     public void test1Parse() throws Exception {
         StringElement element = new StringElement();
