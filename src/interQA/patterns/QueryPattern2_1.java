@@ -1,9 +1,9 @@
 package interQA.patterns;
 
-import interQA.elements.InstanceElement;
+import interQA.elements.IndividualElement;
 import interQA.lexicon.Lexicon;
 import interQA.elements.StringElement;
-import interQA.elements.VerbElement;
+import interQA.elements.ConceptElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import java.util.ArrayList;
@@ -34,10 +34,10 @@ public class QueryPattern2_1 extends QueryPattern {
             element0.add("what");
             elements.add(element0);
 		
-            VerbElement element1 = new VerbElement(lexicon,vocab.TransitiveFrame); 
+            ConceptElement element1 = new ConceptElement(lexicon,LexicalEntry.POS.VERB,vocab.TransitiveFrame); 
             elements.add(element1);
 		
-            InstanceElement element2 = new InstanceElement(); 
+            IndividualElement element2 = new IndividualElement(); 
             elements.add(element2);
 	}
         
@@ -57,12 +57,12 @@ public class QueryPattern2_1 extends QueryPattern {
                          case SUBJOFPROP:
                               query = "SELECT DISTINCT ?x ?label WHERE { "
                                     + " ?x <" + entry.getReference() + "> ?object . "
-                                    + " ?x <" + vocab.rdfsLabel + "> ?l . }";
+                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
                               elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
                          case OBJOFPROP:
                               query = "SELECT DISTINCT ?x ?label WHERE { "
                                     + " ?subject <" + entry.getReference() + "> ?x . "
-                                    + " ?x <" + vocab.rdfsLabel + "> ?l . }";
+                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
                               elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
                     }
                 }     
@@ -74,8 +74,8 @@ public class QueryPattern2_1 extends QueryPattern {
             
             List<String> queries = new ArrayList<>();
             
-            VerbElement     verb     = (VerbElement)     elements.get(1);
-            InstanceElement instance = (InstanceElement) elements.get(2);
+            ConceptElement  verb     = (ConceptElement)  elements.get(1);
+            IndividualElement instance = (IndividualElement) elements.get(2);
                  
             for (LexicalEntry verb_entry : verb.getActiveEntries()) {
                 

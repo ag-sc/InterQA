@@ -10,12 +10,14 @@ public class LexicalEntry {
     
     
     public enum SemArg { SUBJOFPROP, OBJOFPROP };
-    public enum SynArg { SUBJECT, DIRECTOBJECT, PREPOSITIONALOBJECT };
+    public enum SynArg { SUBJECT, COPULATIVEARG, DIRECTOBJECT, PREPOSITIONALOBJECT };
+    public enum POS    { NOUN, VERB, ADJECTIVE };
     
     
     String canonicalForm;     
     String reference; 
     
+    POS    pos;
     String frame;
     
     HashMap<SynArg,SemArg> argumentMapping; 
@@ -39,6 +41,10 @@ public class LexicalEntry {
         frame = uri;
     }
     
+    public void setPOS(POS pos) {
+        this.pos = pos;
+    }
+    
     public void addArgumentMapping(SynArg syn, SemArg sem) {
         argumentMapping.put(syn,sem);
     }
@@ -58,6 +64,10 @@ public class LexicalEntry {
     
     public String getFrame() {
         return frame;
+    }
+    
+    public POS getPOS() {
+        return pos;
     }
     
     public SemArg getSemArg(SynArg syn) {

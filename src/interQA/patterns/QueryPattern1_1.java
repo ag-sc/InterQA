@@ -1,6 +1,6 @@
 package interQA.patterns;
 
-import interQA.elements.ClassNoun;
+import interQA.elements.ConceptElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
@@ -31,7 +31,7 @@ public class QueryPattern1_1 extends QueryPattern {
         element1.add("all");
 	elements.add(element1);
 		
-        ClassNoun element2 = new ClassNoun(lexicon); 
+        ConceptElement element2 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null); 
 	elements.add(element2);
     }
     
