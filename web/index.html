@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>InterQA Demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/stylesheet.css">
+  <!--[if IE 8]><script src="js/es5.js"></script><![endif]-->
+  <script src="js/jquery.js"></script>
+  <script src="js/dist/js/standalone/selectize.js"></script>
+  <script src="js/index.js"></script>
+</head>
+<body>
+<div id="wrapper">
+  <h1>InterQA Demo</h1>
+  <div class="demo">
+    <!--<h2>&lt;select multiple&gt;</h2>-->
+    <div id="selectize-wrapper">
+
+    </div>
+
+    <script>
+      var urlsrc = "";
+      var optionsGlobal = [];
+      var isOnlyGetOptions = true;
+      var isOptionDeleted = false;
+      var createSelect = function createSelect ()
+      {
+        var eventHandler = function() {
+          return function() {
+            if (arguments[0] === null)
+            {
+              // Empty or deleted all elements
+              optionsGlobal = [];
+            }
+            else
+            {
+              // One or more elements (deleted or added)
+              optionsGlobal = arguments[0];
+            }
+            // Delete the selectize floor :-D
+            $("#selectize-wrapper").empty();
+            initSelect();
+          };
+        };
+        var $select = $('#select-state').selectize({
+          maxItems		: null,
+          create          : true,
+          onChange        : eventHandler()
+        });
+      };
+
+      var get_options_success = function get_options_success(e) {
+
+        if (e.length == 0) {
+          alert("No more options.")
+          // No more options means finished -> Execute the SPARQL query
+        }
+        else {
+          var htmlText = '<div class="control-group"><label for="select-state">Sentence:</label><select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an option..."><option value="">Select a state...</option>';
+          if (optionsGlobal.length > 0) {
+            for (var i in optionsGlobal) {
+              htmlText += '<option value="' + optionsGlobal[i] +
+                      '" selected="selected">' + optionsGlobal[i] + '</option>';
+            }
+          }
+          for (var i in e) {
+            htmlText += '<option value="' + e[i] + '">' + e[i] + '</option>';
+          }
+          htmlText += '</select></div>';
+          $("#selectize-wrapper").html(htmlText);
+          createSelect();
+        }
+      };
+
+      /*var get_options_failed = function get_options_failed() {
+        var htmlText = '<div class="control-group"><label for="select-state">Sentence:</label><select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an option..."><option value="">Select a state...</option>';
+        if (optionsGlobal.length > 0) {
+          for (var i in optionsGlobal) {
+            htmlText += '<option value="'+ optionsGlobal[i] +
+                    '" selected="selected">'+ optionsGlobal[i] +'</option>';
+          }
+        }
+        htmlText += '</select></div>';
+        $("#selectize-wrapper").html(htmlText);
+        var $select = $('#select-state').selectize({
+          maxItems		: null,
+          create          : false
+        });
+      };*/
+
+      var initSelect = function initSelect () {
+        var getoptions_url = "/interQAWebApp/ServletInterQA?command=getOptions";
+        var selected_url = "/interQAWebApp/ServletInterQA?command=selected&selection=";
+        for (var i in optionsGlobal) {
+          selected_url += '' + optionsGlobal[i];
+        }
+        execute_ajax(selected_url, function (e) {
+          execute_ajax(getoptions_url, get_options_success, function(e){
+            console.log("Error at get options (after selected)");
+          });
+        }, function (e) {
+          console.log("Error at selected_url");
+        });
+      };
+      $(document).ready(function () {
+        initSelect();
+      });
+      var execute_ajax = function execute_ajax(url, func_success, func_fail) {
+        var request = $.ajax({
+          url: url,
+          type: "GET",
+          datatype: "jsonp",
+          crossDomain: true
+        });
+        request.success(function( msg ) { // Returned 200
+          func_success(msg);
+        });
+        request.fail(function( jqXHR, textStatus ) { //Returned 500
+          func_fail("error 500");
+        });
+      };
+    </script>
+  </div>
+</div>
+</body>
+</html>
