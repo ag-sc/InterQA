@@ -14,27 +14,26 @@ public class QueryPattern1_1Test {
 
 
     @Test
-    public void testSomething() {
+    public void testFullSequence() {
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
         qp1 = new QueryPattern1_1(lexicon);
 
-
         StringBuffer parsedText = new StringBuffer();
 
-        List<String> lsElem0 = qp1.getNext(); // Shows "who", "what"...
+        List<String> lsElem0 = qp1.getNext(); // Shows "give me", "who", "what"...
         //UI -> "give me"
         parsedText.append("give me");
         boolean parsesElem0 = qp1.parses(parsedText.toString());
 
         //true --> go ahead
-        List<String> lsElem1 = qp1.getNext(); // Shows "is", "was"...
+        List<String> lsElem1 = qp1.getNext(); // Shows "all"
         //UI --> "all"
         parsedText.append("all");
         boolean parsesElem1 = qp1.parses(parsedText.toString());
 
         //true --> go ahead
-        List<String> lsElem2 = qp1.getNext(); // Shows "the", "a"...
+        List<String> lsElem2 = qp1.getNext(); // Shows "actor"...
         //UI --> "actor"
         parsedText.append("actor");
         boolean parsesElem2 = qp1.parses(parsedText.toString());
@@ -50,14 +49,30 @@ public class QueryPattern1_1Test {
         //Assert.assertTrue(true);
     }
 
-    public void testParse(){
+    @Test
+    public void testSequenceWithDelete(){
+        // Load lexicon
+        lexicon.load("resources/dbpedia_en.rdf");
+        qp1 = new QueryPattern1_1(lexicon);
+
+        StringBuffer parsedText = new StringBuffer();
+
+        List<String> lsElem0 = qp1.getNext(); // Shows "give me", "who", "what"...
+        //UI -> "give me"
+        parsedText.append("give me");
+        boolean parsesElem0 = qp1.parses(parsedText.toString());
+
+        //true --> go ahead
+        List<String> lsElem1 = qp1.getNext(); // Shows "all"
+
+        //Reset
+        parsedText = new StringBuffer("");  //This means reset
+        boolean parsesElem1 = qp1.parses(parsedText.toString());
+        //returns true
+        //THis should be the initial "give me", "who", "what"...
+        List<String> newres = qp1.getNext(); // Shows "all"
+
 
     }
-
-//    @Test
-//    public void testGetInstancesForCanonicalPlusForm(){
-//       List<String> inst = interQA.QueryPattern1.getInstancesForCanonicalPlusForm("some URL", "capital of");
-//        Assert.assertEquals(inst.toString(), "[http://dbpedia.org/resource/England, http://dbpedia.org/resource/Spain]");
-//    }
 
 }
