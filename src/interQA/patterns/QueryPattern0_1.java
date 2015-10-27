@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author cunger
  */
-public class QueryPattern3_1 extends QueryPattern {
+public class QueryPattern0_1 extends QueryPattern {
     
     // SELECT ?x WHERE { ?x rdf:type <Class> . ?x <Property> <Individual> . } 
     // SELECT ?x WHERE { ?x rdf:type <Class> . ?y <Property> <Individual> . }
@@ -29,7 +29,7 @@ public class QueryPattern3_1 extends QueryPattern {
     InstanceSource instances;
         
     
-	public QueryPattern3_1(Lexicon lexicon, InstanceSource instances) {
+	public QueryPattern0_1(Lexicon lexicon, InstanceSource instances) {
             
             this.instances = instances;
             
