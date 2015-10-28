@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
 import interQA.patterns.QueryPattern1_1;
-import interQA.patterns.QueryPattern2_1;
-import interQA.patterns.QueryPattern2_2;
+import interQA.patterns.QueryPattern9_1;
+import interQA.patterns.QueryPattern9_2;
 import interQA.patterns.QueryPatternManager;
 
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class ServletInterQA extends HttpServlet {
         // Load query patterns
         qm = new QueryPatternManager();
         qm.addQueryPattern(new QueryPattern1_1(lexicon));
-        qm.addQueryPattern(new QueryPattern2_1(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern2_2(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern9_1(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern9_2(lexicon,instances));
     }
 }

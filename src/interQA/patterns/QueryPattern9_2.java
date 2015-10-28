@@ -13,48 +13,43 @@ import java.util.List;
  *
  * @author cunger
  */
-public class QueryPattern2_3 extends QueryPattern {
+public class QueryPattern9_2 extends QueryPattern {
     
-    // SELECT ?x WHERE { ?x <Property> <Individual> . } 
-    // SELECT ?x WHERE { ?y <Property> <Individual> . } 
+        // SELECT ?x WHERE { ?x <Property> <Individual> . } 
+        // SELECT ?x WHERE { <Individual> <Property> ?x . } 
     
-    // Give me (all|the) <NounPP:Property> <Name:Individual>.
+        // (Who|What) <IntransitivePPVerb:Property> <Name:Individual>?
     
-    // Give me all movies by Tarantino. 
-    // Give me all rivers in Turkmenistan.
-    // Give me the founding date of Boston.
+	// Who died in Berlin?
+        // Who co-starred with Audrey Hepburn?
     
     
         InstanceSource instances;
     
     
-	public QueryPattern2_3(Lexicon lexicon, InstanceSource instances) {
+	public QueryPattern9_2(Lexicon lexicon, InstanceSource instances) {
             
             this.instances = instances;
             
             StringElement element0 = new StringElement(); 
-            element0.add("give me");
+            element0.add("who");
+            element0.add("what");
             elements.add(element0);
-	
-            StringElement element1 = new StringElement(); 
-            element1.add("all");
-            element1.add("the");
-            elements.add(element1);
-            
-            ConceptElement element2 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPPFrame); 
-            elements.add(element2);
 		
-            IndividualElement element3 = new IndividualElement(); 
-            elements.add(element3);
+            ConceptElement element1 = new ConceptElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame); 
+            elements.add(element1);
+		
+            IndividualElement element2 = new IndividualElement(); 
+            elements.add(element2);
 	}
 
         @Override
         public void updateAt(int i) {
             
-            if (i == 2) {
-            // If parse is at element2, fill element3 with possible instances...
+            if (i == 1) {
+            // If parse is at element1, fill element2 with possible instances...
                      
-                for (LexicalEntry entry : elements.get(2).getActiveEntries()) {
+                for (LexicalEntry entry : elements.get(1).getActiveEntries()) {
                     
                     String query; 
 
@@ -65,12 +60,12 @@ public class QueryPattern2_3 extends QueryPattern {
                               query = "SELECT DISTINCT ?x ?label WHERE { "
                                     + " ?x <" + entry.getReference() + "> ?object . "
                                     + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
+                              elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
                          case OBJOFPROP:
                               query = "SELECT DISTINCT ?x ?label WHERE { "
                                     + " ?subject <" + entry.getReference() + "> ?x . "
                                     + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
+                              elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
                     }
                 }     
             }
@@ -81,10 +76,10 @@ public class QueryPattern2_3 extends QueryPattern {
             
             List<String> queries = new ArrayList<>();
             
-            ConceptElement  noun     = (ConceptElement)  elements.get(2);
-            IndividualElement instance = (IndividualElement) elements.get(3);
+            ConceptElement  verb     = (ConceptElement)  elements.get(1);
+            IndividualElement instance = (IndividualElement) elements.get(2);
                  
-            for (LexicalEntry verb_entry : noun.getActiveEntries()) {
+            for (LexicalEntry verb_entry : verb.getActiveEntries()) {
                 
                  switch (verb_entry.getSemArg(LexicalEntry.SynArg.PREPOSITIONALOBJECT)) {
                      

@@ -31,39 +31,43 @@ public class InstanceSource {
        
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
         
-        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
-        ResultSet results = ex.execSelect();
-        
-        while (results.hasNext()) {
-            
-               QuerySolution result = results.nextSolution();
-               
-               RDFNode uri   = result.get(var_uri);
-               RDFNode label = result.get(var_label); 
-               
-               if (uri != null && label != null) {
-                   
-                   String form = label.asLiteral().getValue().toString();
-                                      
-                   LexicalEntry entry = new LexicalEntry();
-                   entry.setCanonicalForm(form);
-                   entry.setReference(uri.toString());
-                   
-                   if (!instances.containsKey(form)) {
-                        instances.put(form,new ArrayList<>());
-                   }
-                   instances.get(form).add(entry);
-               }
-        }
+        // TODO Debug!
+
+//        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
+//        ResultSet results = ex.execSelect();
+//        
+//        while (results.hasNext()) {
+//            
+//               // TODO debug, no results are returned
+//            
+//               QuerySolution result = results.nextSolution();
+//               
+//               RDFNode uri   = result.get(var_uri);
+//               RDFNode label = result.get(var_label); 
+//               
+//               if (uri != null && label != null) {
+//                   
+//                   String form = label.asLiteral().getValue().toString();
+//                                      
+//                   LexicalEntry entry = new LexicalEntry();
+//                   entry.setCanonicalForm(form);
+//                   entry.setReference(uri.toString());
+//                   
+//                   if (!instances.containsKey(form)) {
+//                        instances.put(form,new ArrayList<>());
+//                   }
+//                   instances.get(form).add(entry);
+//               }
+//        }
         
         // For testing:
         
-//        LexicalEntry entry = new LexicalEntry();
-//        entry.setCanonicalForm("fnord");
-//        entry.setReference("http://fnord.org/Fnord");
-//        List<LexicalEntry> entries = new ArrayList<>();
-//        entries.add(entry);
-//        instances.put("fnord",entries);
+        LexicalEntry entry = new LexicalEntry();
+        entry.setCanonicalForm("fnord");
+        entry.setReference("http://fnord.org/Fnord");
+        List<LexicalEntry> entries = new ArrayList<>();
+        entries.add(entry);
+        instances.put("fnord",entries);
         
         return instances;
     }

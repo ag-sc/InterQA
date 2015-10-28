@@ -1,6 +1,7 @@
 package interQA.patterns;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ public class QueryPatternManager {
      * @return a list of strings to display to the user
      */
     public List<String> getUIoptions(){
+        
         List<String> allOpts = new ArrayList<>();
         for (QueryPattern pat : availableQueryPatterns){
             List<String> opts = pat.getNext();
@@ -33,7 +35,7 @@ public class QueryPatternManager {
                 allOpts.addAll(opts);
             }
         }
-        return allOpts;
+        return new ArrayList<>(new HashSet<>(allOpts));
     }
     
     public List<String> buildSPARQLqueries() {
@@ -55,7 +57,7 @@ public class QueryPatternManager {
         List<QueryPattern> toRemove = new ArrayList<>();
         for(QueryPattern pat: availableQueryPatterns){
             if (pat.parses(str) == false){ //does not parse str
-                toRemove.add(pat);  //Add it to the toRemove list
+                toRemove.add(pat); //Add it to the toRemove list
             }
         }
         //Removes the non active QApatterns from the list

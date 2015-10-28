@@ -13,43 +13,48 @@ import java.util.List;
  *
  * @author cunger
  */
-public class QueryPattern2_2 extends QueryPattern {
+public class QueryPattern9_3 extends QueryPattern {
     
-        // SELECT ?x WHERE { ?x <Property> <Individual> . } 
-        // SELECT ?x WHERE { ?y <Property> <Individual> . } 
+    // SELECT ?x WHERE { ?x <Property> <Individual> . } 
+    // SELECT ?x WHERE { <Individual> <Property> ?x . } 
     
-        // (Who|What) <IntransitivePPVerb:Property> <Name:Individual>?
+    // Give me (all|the) <NounPP:Property> <Name:Individual>.
     
-	// Who died in Berlin?
-        // Who co-starred with Audrey Hepburn?
+    // Give me all movies by Tarantino. 
+    // Give me all rivers in Turkmenistan.
+    // Give me the founding date of Boston.
     
     
         InstanceSource instances;
     
     
-	public QueryPattern2_2(Lexicon lexicon, InstanceSource instances) {
+	public QueryPattern9_3(Lexicon lexicon, InstanceSource instances) {
             
             this.instances = instances;
             
             StringElement element0 = new StringElement(); 
-            element0.add("who");
-            element0.add("what");
+            element0.add("give me");
             elements.add(element0);
-		
-            ConceptElement element1 = new ConceptElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame); 
+	
+            StringElement element1 = new StringElement(); 
+            element1.add("all");
+            element1.add("the");
             elements.add(element1);
-		
-            IndividualElement element2 = new IndividualElement(); 
+            
+            ConceptElement element2 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPPFrame); 
             elements.add(element2);
+		
+            IndividualElement element3 = new IndividualElement(); 
+            elements.add(element3);
 	}
 
         @Override
         public void updateAt(int i) {
             
-            if (i == 1) {
-            // If parse is at element1, fill element2 with possible instances...
+            if (i == 2) {
+            // If parse is at element2, fill element3 with possible instances...
                      
-                for (LexicalEntry entry : elements.get(1).getActiveEntries()) {
+                for (LexicalEntry entry : elements.get(2).getActiveEntries()) {
                     
                     String query; 
 
@@ -60,12 +65,12 @@ public class QueryPattern2_2 extends QueryPattern {
                               query = "SELECT DISTINCT ?x ?label WHERE { "
                                     + " ?x <" + entry.getReference() + "> ?object . "
                                     + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
+                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
                          case OBJOFPROP:
                               query = "SELECT DISTINCT ?x ?label WHERE { "
                                     + " ?subject <" + entry.getReference() + "> ?x . "
                                     + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
+                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
                     }
                 }     
             }
@@ -76,23 +81,23 @@ public class QueryPattern2_2 extends QueryPattern {
             
             List<String> queries = new ArrayList<>();
             
-            ConceptElement  verb     = (ConceptElement)  elements.get(1);
-            IndividualElement instance = (IndividualElement) elements.get(2);
+            ConceptElement  noun     = (ConceptElement)  elements.get(2);
+            IndividualElement instance = (IndividualElement) elements.get(3);
                  
-            for (LexicalEntry verb_entry : verb.getActiveEntries()) {
+            for (LexicalEntry noun_entry : noun.getActiveEntries()) {
                 
-                 switch (verb_entry.getSemArg(LexicalEntry.SynArg.PREPOSITIONALOBJECT)) {
+                 switch (noun_entry.getSemArg(LexicalEntry.SynArg.PREPOSITIONALOBJECT)) {
                      
                     case SUBJOFPROP: 
                          for (LexicalEntry inst_entry : instance.getActiveEntries()) {
                               queries.add("SELECT DISTINCT ?x WHERE {"
-                                        + " <" + inst_entry.getReference() + "> <" + verb_entry.getReference() + "> ?x . }");
+                                        + " <" + inst_entry.getReference() + "> <" + noun_entry.getReference() + "> ?x . }");
                          }
                          break;
                     case OBJOFPROP: 
                          for (LexicalEntry inst_entry : instance.getActiveEntries()) {
                               queries.add("SELECT DISTINCT ?x WHERE {"
-                                        + " ?x <" + verb_entry.getReference() + "> <" + inst_entry.getReference() + "> . }");
+                                        + " ?x <" + noun_entry.getReference() + "> <" + inst_entry.getReference() + "> . }");
                          }
                          break;
                  }

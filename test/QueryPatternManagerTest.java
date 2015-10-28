@@ -4,8 +4,8 @@
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
 import interQA.patterns.QueryPattern1_1;
-import interQA.patterns.QueryPattern2_1;
-import interQA.patterns.QueryPattern2_2;
+import interQA.patterns.QueryPattern9_1;
+import interQA.patterns.QueryPattern9_2;
 import interQA.patterns.QueryPatternManager;
 import org.junit.Test;
 
@@ -24,8 +24,8 @@ public class QueryPatternManagerTest {
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon);
-        QueryPattern2_1 qp21 = new QueryPattern2_1(lexicon, instances);
-        QueryPattern2_2 qp22 = new QueryPattern2_2(lexicon, instances);
+        QueryPattern9_1 qp21 = new QueryPattern9_1(lexicon, instances);
+        QueryPattern9_2 qp22 = new QueryPattern9_2(lexicon, instances);
         qm.addQueryPattern(qp11);
         qm.addQueryPattern(qp21);
         qm.addQueryPattern(qp22);

@@ -11,10 +11,10 @@ import java.util.List;
 
 
 
-public class QueryPattern2_1 extends QueryPattern {
+public class QueryPattern9_1 extends QueryPattern {
 
         // SELECT ?x WHERE { ?x <Property> <Individual> . } 
-        // SELECT ?x WHERE { ?y <Property> <Individual> . } 
+        // SELECT ?x WHERE { <Individual> <Property> ?x . } 
     
         // (Who|What) <TransitiveVerb:Property> <Name:Individual>?
     
@@ -25,7 +25,7 @@ public class QueryPattern2_1 extends QueryPattern {
         InstanceSource instances;
         
     
-	public QueryPattern2_1(Lexicon lexicon, InstanceSource instances) {
+	public QueryPattern9_1(Lexicon lexicon, InstanceSource instances) {
             
             this.instances = instances;
             
@@ -74,7 +74,7 @@ public class QueryPattern2_1 extends QueryPattern {
             
             List<String> queries = new ArrayList<>();
             
-            ConceptElement  verb     = (ConceptElement)  elements.get(1);
+            ConceptElement    verb     = (ConceptElement)    elements.get(1);
             IndividualElement instance = (IndividualElement) elements.get(2);
                  
             for (LexicalEntry verb_entry : verb.getActiveEntries()) {
