@@ -1,5 +1,6 @@
 import interQA.lexicon.Lexicon;
 import interQA.patterns.QueryPattern1_1;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -66,12 +67,12 @@ public class QueryPattern1_1Test {
         List<String> lsElem1 = qp1.getNext(); // Shows "all"
 
         //Reset
-        parsedText = new StringBuffer("");  //This means reset
+        parsedText = new StringBuffer("give me");  //This means reset
         boolean parsesElem1 = qp1.parses(parsedText.toString());
         //returns true
         //THis should be the initial "give me", "who", "what"...
         List<String> newres = qp1.getNext(); // Shows "all"
-
+        Assert.assertTrue(newres.get(0).equals("all"));
 
     }
 
