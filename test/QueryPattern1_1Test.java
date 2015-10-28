@@ -67,10 +67,10 @@ public class QueryPattern1_1Test {
         List<String> lsElem1 = qp1.getNext(); // Shows "all"
 
         //Reset
-        parsedText = new StringBuffer("give me");  //This means reset
+        parsedText = new StringBuffer("give me");  //This means that the last selection ("all") was deleted
         boolean parsesElem1 = qp1.parses(parsedText.toString());
         //returns true
-        //THis should be the initial "give me", "who", "what"...
+        //This should be the initial "all"...
         List<String> newres = qp1.getNext(); // Shows "all"
         Assert.assertTrue(newres.get(0).equals("all"));
 

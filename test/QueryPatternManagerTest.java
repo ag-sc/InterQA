@@ -7,6 +7,7 @@ import interQA.patterns.QueryPattern1_1;
 import interQA.patterns.QueryPattern9_1;
 import interQA.patterns.QueryPattern9_2;
 import interQA.patterns.QueryPatternManager;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -31,37 +32,22 @@ public class QueryPatternManagerTest {
         qm.addQueryPattern(qp22);
 
         StringBuffer parsedText = new StringBuffer();
+        List<String> opts = qm.getUIoptions();  // "what", "give me", "who"
 
-        List<String> lsElem0qp11 = qp11.getNext(); // Shows "give me"
-        List<String> lsElem0qp21 = qp21.getNext(); // Shows "who", "what"
-        List<String> lsElem0qp22 = qp22.getNext(); // Shows "who", "what"
-        //Display the union of both lists
-        List<String> lsElem0display = new ArrayList<String>();
-        lsElem0display.addAll(lsElem0qp11);
-        lsElem0display.addAll(lsElem0qp21);
-        lsElem0display.addAll(lsElem0qp22);
+        //UI selects "give me" --> one pattern will be valid
+        parsedText.append("give me");
+        qm.userSentence(parsedText.toString()); //Sends the user selection to the qm
+        opts = qm.getUIoptions();  //get options available for last selection: "all"
 
-        //UI -> "who" --> both patterns will be valid
-        parsedText.append("what");
-        boolean parsesElem0qp11 = qp11.parses(parsedText.toString());
-        boolean parsesElem0qp21 = qp21.parses(parsedText.toString());
-        boolean parsesElem0qp22 = qp22.parses(parsedText.toString());
+        //UI selects "all"
+        parsedText.append("all");
+        qm.userSentence(parsedText.toString()); //Sends the user selection to the qm
+        opts = qm.getUIoptions();  //get options available for last selection: many of them
 
-        // parsesElem0qp11 == false  --> reject p11
-        // parsesElem0qp21 & parsesElem0qp22 are true --> go ahead
-        List<String> lsElem1qp21 = qp21.getNext(); // Shows "employ", "play", attend".... "span"
-        List<String> lsElem1qp22 = qp22.getNext(); // Shows NOTHING
-        //Display the union of both lists
-        List<String> lsElem1display = new ArrayList<String>();
-        lsElem1display.addAll(lsElem1qp21);
-        lsElem1display.addAll(lsElem1qp22);
-
-        //UI -> "play" --> only pattern2 is valid
-        parsedText.append("play");
-        boolean parsesElem1qp21 = qp21.parses(parsedText.toString());  //True
-        boolean parsesElem1qp22 = qp22.parses(parsedText.toString());  //False
-
-        //true qp21 --> go ahead only with this
+        //UI deletes last selection
+        qm.userSentence("give me");
+        opts = qm.getUIoptions();  // you should get "all" again
+        Assert.assertTrue(opts.get(0).equals("all"));
 
     }
 
