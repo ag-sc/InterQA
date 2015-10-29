@@ -19,8 +19,9 @@ public abstract class QueryPattern {
 	 * @return whether the input string matches the query pattern
 	 */
 	public boolean parses(String input) {
-		
+
             int i = 0;
+            currentElement = -1;
             while (!input.isEmpty() && elements.size() >= i-1) {
 		    
                     String rest  = elements.get(i).parse(input); 
