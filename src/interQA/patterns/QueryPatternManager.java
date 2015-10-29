@@ -10,6 +10,7 @@ import java.util.List;
 public class QueryPatternManager {
     
     List<QueryPattern> availableQueryPatterns = new ArrayList<>();
+    List<QueryPattern> allQueryPatterns = new ArrayList<>();
     
     StringBuffer parsedText = new StringBuffer();
 
@@ -17,8 +18,15 @@ public class QueryPatternManager {
     public QueryPatternManager(){
 
     }
+
+    /**
+     * Intended to add patterns at the beginning of the process. This will not work if patterns are added once the
+     * process has started and patterns have been rejected
+     * @param pattern
+     */
     public void addQueryPattern(QueryPattern pattern){
         availableQueryPatterns.add(pattern);
+        allQueryPatterns.add(pattern);
     }
 
     /**
@@ -49,13 +57,14 @@ public class QueryPatternManager {
     }
 
     /**
-     * String (complete) created by the user, including the last selection made by the user. This will reduce the number os query patterns available
+     * String (complete) created by the user, including the last selection made by the user.
+     * Typically this will reduce the number of query patterns available
      * @param str
-     * @return the number of available query patterns
+     * @return the names of available query patterns
      */
     public List<String> userSentence(String str){
         List<QueryPattern> toRemove = new ArrayList<>();
-        for(QueryPattern pat: availableQueryPatterns){
+        for(QueryPattern pat: allQueryPatterns){
             if (pat.parses(str) == false){ //does not parse str
                 toRemove.add(pat); //Add it to the toRemove list
             }

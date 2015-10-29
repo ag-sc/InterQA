@@ -49,6 +49,11 @@ public class QueryPatternManagerTest {
         opts = qm.getUIoptions();  // you should get "all" again
         Assert.assertTrue(opts.get(0).equals("all"));
 
+        //UI deletes last selection again (deletes everything)
+        qm.userSentence("");
+        opts = qm.getUIoptions();  // you should get "all" again
+        Assert.assertTrue(opts.get(0).equals("all"));
+
     }
 
 }

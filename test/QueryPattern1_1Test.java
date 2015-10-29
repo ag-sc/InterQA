@@ -22,7 +22,7 @@ public class QueryPattern1_1Test {
 
         StringBuffer parsedText = new StringBuffer();
 
-        List<String> lsElem0 = qp1.getNext(); // Shows "give me", "who", "what"...
+        List<String> lsElem0 = qp1.getNext(); // Shows "give me"
         //UI -> "give me"
         parsedText.append("give me");
         boolean parsesElem0 = qp1.parses(parsedText.toString());
@@ -73,6 +73,32 @@ public class QueryPattern1_1Test {
         //This should be the initial "all"...
         List<String> newres = qp1.getNext(); // Shows "all"
         Assert.assertTrue(newres.get(0).equals("all"));
+
+    }
+
+    @Test
+    public void testSequenceWithCompleteDelete(){
+        // Load lexicon
+        lexicon.load("resources/dbpedia_en.rdf");
+        qp1 = new QueryPattern1_1(lexicon);
+
+        StringBuffer parsedText = new StringBuffer();
+
+        List<String> lsElem0 = qp1.getNext(); // Shows "give me", "who", "what"...
+        //UI -> "give me"
+        parsedText.append("give me");
+        boolean parsesElem0 = qp1.parses(parsedText.toString());
+
+        //true --> go ahead
+        List<String> lsElem1 = qp1.getNext(); // Shows "all"
+
+        //Reset
+        parsedText = new StringBuffer("");  //This means that the whole sentence was deleted
+        boolean parsesElem1 = qp1.parses(parsedText.toString());
+        //returns true
+        //This should be the initial "give me", "who", "what"...
+        List<String> newres = qp1.getNext(); // Shows "all"
+        Assert.assertTrue(newres.get(0).equals("give me"));
 
     }
 
