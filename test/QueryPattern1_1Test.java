@@ -102,4 +102,38 @@ public class QueryPattern1_1Test {
 
     }
 
+    @Test
+    public void testStartsAllDeleted(){
+        // Load lexicon
+        lexicon.load("resources/dbpedia_en.rdf");
+        qp1 = new QueryPattern1_1(lexicon);
+
+        StringBuffer parsedText = new StringBuffer();
+
+        List<String> lsElem0 = qp1.getNext(); // Shows "give me", "who", "what"...
+
+        //Reset
+        parsedText = new StringBuffer("");  //This means that the whole sentence was deleted
+        boolean parsesElem1 = qp1.parses(parsedText.toString());
+        //returns true
+        //This should be the initial "give me", "who", "what"...
+        List<String> newres = qp1.getNext();
+        Assert.assertTrue(newres.get(0).equals("give me"));
+
+    }
+
+    @Test
+    public void testStartsAllDeletedV2(){
+        // Load lexicon
+        lexicon.load("resources/dbpedia_en.rdf");
+        qp1 = new QueryPattern1_1(lexicon);
+
+        boolean parsesElem1 = qp1.parses("");
+        //returns true
+        //This should be the initial "give me", "who", "what"...
+        List<String> newres = qp1.getNext();
+        Assert.assertTrue(newres.get(0).equals("give me"));
+
+    }
+
 }
