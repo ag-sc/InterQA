@@ -12,7 +12,9 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/stylesheet.css">
   <!--[if IE 8]><script src="js/es5.js"></script><![endif]-->
-  <script src="js/jquery.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  <!--<script src="js/jquery.js"></script>-->
   <script src="js/dist/js/standalone/selectize.js"></script>
   <script src="js/index.js"></script>
 </head>
@@ -26,6 +28,35 @@
     </div>
 
     <script>
+
+// Prevent the backspace key from navigating back.
+$(document).unbind('keydown').bind('keydown', function (event) {
+    var doPrevent = false;
+    if (event.keyCode === 8) {
+        var d = event.srcElement || event.target;
+        if ((d.tagName.toUpperCase() === 'INPUT' && 
+             (
+                 d.type.toUpperCase() === 'TEXT' ||
+                 d.type.toUpperCase() === 'PASSWORD' || 
+                 d.type.toUpperCase() === 'FILE' || 
+                 d.type.toUpperCase() === 'SEARCH' || 
+                 d.type.toUpperCase() === 'EMAIL' || 
+                 d.type.toUpperCase() === 'NUMBER' || 
+                 d.type.toUpperCase() === 'DATE' )
+             ) || 
+             d.tagName.toUpperCase() === 'TEXTAREA') {
+            doPrevent = true;
+        }
+        else {
+            doPrevent = false;
+        }
+    }
+
+    if (doPrevent) {
+        event.preventDefault();
+    }
+});
+
       var urlsrc = "";
       var optionsGlobal = [];
       var isOnlyGetOptions = true;
@@ -51,7 +82,8 @@
         };
         var $select = $('#select-state').selectize({
           maxItems		: null,
-          create          : true,
+          create          : false,
+          persist         : false,
           onChange        : eventHandler()
         });
       };
@@ -59,8 +91,16 @@
       var get_options_success = function get_options_success(e) {
 
         if (e.length == 0) {
-          alert("No more options.")
+          alert("No more options. This is the SPARQL code.")
           // No more options means finished -> Execute the SPARQL query
+        /* execute_ajax(getsparql_url,
+                  function(e){ //server OK
+                     e // e contains the result of the server call
+                  },
+                  function(e){  //Server error
+                     console.log("Error at get sparql (after selected)");
+                  });
+        */
         }
         else {
           var htmlText = '<div class="control-group"><label for="select-state">Sentence:</label><select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an option..."><option value="">Select a state...</option>';
@@ -78,22 +118,6 @@
           createSelect();
         }
       };
-
-      /*var get_options_failed = function get_options_failed() {
-        var htmlText = '<div class="control-group"><label for="select-state">Sentence:</label><select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an option..."><option value="">Select a state...</option>';
-        if (optionsGlobal.length > 0) {
-          for (var i in optionsGlobal) {
-            htmlText += '<option value="'+ optionsGlobal[i] +
-                    '" selected="selected">'+ optionsGlobal[i] +'</option>';
-          }
-        }
-        htmlText += '</select></div>';
-        $("#selectize-wrapper").html(htmlText);
-        var $select = $('#select-state').selectize({
-          maxItems		: null,
-          create          : false
-        });
-      };*/
 
       var initSelect = function initSelect () {
         var getoptions_url = "/interQAWebApp/ServletInterQA?command=getOptions";
