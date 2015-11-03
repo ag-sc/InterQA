@@ -92,15 +92,20 @@ $(document).unbind('keydown').bind('keydown', function (event) {
 
         if (e.length == 0) {
           alert("No more options. This is the SPARQL code.")
-          // No more options means finished -> Execute the SPARQL query
-        /* execute_ajax(getsparql_url,
-                  function(e){ //server OK
-                     e // e contains the result of the server call
+          // No more options means finished -> Show/Execute the SPARQL query
+          var getqueries_url = "/interQAWebApp/ServletInterQA?command=getQueries";
+          execute_ajax(getqueries_url,
+                  function(e){ //server OK. e contains the result of the server call
+                      var msg = "These are the SPARQL queries:\n"
+                      for (var i in e){
+                          msg += e[i] + "\n";
+                      }
+                      alert(msg);
                   },
                   function(e){  //Server error
-                     console.log("Error at get sparql (after selected)");
+                     console.log("Error at get queries");
                   });
-        */
+
         }
         else {
           var htmlText = '<div class="control-group"><label for="select-state">Sentence:</label><select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an option..."><option value="">Select a state...</option>';
@@ -122,6 +127,7 @@ $(document).unbind('keydown').bind('keydown', function (event) {
       var initSelect = function initSelect () {
         var getoptions_url = "/interQAWebApp/ServletInterQA?command=getOptions";
         var selected_url = "/interQAWebApp/ServletInterQA?command=selected&selection=";
+
         for (var i in optionsGlobal) {
           selected_url += '' + optionsGlobal[i];
         }

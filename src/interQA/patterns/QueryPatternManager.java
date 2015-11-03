@@ -43,7 +43,7 @@ public class QueryPatternManager {
                 allOpts.addAll(opts);
             }
         }
-        return new ArrayList<>(new HashSet<>(allOpts));
+        return new ArrayList<>(new HashSet<>(allOpts)); //Removes duplicates
     }
     
     public List<String> buildSPARQLqueries() {
@@ -70,7 +70,9 @@ public class QueryPatternManager {
             }
         }
         //Removes the non active QApatterns from the list
-        availableQueryPatterns.removeAll(toRemove);
+        ArrayList<QueryPattern> temp = new ArrayList<QueryPattern>(allQueryPatterns);
+        temp.removeAll(toRemove);
+        availableQueryPatterns = new ArrayList<QueryPattern>(temp);
 
         return getQAPatternNames();
     }
