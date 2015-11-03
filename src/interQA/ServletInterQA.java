@@ -37,7 +37,7 @@ public class ServletInterQA extends HttpServlet {
         }
         switch (command){
             case "getOptions":  //command=getOptions  server returns a list of option
-                //Warning! set response header/statuts BEFORE sending any content to the client
+                //Warning! set response header/status BEFORE sending any content to the client
                 response.setStatus(response.SC_OK); //Code 200
                 out.write(gson.toJson(options));
                 break;
@@ -46,6 +46,10 @@ public class ServletInterQA extends HttpServlet {
                 String text = request.getParameter("selection");
                 List<String> availableQPNames = qm.userSentence(text);
                 out.write(gson.toJson(availableQPNames));
+                break;
+            case "getQueries":    //command=getQueries server returns a list of SPARQL queries
+                response.setStatus(response.SC_OK);
+                out.write(gson.toJson(qm.buildSPARQLqueries()));
                 break;
             default:           // unsupported command
                 response.setStatus(response.SC_BAD_REQUEST); //code 400
