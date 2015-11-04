@@ -22,6 +22,7 @@ public abstract class QueryPattern {
 
             int i = 0;
             currentElement = -1;
+
             while (!input.isEmpty() && elements.size() >= i-1) {
 		    
                     String rest  = elements.get(i).parse(input); 
@@ -45,6 +46,11 @@ public abstract class QueryPattern {
                 return null;
             }
 	}
+        
+        public boolean isComplete() { 
+            
+            return currentElement == elements.size()-1;
+        }
         
         // update(int i) and buildSPARQLqueries() is where the pattern-specific magic happens
         
