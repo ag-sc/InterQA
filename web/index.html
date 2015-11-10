@@ -22,10 +22,13 @@
 <div id="wrapper">
   <h1>InterQA Demo</h1>
   <div class="demo">
-    <!--<h2>&lt;select multiple&gt;</h2>-->
     <div id="selectize-wrapper">
 
     </div>
+     <div id="sparql" style=" font-family: monospace;
+          background-color: rgb(240,240,240);">
+
+     </div>
 
     <script>
 
@@ -61,6 +64,7 @@ $(document).unbind('keydown').bind('keydown', function (event) {
       var optionsGlobal = [];
       var isOnlyGetOptions = true;
       var isOptionDeleted = false;
+      var selecInput = null;
       var createSelect = function createSelect ()
       {
         var eventHandler = function() {
@@ -78,50 +82,53 @@ $(document).unbind('keydown').bind('keydown', function (event) {
             // Delete the selectize floor :-D
             $("#selectize-wrapper").empty();
             initSelect();
+            //Clear SPARQL box
+            $("#sparql").html("");
           };
         };
-        var $select = $('#select-state').selectize({
+        var selecInput = $('#select-state').selectize({
           maxItems		: null,
           create          : false,
           persist         : false,
           onChange        : eventHandler()
         });
+        //  $('#select-state')[0].selectize.focus()
+        selecInput[0].selectize.focus();
       };
 
       var get_options_success = function get_options_success(e) {
 
         if (e.length == 0) {
-          alert("No more options. This is the SPARQL code.")
           // No more options means finished -> Show/Execute the SPARQL query
           var getqueries_url = "/interQAWebApp/ServletInterQA?command=getQueries";
           execute_ajax(getqueries_url,
                   function(e){ //server OK. e contains the result of the server call
-                      var msg = "These are the SPARQL queries:\n"
+                      var msg = "";
                       for (var i in e){
                           msg += e[i] + "\n";
                       }
-                      alert(msg);
+                      $("#sparql").html("<p>" + msg + "</p>");
                   },
                   function(e){  //Server error
                      console.log("Error at get queries");
                   });
 
         }
-        else {
-          var htmlText = '<div class="control-group"><label for="select-state">Sentence:</label><select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an option..."><option value="">Select a state...</option>';
-          if (optionsGlobal.length > 0) {
-            for (var i in optionsGlobal) {
-              htmlText += '<option value="' + optionsGlobal[i] +
-                      '" selected="selected">' + optionsGlobal[i] + '</option>';
-            }
-          }
-          for (var i in e) {
-            htmlText += '<option value="' + e[i] + '">' + e[i] + '</option>';
-          }
-          htmlText += '</select></div>';
-          $("#selectize-wrapper").html(htmlText);
-          createSelect();
+
+      var htmlText = '<div class="control-group"><label for="select-state">Input:</label><select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an option..."><option value="">Select a state...</option>';
+      if (optionsGlobal.length > 0) {
+        for (var i in optionsGlobal) {
+          htmlText += '<option value="' + optionsGlobal[i] +
+                  '" selected="selected">' + optionsGlobal[i] + '</option>';
         }
+      }
+      for (var i in e) {
+        htmlText += '<option value="' + e[i] + '">' + e[i] + '</option>';
+      }
+      htmlText += '</select></div>';
+      $("#selectize-wrapper").html(htmlText);
+      createSelect();
+
       };
 
       var initSelect = function initSelect () {
