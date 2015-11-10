@@ -12,9 +12,7 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/stylesheet.css">
   <!--[if IE 8]><script src="js/es5.js"></script><![endif]-->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-  <!--<script src="js/jquery.js"></script>-->
+  <script src="js/jquery.js"></script>
   <script src="js/dist/js/standalone/selectize.js"></script>
   <script src="js/index.js"></script>
 </head>
@@ -37,16 +35,16 @@ $(document).unbind('keydown').bind('keydown', function (event) {
     var doPrevent = false;
     if (event.keyCode === 8) {
         var d = event.srcElement || event.target;
-        if ((d.tagName.toUpperCase() === 'INPUT' && 
+        if ((d.tagName.toUpperCase() === 'INPUT' &&
              (
                  d.type.toUpperCase() === 'TEXT' ||
-                 d.type.toUpperCase() === 'PASSWORD' || 
-                 d.type.toUpperCase() === 'FILE' || 
-                 d.type.toUpperCase() === 'SEARCH' || 
-                 d.type.toUpperCase() === 'EMAIL' || 
-                 d.type.toUpperCase() === 'NUMBER' || 
+                 d.type.toUpperCase() === 'PASSWORD' ||
+                 d.type.toUpperCase() === 'FILE' ||
+                 d.type.toUpperCase() === 'SEARCH' ||
+                 d.type.toUpperCase() === 'EMAIL' ||
+                 d.type.toUpperCase() === 'NUMBER' ||
                  d.type.toUpperCase() === 'DATE' )
-             ) || 
+             ) ||
              d.tagName.toUpperCase() === 'TEXTAREA') {
             doPrevent = true;
         }
