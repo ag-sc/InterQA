@@ -27,29 +27,30 @@ public class QueryPattern0_3 extends QueryPattern {
         
         @Override
         public void init() {
+            
+            elements = new ArrayList<>();
 				
-		StringElement element0= new StringElement();
-		element0.add("which");
-		elements.add(element0);
+            StringElement element0= new StringElement();
+            element0.add("which");
+            elements.add(element0);
 		
-		ConceptElement element1 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null);
-		elements.add(element1);
+            ConceptElement element1 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null);
+            elements.add(element1);
 		
-		StringElement element2 = new StringElement();
-		element2.add("is");
-		elements.add(element2);
+            StringElement element2 = new StringElement();
+            element2.add("is");
+            elements.add(element2);
 		
-		StringElement element3 = new StringElement();
-		element3.add("a");
-		element3.add("the");
-		elements.add(element3);
+            StringElement element3 = new StringElement();
+            element3.add("a");
+            element3.add("the");
+            elements.add(element3);
 		
-		ConceptElement element4 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPPFrame);
-		elements.add(element4);
+            ConceptElement element4 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPPFrame);
+            elements.add(element4);
 		
-		IndividualElement element5 = new IndividualElement();
-		elements.add(element5);
-		
+            IndividualElement element5 = new IndividualElement();
+            elements.add(element5);	
 		
 	}
     

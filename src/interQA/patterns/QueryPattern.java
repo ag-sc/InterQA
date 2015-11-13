@@ -50,10 +50,10 @@ public abstract class QueryPattern {
                 
 	public List<String> getNext(){
             	
-            if (currentElement < elements.size()-1) {
+            if (currentElement < elements.size()-1) {                
                 return elements.get(currentElement+1).getOptions();
             } else {
-                return null;
+                return new ArrayList<>();
             }
 	}
         

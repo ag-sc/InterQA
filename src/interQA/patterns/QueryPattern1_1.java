@@ -32,17 +32,19 @@ public class QueryPattern1_1 extends QueryPattern {
         
         @Override
         public void init() {
+            
+            elements = new ArrayList<>();
         
-        StringElement element0 = new StringElement(); 
-	element0.add("give me");
-	elements.add(element0);
-	
-        StringElement element1 = new StringElement(); 
-        element1.add("all");
-	elements.add(element1);
-		
-        ConceptElement element2 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null); 
-	elements.add(element2);
+            StringElement element0 = new StringElement(); 
+            element0.add("give me");
+            elements.add(element0);
+
+            StringElement element1 = new StringElement(); 
+            element1.add("all");
+            elements.add(element1);
+
+            ConceptElement element2 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null); 
+            elements.add(element2);
     }
     
     @Override
@@ -54,7 +56,7 @@ public class QueryPattern1_1 extends QueryPattern {
              queries.add("SELECT DISTINCT ?x WHERE { "
                        + " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + entry.getReference() + "> . }");
         }
-        
+                
         return queries;
     }
 

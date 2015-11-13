@@ -35,6 +35,8 @@ public class QueryPattern9_2 extends QueryPattern {
         @Override
         public void init() {
             
+            elements = new ArrayList<>();
+            
             StringElement element0 = new StringElement(); 
             element0.add("who");
             element0.add("what");

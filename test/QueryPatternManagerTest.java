@@ -136,8 +136,8 @@ public class QueryPatternManagerTest {
         List<String> opts = null;
         opts = qm.getUIoptions();  // you should get ""
         Assert.assertTrue(opts.isEmpty());
-
-        List<String> ql = qm.buildSPARQLqueries();
+        
+        List<String> ql = qm.buildSPARQLqueries();        
         Assert.assertTrue(ql.get(0).equals(
            "SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Pope> . }"
         ));

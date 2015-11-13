@@ -29,36 +29,38 @@ public class QueryPattern3_1 extends QueryPattern{
         
         @Override
         public void init() {
+            
+            elements = new ArrayList<>();
 		
-		StringElement element0 = new StringElement();
-		element0.add("what");
-		elements.add(element0);
+            StringElement element0 = new StringElement();
+            element0.add("what");
+            elements.add(element0);
 		
-		StringElement element1 = new StringElement();
-		element1.add("is");
-		element1.add("are");
-		elements.add(element1);
+            StringElement element1 = new StringElement();
+            element1.add("is");
+            element1.add("are");
+            elements.add(element1);
 		
-		StringElement element2 = new StringElement();
-		element2.add("the");
-		elements.add(element2);
+            StringElement element2 = new StringElement();
+            element2.add("the");
+            elements.add(element2);
 		
-		ConceptElement element3 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
-		elements.add(element3);
+            ConceptElement element3 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+            elements.add(element3);
 		
-		StringElement element4 = new StringElement();
-		element4.add("and");
-		elements.add(element4);
+            StringElement element4 = new StringElement();
+            element4.add("and");
+            elements.add(element4);
 		
-		ConceptElement element5 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
-		elements.add(element5);
+            ConceptElement element5 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+            elements.add(element5);
 		
-		StringElement element6 = new StringElement();
-		element6.add("of");
-		elements.add(element6);
+            StringElement element6 = new StringElement();
+            element6.add("of");
+            elements.add(element6);
 		
-		ConceptElement element7 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null);
-		elements.add(element7);
+            ConceptElement element7 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null);
+            elements.add(element7);
 		
 	}
 		@Override

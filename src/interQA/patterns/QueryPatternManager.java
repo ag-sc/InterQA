@@ -38,10 +38,7 @@ public class QueryPatternManager {
         
         List<String> allOpts = new ArrayList<>();
         for (QueryPattern pat : availableQueryPatterns){
-            List<String> opts = pat.getNext();
-            if (opts != null) {
-                allOpts.addAll(opts);
-            }
+             allOpts.addAll(pat.getNext());
         }
         return new ArrayList<>(new HashSet<>(allOpts)); //Removes duplicates
     }
