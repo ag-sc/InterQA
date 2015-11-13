@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.RDFNode;
 
 /**
  *

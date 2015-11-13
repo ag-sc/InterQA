@@ -1,3 +1,4 @@
+import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
 import interQA.patterns.QueryPattern1_1;
 import org.junit.Assert;
@@ -11,6 +12,7 @@ import java.util.List;
 public class QueryPattern1_1Test {
     // Load lexicon
     private Lexicon lexicon = new Lexicon();
+    private InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
     private QueryPattern1_1 qp1 = null;
 
 
@@ -18,7 +20,7 @@ public class QueryPattern1_1Test {
     public void testFullSequence() {
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon);
+        qp1 = new QueryPattern1_1(lexicon,instances);
 
         StringBuffer parsedText = new StringBuffer();
 
@@ -54,7 +56,7 @@ public class QueryPattern1_1Test {
     public void testSequenceWithDelete(){
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon);
+        qp1 = new QueryPattern1_1(lexicon, instances);
 
         StringBuffer parsedText = new StringBuffer();
 
@@ -80,7 +82,7 @@ public class QueryPattern1_1Test {
     public void testSequenceWithCompleteDelete(){
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon);
+        qp1 = new QueryPattern1_1(lexicon, instances);
 
         StringBuffer parsedText = new StringBuffer();
 
@@ -106,7 +108,7 @@ public class QueryPattern1_1Test {
     public void testStartsAllDeleted(){
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon);
+        qp1 = new QueryPattern1_1(lexicon, instances);
 
         StringBuffer parsedText = new StringBuffer();
 
@@ -126,7 +128,7 @@ public class QueryPattern1_1Test {
     public void testStartsAllDeletedV2(){
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon);
+        qp1 = new QueryPattern1_1(lexicon, instances);
 
         boolean parsesElem1 = qp1.parses("");
         //returns true

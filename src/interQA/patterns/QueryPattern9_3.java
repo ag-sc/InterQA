@@ -23,14 +23,17 @@ public class QueryPattern9_3 extends QueryPattern {
     // Give me all movies by Tarantino. 
     // Give me all rivers in Turkmenistan.
     // Give me the founding date of Boston.
-    
-    
-        InstanceSource instances;
-    
-    
+
 	public QueryPattern9_3(Lexicon lexicon, InstanceSource instances) {
             
-            this.instances = instances;
+            this.lexicon = lexicon;
+            this.instances = instances; 
+            
+            init();
+        }
+        
+        @Override
+        public void init() {  
             
             StringElement element0 = new StringElement(); 
             element0.add("give me");

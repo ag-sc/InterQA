@@ -24,15 +24,19 @@ public class QueryPattern0_1 extends QueryPattern {
     
     // Which band performed Dancing Queen?
     // Which movies star Brad Pitt?
-    
-    
-    InstanceSource instances;
-        
+            
     
 	public QueryPattern0_1(Lexicon lexicon, InstanceSource instances) {
             
-            this.instances = instances;
+            this.lexicon = lexicon;
+            this.instances = instances; 
             
+            init();
+        }
+        
+        @Override
+        public void init() {
+                       
             StringElement element0 = new StringElement(); 
             element0.add("which");
             elements.add(element0);

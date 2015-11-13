@@ -2,6 +2,8 @@ package interQA.patterns;
 
 import interQA.lexicon.Vocabulary;
 import interQA.elements.ParsableElement;
+import interQA.lexicon.InstanceSource;
+import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,20 +11,28 @@ import java.util.List;
 public abstract class QueryPattern {
 
         Vocabulary vocab = new Vocabulary();
-        	
+        Lexicon lexicon;
+        InstanceSource instances;
+        
 	List<ParsableElement> elements = new ArrayList<>();
         
 	private int currentElement = -1;    
     
+        
+        public void init() {
+        }
+
         /**
 	 * @param input The whole string from the UI (e.g."who is the")
 	 * @return whether the input string matches the query pattern
 	 */
 	public boolean parses(String input) {
 
-            int i = 0;
+            init();
+            
             currentElement = -1;
 
+            int i = 0;
             while (!input.isEmpty() && elements.size() >= i-1) {
 		    
                     String rest  = elements.get(i).parse(input); 

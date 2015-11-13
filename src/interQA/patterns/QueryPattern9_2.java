@@ -23,13 +23,17 @@ public class QueryPattern9_2 extends QueryPattern {
 	// Who died in Berlin?
         // Who co-starred with Audrey Hepburn?
     
-    
-        InstanceSource instances;
-    
-    
+
 	public QueryPattern9_2(Lexicon lexicon, InstanceSource instances) {
             
-            this.instances = instances;
+            this.lexicon = lexicon;
+            this.instances = instances; 
+            
+            init();
+        }
+        
+        @Override
+        public void init() {
             
             StringElement element0 = new StringElement(); 
             element0.add("who");

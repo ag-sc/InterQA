@@ -78,7 +78,7 @@ public class ServletInterQA extends HttpServlet {
 
         // Load query patterns
         qm = new QueryPatternManager();
-        qm.addQueryPattern(new QueryPattern1_1(lexicon));
+        qm.addQueryPattern(new QueryPattern1_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern9_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern9_2(lexicon,instances));
     }

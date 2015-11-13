@@ -20,14 +20,18 @@ public class QueryPattern9_1 extends QueryPattern {
     
 	// Who created Miffy?
 	// What causes cancer?
-    
-    
-        InstanceSource instances;
-        
+            
     
 	public QueryPattern9_1(Lexicon lexicon, InstanceSource instances) {
+                        
+            this.lexicon = lexicon;
+            this.instances = instances; 
             
-            this.instances = instances;
+            init();
+        }
+        
+        @Override
+        public void init() {
             
             StringElement element0 = new StringElement(); 
             element0.add("who");

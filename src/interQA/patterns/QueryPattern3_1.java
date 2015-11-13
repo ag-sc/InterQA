@@ -20,8 +20,15 @@ public class QueryPattern3_1 extends QueryPattern{
 	InstanceSource instances;
 	
 	public QueryPattern3_1(Lexicon lexicon,InstanceSource instances){
-		
-		this.instances = instances;
+				            
+            this.lexicon = lexicon;
+            this.instances = instances; 
+            
+            init();
+        }
+        
+        @Override
+        public void init() {
 		
 		StringElement element0 = new StringElement();
 		element0.add("what");

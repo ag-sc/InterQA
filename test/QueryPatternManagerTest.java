@@ -10,7 +10,6 @@ import interQA.patterns.QueryPatternManager;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QueryPatternManagerTest {
@@ -24,7 +23,7 @@ public class QueryPatternManagerTest {
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
-        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon);
+        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon, instances);
         QueryPattern9_1 qp21 = new QueryPattern9_1(lexicon, instances);
         QueryPattern9_2 qp22 = new QueryPattern9_2(lexicon, instances);
         qm.addQueryPattern(qp11);
@@ -64,7 +63,7 @@ public class QueryPatternManagerTest {
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
-        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon);
+        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon, instances);
         QueryPattern9_1 qp21 = new QueryPattern9_1(lexicon, instances);
         QueryPattern9_2 qp22 = new QueryPattern9_2(lexicon, instances);
         qm.addQueryPattern(qp11);
@@ -91,7 +90,7 @@ public class QueryPatternManagerTest {
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
-        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon);
+        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon, instances);
         QueryPattern9_1 qp21 = new QueryPattern9_1(lexicon, instances);
         QueryPattern9_2 qp22 = new QueryPattern9_2(lexicon, instances);
         qm.addQueryPattern(qp11);
@@ -126,7 +125,7 @@ public class QueryPatternManagerTest {
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
-        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon);
+        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon, instances);
         QueryPattern9_1 qp21 = new QueryPattern9_1(lexicon, instances);
         QueryPattern9_2 qp22 = new QueryPattern9_2(lexicon, instances);
         qm.addQueryPattern(qp11);
@@ -154,7 +153,7 @@ public class QueryPatternManagerTest {
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
-        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon);
+        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon, instances);
         QueryPattern9_1 qp21 = new QueryPattern9_1(lexicon, instances);
         QueryPattern9_2 qp22 = new QueryPattern9_2(lexicon, instances);
         qm.addQueryPattern(qp11);

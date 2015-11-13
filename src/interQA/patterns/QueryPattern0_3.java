@@ -16,12 +16,18 @@ public class QueryPattern0_3 extends QueryPattern {
 
     // Which city is the capital of Australia?
 	
-	InstanceSource instances;
 	
 	public QueryPattern0_3(Lexicon lexicon,InstanceSource instances){
-		
-		this.instances = instances;
-		
+                                    
+            this.lexicon = lexicon;
+            this.instances = instances; 
+            
+            init();
+        }
+        
+        @Override
+        public void init() {
+				
 		StringElement element0= new StringElement();
 		element0.add("which");
 		elements.add(element0);

@@ -2,6 +2,7 @@ package interQA.patterns;
 
 import interQA.elements.ConceptElement;
 import interQA.elements.StringElement;
+import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
@@ -21,7 +22,16 @@ public class QueryPattern1_1 extends QueryPattern {
     // Give me all mountains. 
     
     
-    public QueryPattern1_1(Lexicon lexicon) {
+    public QueryPattern1_1(Lexicon lexicon, InstanceSource instances) {
+                            
+            this.lexicon = lexicon;
+            this.instances = instances; 
+            
+            init();
+        }
+        
+        @Override
+        public void init() {
         
         StringElement element0 = new StringElement(); 
 	element0.add("give me");
