@@ -145,4 +145,31 @@ public class QueryPatternManagerTest {
 
     }
 
+    @Test
+    public void testRightSentenceGetSPARQLPoltergeist() {
+        // Load lexicon
+        Lexicon lexicon = new Lexicon();
+        lexicon.load("resources/dbpedia_en.rdf");
+        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
+
+        // Load query patterns
+        QueryPatternManager qm = new QueryPatternManager();
+        QueryPattern1_1 qp11 = new QueryPattern1_1(lexicon);
+        QueryPattern9_1 qp21 = new QueryPattern9_1(lexicon, instances);
+        QueryPattern9_2 qp22 = new QueryPattern9_2(lexicon, instances);
+        qm.addQueryPattern(qp11);
+        qm.addQueryPattern(qp21);
+        qm.addQueryPattern(qp22);
+
+        qm.userSentence("give meallpope");
+        List<String> opts = null;
+        opts = qm.getUIoptions();  // you should get ""
+        Assert.assertTrue(opts.isEmpty());
+
+        qm.userSentence("give meall");
+        opts = qm.getUIoptions();  // you should get many options
+        Assert.assertTrue(opts.size() > 1);
+
+    }
+
 }
