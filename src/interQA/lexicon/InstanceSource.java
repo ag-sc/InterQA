@@ -103,6 +103,7 @@ public class InstanceSource {
                
                for (LexicalEntry entry : entries) {
                     
+            	   if (entry.getSemArg(syn)== null) continue; // TODO cunger: Look at why this happens!
                     switch (entry.getSemArg(syn)) {
                         case SUBJOFPROP: 
                              query = domainQuery(uri,entry.getReference());
