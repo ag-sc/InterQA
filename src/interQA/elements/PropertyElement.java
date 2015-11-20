@@ -4,10 +4,10 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 
 
-public class ConceptElement extends ParsableElement {
+public class PropertyElement extends ParsableElement {
 
 	
-	public ConceptElement(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
+	public PropertyElement(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
             
             this.index = lexicon.getSubindex(pos,frame);
 	}

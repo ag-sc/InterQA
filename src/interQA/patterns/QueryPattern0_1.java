@@ -1,7 +1,8 @@
 package interQA.patterns;
 
-import interQA.elements.ConceptElement;
+import interQA.elements.ClassElement;
 import interQA.elements.IndividualElement;
+import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
@@ -43,10 +44,10 @@ public class QueryPattern0_1 extends QueryPattern {
             element0.add("which");
             elements.add(element0);
 		
-            ConceptElement element1 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null); 
+            ClassElement element1 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null); 
             elements.add(element1);
             
-            ConceptElement element2 = new ConceptElement(lexicon,LexicalEntry.POS.VERB,vocab.TransitiveFrame);
+            PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.TransitiveFrame);
 	    elements.add(element2);
             
             IndividualElement element3 = new IndividualElement(); 
@@ -99,8 +100,8 @@ public class QueryPattern0_1 extends QueryPattern {
             
             List<String> queries = new ArrayList<>();
             
-            ConceptElement    noun = (ConceptElement)    elements.get(1);
-            ConceptElement    verb = (ConceptElement)    elements.get(2);
+            ClassElement    noun = (ClassElement)    elements.get(1);
+            ClassElement    verb = (ClassElement)    elements.get(2);
             IndividualElement indi = (IndividualElement) elements.get(3);
                  
             for (LexicalEntry noun_entry : noun.getActiveEntries()) {

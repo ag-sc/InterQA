@@ -45,21 +45,21 @@ public class QueryPattern3_1 extends QueryPattern{
             element2.add("the");
             elements.add(element2);
 		
-            ConceptElement element3 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+            PropertyElement element3 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
             elements.add(element3);
 		
             StringElement element4 = new StringElement();
             element4.add("and");
             elements.add(element4);
 		
-            ConceptElement element5 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+            PropertyElement element5 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
             elements.add(element5);
 		
             StringElement element6 = new StringElement();
             element6.add("of");
             elements.add(element6);
 		
-            ConceptElement element7 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null);
+            ClassElement element7 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
             elements.add(element7);
 		
 	}
@@ -92,9 +92,9 @@ public class QueryPattern3_1 extends QueryPattern{
 		public List<String> buildSPARQLqueries(){
 			List<String> queries = new ArrayList<>();
 			
-			ConceptElement nounpos1 = (ConceptElement) elements.get(3);
-			ConceptElement nounpos2 = (ConceptElement) elements.get(5);
-			ConceptElement nounclass = (ConceptElement) elements.get(7);
+			ClassElement nounpos1 = (ClassElement) elements.get(3);
+			ClassElement nounpos2 = (ClassElement) elements.get(5);
+			ClassElement nounclass = (ClassElement) elements.get(7);
 			
 			for(LexicalEntry nounpos1_entry: nounpos1.getActiveEntries()){
 				for(LexicalEntry nounpos2_entry: nounpos2.getActiveEntries()){

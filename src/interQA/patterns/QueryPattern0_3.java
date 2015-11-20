@@ -34,7 +34,7 @@ public class QueryPattern0_3 extends QueryPattern {
             element0.add("which");
             elements.add(element0);
 		
-            ConceptElement element1 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,null);
+            ClassElement element1 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
             elements.add(element1);
 		
             StringElement element2 = new StringElement();
@@ -46,7 +46,7 @@ public class QueryPattern0_3 extends QueryPattern {
             element3.add("the");
             elements.add(element3);
 		
-            ConceptElement element4 = new ConceptElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPPFrame);
+            PropertyElement element4 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPPFrame);
             elements.add(element4);
 		
             IndividualElement element5 = new IndividualElement();
@@ -97,8 +97,8 @@ public class QueryPattern0_3 extends QueryPattern {
     	
     	List<String> queries = new ArrayList<>();
     	
-    	ConceptElement noun = (ConceptElement) elements.get(1);
-    	ConceptElement nounprop = (ConceptElement) elements.get(4);
+    	ClassElement noun = (ClassElement) elements.get(1);
+    	ClassElement nounprop = (ClassElement) elements.get(4);
     	IndividualElement indi = (IndividualElement) elements.get(5);
     	
     	for(LexicalEntry noun_entry: noun.getActiveEntries()){

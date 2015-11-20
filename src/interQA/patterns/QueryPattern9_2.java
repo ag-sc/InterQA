@@ -2,7 +2,8 @@ package interQA.patterns;
 
 import interQA.elements.IndividualElement;
 import interQA.elements.StringElement;
-import interQA.elements.ConceptElement;
+import interQA.elements.ClassElement;
+import interQA.elements.PropertyElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
@@ -42,7 +43,7 @@ public class QueryPattern9_2 extends QueryPattern {
             element0.add("what");
             elements.add(element0);
 		
-            ConceptElement element1 = new ConceptElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame); 
+            PropertyElement element1 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame); 
             elements.add(element1);
 		
             IndividualElement element2 = new IndividualElement(); 
@@ -82,7 +83,7 @@ public class QueryPattern9_2 extends QueryPattern {
             
             List<String> queries = new ArrayList<>();
             
-            ConceptElement  verb     = (ConceptElement)  elements.get(1);
+            ClassElement  verb     = (ClassElement)  elements.get(1);
             IndividualElement instance = (IndividualElement) elements.get(2);
                  
             for (LexicalEntry verb_entry : verb.getActiveEntries()) {
