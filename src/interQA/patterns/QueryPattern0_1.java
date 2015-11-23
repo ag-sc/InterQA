@@ -47,9 +47,10 @@ public class QueryPattern0_1 extends QueryPattern {
             ClassElement element1 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null); 
             elements.add(element1);
             
+            
 
             PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.TransitiveFrame);
-	    elements.add(element2);
+	        elements.add(element2);
 
             
             IndividualElement element3 = new IndividualElement(); 
@@ -73,28 +74,11 @@ public class QueryPattern0_1 extends QueryPattern {
             } 
             
             if (i == 2) {
-            // If parse is at element2, fill element3 with possible instances...
-                
-                for (LexicalEntry entry : elements.get(2).getActiveEntries()) {
-                    
-                    String query; 
-
-                    // ...depending on which semantic position it fills.
-                    switch (entry.getSemArg(LexicalEntry.SynArg.DIRECTOBJECT)) {
-                        
-                         case SUBJOFPROP:
-                              query = "SELECT DISTINCT ?x ?label WHERE { "
-                                    + " ?x <" + entry.getReference() + "> ?object . "
-                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
-                         case OBJOFPROP:
-                              query = "SELECT DISTINCT ?x ?label WHERE { "
-                                    + " ?subject <" + entry.getReference() + "> ?x . "
-                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
-                    }
-                }     
+            	
+            	elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.DIRECTOBJECT ));
+            	  
             }
+            
         }
 
         @Override

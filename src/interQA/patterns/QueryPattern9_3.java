@@ -59,26 +59,8 @@ public class QueryPattern9_3 extends QueryPattern {
             
             if (i == 2) {
             // If parse is at element2, fill element3 with possible instances...
-                     
-                for (LexicalEntry entry : elements.get(2).getActiveEntries()) {
-                    
-                    String query; 
-
-                    // ...depending on which semantic position it fills.
-                    switch (entry.getSemArg(LexicalEntry.SynArg.PREPOSITIONALOBJECT)) {
-                        
-                         case SUBJOFPROP:
-                              query = "SELECT DISTINCT ?x ?label WHERE { "
-                                    + " ?x <" + entry.getReference() + "> ?object . "
-                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
-                         case OBJOFPROP:
-                              query = "SELECT DISTINCT ?x ?label WHERE { "
-                                    + " ?subject <" + entry.getReference() + "> ?x . "
-                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
-                    }
-                }     
+                elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+                   
             }
         }        
         

@@ -5,7 +5,7 @@ import interQA.lexicon.*;
 import java.util.*;
 /**
 *
-* @author mertince
+* @author mince
 */
 
 public class QueryPattern3_1 extends QueryPattern{
@@ -63,63 +63,39 @@ public class QueryPattern3_1 extends QueryPattern{
             elements.add(element7);
 		
 	}
-        //TODO:mince move updateAt another class (on progress)
+        
 		@Override
 		public void updateAt(int i) {
 		
 			if (i==4){
-				Map<String,List<LexicalEntry>> old_element2index = elements.get(5).getIndex();
+				Map<String,List<LexicalEntry>> old_element2index = elements.get(6).getIndex();
 		           Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
 		                
 		            for (LexicalEntry entry1 : elements.get(4).getActiveEntries()) {
 		            	                     
 		                new_element2index.putAll(instances.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
 		            }
-		            elements.get(5).setIndex(new_element2index);
+		            elements.get(6).setIndex(new_element2index);
 			}
 			if (i==6){
-				Map<String,List<LexicalEntry>> old_element2index = elements.get(7).getIndex();
-		           Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
-		              
-		            for(LexicalEntry entry1 :elements.get(4).getActiveEntries()){
-		            for (LexicalEntry entry2 : elements.get(5).getActiveEntries()) {
-		                               
-		            	 String query; 
-
-		                    
-		                    switch (entry2.getSemArg(LexicalEntry.SynArg.DIRECTOBJECT)) {
-		                        
-		                         case SUBJOFPROP:
-		                        	 
-		                        	 //TODO mince: The position of instance may vary depending on property (think on all cases) !!
-		                              query = "SELECT DISTINCT ?x ?label WHERE { "
-		                                    + " ?x <" + entry1.getReference() + "> ?object . "
-		                                    + " ?x <" + entry2.getReference()+"> ?object"
-		                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
-		                              elements.get(7).addToIndex(instances.getInstanceIndex(query,"x","l"));
-		                         case OBJOFPROP:
-		                              query = "SELECT DISTINCT ?x ?label WHERE { "
-		                                    + " ?subject <"+entry1.getReference()+"> ?x ."
-		                                    + " ?subject <" + entry2.getReference() + "> ?x . "
-		                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
-		                              elements.get(7).addToIndex(instances.getInstanceIndex(query,"x","l"));
-		                    }
-		            	
-		                 }
+				
+				   elements.get(8).addToIndex(instances.filterBy2PropertiesForInstances(elements.get(4).getActiveEntries(),
+						   elements.get(6).getActiveEntries(), LexicalEntry.SynArg.DIRECTOBJECT));       
 		            
-			}
+				
 			}
 			
 		
 		}
 		//SELECT ?x ?y WHERE {?a rdf:type <Class>. ?a <propert1> ?x. ?a <property2> ?y. }
+		//TODO : mince instance position possibility for properties !!
 		@Override
 		public List<String> buildSPARQLqueries(){
 			List<String> queries = new ArrayList<>();
 			
-			PropertyElement nounpos1 = (PropertyElement) elements.get(3);
-			PropertyElement nounpos2 = (PropertyElement) elements.get(5);
-			ClassElement nounclass = (ClassElement) elements.get(7);
+			PropertyElement nounpos1 = (PropertyElement) elements.get(4);
+			PropertyElement nounpos2 = (PropertyElement) elements.get(6);
+			ClassElement nounclass = (ClassElement) elements.get(8);
 			
 			for(LexicalEntry nounpos1_entry: nounpos1.getActiveEntries()){
 				for(LexicalEntry nounpos2_entry: nounpos2.getActiveEntries()){

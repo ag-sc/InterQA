@@ -69,28 +69,10 @@ public class QueryPattern0_3 extends QueryPattern {
             }
             elements.get(4).setIndex(new_element2index);
     	}
-    	else if(i==4){
+    	if(i==4){
     		
-    		for (LexicalEntry entry : elements.get(5).getActiveEntries()) {
-                
-                String query; 
-
-                
-                switch (entry.getSemArg(LexicalEntry.SynArg.PREPOSITIONALOBJECT)) {
-                    
-                     case SUBJOFPROP:
-                          query = "SELECT DISTINCT ?x ?label WHERE { "
-                                + " ?x <" + entry.getReference() + "> ?object . "
-                                + " ?x <" + vocab.rdfs + "label> ?l . }";
-                          elements.get(5).addToIndex(instances.getInstanceIndex(query,"x","l"));
-                     case OBJOFPROP:
-                          query = "SELECT DISTINCT ?x ?label WHERE { "
-                                + " ?subject <" + entry.getReference() + "> ?x . "
-                                + " ?x <" + vocab.rdfs + "label> ?l . }";
-                          elements.get(5).addToIndex(instances.getInstanceIndex(query,"x","l"));
- 	}
-
-    }
+    		elements.get(5).addToIndex(instances.filterByPropertyForInstances(elements.get(4).getActiveEntries(), LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+    		
    }
     	
   }

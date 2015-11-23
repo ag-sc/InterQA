@@ -56,22 +56,8 @@ public class QueryPattern9_1 extends QueryPattern {
                      
                 for (LexicalEntry entry : elements.get(1).getActiveEntries()) {
                     
-                    String query; 
-
-                    // ...depending on which semantic position it fills.
-                    switch (entry.getSemArg(LexicalEntry.SynArg.DIRECTOBJECT)) {
-                        
-                         case SUBJOFPROP:
-                              query = "SELECT DISTINCT ?x ?label WHERE { "
-                                    + " ?x <" + entry.getReference() + "> ?object . "
-                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
-                         case OBJOFPROP:
-                              query = "SELECT DISTINCT ?x ?label WHERE { "
-                                    + " ?subject <" + entry.getReference() + "> ?x . "
-                                    + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
-                    }
+                	elements.get(2).addToIndex(instances.filterByPropertyForInstances(elements.get(1).getActiveEntries(), LexicalEntry.SynArg.DIRECTOBJECT));
+                
                 }     
             }
         }

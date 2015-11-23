@@ -8,6 +8,8 @@ import java.util.Map;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 
+
+import interQA.patterns.QueryPattern;
 /**
  *
  * @author cunger
@@ -66,9 +68,10 @@ public class InstanceSource {
         entries.add(entry);
         instances.put("fnord",entries);
         
+        
         return instances;
     }
-    //to confirm property of class at domain position 
+    //to confirm property of class at domain position (CTP = Class To Property)
     private String domainQueryForCTP(String domain, String property) {
         
         // TODO This is most probably too strict.
@@ -76,7 +79,7 @@ public class InstanceSource {
                   + " UNION { <"+property+"> <" + vocab.rdfs + "domain> ?domain . "
                           + " <"+ domain +"> <" + vocab.rdfs + "subClassOf> ?domain . } }";  
     }
-    //to confirm property of class at range position
+    //to confirm property of class at range position (CTP = Class To Property)
     private String rangeQueryForCTP(String range, String property) {
         
         // TODO This is most probably too strict.
@@ -84,9 +87,37 @@ public class InstanceSource {
                   + " UNION { <"+property+"> <" + vocab.rdfs + "range> ?range . "
                           + " <"+ range +"> <" + vocab.rdfs + "subClassOf> ?range . } }";  
     }
-    
-    
-    
+    //to query instances(domain pos) that are suitable with property(Property to Instance)
+    private String domainQueryForPTI(String property_uri){
+    		
+    	return "SELECT DISTINCT ?x ?label WHERE { "
+                + " ?x <" + property_uri + "> ?object . "
+                + " ?x <" + vocab.rdfs + "label> ?l . }";
+    }
+    //to query instances(domain pos) that are suitable with property(Property to Instance)
+    private String rangeQueryForPTI(String property_uri){
+    	return "SELECT DISTINCT ?x ?label WHERE { "
+               + " ?subject <" + property_uri + "> ?x . "
+               + " ?x <" + vocab.rdfs + "label> ?l . }";
+    }
+    //to query instances for the case; both property share same domain
+    private String domainQueryFor2PTI(String property_uri1,String property_uri2){
+    	
+    	
+    	return "SELECT DISTINCT ?x ?label WHERE { "
+		        + " ?x <" + property_uri1 + "> ?object1 . "
+		        + " ?x <" + property_uri2 +"> ?object2"
+		        + " ?x <" + vocab.rdfs + "label> ?l . }";
+    }
+    //to query instances for the case; both property share same range
+    private String rangeQueryFor2PTI(String property_uri1,String property_uri2){
+    	
+    	
+    	return "SELECT DISTINCT ?x ?label WHERE { "
+    			+ " ?subject1 <"+ property_uri1 +"> ?x ."
+                + " ?subject2 <" + property_uri2 + "> ?x . "
+		        + " ?x <" + vocab.rdfs + "label> ?l . }";
+    }
     //to confirm the latter property (w.r.t the former property) of class at domain position (May be the former method can be implemented for
     //for this method too) 
     private String domainQueryForPTP(String latterproperty, String formerproperty){
@@ -108,6 +139,7 @@ public class InstanceSource {
     					 		+ " UNION { ?object <"+latterproperty+"> ?subject1 . "
     					 				+ "?subject2 <"+formerproperty+" ?object. } }";
     }
+    
     public Map<String,List<LexicalEntry>> filterByClassForProperty(Map<String,List<LexicalEntry>> index, LexicalEntry.SynArg syn, String uri) {
         
         Map<String,List<LexicalEntry>> filtered_index = new HashMap<>();
@@ -155,6 +187,7 @@ public class InstanceSource {
     	
     	String query ="";
     	
+    	
     	Iterator iter = index.entrySet().iterator();
     	while(iter.hasNext()){
     		Map.Entry pair = (Map.Entry) iter.next();
@@ -167,6 +200,7 @@ public class InstanceSource {
     			switch(entry.getSemArg(syn)){
     				case SUBJOFPROP:
     					query = domainQueryForPTP(uri,entry.getReference());
+    					break;
     				case OBJOFPROP:
     					query = rangeQueryForPTP(uri,entry.getReference());
     					break;
@@ -188,4 +222,61 @@ public class InstanceSource {
     	return filtered_index;
     }
     
+    public Map<String,List<LexicalEntry>> filterByPropertyForInstances(List<LexicalEntry> entries, LexicalEntry.SynArg syn){
+    	
+    	Map<String,List<LexicalEntry>> filtered_instances_index = new HashMap<>();
+    		
+    		for(LexicalEntry entry : entries){
+    			String query;
+    			switch(entry.getSemArg(syn)){
+    				
+    				case SUBJOFPROP:
+    				    query = domainQueryForPTI(entry.getReference());
+    				    
+    				    filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+    					break;
+    				case OBJOFPROP:
+    					query= rangeQueryForPTI(entry.getReference());
+    					filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+    					break;
+    				default:
+    					break;		
+    			}
+    			
+    			
+    		}
+    	
+    	
+    	return filtered_instances_index;
+    }
+
+    public Map<String,List<LexicalEntry>> filterBy2PropertiesForInstances(List<LexicalEntry> entriesForPre1, List<LexicalEntry> entriesForPre2, LexicalEntry.SynArg syn ){
+    	Map<String,List<LexicalEntry>> filtered_instances_index = new HashMap<>();
+		
+		for(LexicalEntry entry1 : entriesForPre1){
+		for(LexicalEntry entry2: entriesForPre2){
+			String query;
+			switch(entry1.getSemArg(syn)){
+			//TODO mince: The position of instance may vary depending on property (think on all cases) !! 
+			// instance for first property may locate at subject and for second property at domain 
+				case SUBJOFPROP:
+				    query = domainQueryFor2PTI(entry1.getReference(),entry2.getReference());
+				    
+				    filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+					break;
+				case OBJOFPROP:
+					query= rangeQueryFor2PTI(entry1.getReference(),entry2.getReference());
+					filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+					break;
+				default:
+					break;		
+			}
+		}
+			
+		}
+	
+	
+	return filtered_instances_index;
+    	
+    }
 }
