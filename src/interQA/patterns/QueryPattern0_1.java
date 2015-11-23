@@ -47,8 +47,10 @@ public class QueryPattern0_1 extends QueryPattern {
             ClassElement element1 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null); 
             elements.add(element1);
             
+
             PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.TransitiveFrame);
 	    elements.add(element2);
+
             
             IndividualElement element3 = new IndividualElement(); 
             elements.add(element3);
@@ -65,7 +67,7 @@ public class QueryPattern0_1 extends QueryPattern {
                      
                 for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
                                         
-                    new_element2index.putAll(instances.filterBy(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+                    new_element2index.putAll(instances.filterByClassForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
                 }
                 elements.get(2).setIndex(new_element2index);
             } 
@@ -101,7 +103,7 @@ public class QueryPattern0_1 extends QueryPattern {
             List<String> queries = new ArrayList<>();
             
             ClassElement    noun = (ClassElement)    elements.get(1);
-            ClassElement    verb = (ClassElement)    elements.get(2);
+            PropertyElement    verb = (PropertyElement)    elements.get(2);
             IndividualElement indi = (IndividualElement) elements.get(3);
                  
             for (LexicalEntry noun_entry : noun.getActiveEntries()) {

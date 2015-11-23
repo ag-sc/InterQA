@@ -23,7 +23,7 @@ public class QueryPattern9_2 extends QueryPattern {
     
 	// Who died in Berlin?
         // Who co-starred with Audrey Hepburn?
-    
+     
 
 	public QueryPattern9_2(Lexicon lexicon, InstanceSource instances) {
             
@@ -46,14 +46,19 @@ public class QueryPattern9_2 extends QueryPattern {
             PropertyElement element1 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame); 
             elements.add(element1);
 		
-            IndividualElement element2 = new IndividualElement(); 
+            StringElement element2 = new StringElement();
+            element2.add("in");
+            element2.add("with");
             elements.add(element2);
+            
+            IndividualElement element3 = new IndividualElement(); 
+            elements.add(element3);
 	}
 
         @Override
         public void updateAt(int i) {
             
-            if (i == 1) {
+            if (i == 2) {
             // If parse is at element1, fill element2 with possible instances...
                      
                 for (LexicalEntry entry : elements.get(1).getActiveEntries()) {
@@ -67,12 +72,12 @@ public class QueryPattern9_2 extends QueryPattern {
                               query = "SELECT DISTINCT ?x ?label WHERE { "
                                     + " ?x <" + entry.getReference() + "> ?object . "
                                     + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
+                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
                          case OBJOFPROP:
                               query = "SELECT DISTINCT ?x ?label WHERE { "
                                     + " ?subject <" + entry.getReference() + "> ?x . "
                                     + " ?x <" + vocab.rdfs + "label> ?l . }";
-                              elements.get(2).addToIndex(instances.getInstanceIndex(query,"x","l"));
+                              elements.get(3).addToIndex(instances.getInstanceIndex(query,"x","l"));
                     }
                 }     
             }
@@ -83,7 +88,7 @@ public class QueryPattern9_2 extends QueryPattern {
             
             List<String> queries = new ArrayList<>();
             
-            ClassElement  verb     = (ClassElement)  elements.get(1);
+            PropertyElement  verb     = (PropertyElement)  elements.get(1);
             IndividualElement instance = (IndividualElement) elements.get(2);
                  
             for (LexicalEntry verb_entry : verb.getActiveEntries()) {

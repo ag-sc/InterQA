@@ -81,7 +81,7 @@ public class QueryPattern9_1 extends QueryPattern {
             
             List<String> queries = new ArrayList<>();
             
-            ClassElement    verb     = (ClassElement)    elements.get(1);
+            PropertyElement    verb     = (PropertyElement)    elements.get(1);
             IndividualElement instance = (IndividualElement) elements.get(2);
                  
             for (LexicalEntry verb_entry : verb.getActiveEntries()) {

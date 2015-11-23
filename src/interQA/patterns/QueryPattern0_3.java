@@ -56,17 +56,20 @@ public class QueryPattern0_3 extends QueryPattern {
     
     @Override
     public void updateAt(int i){
-    	    	if(i==1){
+    	    	
+    	if(i==1){
+    		
     		Map<String,List<LexicalEntry>> old_element2index = elements.get(4).getIndex();
-           Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+            
+    		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
                 
             for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
                                     
-                new_element2index.putAll(instances.filterBy(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+                new_element2index.putAll(instances.filterByClassForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
             }
             elements.get(4).setIndex(new_element2index);
     	}
-    	else if(i==5){
+    	else if(i==4){
     		
     		for (LexicalEntry entry : elements.get(5).getActiveEntries()) {
                 
@@ -98,7 +101,7 @@ public class QueryPattern0_3 extends QueryPattern {
     	List<String> queries = new ArrayList<>();
     	
     	ClassElement noun = (ClassElement) elements.get(1);
-    	ClassElement nounprop = (ClassElement) elements.get(4);
+    	PropertyElement nounprop = (PropertyElement) elements.get(4);
     	IndividualElement indi = (IndividualElement) elements.get(5);
     	
     	for(LexicalEntry noun_entry: noun.getActiveEntries()){
