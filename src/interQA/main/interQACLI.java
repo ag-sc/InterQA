@@ -11,6 +11,7 @@ import interQA.patterns.QueryPattern9_3;
 import interQA.patterns.QueryPattern0_1;
 import interQA.patterns.QueryPattern0_3;
 import interQA.patterns.QueryPattern3_1;
+import interQA.patterns.*;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -31,13 +32,23 @@ public class interQACLI {
         
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
+        qm.addQueryPattern(new QueryPattern0_1(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern0_2(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern0_3(lexicon,instances));
         qm.addQueryPattern(new QueryPattern1_1(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern1_2(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern1_3(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern1_4(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern1_5(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern3_1(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern3_1_1(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern3_2(lexicon,instances));
         qm.addQueryPattern(new QueryPattern9_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern9_2(lexicon,instances));
         qm.addQueryPattern(new QueryPattern9_3(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern0_1(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern0_3(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern3_1(lexicon,instances));
+        
+        
+        
         // RUN 
         
         Scanner scanner = new Scanner(System.in);

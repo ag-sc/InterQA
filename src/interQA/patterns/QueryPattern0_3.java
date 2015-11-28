@@ -80,40 +80,14 @@ public class QueryPattern0_3 extends QueryPattern {
     @Override
     public List<String> buildSPARQLqueries(){
     	
-    	List<String> queries = new ArrayList<>();
+    	SparqlQueryBuilder sqb = new SparqlQueryBuilder();
     	
     	ClassElement noun = (ClassElement) elements.get(1);
     	PropertyElement nounprop = (PropertyElement) elements.get(4);
     	IndividualElement indi = (IndividualElement) elements.get(5);
+    	 
     	
-    	for(LexicalEntry noun_entry: noun.getActiveEntries()){
-    	for(LexicalEntry nounprop_entry: nounprop.getActiveEntries()){
-    			
-    			switch (nounprop_entry.getSemArg(LexicalEntry.SynArg.DIRECTOBJECT)){
-    			
-    				case SUBJOFPROP:
-    					for(LexicalEntry inst_entry : indi.getActiveEntries()){
-    						queries.add("SELECT DISTINCT ?x WHERE { "
-    								+ "?x <"+vocab.rdfType+"> <"+noun_entry.getReference()+"> ."
-    								+ "?x <"+nounprop_entry.getReference()+"> <"+inst_entry.getReference()+"> . }");
-    							
-    					}
-    					break;
-    				case OBJOFPROP:
-    					for(LexicalEntry inst_entry : indi.getActiveEntries()){
-    						queries.add("SELECT DISTINCT ?x WHERE { "
-    								+ "?x <"+vocab.rdfType+"> <"+noun_entry.getReference()+"> ."
-    								+ " <"+inst_entry.getReference()+"> <"+nounprop_entry.getReference()+"> ?x . }");
-    							
-    					}
-    					break;
-    			
-    			}
-    		}
-    	}
-    	
-    	
-    	return queries;
+    	return sqb.BuildQueryForIndividualAndProperty(noun, indi, nounprop,LexicalEntry.SynArg.DIRECTOBJECT);
     }
     
 }

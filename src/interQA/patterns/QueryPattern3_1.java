@@ -91,26 +91,13 @@ public class QueryPattern3_1 extends QueryPattern{
 		//TODO : mince instance position possibility for properties !!
 		@Override
 		public List<String> buildSPARQLqueries(){
-			List<String> queries = new ArrayList<>();
+			SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 			
 			PropertyElement nounpos1 = (PropertyElement) elements.get(4);
 			PropertyElement nounpos2 = (PropertyElement) elements.get(6);
 			ClassElement nounclass = (ClassElement) elements.get(8);
 			
-			for(LexicalEntry nounpos1_entry: nounpos1.getActiveEntries()){
-				for(LexicalEntry nounpos2_entry: nounpos2.getActiveEntries()){
-					for(LexicalEntry nounclass_entry: nounclass.getActiveEntries()){
-						queries.add("SELECT DISTINCT ?x ?y {"
-								+ " ?a  <" + vocab.rdfType + ">  <" + nounclass_entry.getReference() + "> ."
-								+ " ?a  <" + nounpos1_entry.getReference() + "> ?x . "
-								+ " ?a  <" + nounpos2_entry.getReference() + "> ?y . }");
-					}
-				}
-				
-			}
-			
-			
-			return queries;
+			return sqb.BuildQueryForClassAnd2Properties(nounclass, nounpos1, nounpos2, LexicalEntry.SynArg.DIRECTOBJECT, LexicalEntry.SynArg.DIRECTOBJECT);
 			
 		}
 		

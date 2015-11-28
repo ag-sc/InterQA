@@ -7,6 +7,7 @@ import interQA.elements.StringElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import interQA.lexicon.SparqlQueryBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,34 +85,12 @@ public class QueryPattern0_1 extends QueryPattern {
         @Override
 	public List<String> buildSPARQLqueries() {
             
-            List<String> queries = new ArrayList<>();
+        	SparqlQueryBuilder sqb = new SparqlQueryBuilder();
             
             ClassElement    noun = (ClassElement)    elements.get(1);
             PropertyElement    verb = (PropertyElement)    elements.get(2);
             IndividualElement indi = (IndividualElement) elements.get(3);
-                 
-            for (LexicalEntry noun_entry : noun.getActiveEntries()) {
-            for (LexicalEntry verb_entry : verb.getActiveEntries()) {
-                
-                 switch (verb_entry.getSemArg(LexicalEntry.SynArg.DIRECTOBJECT)) {
-                     
-                    case SUBJOFPROP: 
-                         for (LexicalEntry inst_entry : indi.getActiveEntries()) {
-                              queries.add("SELECT DISTINCT ?x WHERE { "
-                                        + " ?x <" + vocab.rdfType + "> <" + noun_entry.getReference() + "> . "
-                                        + " <" + inst_entry.getReference() + "> <" + verb_entry.getReference() + "> ?x . }");
-                         }
-                         break;
-                    case OBJOFPROP: 
-                         for (LexicalEntry inst_entry : indi.getActiveEntries()) {
-                              queries.add("SELECT DISTINCT ?x WHERE {"
-                                        + " ?x <" + vocab.rdfType + "> <" + noun_entry.getReference() + "> . "
-                                        + " ?x <" + verb_entry.getReference() + "> <" + inst_entry.getReference() + "> . }");
-                         }
-                         break;
-                 }
-            }}
-		
-            return queries;
+            
+            return sqb.BuildQueryForIndividualAndProperty(noun, indi, verb,LexicalEntry.SynArg.DIRECTOBJECT);
 	}
 }

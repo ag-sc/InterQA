@@ -12,7 +12,7 @@ public class QueryPattern3_1_1 extends QueryPattern{
 
 	//SELECT ?x ?y WHERE {?a rdf:type <Class>. ?a <propert1> ?x. }
 		//What is|are the <NounPFrame:Property> of <Noun:Class>
-		
+		//TODO : mince give another name for this pattern
 		
 		//What is the height of nba players_?
 		//What is the model of BMW cars?
@@ -74,22 +74,14 @@ public class QueryPattern3_1_1 extends QueryPattern{
 			//SELECT ?x WHERE {?a rdf:type <Class>. ?a <property> ?x. }
 			@Override
 			public List<String> buildSPARQLqueries(){
-				List<String> queries = new ArrayList<>();
+				
+				SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 				
 				PropertyElement nounpos1 = (PropertyElement) elements.get(4);
 				ClassElement nounclass = (ClassElement) elements.get(6);
+			
 				
-				for(LexicalEntry nounpos1_entry: nounpos1.getActiveEntries()){
-						for(LexicalEntry nounclass_entry: nounclass.getActiveEntries()){
-							queries.add("SELECT DISTINCT ?x {"
-									+ " ?a  <" + vocab.rdfType + ">  <" + nounclass_entry.getReference() + "> ."
-									+ " ?a  <" + nounpos1_entry.getReference() + "> ?x . }");
-						}
-					
-				}
-				
-				
-				return queries;
+				return sqb.BuildQueryForClassAndProperty(nounclass, nounpos1, LexicalEntry.SynArg.DIRECTOBJECT);
 				
 			}
 			

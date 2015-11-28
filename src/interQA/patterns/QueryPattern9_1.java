@@ -5,6 +5,7 @@ import interQA.lexicon.Lexicon;
 import interQA.elements.StringElement;
 import interQA.elements.ClassElement;
 import interQA.elements.PropertyElement;
+import interQA.lexicon.SparqlQueryBuilder;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import java.util.ArrayList;
@@ -65,30 +66,12 @@ public class QueryPattern9_1 extends QueryPattern {
         @Override
 	public List<String> buildSPARQLqueries() {
             
-            List<String> queries = new ArrayList<>();
+            SparqlQueryBuilder sqb = new SparqlQueryBuilder();
             
             PropertyElement    verb     = (PropertyElement)    elements.get(1);
             IndividualElement instance = (IndividualElement) elements.get(2);
-                 
-            for (LexicalEntry verb_entry : verb.getActiveEntries()) {
-                
-                 switch (verb_entry.getSemArg(LexicalEntry.SynArg.DIRECTOBJECT)) {
-                     
-                    case SUBJOFPROP: 
-                         for (LexicalEntry inst_entry : instance.getActiveEntries()) {
-                              queries.add("SELECT DISTINCT ?x WHERE {"
-                                        + " <" + inst_entry.getReference() + "> <" + verb_entry.getReference() + "> ?x . }");
-                         }
-                         break;
-                    case OBJOFPROP: 
-                         for (LexicalEntry inst_entry : instance.getActiveEntries()) {
-                              queries.add("SELECT DISTINCT ?x WHERE {"
-                                        + " ?x <" + verb_entry.getReference() + "> <" + inst_entry.getReference() + "> . }");
-                         }
-                         break;
-                 }
-            }
-		
-            return queries;
+            
+            return sqb.BuildQueryForIndividualAndPropery(instance, verb,LexicalEntry.SynArg.DIRECTOBJECT);
+            
 	}
 }

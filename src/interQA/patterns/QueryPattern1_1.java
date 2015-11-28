@@ -4,6 +4,7 @@ import interQA.elements.ClassElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
+import interQA.lexicon.SparqlQueryBuilder;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,8 @@ public class QueryPattern1_1 extends QueryPattern {
     
     // Give me all movies. 
     // Give me all mountains. 
-    
+    // List me all movies
+	// List me all mountains
     
     public QueryPattern1_1(Lexicon lexicon, InstanceSource instances) {
                             
@@ -37,6 +39,7 @@ public class QueryPattern1_1 extends QueryPattern {
         
             StringElement element0 = new StringElement(); 
             element0.add("give me");
+            element0.add("list me");
             elements.add(element0);
 
             StringElement element1 = new StringElement(); 
@@ -50,14 +53,9 @@ public class QueryPattern1_1 extends QueryPattern {
     @Override
     public List<String> buildSPARQLqueries() {
         
-        List<String> queries = new ArrayList<>();
-        
-        for (LexicalEntry entry : elements.get(2).getActiveEntries()) {
-             queries.add("SELECT DISTINCT ?x WHERE { "
-                       + " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + entry.getReference() + "> . }");
-        }
+        SparqlQueryBuilder sqb = new SparqlQueryBuilder();
                 
-        return queries;
+        return sqb.BuildQueryForClassInstances(elements.get(2).getActiveEntries());
     }
 
 }
