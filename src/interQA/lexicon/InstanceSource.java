@@ -9,7 +9,6 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 
 
-import interQA.patterns.QueryPattern;
 /**
  *
  * @author cunger
@@ -61,7 +60,7 @@ public class InstanceSource {
         
         // For testing:
         
-        LexicalEntry entry = new LexicalEntry();
+        LexicalEntry entry = new LexicalEntry("dummy");
         entry.setCanonicalForm("fnord");
         entry.setReference("http://fnord.org/Fnord");
         List<LexicalEntry> entries = new ArrayList<>();

@@ -28,6 +28,7 @@ public class interQACLI {
         // Load lexicon     
         Lexicon lexicon = new Lexicon();
         lexicon.load("resources/dbpedia_en.rdf");
+        lexicon.link("resources/dbpedia_en_wn.nt");
         InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
         
         // Load query patterns

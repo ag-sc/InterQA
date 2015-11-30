@@ -20,6 +20,8 @@ public class QueryPattern1_1Test {
     public void testFullSequence() {
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
+        lexicon.link("resources/dbpedia_en_wn.nt");
+        
         qp1 = new QueryPattern1_1(lexicon,instances);
 
         StringBuffer parsedText = new StringBuffer();
