@@ -33,7 +33,7 @@ public class Lexicon {
             model = ModelFactory.createDefaultModel();          
             index = new HashMap<>();
         }
-          
+        
         public void load(String filePath) {
             
             model.read(filePath);
@@ -45,35 +45,6 @@ public class Lexicon {
             collectNounPPs(); 
             // TODO collect NounPossessives
             // TODO collect adjectives
-        }
-        
-        public void link(String filePath) {
-                        
-            model.read(filePath);
-            
-            for (List<LexicalEntry> entries : index.values()) {
-              for (LexicalEntry entry : entries) {
-                if (entry.wnURI == null) {    
-                     
-                    String queryString = "SELECT DISTINCT ?other WHERE {"
-                               + " <" + entry.lemonURI + "> <http://www.w3.org/2000/01/rdf-schema#seeAlso> ?other ."
-                               + "}";
-            
-                    Query query = QueryFactory.create(queryString) ; 
-                    try (QueryExecution qexec = QueryExecutionFactory.create(query,model)) {    
-                        ResultSet results = qexec.execSelect() ;                                
-                        for ( ; results.hasNext() ; ) {                    
-                            QuerySolution sol = results.nextSolution() ;
-                                              
-                            String other = sol.get("other").toString(); 
-                            if (other.startsWith("http://lemon-model.net/lexica/uby/wn/")) {
-                                entry.wnURI = other;
-                            }
-                        }
-                    }
-                }
-              }
-            }   
         }
         
         public HashMap<String,List<LexicalEntry>> getSubindex(LexicalEntry.POS pos, String frame) {
@@ -105,7 +76,7 @@ public class Lexicon {
             
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?entry ?canonicalForm ?reference WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?reference WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
                                + " ?entry   lexinfo:partOfSpeech lexinfo:commonNoun . "
                                + " ?entry   lemon:canonicalForm ?form . " 
@@ -125,15 +96,14 @@ public class Lexicon {
                     QuerySolution sol = results.nextSolution() ;
                                               
                     try {
-                        String uri           = sol.get("entry").toString();
                         String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
                         String reference     = sol.get("reference").toString(); 
 
-                        LexicalEntry entry = new LexicalEntry(uri); 
+                        LexicalEntry entry = new LexicalEntry(); 
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.NOUN);
-                        
+
                         if (!index.containsKey(canonicalForm)) {
                              index.put(canonicalForm,new ArrayList<>());
                         }
@@ -144,13 +114,12 @@ public class Lexicon {
                 }
             }
         }
-        
 	
         private void collectTransitiveVerbs() {
             
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?entry ?canonicalForm ?reference ?subjOfProp ?objOfProp ?subject ?directObject WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?reference ?subjOfProp ?objOfProp ?subject ?directObject WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
                                + " ?entry   lexinfo:partOfSpeech lexinfo:verb . "
                                + " ?entry   lemon:canonicalForm ?form . " 
@@ -175,7 +144,6 @@ public class Lexicon {
                     
                     QuerySolution sol = results.nextSolution() ;
                     
-                    String uri           = sol.get("entry").toString();
                     String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
                     String reference     = sol.get("reference").toString(); 
                     String subjOfProp    = sol.get("subjOfProp").toString();
@@ -184,7 +152,7 @@ public class Lexicon {
                     String directObject  = sol.get("directObject").toString();
                     
                     try {      
-                        LexicalEntry entry = new LexicalEntry(uri); 
+                        LexicalEntry entry = new LexicalEntry(); 
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.VERB);
@@ -217,7 +185,7 @@ public class Lexicon {
             
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?entry ?canonicalForm ?reference ?subjOfProp ?objOfProp ?subject ?prepositionalObject ?marker WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?reference ?subjOfProp ?objOfProp ?subject ?prepositionalObject ?marker WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
                                + " ?entry   lexinfo:partOfSpeech lexinfo:verb . "
                                + " ?entry   lemon:canonicalForm ?form . " 
@@ -246,7 +214,6 @@ public class Lexicon {
                     
                     QuerySolution sol = results.nextSolution() ;
                     
-                    String uri           = sol.get("entry").toString();
                     String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
                     String reference     = sol.get("reference").toString(); 
                     String subjOfProp    = sol.get("subjOfProp").toString();
@@ -256,7 +223,7 @@ public class Lexicon {
                     String marker        = sol.get("marker").toString();
                     
                     try {      
-                        LexicalEntry entry = new LexicalEntry(uri); 
+                        LexicalEntry entry = new LexicalEntry(); 
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.VERB);
@@ -293,7 +260,7 @@ public class Lexicon {
             
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?entry ?canonicalForm ?reference ?subjOfProp ?objOfProp ?copArg ?prepObject WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?reference ?subjOfProp ?objOfProp ?copArg ?prepObject WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
                                + " ?entry   lexinfo:partOfSpeech lexinfo:noun . "
                                + " ?entry   lemon:canonicalForm ?form . " 
@@ -318,7 +285,6 @@ public class Lexicon {
                     
                     QuerySolution sol = results.nextSolution() ;
                     
-                    String uri           = sol.get("entry").toString();
                     String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
                     String reference     = sol.get("reference").toString(); 
                     String subjOfProp    = sol.get("subjOfProp").toString();
@@ -327,7 +293,7 @@ public class Lexicon {
                     String prepObject    = sol.get("prepObject").toString();
                     
                     try {      
-                        LexicalEntry entry = new LexicalEntry(uri); 
+                        LexicalEntry entry = new LexicalEntry(); 
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.NOUN);

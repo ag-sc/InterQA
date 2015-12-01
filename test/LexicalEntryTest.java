@@ -8,7 +8,7 @@ import junit.framework.TestCase;
  */
 public class LexicalEntryTest extends TestCase {
 
-    LexicalEntry lexentry = new LexicalEntry("example");
+    LexicalEntry lexentry = new LexicalEntry();
 
     public void testMatches() throws Exception {
         

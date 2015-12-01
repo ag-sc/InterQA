@@ -1,8 +1,6 @@
 package interQA.lexicon;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *
@@ -16,11 +14,9 @@ public class LexicalEntry {
     public enum POS    { NOUN, VERB, ADJECTIVE };
     
     
-    String lemonURI;
-    String wnURI;
-       
     String canonicalForm;     
     String reference; 
+    
     POS    pos;
     String frame;
     
@@ -28,13 +24,11 @@ public class LexicalEntry {
     HashMap<SynArg,String> markers;
     
     
-    public LexicalEntry(String uri) {
-        
-        lemonURI = uri;
+    public LexicalEntry() {
         argumentMapping = new HashMap<>();
     }
     
-
+    
     public void setCanonicalForm(String form) {
         canonicalForm = form;
     }
