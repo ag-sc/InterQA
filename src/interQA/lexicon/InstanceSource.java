@@ -7,66 +7,76 @@ import java.util.List;
 import java.util.Map;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
-
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.RDFNode;
 
 import interQA.patterns.QueryPattern;
 /**
  *
  * @author cunger
  */
+// domainqueryPTI limit and offset set
 public class InstanceSource {
     
     String endpoint;
     
+    String lang ;
     Vocabulary vocab = new Vocabulary();
         
     
-    public InstanceSource(String url) {
+    public InstanceSource(String url,String language) {
         
         endpoint = url;
+        lang = language;
     }
     
     public Map<String,List<LexicalEntry>> getInstanceIndex(String query, String var_uri, String var_label) {
        
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
         
-        // TODO Debug!
-
-//        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
-//        ResultSet results = ex.execSelect();
-//        
-//        while (results.hasNext()) {
-//            
-//               // TODO debug, no results are returned
-//            
-//               QuerySolution result = results.nextSolution();
-//               
-//               RDFNode uri   = result.get(var_uri);
-//               RDFNode label = result.get(var_label); 
-//               
-//               if (uri != null && label != null) {
-//                   
-//                   String form = label.asLiteral().getValue().toString();
-//                                      
-//                   LexicalEntry entry = new LexicalEntry();
-//                   entry.setCanonicalForm(form);
-//                   entry.setReference(uri.toString());
-//                   
-//                   if (!instances.containsKey(form)) {
-//                        instances.put(form,new ArrayList<>());
-//                   }
-//                   instances.get(form).add(entry);
-//               }
-//        }
+       
+        
+        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
+        ResultSet results = ex.execSelect();
+        while (results.hasNext()) {
+            
+               
+           
+              QuerySolution result = results.nextSolution();
+               
+               RDFNode uri   = result.get(var_uri);
+               RDFNode label = result.get(var_label); 
+               
+              if (uri != null && label != null) {
+            	  
+            	  
+            		  String form = label.asLiteral().getValue().toString().replaceAll(" \\(.*?\\)", "");
+                	  
+                      LexicalEntry entry = new LexicalEntry();
+                      entry.setCanonicalForm(form);
+                      entry.setReference(uri.toString());
+                     
+                      if (!instances.containsKey(form)) {
+                           instances.put(form,new ArrayList<>());
+                     }
+                      
+                      instances.get(form).add(entry);
+                  
+                  
+            	  }
+                      
+            	  
+        }
         
         // For testing:
-        
-        LexicalEntry entry = new LexicalEntry();
-        entry.setCanonicalForm("fnord");
-        entry.setReference("http://fnord.org/Fnord");
-        List<LexicalEntry> entries = new ArrayList<>();
-        entries.add(entry);
-        instances.put("fnord",entries);
+//        
+//        LexicalEntry entry = new LexicalEntry();
+//        entry.setCanonicalForm("fnord");
+//        entry.setReference("http://fnord.org/Fnord");
+//        List<LexicalEntry> entries = new ArrayList<>();
+//        entries.add(entry);
+//        instances.put("fnord",entries);
         
         
         return instances;
@@ -89,34 +99,38 @@ public class InstanceSource {
     }
     //to query instances(domain pos) that are suitable with property(Property to Instance)
     private String domainQueryForPTI(String property_uri){
-    		
-    	return "SELECT DISTINCT ?x ?label WHERE { "
+    	
+    	return "SELECT DISTINCT ?x ?l WHERE { "
                 + " ?x <" + property_uri + "> ?object . "
-                + " ?x <" + vocab.rdfs + "label> ?l . }";
+                + " ?x <" + vocab.rdfs + "label> ?l . "
+                + "filter langMatches( lang(?l), \""+lang+"\") }";
     }
     //to query instances(domain pos) that are suitable with property(Property to Instance)
     private String rangeQueryForPTI(String property_uri){
-    	return "SELECT DISTINCT ?x ?label WHERE { "
+    	return "SELECT DISTINCT ?x ?l WHERE { "
                + " ?subject <" + property_uri + "> ?x . "
-               + " ?x <" + vocab.rdfs + "label> ?l . }";
+               + " ?x <" + vocab.rdfs + "label> ?l . "
+               + "filter langMatches( lang(?l), \""+lang+"\") }";
     }
     //to query instances for the case; both property share same domain
     private String domainQueryFor2PTI(String property_uri1,String property_uri2){
     	
     	
-    	return "SELECT DISTINCT ?x ?label WHERE { "
+    	return "SELECT DISTINCT ?x ?l WHERE { "
 		        + " ?x <" + property_uri1 + "> ?object1 . "
 		        + " ?x <" + property_uri2 +"> ?object2"
-		        + " ?x <" + vocab.rdfs + "label> ?l . }";
+		        + " ?x <" + vocab.rdfs + "label> ?l ."
+		        + "filter langMatches( lang(?l), \""+lang+"\") }";
     }
     //to query instances for the case; both property share same range
     private String rangeQueryFor2PTI(String property_uri1,String property_uri2){
     	
     	
-    	return "SELECT DISTINCT ?x ?label WHERE { "
+    	return "SELECT DISTINCT ?x ?l WHERE { "
     			+ " ?subject1 <"+ property_uri1 +"> ?x ."
                 + " ?subject2 <" + property_uri2 + "> ?x . "
-		        + " ?x <" + vocab.rdfs + "label> ?l . }";
+		        + " ?x <" + vocab.rdfs + "label> ?l . "
+		        + "filter langMatches( lang(?l), \""+lang+"\")}";
     }
     //to confirm the latter property (w.r.t the former property) of class at domain position (May be the former method can be implemented for
     //for this method too) 
@@ -279,4 +293,7 @@ public class InstanceSource {
 	return filtered_instances_index;
     	
     }
+ 	
+    
+
 }

@@ -60,7 +60,7 @@ public class QueryPattern0_2 extends QueryPattern {
 		
 		if(i==1){
 			
-			Map<String,List<LexicalEntry>> old_element2index = elements.get(4).getIndex();
+			Map<String,List<LexicalEntry>> old_element2index = elements.get(1).getIndex();
             
     		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
     		
