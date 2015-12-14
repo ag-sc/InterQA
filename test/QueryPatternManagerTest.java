@@ -17,9 +17,9 @@ public class QueryPatternManagerTest {
     @Test
     public void testDeleteSecond() {
         // Load lexicon
-        Lexicon lexicon = new Lexicon();
+        Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
+        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
@@ -57,9 +57,9 @@ public class QueryPatternManagerTest {
     @Test
     public void testDeleteFirst() {
         // Load lexicon
-        Lexicon lexicon = new Lexicon();
+        Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
+        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
@@ -84,9 +84,9 @@ public class QueryPatternManagerTest {
     @Test
     public void testStartsEmpty() {
         // Load lexicon
-        Lexicon lexicon = new Lexicon();
+        Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
+        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
@@ -119,9 +119,9 @@ public class QueryPatternManagerTest {
     @Test
     public void testRightSentenceGetSPARQL() {
         // Load lexicon
-        Lexicon lexicon = new Lexicon();
+        Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
+        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
@@ -132,7 +132,7 @@ public class QueryPatternManagerTest {
         qm.addQueryPattern(qp21);
         qm.addQueryPattern(qp22);
 
-        qm.userSentence("give meallpope");
+        qm.userSentence("give meallpopes");
         List<String> opts = null;
         opts = qm.getUIoptions();  // you should get ""
         Assert.assertTrue(opts.isEmpty());
@@ -147,9 +147,9 @@ public class QueryPatternManagerTest {
     @Test
     public void testRightSentenceGetSPARQLPoltergeist() {
         // Load lexicon
-        Lexicon lexicon = new Lexicon();
+        Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
+        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();

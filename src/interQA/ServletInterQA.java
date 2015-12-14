@@ -72,9 +72,9 @@ public class ServletInterQA extends HttpServlet {
         //String fileName2 = fullPath + "test2.rdf";
 
         // Load lexicon
-        Lexicon lexicon = new Lexicon();
+        Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
+        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         qm = new QueryPatternManager();

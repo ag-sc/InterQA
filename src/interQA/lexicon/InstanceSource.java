@@ -11,7 +11,6 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
 
-import interQA.patterns.QueryPattern;
 /**
  *
  * @author cunger

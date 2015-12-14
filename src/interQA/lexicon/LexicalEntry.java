@@ -9,10 +9,10 @@ import java.util.HashMap;
 public class LexicalEntry {
     
     
-    public enum SemArg { SUBJOFPROP, OBJOFPROP };
-    public enum SynArg { SUBJECT, COPULATIVEARG, DIRECTOBJECT, PREPOSITIONALOBJECT };
-    public enum POS    { NOUN, VERB, ADJECTIVE };
-    
+    public enum SemArg  { SUBJOFPROP, OBJOFPROP };
+    public enum SynArg  { SUBJECT, COPULATIVEARG, DIRECTOBJECT, PREPOSITIONALOBJECT, POSSESSIVEADJUNCT };
+    public enum POS     { NOUN, VERB, ADJECTIVE };
+    public enum Feature { SINGULAR, PLURAL, PRESENT, PAST };
     
     String canonicalForm;     
     String reference; 
@@ -20,12 +20,14 @@ public class LexicalEntry {
     POS    pos;
     String frame;
     
-    HashMap<SynArg,SemArg> argumentMapping; 
-    HashMap<SynArg,String> markers;
+    HashMap<Feature,String> forms;
+    HashMap<SynArg,SemArg>  argumentMapping; 
+    HashMap<SynArg,String>  markers;
     
     
     public LexicalEntry() {
         argumentMapping = new HashMap<>();
+        forms = new HashMap<>();
     }
     
     
@@ -45,6 +47,10 @@ public class LexicalEntry {
         this.pos = pos;
     }
     
+    public void addForm(Feature f, String form) {
+        forms.put(f,form);
+    }
+    
     public void addArgumentMapping(SynArg syn, SemArg sem) {
         argumentMapping.put(syn,sem);
     }
@@ -56,6 +62,10 @@ public class LexicalEntry {
     
     public String getCanonicalForm() {
         return canonicalForm;
+    }
+    
+    public String getForm(Feature f) {
+        return forms.get(f);
     }
     
     public String getReference() {

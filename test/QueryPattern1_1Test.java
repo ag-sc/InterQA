@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class QueryPattern1_1Test {
     // Load lexicon
-    private Lexicon lexicon = new Lexicon();
-    private InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql");
+    private Lexicon lexicon = new Lexicon("en");
+    private InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
     private QueryPattern1_1 qp1 = null;
 
 
