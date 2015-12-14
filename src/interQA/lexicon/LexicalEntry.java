@@ -26,8 +26,10 @@ public class LexicalEntry {
     
     
     public LexicalEntry() {
-        argumentMapping = new HashMap<>();
+
         forms = new HashMap<>();
+        argumentMapping = new HashMap<>();
+        markers = new HashMap<>();
     }
     
     
