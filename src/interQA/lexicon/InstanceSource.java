@@ -1,6 +1,7 @@
 package interQA.lexicon;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,29 +20,48 @@ import org.apache.jena.rdf.model.RDFNode;
 public class InstanceSource {
     
     String endpoint;
-    
     String lang ;
     Vocabulary vocab = new Vocabulary();
-        
-    
+    List<String> labelProperties;
+
     public InstanceSource(String url,String language) {
+        
+       this(url,language,Arrays.asList("http://www.w3.org/2000/01/rdf-schema#label"));
+    }
+        
+    public InstanceSource(String url,String language,List<String> props) {
         
         endpoint = url;
         lang = language;
+        labelProperties = props;
+    }
+    
+    private String label(String var1, String var2) {
+        
+        String out; 
+        
+        if (labelProperties.size() == 1) {
+            out = var1 + " " + labelProperties.get(0) + " " + var2 + " .";
+        }
+        else if (labelProperties.size() > 1) {
+            out = "{ " + var1 + " " + labelProperties.get(0) + " " + var2 + " . }";
+            for (String prop : labelProperties.subList(1,labelProperties.size()-1)) {
+                 out += " UNION { " + var1 + " " + prop + " " + var2 + " . }";
+            }
+        }
+        else out = "";
+        
+        return out;
     }
     
     public Map<String,List<LexicalEntry>> getInstanceIndex(String query, String var_uri, String var_label) {
        
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
-        
-       
-        
+
         QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
         ResultSet results = ex.execSelect();
         while (results.hasNext()) {
-            
-               
-           
+
               QuerySolution result = results.nextSolution();
                
                RDFNode uri   = result.get(var_uri);
@@ -101,35 +121,34 @@ public class InstanceSource {
     	
     	return "SELECT DISTINCT ?x ?l WHERE { "
                 + " ?x <" + property_uri + "> ?object . "
-                + " ?x <" + vocab.rdfs + "label> ?l . "
+                + label("?x","?l")
                 + "filter langMatches( lang(?l), \""+lang+"\") }";
     }
     //to query instances(domain pos) that are suitable with property(Property to Instance)
     private String rangeQueryForPTI(String property_uri){
-    	return "SELECT DISTINCT ?x ?l WHERE { "
+    	
+        return "SELECT DISTINCT ?x ?l WHERE { "
                + " ?subject <" + property_uri + "> ?x . "
-               + " ?x <" + vocab.rdfs + "label> ?l . "
+               + label("?x","?l")
                + "filter langMatches( lang(?l), \""+lang+"\") }";
     }
     //to query instances for the case; both property share same domain
     private String domainQueryFor2PTI(String property_uri1,String property_uri2){
-    	
-    	
+    	   	
     	return "SELECT DISTINCT ?x ?l WHERE { "
-		        + " ?x <" + property_uri1 + "> ?object1 . "
-		        + " ?x <" + property_uri2 +"> ?object2"
-		        + " ?x <" + vocab.rdfs + "label> ?l ."
-		        + "filter langMatches( lang(?l), \""+lang+"\") }";
+		+ " ?x <" + property_uri1 + "> ?object1 . "
+		+ " ?x <" + property_uri2 +"> ?object2"
+		+ label("?x","?l")
+		+ "filter langMatches( lang(?l), \""+lang+"\") }";
     }
     //to query instances for the case; both property share same range
     private String rangeQueryFor2PTI(String property_uri1,String property_uri2){
-    	
-    	
+    	   	
     	return "SELECT DISTINCT ?x ?l WHERE { "
-    			+ " ?subject1 <"+ property_uri1 +"> ?x ."
+    		+ " ?subject1 <"+ property_uri1 +"> ?x ."
                 + " ?subject2 <" + property_uri2 + "> ?x . "
-		        + " ?x <" + vocab.rdfs + "label> ?l . "
-		        + "filter langMatches( lang(?l), \""+lang+"\")}";
+		+ label("?x","?l")
+		+ "filter langMatches( lang(?l), \""+lang+"\")}";
     }
     //to confirm the latter property (w.r.t the former property) of class at domain position (May be the former method can be implemented for
     //for this method too) 
