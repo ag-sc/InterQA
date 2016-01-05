@@ -8,7 +8,12 @@ lex:lexicon a lemon:Lexicon ;
   lemon:language "en";
   lemon:entry lex:conference ;
   lemon:entry lex:takePlaceIn ;
-  lemon:entry lex:proceedingsOf .
+  lemon:entry lex:proceedingsOf ; 
+  lemon:entry lex:startOf ;
+  lemon:entry lex:endOf ; 
+  lemon:entry lex:startDateOf ;
+  lemon:entry lex:endDateOf ; 
+  lemon:entry lex:heldIn .
 
 
 #### conference ####
@@ -45,9 +50,7 @@ lex:takePlaceIn_synBehavior a lexinfo:IntransitivePPFrame ;
   lexinfo:subject lex:takePlaceIn_subj ;
   lexinfo:prepositionalObject lex:takePlaceIn_obj .
 
-  lex:takePlaceIn_obj lemon:marker lex:in .
-  lex:in lemon:canonicalForm lex:in_form .
-  lex:in_form lemon:writtenRep "in"@en .
+lex:takePlaceIn_obj lemon:marker lex:in .
 
 lex:takePlaceIn_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confYear> ;
   lemon:subjOfProp lex:takePlaceIn_subj ;
@@ -81,3 +84,125 @@ lex:proceedingsOf_synBehavior a lexinfo:NounPossessiveFrame ;
 lex:proceedingsOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/hasConference> ;
     lemon:subjOfProp lex:proceedingsOf_copArg ;
     lemon:objOfProp  lex:proceedingsOf_posAdj .
+
+
+#### start of ####
+
+lex:startOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:startOf_canonicalForm ;
+  lemon:otherForm lex:startOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:startOf_synBehavior ;
+  lemon:sense lex:startOf_sense .
+
+lex:startOf_canonicalForm lemon:writtenRep "start"@en ;
+  lexinfo:number lexinfo:singular .
+lex:startOf_otherForm lemon:writtenRep "starts"@en ;
+  lexinfo:number lexinfo:plural .
+
+lex:startOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:startOf_copArg ;
+  lexinfo:possessiveAdjunct lex:startOf_posAdj .
+
+lex:startOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/startDate> ;
+    lemon:subjOfProp lex:startOf_copArg ;
+    lemon:objOfProp  lex:startOf_posAdj .
+
+
+#### end of ####
+
+lex:endOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:endOf_canonicalForm ;
+  lemon:otherForm lex:endOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:endOf_synBehavior ;
+  lemon:sense lex:endOf_sense .
+
+lex:endOf_canonicalForm lemon:writtenRep "end"@en ;
+  lexinfo:number lexinfo:singular .
+lex:endOf_otherForm lemon:writtenRep "ends"@en ;
+  lexinfo:number lexinfo:plural .
+
+lex:endOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:endOf_copArg ;
+  lexinfo:possessiveAdjunct lex:endOf_posAdj .
+
+lex:endOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/endDate> ;
+    lemon:subjOfProp lex:endOf_copArg ;
+    lemon:objOfProp  lex:endOf_posAdj .
+
+
+#### start date of ####
+
+lex:startDateOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:startDateOf_canonicalForm ;
+  lemon:otherForm lex:startDateOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:startDateOf_synBehavior ;
+  lemon:sense lex:startDateOf_sense .
+
+lex:startDateOf_canonicalForm lemon:writtenRep "start date"@en ;
+  lexinfo:number lexinfo:singular .
+lex:startDateOf_otherForm lemon:writtenRep "start dates"@en ;
+  lexinfo:number lexinfo:plural .
+
+lex:startDateOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:startDateOf_copArg ;
+  lexinfo:possessiveAdjunct lex:startDateOf_posAdj .
+
+lex:startDateOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/startDate> ;
+    lemon:subjOfProp lex:startDateOf_copArg ;
+    lemon:objOfProp  lex:startDateOf_posAdj .
+
+
+#### end date of ####
+
+lex:endDateOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:endDateOf_canonicalForm ;
+  lemon:otherForm lex:endDateOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:endDateOf_synBehavior ;
+  lemon:sense lex:endDateOf_sense .
+
+lex:endDateOf_canonicalForm lemon:writtenRep "end date"@en ;
+  lexinfo:number lexinfo:singular .
+lex:endDateOf_otherForm lemon:writtenRep "end dates"@en ;
+  lexinfo:number lexinfo:plural .
+
+lex:endDateOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:endDateOf_copArg ;
+  lexinfo:possessiveAdjunct lex:endDateOf_posAdj .
+
+lex:endDateOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/endDate> ;
+    lemon:subjOfProp lex:endDateOf_copArg ;
+    lemon:objOfProp  lex:endDateOf_posAdj .
+
+
+#### held in ####
+
+lex:heldIn a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:heldIn_canonicalForm ;
+  lexinfo:partOfSpeech lexinfo:adjective ;
+  lemon:synBehavior lex:heldIn_synBehavior ;
+  lemon:sense lex:heldIn_sense1, lex:heldIn_sense2 .
+
+lex:heldIn_canonicalForm lemon:writtenRep "held"@en .
+
+lex:heldIn_synBehavior a lexinfo:AdjectivePPFrame ;
+  lexinfo:subject lex:heldIn_subj ;
+  lexinfo:prepositionalObject lex:heldIn_prepObj .
+
+lex:heldIn_prepObj lemon:marker lex:in .
+
+lex:endDateOf_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
+    lemon:subjOfProp lex:heldIn_subj ;
+    lemon:objOfProp  lex:heldIn_prepObj .
+lex:endDateOf_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
+    lemon:subjOfProp lex:heldIn_subj ;
+    lemon:objOfProp  lex:heldIn_prepObj .
+
+
+#### Markers #### 
+
+lex:in lemon:canonicalForm lex:in_form .
+lex:in_form lemon:writtenRep "in"@en .

@@ -108,4 +108,15 @@ public class Inflector_en implements Inflector {
         return getPast(verb,3);
     }
     
+    @Override 
+    public String getComparative(String adjective) {
+        // TODO
+        return "more " + adjective;
+    }
+
+    @Override 
+    public String getSuperlative(String adjective) {
+        // TODO
+        return "most " + adjective;
+    }
 }

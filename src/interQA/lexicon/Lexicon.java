@@ -48,7 +48,7 @@ public class Lexicon {
             collectIntransitivePPVerbs();
             collectNounPPs(); 
             collectNounPossessives();
-            // TODO collect adjectives
+            collectAdjectivePPs();
             
         }
         
@@ -460,6 +460,79 @@ public class Lexicon {
                         index.get(form3).add(entry);
                         if (!index.containsKey(form4)) index.put(form4,new ArrayList<>());
                         index.get(form4).add(entry);
+                    }
+                    catch (NullPointerException npe) {
+                        npe.printStackTrace();
+                    }
+                }
+            }
+        }
+        
+        private void collectAdjectivePPs() {
+                                    
+            String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
+                               + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
+                               + "SELECT DISTINCT ?canonicalForm ?reference ?subjOfProp ?objOfProp ?subject ?prepositionalObject ?marker WHERE {"
+                               + " ?lexicon lemon:entry ?entry . "
+                               + " ?entry   lexinfo:partOfSpeech lexinfo:adjective . "
+                               + " ?entry   lemon:canonicalForm ?form . " 
+                               + " ?form    lemon:writtenRep ?canonicalForm ."
+                               + " ?entry   lemon:sense ?sense . "
+                               + " ?sense   lemon:reference ?reference ."
+                               + " ?sense   lemon:subjOfProp ?subjOfProp ."
+                               + " ?sense   lemon:objOfProp  ?objOfProp ."
+                               + " ?entry   lemon:synBehavior ?frame ."
+                               + " ?frame   <" + vocab.rdfType + "> lexinfo:AdjectivePPFrame ."
+                               + " ?frame   lexinfo:subject ?subject ."
+                               + " ?frame   lexinfo:prepositionalObject ?prepositionalObject ."
+                               + " ?prepositionalObject lemon:marker ?mentry ."
+                               + " ?mentry  lemon:canonicalForm ?mform ."
+                               + " ?mform   lemon:writtenRep ?marker . "
+                               + "}";
+            
+            Query query = QueryFactory.create(queryString) ;
+  
+            try (QueryExecution qexec = QueryExecutionFactory.create(query,model)) {
+                    
+                ResultSet results = qexec.execSelect() ;
+                                
+                for ( ; results.hasNext() ; ) {
+                              
+                    QuerySolution sol = results.nextSolution() ;
+                              
+                    try {
+                        String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
+                        String reference     = sol.get("reference").toString();
+                        String subjOfProp    = sol.get("subjOfProp").toString();
+                        String objOfProp     = sol.get("objOfProp").toString();
+                        String subject       = sol.get("subject").toString();
+                        String prepObject    = sol.get("prepositionalObject").toString();
+                        String marker        = sol.get("marker").asLiteral().getValue().toString();
+                                                
+                        LexicalEntry entry = new LexicalEntry(); 
+                        entry.setCanonicalForm(canonicalForm);
+                        entry.setReference(reference);
+                        entry.setPOS(LexicalEntry.POS.ADJECTIVE);
+                        entry.setFrame(vocab.lexinfo + "AdjectivePPFrame");
+                        
+                        if (subject.equals(subjOfProp) && prepObject.equals(objOfProp)) {
+                            entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                        }
+                        else if (subject.equals(objOfProp) && prepObject.equals(subjOfProp)) {
+                            entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                        }
+                        else {
+                            continue;
+                        }
+                        
+                        entry.addMarker(LexicalEntry.SynArg.PREPOSITIONALOBJECT,marker);
+                        
+                        String form = canonicalForm + " " + marker;
+                        if (!index.containsKey(form)) index.put(form ,new ArrayList<>());
+                        index.get(form).add(entry);
+
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();

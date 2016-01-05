@@ -11,4 +11,6 @@ public interface Inflector {
     public String getPresent(String verb, int person); 
     public String getPast(String verb, int person);
     public String getPastParticiple(String verb);
+    public String getComparative(String adjective);
+    public String getSuperlative(String adjective);
 }

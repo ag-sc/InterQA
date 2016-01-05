@@ -12,7 +12,7 @@ public class LexicalEntry {
     public enum SemArg  { SUBJOFPROP, OBJOFPROP };
     public enum SynArg  { SUBJECT, COPULATIVEARG, DIRECTOBJECT, PREPOSITIONALOBJECT, POSSESSIVEADJUNCT };
     public enum POS     { NOUN, VERB, ADJECTIVE };
-    public enum Feature { SINGULAR, PLURAL, PRESENT, PAST };
+    public enum Feature { SINGULAR, PLURAL, PRESENT, PAST, COMPARATIVE, SUPERLATIVE };
     
     String canonicalForm;     
     String reference; 
