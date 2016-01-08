@@ -5,6 +5,7 @@ import java.util.List;
 
 import interQA.elements.ClassElement;
 import interQA.elements.IndividualElement;
+import interQA.elements.LiteralElement;
 import interQA.elements.PropertyElement;
 
 public class SparqlQueryBuilder {
@@ -74,7 +75,15 @@ public class SparqlQueryBuilder {
 	private String queryForOBJOFPROPinCaseClassAndPropertyEnding(LexicalEntry prop_entry2){
 				return " ?y  <" + prop_entry2.getReference() + "> ?a . }";
 			}
+	//SPRINGER
 	
+	//query for property (w.r.t class) and literal
+	private String queryForincasePropertyAndLiteral(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry lit_entry){
+		//SELECT DISTINCT ?uri { ?uri rdf:type Conference . ?uri confYear "2015" . }
+		return "SELECT DISTINCT ?uri "
+				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
+				+ "  ?uri  <"+prop_entry.getReference()+">  "+lit_entry.getReference()+". }";
+	}
 	
 	
 	public List<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries){
@@ -250,6 +259,21 @@ public class SparqlQueryBuilder {
 		}
 		
 		}
+		return queries;
+	}
+
+	public List<String> BuildQueryForClassAndPropertyAndLiteral(ClassElement class_elements,PropertyElement property_elements,LiteralElement literal_elements){
+		
+		List<String> queries = new ArrayList<>();
+		
+		for(LexicalEntry noun_entry : class_elements.getActiveEntries()){
+			for(LexicalEntry verb_entry : property_elements.getActiveEntries()){
+				for(LexicalEntry lit_entry: literal_elements.getActiveEntries()){
+					queries.add(queryForincasePropertyAndLiteral(noun_entry,verb_entry,lit_entry));
+				}
+			}
+		}
+		
 		return queries;
 	}
 }

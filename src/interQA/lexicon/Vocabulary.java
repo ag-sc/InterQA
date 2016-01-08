@@ -10,6 +10,8 @@ public class Vocabulary {
     public String rdfs    = "http://www.w3.org/2000/01/rdf-schema#";
     public String lemon   = "http://lemon-model.net/lemon#";
     public String lexinfo = "http://www.lexinfo.net/ontology/2.0/lexinfo#";
+    public String xmls 	  =	"http://www.w3.org/2001/XMLSchema#";
+    
     
     public String TransitiveFrame;
     public String IntransitivePPFrame;

@@ -3,6 +3,7 @@ package interQA.main;
 
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
+import interQA.lexicon.LiteralSource;
 import interQA.patterns.QueryPatternManager;
 import interQA.patterns.QueryPattern1_1;
 import interQA.patterns.QueryPattern9_1;
@@ -11,6 +12,7 @@ import interQA.patterns.QueryPattern9_3;
 import interQA.patterns.QueryPattern0_1;
 import interQA.patterns.QueryPattern0_3;
 import interQA.patterns.QueryPattern3_1;
+import interQA.patterns.*;
 import interQA.patterns.*;
 import java.util.List;
 import java.util.Scanner;
@@ -28,11 +30,14 @@ public class interQACLI {
         // Load lexicon     
         Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/springer_en.ttl");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+        InstanceSource instances = new InstanceSource("http://es.dbpedia.org/sparql","en");
+        LiteralSource literals = new LiteralSource("http://es.dbpedia.org/sparql","en");
         
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
-        qm.addQueryPattern(new QueryPattern0_1(lexicon,instances));
+        
+        qm.addQueryPattern(new SpringerQueryPattern0_0(lexicon,instances,literals));
+        /*qm.addQueryPattern(new QueryPattern0_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern0_2(lexicon,instances));
         qm.addQueryPattern(new QueryPattern0_3(lexicon,instances));
         qm.addQueryPattern(new QueryPattern1_1(lexicon,instances));
@@ -45,7 +50,7 @@ public class interQACLI {
         qm.addQueryPattern(new QueryPattern3_2(lexicon,instances));
         qm.addQueryPattern(new QueryPattern9_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern9_2(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern9_3(lexicon,instances));
+        qm.addQueryPattern(new QueryPattern9_3(lexicon,instances));*/
         
         
         

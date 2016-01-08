@@ -1,4 +1,4 @@
-package interQA.patterns;
+ package interQA.patterns;
 
 import interQA.elements.*;
 import interQA.lexicon.*;
@@ -67,7 +67,7 @@ public class QueryPattern0_3 extends QueryPattern {
                                     
                 new_element2index.putAll(instances.filterByClassForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
             }
-            elements.get(4).setIndex(new_element2index);
+            elements.get(4).addToIndex(new_element2index);
     	}
     	if(i==4){
     		

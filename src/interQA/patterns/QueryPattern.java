@@ -4,6 +4,8 @@ import interQA.lexicon.Vocabulary;
 import interQA.elements.ParsableElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
+import interQA.lexicon.LiteralSource;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public abstract class QueryPattern {
         Vocabulary vocab = new Vocabulary();
         Lexicon lexicon;
         InstanceSource instances;
+        LiteralSource literals;
         
 	List<ParsableElement> elements = new ArrayList<>();
         
