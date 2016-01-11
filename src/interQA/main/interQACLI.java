@@ -37,7 +37,7 @@ public class interQACLI {
         lexicon.load("resources/springer_en.ttl");
         InstanceSource instances = new InstanceSource("http://es.dbpedia.org/sparql","en");
         LiteralSource literals = new LiteralSource("http://es.dbpedia.org/sparql","en",LabelProps);
-        
+                
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         

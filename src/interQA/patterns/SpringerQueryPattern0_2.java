@@ -33,44 +33,57 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 		elements = new ArrayList<>();
 		
 		StringElement element0 = new StringElement();
-		element0.add("give me all");
+		element0.add("give me");
+                element0.add("show me");
 		elements.add(element0);
-		
-		ClassElement element1 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
+                
+                StringElement element1 = new StringElement();
+		element1.add("all");
+                element1.add("the");
 		elements.add(element1);
 		
-		StringElement element2 = new StringElement();
-		element2.add("that are");
+		ClassElement element2 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
 		elements.add(element2);
 		
-		PropertyElement element3 = new PropertyElement(lexicon,LexicalEntry.POS.ADJECTIVE,vocab.AdjectivePPFrame);
+		StringElement element3 = new StringElement();
+		element3.add("that");
 		elements.add(element3);
-		
-		LiteralElement element4 = new LiteralElement();
+
+                StringElement element4 = new StringElement();
+		element4.add("is");
+                element4.add("are");
+		element4.add("was");
+		element4.add("were");
 		elements.add(element4);
+                
+		PropertyElement element5 = new PropertyElement(lexicon,LexicalEntry.POS.ADJECTIVE,vocab.AdjectivePPFrame);
+		elements.add(element5);
+		
+		LiteralElement element6 = new LiteralElement();
+		elements.add(element6);
 	}
 	
 	@Override
 	public void updateAt(int i){
 		
-		if(i==1){
-			Map<String,List<LexicalEntry>> old_element2index = elements.get(1).getIndex();
+		if(i==2){
+			Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
             
     		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
     		
     		
     		
-    		for(LexicalEntry entry : elements.get(1).getActiveEntries()){
+    		for(LexicalEntry entry : elements.get(2).getActiveEntries()){
     			
     			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
     			
     		}
-			elements.get(3).addToIndex(new_element2index);
+			elements.get(5).addToIndex(new_element2index);
 		}
 		
-		if(i==3){
+		if(i==5){
 			
-			elements.get(4).addToIndex(literals.getLiteralByProperty(elements.get(3).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+			elements.get(6).addToIndex(literals.getLiteralByProperty(elements.get(5).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
 		}
 		
 	}
@@ -80,9 +93,9 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 		
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
-		ClassElement    noun = (ClassElement)    elements.get(1);
-        PropertyElement    adjective = (PropertyElement)    elements.get(3);
-        LiteralElement literal = (LiteralElement) elements.get(4);
+		ClassElement    noun = (ClassElement)    elements.get(2);
+        PropertyElement    adjective = (PropertyElement)    elements.get(4);
+        LiteralElement literal = (LiteralElement) elements.get(5);
 		
 		
 		

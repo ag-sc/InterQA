@@ -194,10 +194,10 @@ lex:heldIn_synBehavior a lexinfo:AdjectivePPFrame ;
 
 lex:heldIn_prepObj lemon:marker lex:in .
 
-lex:endDateOf_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
+lex:heldIn_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
     lemon:subjOfProp lex:heldIn_subj ;
     lemon:objOfProp  lex:heldIn_prepObj .
-lex:endDateOf_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
+lex:heldIn_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
     lemon:subjOfProp lex:heldIn_subj ;
     lemon:objOfProp  lex:heldIn_prepObj .
 

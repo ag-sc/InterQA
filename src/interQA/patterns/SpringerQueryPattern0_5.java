@@ -34,29 +34,30 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 		elements = new ArrayList<>();
 		
 		StringElement element0 = new StringElement();
-		element0.add("give me the");
+		element0.add("give me");
+                element0.add("show me");
 		elements.add(element0);
 		
-		
-		PropertyElement element1 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+                StringElement element1 = new StringElement();
+		element1.add("all");
+                element1.add("the");
 		elements.add(element1);
 		
-		
-		StringElement element2 = new StringElement();
-		element2.add("and");
+		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
 		elements.add(element2);
 		
-		
-		PropertyElement element3 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+		StringElement element3 = new StringElement();
+		element3.add("and");
 		elements.add(element3);
 		
-		
-		LiteralElement element4 = new LiteralElement();
+		PropertyElement element4 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
 		elements.add(element4);
-		
 		
 		LiteralElement element5 = new LiteralElement();
 		elements.add(element5);
+		
+		LiteralElement element6 = new LiteralElement();
+		elements.add(element6);
 		
 		
 		
@@ -65,16 +66,16 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 	@Override
 	public void updateAt(int i){
 		
-		if(i==2){
+		if(i==3){
 			
-			Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
+			Map<String,List<LexicalEntry>> old_element2index = elements.get(4).getIndex();
 			Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
 			
-			for(LexicalEntry entry1 : elements.get(1).getActiveEntries()){
+			for(LexicalEntry entry1 : elements.get(2).getActiveEntries()){
 				new_element2index.putAll(instances.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.COPULATIVEARG, entry1.getReference()));
 				
 			}
-			elements.get(3).setIndex(new_element2index);;
+			elements.get(4).setIndex(new_element2index);;
 		}
 		
 	}

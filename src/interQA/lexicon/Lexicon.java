@@ -449,17 +449,17 @@ public class Lexicon {
                                                 
                         String form1 = sg + " of"; // TODO still specific for English
                         String form2 = pl + " of"; // TODO still specific for English
-                        String form3 = "'s " + sg; // TODO still specific for English
-                        String form4 = "'s " + pl; // TODO still specific for English
+//                        String form3 = "'s " + sg; // TODO still specific for English
+//                        String form4 = "'s " + pl; // TODO still specific for English
 
                         if (!index.containsKey(form1)) index.put(form1,new ArrayList<>());
                         index.get(form1).add(entry); 
                         if (!index.containsKey(form2)) index.put(form2,new ArrayList<>());
                         index.get(form2).add(entry);
-                        if (!index.containsKey(form3)) index.put(form3,new ArrayList<>());
-                        index.get(form3).add(entry);
-                        if (!index.containsKey(form4)) index.put(form4,new ArrayList<>());
-                        index.get(form4).add(entry);
+//                        if (!index.containsKey(form3)) index.put(form3,new ArrayList<>());
+//                        index.get(form3).add(entry);
+//                        if (!index.containsKey(form4)) index.put(form4,new ArrayList<>());
+//                        index.get(form4).add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -532,7 +532,7 @@ public class Lexicon {
                         String form = canonicalForm + " " + marker;
                         if (!index.containsKey(form)) index.put(form ,new ArrayList<>());
                         index.get(form).add(entry);
-
+                        
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();

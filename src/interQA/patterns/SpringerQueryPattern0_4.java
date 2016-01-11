@@ -8,13 +8,21 @@ import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 import interQA.elements.*;
+import java.util.List;
+import java.util.Map;
 
 public class SpringerQueryPattern0_4 extends QueryPattern{
 
 	//Show me <Property:NounPossessiveFrame> <Literal> <Literal>
 	//Show me the proceedings of ISWC 2015
-	
-	public SpringerQueryPattern0_4(Lexicon lexicon,InstanceSource source,LiteralSource literal){
+    
+//    SELECT DISTINCT ?uri WHERE {
+//       ?uri hasConference ?conf . 
+//       ?conf confAcronym "ISWC" .
+//       ?conf confYear "2015" .
+//}
+//	
+	public SpringerQueryPattern0_4(Lexicon lexicon,InstanceSource source,LiteralSource literals){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
@@ -29,26 +37,32 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
 		elements = new ArrayList<>();
 		
 		StringElement element0 = new StringElement();
-		element0.add("show me");
+		element0.add("give me");
+                element0.add("show me");
 		elements.add(element0);
-		
-		PropertyElement element1 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+                
+                StringElement element1 = new StringElement();
+		element1.add("all");
+                element1.add("the");
 		elements.add(element1);
 		
-		LiteralElement element2 = new LiteralElement();
+		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
 		elements.add(element2);
 		
 		LiteralElement element3 = new LiteralElement();
 		elements.add(element3);
 		
+		LiteralElement element4 = new LiteralElement();
+		elements.add(element4);
+		
 	}
 	
 	@Override
 	public void updateAt(int i){
+            		
+                if(i==2){
 		
-		if(i==1){
-			
-			elements.get(2).addToIndex(literals.getLiteralByProperty(elements.get(1).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
+                    elements.get(3).addToIndex(literals.getLiteralByProperty(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
 			
 		}
 		

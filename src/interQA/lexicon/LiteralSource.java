@@ -126,13 +126,13 @@ public class LiteralSource {
 	
 	
 	public Map<String,List<LexicalEntry>> getLiteralByProperty(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
-		
+		            
 		Map<String,List<LexicalEntry>> literals = new HashMap<>();
 		
 		String query;
 		
 		for(LexicalEntry index : indexes){
-			
+
 			if (index.getSemArg(syn)== null) continue;
 			switch(index.getSemArg(syn)){
 			

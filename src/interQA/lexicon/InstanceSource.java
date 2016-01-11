@@ -240,8 +240,8 @@ public class InstanceSource {
     					break;
     			
     			}
-    			
-    				QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint, query);
+                        
+    				QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint, query.replace("\u00a0"," "));
     				boolean satisfiesCondition = ex.execAsk();
     				
     				if(satisfiesCondition) filtered_entries.add(entry);    				
