@@ -3,6 +3,9 @@ package interQA.lexicon;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+
 import interQA.elements.ClassElement;
 import interQA.elements.IndividualElement;
 import interQA.elements.LiteralElement;
@@ -11,7 +14,7 @@ import interQA.elements.PropertyElement;
 public class SparqlQueryBuilder {
 
 	Vocabulary vocab = new Vocabulary();
-	
+	String endpoint = "http://es.dbpedia.org/sparql";
 	
 	// query to reach Instances of a Class
 	private String queryForClassInstances(LexicalEntry classvar){
@@ -84,7 +87,13 @@ public class SparqlQueryBuilder {
 				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
 				+ "  ?uri  <"+prop_entry.getReference()+">  "+lit_entry.getReference()+". }";
 	}
-	
+	// create query to ensure whether it works or not (property (w.r.t class) and literal)
+	private String AskQueryForincasePropertyAndLiteral(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry lit_entry){
+		
+		return "ASK WHERE"
+				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
+				+ "  ?uri  <"+prop_entry.getReference()+">  "+lit_entry.getReference()+". }";
+	}
 	
 	public List<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries){
 		
@@ -265,12 +274,18 @@ public class SparqlQueryBuilder {
 	public List<String> BuildQueryForClassAndPropertyAndLiteral(ClassElement class_elements,PropertyElement property_elements,LiteralElement literal_elements){
 		
 		List<String> queries = new ArrayList<>();
-		
+		String query="";
+		String check_query="";
 		for(LexicalEntry noun_entry : class_elements.getActiveEntries()){
 			for(LexicalEntry verb_entry : property_elements.getActiveEntries()){
 				for(LexicalEntry lit_entry: literal_elements.getActiveEntries()){
-					queries.add(queryForincasePropertyAndLiteral(noun_entry,verb_entry,lit_entry));
+					query=queryForincasePropertyAndLiteral(noun_entry,verb_entry,lit_entry);
+					check_query =AskQueryForincasePropertyAndLiteral(noun_entry,verb_entry,lit_entry); 
 				}
+				 QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,check_query); //yap birseyler koc
+                 boolean satisfiesCondition = ex.execAsk();
+                 
+                 if(satisfiesCondition) queries.add(query);
 			}
 		}
 		
