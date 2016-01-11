@@ -5,34 +5,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import interQA.elements.LiteralElement;
 import interQA.elements.ClassElement;
-import interQA.elements.IndividualElement;
+import interQA.elements.LiteralElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
-
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 
-
-
-public class SpringerQueryPattern0_1 extends QueryPattern {
+public class SpringerQueryPattern0_2 extends QueryPattern{
+	
+	//Give me all <Class:Noun> that <Property:AdjectivePPFrame> <Literal> 
+	//Give me all conferences that are held in Berlin.
 	
 	
-	
-	//Which <Class:Noun> <Property:IntransitivePPframe> <Literal:gYear>
-	
-	//Which conferences took place in 2015?
-	
-	public SpringerQueryPattern0_1(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
+	public SpringerQueryPattern0_2(Lexicon lexicon,InstanceSource instances,LiteralSource literal){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
-		this.literals = literals;
-		
 		init();
 	}
 	
@@ -41,17 +33,21 @@ public class SpringerQueryPattern0_1 extends QueryPattern {
 		elements = new ArrayList<>();
 		
 		StringElement element0 = new StringElement();
-		element0.add("which");
+		element0.add("give me all");
 		elements.add(element0);
 		
 		ClassElement element1 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
-		elements.add(element1);	
+		elements.add(element1);
 		
-		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame);
+		StringElement element2 = new StringElement();
+		element2.add("that are");
 		elements.add(element2);
 		
-		LiteralElement element3 = new LiteralElement();
+		PropertyElement element3 = new PropertyElement(lexicon,LexicalEntry.POS.ADJECTIVE,vocab.AdjectivePPFrame);
 		elements.add(element3);
+		
+		LiteralElement element4 = new LiteralElement();
+		elements.add(element4);
 	}
 	
 	@Override
@@ -69,14 +65,14 @@ public class SpringerQueryPattern0_1 extends QueryPattern {
     			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
     			
     		}
-			elements.get(2).addToIndex(new_element2index);
+			elements.get(3).addToIndex(new_element2index);
 		}
 		
-		if(i==2){
-	
-			elements.get(3).addToIndex(literals.getLiteralByProperty(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+		if(i==3){
 			
+			elements.get(4).addToIndex(literals.getLiteralByProperty(elements.get(3).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
 		}
+		
 	}
 	
 	@Override
@@ -85,14 +81,12 @@ public class SpringerQueryPattern0_1 extends QueryPattern {
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
 		ClassElement    noun = (ClassElement)    elements.get(1);
-        PropertyElement    verb = (PropertyElement)    elements.get(2);
-        LiteralElement literal = (LiteralElement) elements.get(3);
+        PropertyElement    adjective = (PropertyElement)    elements.get(3);
+        LiteralElement literal = (LiteralElement) elements.get(4);
 		
 		
 		
-		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,verb,literal);
+		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,adjective,literal);
+		
 	}
-	
-	
-
 }

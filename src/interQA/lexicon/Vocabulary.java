@@ -17,7 +17,7 @@ public class Vocabulary {
     public String IntransitivePPFrame;
     public String NounPPFrame;
     public String NounPossessiveFrame;
-    
+    public String AdjectivePPFrame;
     
     public Vocabulary() {
 
@@ -25,6 +25,6 @@ public class Vocabulary {
         IntransitivePPFrame = "http://www.lexinfo.net/ontology/2.0/lexinfo#IntransitivePPFrame";
         NounPPFrame         = "http://www.lexinfo.net/ontology/2.0/lexinfo#NounPPFrame";
         NounPossessiveFrame = "http://www.lexinfo.net/ontology/2.0/lexinfo#NounPossessiveFrame";
-                
+        AdjectivePPFrame    = "http://www.lexinfo.net/ontology/2.0/lexinfo#AdjectivePPFrame";        
     }
 }

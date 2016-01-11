@@ -17,12 +17,36 @@ public class LiteralSource {
 	String endpoint;
 	String lang;
 	Vocabulary vocab = new Vocabulary();
-	
+	List<String> Labelprops;
 	
 	public LiteralSource(String endpoint,String lang){
 		this.endpoint = endpoint;
 		this.lang = lang;
 	}
+
+	public LiteralSource(String endpoint,String lang,List<String> props){
+		this.endpoint = endpoint;
+		this.lang = lang;
+		Labelprops = props;
+	}
+	
+    private String label(String var1, String var2) {
+        
+        String out; 
+        
+        if (Labelprops.size() == 1) {
+            out = var1 + " <" + Labelprops.get(0) + "> " + var2 + " .";
+        }
+        else if (Labelprops.size() > 1) {
+            out = "{ " + var1 + "  <" + Labelprops.get(0) + ">  " + var2 + " . }";
+            for (String prop : Labelprops.subList(1,Labelprops.size()-1)) {
+                 out += " UNION { " + var1 + " <" + prop + "> " + var2 + " . }";
+            }
+        }
+        else out = "";
+        
+        return out;
+    }
 
 	private Map<String,List<LexicalEntry>> getLiteralIndex(String query, String var_literal){
 		
@@ -77,28 +101,59 @@ public class LiteralSource {
 		
 	}
 	
-	// query to get literals for specific property
-	private String LiteralQueryForProperty(String property){
+	// domain query to get literals for specific property
+	private String domainLiteralQueryForProperty(String property){
 		
 		return "SELECT DISTINCT ?lit  { ?x <"+property+"> ?lit.}";
 		
 	}
-	// return literals depends on properties
-	public Map<String,List<LexicalEntry>> getLiteralByProperty(List<LexicalEntry> indexes){
+	//range query to get literals for specific property
+	private String rangeLiteralQueryForProperty(String property){
+		
+		return "SELECT DISTINCT ?lit  { ?object <"+property+"> ?x."
+				+ label("?x","?lit")
+				+"filter langMatches( lang(?l), \""+lang+"\") }";
+		
+	}
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	public Map<String,List<LexicalEntry>> getLiteralByProperty(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
 		
 		Map<String,List<LexicalEntry>> literals = new HashMap<>();
 		
 		String query;
 		
 		for(LexicalEntry index : indexes){
-		    query = LiteralQueryForProperty(index.getReference());
-			literals.putAll(getLiteralIndex(query,"?lit"));
+			
+			if (index.getSemArg(syn)== null) continue;
+			switch(index.getSemArg(syn)){
+			
+				case SUBJOFPROP:
+					query = rangeLiteralQueryForProperty(index.getReference());
+					literals.putAll(getLiteralIndex(query,"?lit"));
+					break;
+				case OBJOFPROP:
+					query = domainLiteralQueryForProperty(index.getReference());
+					literals.putAll(getLiteralIndex(query,"?lit"));
+			}
+		    
 							
 		}
 				
 		return literals;
 		
 	}
+	
+
+	
 }
 
 

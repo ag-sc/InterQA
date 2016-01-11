@@ -14,6 +14,8 @@ import interQA.patterns.QueryPattern0_3;
 import interQA.patterns.QueryPattern3_1;
 import interQA.patterns.*;
 import interQA.patterns.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -26,17 +28,24 @@ public class interQACLI {
     public static void  main(String args[]){
         
         // INIT
+        List<String> LabelProps = new ArrayList<>();
+        LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
+        LabelProps.add("http://lod.springer.com/data/ontology/property/confAcronym");
         
         // Load lexicon     
         Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/springer_en.ttl");
         InstanceSource instances = new InstanceSource("http://es.dbpedia.org/sparql","en");
-        LiteralSource literals = new LiteralSource("http://es.dbpedia.org/sparql","en");
+        LiteralSource literals = new LiteralSource("http://es.dbpedia.org/sparql","en",LabelProps);
         
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         
-        qm.addQueryPattern(new SpringerQueryPattern0_0(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_1(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_2(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_3(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_4(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_5(lexicon,instances,literals));
         /*qm.addQueryPattern(new QueryPattern0_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern0_2(lexicon,instances));
         qm.addQueryPattern(new QueryPattern0_3(lexicon,instances));

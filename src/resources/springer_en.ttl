@@ -104,7 +104,7 @@ lex:startOf_synBehavior a lexinfo:NounPossessiveFrame ;
   lexinfo:copulativeArg lex:startOf_copArg ;
   lexinfo:possessiveAdjunct lex:startOf_posAdj .
 
-lex:startOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/startDate> ;
+lex:startOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/confStartDate> ;
     lemon:subjOfProp lex:startOf_copArg ;
     lemon:objOfProp  lex:startOf_posAdj .
 
@@ -127,7 +127,7 @@ lex:endOf_synBehavior a lexinfo:NounPossessiveFrame ;
   lexinfo:copulativeArg lex:endOf_copArg ;
   lexinfo:possessiveAdjunct lex:endOf_posAdj .
 
-lex:endOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/endDate> ;
+lex:endOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/confEndDate> ;
     lemon:subjOfProp lex:endOf_copArg ;
     lemon:objOfProp  lex:endOf_posAdj .
 
@@ -150,7 +150,7 @@ lex:startDateOf_synBehavior a lexinfo:NounPossessiveFrame ;
   lexinfo:copulativeArg lex:startDateOf_copArg ;
   lexinfo:possessiveAdjunct lex:startDateOf_posAdj .
 
-lex:startDateOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/startDate> ;
+lex:startDateOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/confStartDate> ;
     lemon:subjOfProp lex:startDateOf_copArg ;
     lemon:objOfProp  lex:startDateOf_posAdj .
 
@@ -173,7 +173,7 @@ lex:endDateOf_synBehavior a lexinfo:NounPossessiveFrame ;
   lexinfo:copulativeArg lex:endDateOf_copArg ;
   lexinfo:possessiveAdjunct lex:endDateOf_posAdj .
 
-lex:endDateOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/endDate> ;
+lex:endDateOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/confEndDate> ;
     lemon:subjOfProp lex:endDateOf_copArg ;
     lemon:objOfProp  lex:endDateOf_posAdj .
 

@@ -153,23 +153,23 @@ public class InstanceSource {
     //to confirm the latter property (w.r.t the former property) of class at domain position (May be the former method can be implemented for
     //for this method too) 
     private String domainQueryForPTP(String latterproperty, String formerproperty){
-    	return "ASK WHERE { {  ?subject <"+latterproperty+"> ?object1 . "
-    						+ " ?subject <"+formerproperty+"> ?object2 . }"
-    								+ " UNION { ?subject <"+latterproperty+"> ?object1 . "
-    											+ "?object2 <"+formerproperty+"> ?subject .} "
-    								+ " UNION { ?object1 <"+latterproperty+"> ?subject . "
-    											+ "?subject <"+formerproperty+"> ?object2. } }";
+    	return "ASK WHERE { {  ?subject  <"+latterproperty+">  ?object1 . "
+    						+ " ?subject  <"+formerproperty+">  ?object2 . }"
+    								+ " UNION { ?subject  <"+latterproperty+">  ?object1 . "
+    											+ "?object2  <"+formerproperty+">  ?subject .} "
+    								+ " UNION { ?object1  <"+latterproperty+">  ?subject . "
+    											+ "?subject  <"+formerproperty+">  ?object2. } }";
     	// ?domaın p1 ?obj 
     	// ?obj p2 ... 
     }
     //to confirm the latter property (w.r.t the former property) of class at range position  
     private String rangeQueryForPTP(String latterproperty, String formerproperty){
-    	return "ASK WHERE {  ?subject1 <"+latterproperty+"> ?object . "
-    					 + " ?subject2 <"+formerproperty+"> ?object . }"
-    					 		+ " UNION { ?subject1 <"+latterproperty+"> ?object . "
-    					 				 + "?object <"+formerproperty+"> ?subject2 . } "
-    					 		+ " UNION { ?object <"+latterproperty+"> ?subject1 . "
-    					 				+ "?subject2 <"+formerproperty+" ?object. } }";
+    	return "ASK WHERE {  ?subject1  <"+latterproperty+">  ?object . "
+    					 + " ?subject2  <"+formerproperty+">  ?object . }"
+    					 		+ " UNION { ?subject1  <"+latterproperty+">  ?object . "
+    					 				 + "?object  <"+formerproperty+">  ?subject2 . } "
+    					 		+ " UNION { ?object  <"+latterproperty+">  ?subject1 . "
+    					 				+ "?subject2  <"+formerproperty+">  ?object. } }";
     }
     
     public Map<String,List<LexicalEntry>> filterByClassForProperty(Map<String,List<LexicalEntry>> index, LexicalEntry.SynArg syn, String uri) {
