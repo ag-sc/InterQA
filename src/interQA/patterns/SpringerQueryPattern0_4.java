@@ -38,12 +38,12 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
 		
 		StringElement element0 = new StringElement();
 		element0.add("give me");
-                element0.add("show me");
+        element0.add("show me");
 		elements.add(element0);
                 
-                StringElement element1 = new StringElement();
+        StringElement element1 = new StringElement();
 		element1.add("all");
-                element1.add("the");
+        element1.add("the");
 		elements.add(element1);
 		
 		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
@@ -60,19 +60,29 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
 	@Override
 	public void updateAt(int i){
             		
-                if(i==2){
+                
+		if(i==2){
 		
-                    elements.get(3).addToIndex(literals.getLiteralByProperty(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
+            elements.get(3).addToIndex(literals.getLiteralByPropertyAndInstance(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
 			
 		}
-		
+		if(i==3){
+			
+			elements.get(4).addToIndex(literals.getLiteralByLiteral(elements.get(3).getActiveEntries()));
+		}
 		
 	}
-/*
+
 	@Override
 	public List<String> buildSPARQLqueries(){
 		
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
-	}*/
+		PropertyElement prop_element = (PropertyElement) elements.get(2);
+		LiteralElement name_literal = (LiteralElement) elements.get(3);
+		LiteralElement gYear_literal = (LiteralElement) elements.get(4);
+		
+		return sqb.BuildQueryForPropertyAndgYearAndNameLiteral(prop_element, gYear_literal, name_literal);
+		
+	}
 }

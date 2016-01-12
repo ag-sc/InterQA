@@ -35,12 +35,12 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 		
 		StringElement element0 = new StringElement();
 		element0.add("give me");
-                element0.add("show me");
+        element0.add("show me");
 		elements.add(element0);
 		
-                StringElement element1 = new StringElement();
+        StringElement element1 = new StringElement();
 		element1.add("all");
-                element1.add("the");
+        element1.add("the");
 		elements.add(element1);
 		
 		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
@@ -75,18 +75,34 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 				new_element2index.putAll(instances.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.COPULATIVEARG, entry1.getReference()));
 				
 			}
-			elements.get(4).setIndex(new_element2index);;
+			elements.get(4).setIndex(new_element2index);
 		}
+		
+		if(i==4){
+			
+			elements.get(5).addToIndex(literals.getLabelLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
+		}
+		if(i==5){
+			
+			elements.get(6).addToIndex(literals.getLiteralByLiteral(elements.get(5).getActiveEntries()));
+		}
+		
 		
 	}
 	
 	
-	/*
+	
 	@Override
 	public List<String> buildSPARQLqueries(){
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
+		PropertyElement noun_prop1 = (PropertyElement) elements.get(2);
+		PropertyElement noun_prop2 = (PropertyElement) elements.get(4);
+		LiteralElement literal1 = (LiteralElement) elements.get(5);
+		LiteralElement literal2 = (LiteralElement) elements.get(6);
 		
-	}*/
+		return sqb.BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(noun_prop1,LexicalEntry.SynArg.COPULATIVEARG,
+				noun_prop2,LexicalEntry.SynArg.COPULATIVEARG, literal1, literal2);
+	}
 
 }

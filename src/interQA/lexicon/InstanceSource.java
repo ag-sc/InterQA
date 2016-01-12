@@ -244,7 +244,7 @@ public class InstanceSource {
     				QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint, query.replace("\u00a0"," "));
     				boolean satisfiesCondition = ex.execAsk();
     				
-    				if(satisfiesCondition) filtered_entries.add(entry);    				
+    				if(satisfiesCondition&&entry.getReference()!=uri) filtered_entries.add(entry);    				
     		}
     			if(!filtered_entries.isEmpty()){
     				filtered_index.put(form,filtered_entries);

@@ -101,31 +101,66 @@ public class LiteralSource {
 		
 	}
 	
+	// domain query to get label literals for specific property
+	private String domainLabelLiteralQueryForProperty(String property){
+		
+		return "SELECT DISTINCT ?lit  { ?x <"+property+"> ?y."
+				+ label("?x","?lit")
+				+"filter langMatches( lang(?lit),\""+lang+"\")}";
+		
+	}
+	//range query to get label literals for specific property
+	private String rangeLabelLiteralQueryForProperty(String property){
+		
+		return "SELECT DISTINCT ?lit  { ?object <"+property+"> ?x."
+				+ label("?x","?lit")
+				+"filter langMatches( lang(?lit), \""+lang+"\")}";
+		
+	}
+	
 	// domain query to get literals for specific property
 	private String domainLiteralQueryForProperty(String property){
 		
-		return "SELECT DISTINCT ?lit  { ?x <"+property+"> ?lit.}";
+		return "SELECT DISTINCT ?y  { ?x <"+property+"> ?y. }";
 		
 	}
 	//range query to get literals for specific property
 	private String rangeLiteralQueryForProperty(String property){
 		
-		return "SELECT DISTINCT ?lit  { ?object <"+property+"> ?x."
-				+ label("?x","?lit")
-				+"filter langMatches( lang(?l), \""+lang+"\") }";
+		return "SELECT DISTINCT ?y  { ?y <"+property+"> ?x. }";
 		
 	}
 	
 	
 	
+	//domain query to get literals for specific property that returns IRI 
+	private String domainLiteralQueryForPropertyAndInstance(String property){
+		
+		return "SELECT DISTINCT ?lit  { ?x <"+property+"> ?y."
+				+label("?y","?lit") 
+				+ " }";
+	}
+	//range query to get literals for specific property that returns IRI 
+	private String rangeLiteralQueryForPropertyAndInstance(String property){
+		
+		return "SELECT DISTINCT ?lit  { ?y <"+property+"> ?x."
+				+label("?y","?lit") 
+				+ " }";
+	} 
+	//query to get gYearLiterals by the chosen Literal
+	private String gYearLiteralQueryForChosenLiteral(String literal){
+		return "SELECT DISTINCT ?lit {"
+				+ "?x <http://lod.springer.com/data/ontology/property/hasConference> ?conference."
+				+ "?conference <http://lod.springer.com/data/ontology/property/confYear> ?lit."
+				+label("?conference",literal) +"}";
+	}
 
 	
 	
 	
 	
 	
-	
-	public Map<String,List<LexicalEntry>> getLiteralByProperty(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
+	public Map<String,List<LexicalEntry>> getLabelLiteralByProperty(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
 		            
 		Map<String,List<LexicalEntry>> literals = new HashMap<>();
 		
@@ -137,12 +172,13 @@ public class LiteralSource {
 			switch(index.getSemArg(syn)){
 			
 				case SUBJOFPROP:
-					query = rangeLiteralQueryForProperty(index.getReference());
+					query = rangeLabelLiteralQueryForProperty(index.getReference());
 					literals.putAll(getLiteralIndex(query,"?lit"));
 					break;
 				case OBJOFPROP:
-					query = domainLiteralQueryForProperty(index.getReference());
+					query = domainLabelLiteralQueryForProperty(index.getReference());
 					literals.putAll(getLiteralIndex(query,"?lit"));
+					break;
 			}
 		    
 							
@@ -152,8 +188,79 @@ public class LiteralSource {
 		
 	}
 	
+	public Map<String,List<LexicalEntry>> getLiteralByProperty(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
+        
+		Map<String,List<LexicalEntry>> literals = new HashMap<>();
+		
+		String query;
+		
+		for(LexicalEntry index : indexes){
 
+			if (index.getSemArg(syn)== null) continue;
+			switch(index.getSemArg(syn)){
+			
+				case SUBJOFPROP:
+					query = rangeLiteralQueryForProperty(index.getReference());
+					literals.putAll(getLiteralIndex(query,"?y"));
+					break;
+				case OBJOFPROP:
+					query = domainLiteralQueryForProperty(index.getReference());
+					literals.putAll(getLiteralIndex(query,"?y"));
+					break;
+			}
+		    
+							
+		}
+				
+		return literals;
+		
+	}
 	
+	
+	public Map<String,List<LexicalEntry>> getLiteralByPropertyAndInstance(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
+        
+		Map<String,List<LexicalEntry>> literals = new HashMap<>();
+		
+		String query;
+		
+		for(LexicalEntry index : indexes){
+
+			if (index.getSemArg(syn)== null) continue;
+			switch(index.getSemArg(syn)){
+			
+				case SUBJOFPROP:
+					query = rangeLiteralQueryForPropertyAndInstance(index.getReference());
+					literals.putAll(getLiteralIndex(query,"?lit"));
+					break;
+				case OBJOFPROP:
+					query = domainLiteralQueryForPropertyAndInstance(index.getReference());
+					literals.putAll(getLiteralIndex(query,"?lit"));
+					break;
+			}
+		    
+							
+		}
+				
+		return literals;
+		
+	}
+	
+	public Map<String,List<LexicalEntry>> getLiteralByLiteral(List<LexicalEntry> indexes){
+		
+		Map<String,List<LexicalEntry>> literals = new HashMap();
+		String query;
+		
+		for(LexicalEntry index: indexes){
+			
+			query =gYearLiteralQueryForChosenLiteral(index.getReference()); 
+			literals.putAll(getLiteralIndex(query,"?lit"));		
+		}
+		
+		
+		
+		return literals;
+		
+	}
 }
 
 

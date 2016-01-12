@@ -15,27 +15,34 @@ import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 
-public class SpringerQueryPattern0_2 extends QueryPattern{
+public class SpringerQueryPattern0_3_1 extends QueryPattern{
 	
-	//Give me all <Class:Noun> that <Property:AdjectivePPFrame> <Literal> 
-	//Give me all conferences that are held in Berlin.
+	//Show me all <Class:Noun> that <Property:IntransitivePPFrame> <Literal>
 	
+	//Show me all conferences that took place in Germany.
+	//Show me all conferences that took place in 2015.
+
+	//SELECT DISTINCT ?uri { ?uri rdf:type Conference . ?uri confCity "Berlin" . }
 	
-	public SpringerQueryPattern0_2(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
+	//SELECT DISTINCT ?uri { ?uri rdf:type <Class>.     ?uri <Property> <Literal>. }
+	
+	public SpringerQueryPattern0_3_1(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
 		this.literals = literals;
+		
 		init();
 	}
-	
+
 	@Override
 	public void init(){
+		
 		elements = new ArrayList<>();
 		
 		StringElement element0 = new StringElement();
-		element0.add("give me");
-        element0.add("show me");
+		element0.add("show me");
+        element0.add("give me");
 		elements.add(element0);
                 
         StringElement element1 = new StringElement();
@@ -43,31 +50,29 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
         element1.add("the");
 		elements.add(element1);
 		
-		ClassElement element2 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
+		ClassElement element2 =  new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
 		elements.add(element2);
 		
 		StringElement element3 = new StringElement();
 		element3.add("that");
 		elements.add(element3);
-
-        StringElement element4 = new StringElement();
-		element4.add("is");
-        element4.add("are");
-		element4.add("was");
-		element4.add("were");
+		
+		PropertyElement element4 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame);
 		elements.add(element4);
-                
-		PropertyElement element5 = new PropertyElement(lexicon,LexicalEntry.POS.ADJECTIVE,vocab.AdjectivePPFrame);
+		
+		LiteralElement element5 = new LiteralElement();
 		elements.add(element5);
 		
-		LiteralElement element6 = new LiteralElement();
+		StringElement element6 = new StringElement();
+		element6.add("question mark");
 		elements.add(element6);
 	}
 	
 	@Override
 	public void updateAt(int i){
 		
-		if(i==2){
+		if(i==3){
+			
 			Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
             
     		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
@@ -79,28 +84,29 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
     			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
     			
     		}
-			elements.get(5).addToIndex(new_element2index);
+			elements.get(4).addToIndex(new_element2index);
+			
 		}
 		
-		if(i==5){
+		if(i==4){
 			
-			elements.get(6).addToIndex(literals.getLabelLiteralByProperty(elements.get(5).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+			elements.get(5).addToIndex(literals.getLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+			
 		}
+		
 		
 	}
-	
 	@Override
 	public List<String> buildSPARQLqueries(){
 		
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
 		ClassElement    noun = (ClassElement)    elements.get(2);
-        PropertyElement    adjective = (PropertyElement)    elements.get(5);
-        LiteralElement literal = (LiteralElement) elements.get(6);
+        PropertyElement    verb = (PropertyElement)    elements.get(4);
+        LiteralElement literal = (LiteralElement) elements.get(5);
 		
 		
 		
-		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,adjective,literal);
-		
+		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,verb,literal);
 	}
 }

@@ -1,10 +1,14 @@
 package interQA.lexicon;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import interQA.elements.ClassElement;
 import interQA.elements.IndividualElement;
@@ -16,7 +20,37 @@ public class SparqlQueryBuilder {
 	Vocabulary vocab = new Vocabulary();
 	String endpoint = "http://es.dbpedia.org/sparql";
 	
-	// query to reach Instances of a Class
+	List<String> LabelProperties = new ArrayList<String>(){{add("http://lod.springer.com/data/ontology/property/confAcronym");
+	add("http://lod.springer.com/data/ontology/property/confName");}};
+	
+	List<String> DateProperties = new ArrayList<String>(){{add("http://lod.springer.com/data/ontology/property/confYear");}};
+	
+	
+	 private String label(String var1, String var2,List<String> Labelprops) {
+	        
+	        String out; 
+	        
+	        if (Labelprops.size() == 1) {
+	            out = var1 + " <" + Labelprops.get(0) + "> " + var2 + " .";
+	        }
+	        else if (Labelprops.size() > 1) {
+	            out = "{ " + var1 + "  <" + Labelprops.get(0) + ">  " + var2 + " . }";
+	            for (String prop : Labelprops.subList(1,Labelprops.size()-1)) {
+	                 out += " UNION { " + var1 + " <" + prop + "> " + var2 + " . }";
+	            }
+	        }
+	        else out = "";
+	        
+	        return out;
+	    }
+	
+	 public boolean SPARQLQueryValidator(String check_query){
+			QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,check_query); 
+	        return ex.execAsk();
+		}
+
+	 
+	 // query to reach Instances of a Class
 	private String queryForClassInstances(LexicalEntry classvar){
 		return "SELECT DISTINCT ?x WHERE { "
                 + " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + classvar.getReference() + "> . }";
@@ -78,6 +112,9 @@ public class SparqlQueryBuilder {
 	private String queryForOBJOFPROPinCaseClassAndPropertyEnding(LexicalEntry prop_entry2){
 				return " ?y  <" + prop_entry2.getReference() + "> ?a . }";
 			}
+	
+	
+	
 	//SPRINGER
 	
 	//query for property (w.r.t class) and literal
@@ -94,6 +131,50 @@ public class SparqlQueryBuilder {
 				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
 				+ "  ?uri  <"+prop_entry.getReference()+">  "+lit_entry.getReference()+". }";
 	}
+	//query for gYear Literal and Name Literal of Conference and Property
+	private String queryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
+		return "SELECT DISTINCT ?x "
+				+ "{?x <"+prop_entry.getReference()+"> ?lit."
+				+label("?lit",name_entry.getReference(),LabelProperties)
+				+label("?lit",gYear_entry.getReference(),DateProperties)
+				+" }";
+	}
+	// create query to ensure whether it works or not (property (w.r.t class) and gYear and Name Literal)
+	private String AskQueryForincasePropertyAndgYearAndNameLiteral(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
+		return "ASK WHERE "
+				+ "{?x <"+prop_entry.getReference()+"> ?lit."
+				+label("?lit",name_entry.getReference(),LabelProperties)
+				+label("?lit",gYear_entry.getReference(),DateProperties)
+				+" }";
+		
+	}
+	
+	private String queryForSUBJOFPROPinCasePropertyBeginning(LexicalEntry prop_entry){
+		return "SELECT DISTINCT ?lit1 ?lit2  { ?x  <"+prop_entry.getReference()+"> ?lit1.";
+	}
+	
+	private String queryForOBJOFPROPinCasePropertyBeginning(LexicalEntry prop_entry){
+		return "SELECT DISTINCT ?lit1 ?lit2  { ?lit1  <"+prop_entry.getReference()+"> ?x.";
+	}
+	
+	private String AskQueryForSUBJOFPROPinCasePropertyBeginning(LexicalEntry prop_entry){
+		return "ASK WHERE { ?x  <"+prop_entry.getReference()+"> ?lit1.";
+	}
+	
+	private String AskQueryForOBJOFPROPinCasePropertyBeginning(LexicalEntry prop_entry){
+		return "ASK WHERE { ?lit1  <"+prop_entry.getReference()+"> ?x.";
+	}
+
+	private String queryForSUBJOFPROPinCasePropertyInMiddle(LexicalEntry prop_entry){
+		return "?x <"+prop_entry.getReference()+"> ?lit2.";
+	}
+	
+	private String queryForOBJOFPROPinCasePropertyInMiddle(LexicalEntry prop_entry){
+		return "?lit2 <"+prop_entry.getReference()+"> ?x. ";
+	}
+	
+
+	
 	
 	public List<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries){
 		
@@ -104,7 +185,8 @@ public class SparqlQueryBuilder {
 	}
 	
 	//without class IRI
-	public List<String> BuildQueryForIndividualAndPropery(IndividualElement instance_elements,PropertyElement property_elements,LexicalEntry.SynArg syn){
+	public List<String> BuildQueryForIndividualAndPropery(IndividualElement instance_elements,PropertyElement property_elements,
+LexicalEntry.SynArg syn){
 		
 		List<String> queries = new ArrayList<>();
 		
@@ -136,7 +218,8 @@ public class SparqlQueryBuilder {
 		
 	}
 	//with class IRI of Instances
-	public List<String> BuildQueryForIndividualAndProperty(ClassElement class_elements,IndividualElement instance_elements,PropertyElement property_elements,LexicalEntry.SynArg syn){
+	public List<String> BuildQueryForIndividualAndProperty(ClassElement class_elements,IndividualElement instance_elements,
+PropertyElement property_elements,LexicalEntry.SynArg syn){
 		
 		List<String> queries = new ArrayList<>();
 		
@@ -171,7 +254,8 @@ public class SparqlQueryBuilder {
 		return queries;
 	}
 
-	public List<String> BuildQueryForClassAndProperty(ClassElement class_elements,PropertyElement property_elements,LexicalEntry.SynArg syn){
+	public List<String> BuildQueryForClassAndProperty(ClassElement class_elements,PropertyElement property_elements,
+LexicalEntry.SynArg syn){
 		
 		List<String> queries  = new ArrayList<>();
 		
@@ -203,7 +287,8 @@ public class SparqlQueryBuilder {
 		
 	}
 
-	public List<String> BuildQueryForClassAnd2Properties(ClassElement class_elements,PropertyElement property_element1,PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg syn2){
+	public List<String> BuildQueryForClassAnd2Properties(ClassElement class_elements,PropertyElement property_element1,
+PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg syn2){
 		
 		List<String> queries = new ArrayList<>();
 		
@@ -271,7 +356,10 @@ public class SparqlQueryBuilder {
 		return queries;
 	}
 
-	public List<String> BuildQueryForClassAndPropertyAndLiteral(ClassElement class_elements,PropertyElement property_elements,LiteralElement literal_elements){
+	
+	//SPRINGER
+	public List<String> BuildQueryForClassAndPropertyAndLiteral(ClassElement class_elements,PropertyElement property_elements,
+LiteralElement literal_elements){
 		
 		List<String> queries = new ArrayList<>();
 		String query="";
@@ -282,13 +370,140 @@ public class SparqlQueryBuilder {
 					query=queryForincasePropertyAndLiteral(noun_entry,verb_entry,lit_entry);
 					check_query =AskQueryForincasePropertyAndLiteral(noun_entry,verb_entry,lit_entry); 
 				}
-				 QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,check_query); //yap birseyler koc
-                 boolean satisfiesCondition = ex.execAsk();
-                 
-                 if(satisfiesCondition) queries.add(query);
+				if(SPARQLQueryValidator(check_query)) queries.add(query);
 			}
 		}
 		
 		return queries;
 	}
+
+	public List<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,LiteralElement gYear_elements,
+LiteralElement name_elements){
+		
+		List<String> queries = new ArrayList<>();
+		String query = "";
+		String check_query="";
+		for(LexicalEntry property_element: property_elements.getActiveEntries()){
+			for(LexicalEntry name_element : name_elements.getActiveEntries()){
+				for(LexicalEntry gYear_element : gYear_elements.getActiveEntries()){
+					query = queryForincasegYearNameandProperty(gYear_element,name_element,property_element);
+					check_query = AskQueryForincasePropertyAndgYearAndNameLiteral(gYear_element,name_element,property_element);
+				}
+				if(SPARQLQueryValidator(check_query)&& !queries.contains(query)) queries.add(query);
+			}
+		}
+		
+		
+		return queries;
+	}
+
+	public List<String> BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(PropertyElement property_elements1,LexicalEntry.SynArg syn1,
+			PropertyElement property_elements2,LexicalEntry.SynArg syn2,LiteralElement name_literals,LiteralElement gYear_literals){
+		
+		List<String> queries = new ArrayList<>();
+		
+		for(LexicalEntry property_entry1 : property_elements1.getActiveEntries()){
+			
+			String query = "";
+			String check_query= "";
+			
+			switch(property_entry1.getSemArg(syn1)){
+				case SUBJOFPROP:
+					
+					query = queryForSUBJOFPROPinCasePropertyBeginning(property_entry1);
+					check_query = AskQueryForSUBJOFPROPinCasePropertyBeginning(property_entry1);
+					
+					for(LexicalEntry property_entry2 : property_elements2.getActiveEntries()){
+						
+						switch(property_entry2.getSemArg(syn2)){
+						
+						case SUBJOFPROP:
+							query += queryForSUBJOFPROPinCasePropertyInMiddle(property_entry2);
+							check_query += queryForSUBJOFPROPinCasePropertyInMiddle(property_entry2);
+							for(LexicalEntry gYear_entry : gYear_literals.getActiveEntries()){
+								for(LexicalEntry name_entry : name_literals.getActiveEntries()){
+									query += label("?x",gYear_entry.getReference(),DateProperties) + label("?x",name_entry.getReference(),LabelProperties);
+									check_query += label("?x",gYear_entry.getReference(),DateProperties) + label("?x",name_entry.getReference(),LabelProperties);
+								}
+							}
+							query += "}";
+							check_query += "}";
+							
+							if(SPARQLQueryValidator(check_query)) queries.add(query);
+							
+							break;
+						case OBJOFPROP:
+							query += queryForOBJOFPROPinCasePropertyInMiddle(property_entry2);
+							check_query += queryForOBJOFPROPinCasePropertyInMiddle(property_entry2);
+							for(LexicalEntry gYear_entry : gYear_literals.getActiveEntries()){
+								for(LexicalEntry name_entry : name_literals.getActiveEntries()){
+									query += label("?x",gYear_entry.getReference(),DateProperties) + label("?x",name_entry.getReference(),LabelProperties);
+									check_query += label("?x",gYear_entry.getReference(),DateProperties) + label("?x",name_entry.getReference(),LabelProperties);
+								}
+							}
+							query += "}";
+							check_query += "}";
+							
+							if(SPARQLQueryValidator(check_query)) queries.add(query);
+							break;
+						default:
+							break;
+						}
+					}
+					
+					break;
+					
+				case OBJOFPROP:
+					for(LexicalEntry property_entry2 : property_elements2.getActiveEntries()){
+						
+						query = queryForOBJOFPROPinCasePropertyBeginning(property_entry1);
+						check_query = AskQueryForOBJOFPROPinCasePropertyBeginning(property_entry1);
+						
+						switch(property_entry2.getSemArg(syn2)){
+						
+
+						case SUBJOFPROP:
+							query += queryForSUBJOFPROPinCasePropertyInMiddle(property_entry2);
+							check_query += queryForSUBJOFPROPinCasePropertyInMiddle(property_entry2) ;
+							for(LexicalEntry gYear_entry : gYear_literals.getActiveEntries()){
+								for(LexicalEntry name_entry : name_literals.getActiveEntries()){
+									query += label("?x",gYear_entry.getReference(),DateProperties) + label("?x",name_entry.getReference(),LabelProperties);
+									check_query += label("?x",gYear_entry.getReference(),DateProperties) + label("?x",name_entry.getReference(),LabelProperties);
+								}
+							}
+							query += "}";
+							check_query += "}";
+							
+							if(SPARQLQueryValidator(check_query)) queries.add(query);
+							break;
+						case OBJOFPROP:
+							query += queryForOBJOFPROPinCasePropertyInMiddle(property_entry2);
+							for(LexicalEntry gYear_entry : gYear_literals.getActiveEntries()){
+								for(LexicalEntry name_entry : name_literals.getActiveEntries()){
+									query += label("?x",gYear_entry.getReference(),DateProperties) + label("?x",name_entry.getReference(),LabelProperties);
+									check_query += label("?x",gYear_entry.getReference(),DateProperties) + label("?x",name_entry.getReference(),LabelProperties);
+								}
+							}
+							query += "}";
+							check_query += "}";
+							
+							if(SPARQLQueryValidator(check_query)) queries.add(query);
+							break;
+						default:
+							break;
+				
+					}		
+					break;	
+			
+			}
+			
+		}
+		
+	}
+		return queries;
+
+}
+	
+	
+
 }

@@ -15,18 +15,17 @@ import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 
-public class SpringerQueryPattern0_3 extends QueryPattern{
+public class SpringerQueryPattern0_3_2 extends QueryPattern{
 	
 	//Show me all <Class:Noun> that <Property:IntransitivePPFrame> <Literal>
 	
-	//Show me all conferences that took place in Germany.
-	//Show me all conferences that took place in 2015.
+	//Show me all conferences that took place in Berlin in 2015.
 
-	//SELECT DISTINCT ?uri { ?uri rdf:type Conference . ?uri confCity "Berlin" . }
+	//SELECT DISTINCT ?uri { ?uri rdf:type Conference . ?uri confCity "Berlin" . ?uri confYear "2015" }
 	
 	//SELECT DISTINCT ?uri { ?uri rdf:type <Class>.     ?uri <Property> <Literal>. }
 	
-	public SpringerQueryPattern0_3(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
+	public SpringerQueryPattern0_3_2(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
@@ -63,7 +62,12 @@ public class SpringerQueryPattern0_3 extends QueryPattern{
 		LiteralElement element5 = new LiteralElement();
 		elements.add(element5);
 		
+		StringElement element6 = new StringElement();
+		element6.add("in");
+		elements.add(element6);
 		
+		LiteralElement element7 = new LiteralElement();
+		elements.add(element7);
 	}
 	
 	@Override
@@ -91,7 +95,10 @@ public class SpringerQueryPattern0_3 extends QueryPattern{
 			elements.get(5).addToIndex(literals.getLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
 			
 		}
-		
+		if(i==6){
+			
+			elements.get(7).addToIndex(literals.getLiteralByLiteral(elements.get(5).getActiveEntries()));
+		}
 		
 	}
 	@Override

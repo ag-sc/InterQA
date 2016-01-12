@@ -29,7 +29,7 @@ public class interQACLI {
         
         // INIT
         List<String> LabelProps = new ArrayList<>();
-        LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
+        //LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
         LabelProps.add("http://lod.springer.com/data/ontology/property/confAcronym");
         
         // Load lexicon     
@@ -43,7 +43,8 @@ public class interQACLI {
         
         qm.addQueryPattern(new SpringerQueryPattern0_1(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_2(lexicon,instances,literals));
-        qm.addQueryPattern(new SpringerQueryPattern0_3(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_3_1(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_3_2(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_4(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_5(lexicon,instances,literals));
         /*qm.addQueryPattern(new QueryPattern0_1(lexicon,instances));
