@@ -13,7 +13,8 @@ lex:lexicon a lemon:Lexicon ;
   lemon:entry lex:endOf ; 
   lemon:entry lex:startDateOf ;
   lemon:entry lex:endDateOf ; 
-  lemon:entry lex:heldIn .
+  lemon:entry lex:heldIn ;
+  lemon:entry lex:in .
 
 
 #### conference ####
@@ -204,5 +205,24 @@ lex:heldIn_sense2 lemon:reference <http://lod.springer.com/data/ontology/propert
 
 #### Markers #### 
 
-lex:in lemon:canonicalForm lex:in_form .
+lex:in a lemon:LexicalEntry ; 
+  lemon:canonicalForm lex:in_form ; 
+  lexinfo:partOfSpeech lexinfo:preposition ;
+  lemon:synBehavior lex:in_synBehavior ; 
+  lemon:sense lex:in_sense1, lex:in_sense2, lex:in_sense3 .
+
 lex:in_form lemon:writtenRep "in"@en .
+
+lex:in_synBehavior a lexinfo:PrepositionalFrame ;
+  lexinfo:attributiveArg lex:in_arg1 ;
+  lexinfo:prepositionalAdjunct lex:in_arg2 .
+
+lex:in_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .
+lex:in_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .
+lex:in_sense3 lemon:reference <http://lod.springer.com/data/ontology/property/confYear> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .

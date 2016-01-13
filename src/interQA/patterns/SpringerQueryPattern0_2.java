@@ -35,12 +35,12 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 		
 		StringElement element0 = new StringElement();
 		element0.add("give me");
-        element0.add("show me");
+                element0.add("show me");
 		elements.add(element0);
                 
         StringElement element1 = new StringElement();
 		element1.add("all");
-        element1.add("the");
+                element1.add("the");
 		elements.add(element1);
 		
 		ClassElement element2 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
@@ -52,7 +52,7 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 
         StringElement element4 = new StringElement();
 		element4.add("is");
-        element4.add("are");
+                element4.add("are");
 		element4.add("was");
 		element4.add("were");
 		elements.add(element4);

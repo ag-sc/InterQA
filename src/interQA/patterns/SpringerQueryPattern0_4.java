@@ -9,7 +9,6 @@ import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 import interQA.elements.*;
 import java.util.List;
-import java.util.Map;
 
 public class SpringerQueryPattern0_4 extends QueryPattern{
 

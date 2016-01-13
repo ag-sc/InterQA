@@ -49,6 +49,7 @@ public class Lexicon {
             collectNounPPs(); 
             collectNounPossessives();
             collectAdjectivePPs();
+            collectPrepositions();
             
         }
         
@@ -533,6 +534,71 @@ public class Lexicon {
                         if (!index.containsKey(form)) index.put(form ,new ArrayList<>());
                         index.get(form).add(entry);
                         
+                    }
+                    catch (NullPointerException npe) {
+                        npe.printStackTrace();
+                    }
+                }
+            }
+        }
+        
+        private void collectPrepositions() {
+            
+            String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
+                               + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
+                               + "SELECT DISTINCT ?canonicalForm ?reference ?subjOfProp ?objOfProp ?subject ?object WHERE {"
+                               + " ?lexicon lemon:entry ?entry . "
+                               + " ?entry   lexinfo:partOfSpeech lexinfo:preposition . "
+                               + " ?entry   lemon:canonicalForm ?form . " 
+                               + " ?form    lemon:writtenRep ?canonicalForm ."
+                               + " ?entry   lemon:sense ?sense . "
+                               + " ?sense   lemon:reference ?reference ."
+                               + " ?sense   lemon:subjOfProp ?subjOfProp ."
+                               + " ?sense   lemon:objOfProp  ?objOfProp ."
+                               + " ?entry   lemon:synBehavior ?frame ."
+                               + " ?frame   <" + vocab.rdfType + "> lexinfo:PrepositionalFrame ."
+                               + " ?frame   lexinfo:attributiveArg ?subject ."
+                               + " ?frame   lexinfo:prepositionalAdjunct ?object ."
+                               + "}";
+            
+            Query query = QueryFactory.create(queryString) ;
+  
+            try (QueryExecution qexec = QueryExecutionFactory.create(query,model)) {
+    
+                ResultSet results = qexec.execSelect() ;
+                                
+                for ( ; results.hasNext() ; ) {
+                    
+                    QuerySolution sol = results.nextSolution() ;
+                                        
+                    String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
+                    String reference     = sol.get("reference").toString(); 
+                    String subjOfProp    = sol.get("subjOfProp").toString();
+                    String objOfProp     = sol.get("objOfProp").toString();
+                    String subject       = sol.get("subject").toString();
+                    String object        = sol.get("object").toString();
+                    
+                    try {      
+                        LexicalEntry entry = new LexicalEntry(); 
+                        entry.setCanonicalForm(canonicalForm);
+                        entry.setReference(reference);
+                        entry.setPOS(LexicalEntry.POS.PREPOSITION);
+                        entry.setFrame(vocab.lexinfo + "PrepositionalFrame");
+                        
+                        if (subject.equals(subjOfProp) && object.equals(objOfProp)) {
+                            entry.addArgumentMapping(LexicalEntry.SynArg.ATTRIBUTIVEARG,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALADJUNCT,LexicalEntry.SemArg.OBJOFPROP);
+                        }
+                        else if (subject.equals(objOfProp) && object.equals(subjOfProp)) {
+                            entry.addArgumentMapping(LexicalEntry.SynArg.ATTRIBUTIVEARG,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALADJUNCT,LexicalEntry.SemArg.SUBJOFPROP);
+                        }
+                        else {
+                            continue;
+                        }
+                        
+                        if (!index.containsKey(canonicalForm)) index.put(canonicalForm ,new ArrayList<>());
+                        index.get(canonicalForm).add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();

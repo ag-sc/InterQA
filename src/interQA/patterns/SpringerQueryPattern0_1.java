@@ -7,7 +7,6 @@ import java.util.Map;
 
 import interQA.elements.LiteralElement;
 import interQA.elements.ClassElement;
-import interQA.elements.IndividualElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 
@@ -20,7 +19,6 @@ import interQA.lexicon.SparqlQueryBuilder;
 
 
 public class SpringerQueryPattern0_1 extends QueryPattern {
-	
 	
 	
 	//Which <Class:Noun> <Property:IntransitivePPframe> <Literal:gYear>
@@ -58,24 +56,21 @@ public class SpringerQueryPattern0_1 extends QueryPattern {
 	public void updateAt(int i){
 		
 		if(i==1){
-			Map<String,List<LexicalEntry>> old_element2index = elements.get(1).getIndex();
-            
-    		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+                    
+                    Map<String,List<LexicalEntry>> old_element2index = elements.get(1).getIndex();
+       	            Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
     		
-    		
-    		
-    		for(LexicalEntry entry : elements.get(1).getActiveEntries()){
+                    for(LexicalEntry entry : elements.get(1).getActiveEntries()){
     			
     			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
     			
-    		}
-			elements.get(2).addToIndex(new_element2index);
+                    }
+                    elements.get(2).addToIndex(new_element2index);
 		}
 		
 		if(i==2){
 	
-			elements.get(3).addToIndex(literals.getLiteralByProperty(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
-			
+                    elements.get(3).addToIndex(literals.getLiteralByProperty(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
 		}
 	}
 	
@@ -84,11 +79,9 @@ public class SpringerQueryPattern0_1 extends QueryPattern {
 		
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
-		ClassElement    noun = (ClassElement)    elements.get(1);
-        PropertyElement    verb = (PropertyElement)    elements.get(2);
-        LiteralElement literal = (LiteralElement) elements.get(3);
-		
-		
+		ClassElement    noun    = (ClassElement)    elements.get(1);
+                PropertyElement verb    = (PropertyElement) elements.get(2);
+                LiteralElement  literal = (LiteralElement)  elements.get(3);
 		
 		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,verb,literal);
 	}

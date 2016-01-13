@@ -2,7 +2,6 @@ package interQA.patterns;
 
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
-import interQA.lexicon.LexicalEntry.SynArg;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
@@ -35,12 +34,12 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 		
 		StringElement element0 = new StringElement();
 		element0.add("give me");
-        element0.add("show me");
+                element0.add("show me");
 		elements.add(element0);
 		
         StringElement element1 = new StringElement();
 		element1.add("all");
-        element1.add("the");
+                element1.add("the");
 		elements.add(element1);
 		
 		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
@@ -58,8 +57,6 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 		
 		LiteralElement element6 = new LiteralElement();
 		elements.add(element6);
-		
-		
 		
 	}
 	

@@ -10,21 +10,16 @@ public class Vocabulary {
     public String rdfs    = "http://www.w3.org/2000/01/rdf-schema#";
     public String lemon   = "http://lemon-model.net/lemon#";
     public String lexinfo = "http://www.lexinfo.net/ontology/2.0/lexinfo#";
-    public String xmls 	  =	"http://www.w3.org/2001/XMLSchema#";
+    public String xmls 	  = "http://www.w3.org/2001/XMLSchema#";
     
     
-    public String TransitiveFrame;
-    public String IntransitivePPFrame;
-    public String NounPPFrame;
-    public String NounPossessiveFrame;
-    public String AdjectivePPFrame;
+    public String TransitiveFrame = lexinfo + "TransitiveFrame";
+    public String IntransitivePPFrame = lexinfo + "IntransitivePPFrame";
+    public String NounPPFrame = lexinfo + "NounPPFrame";
+    public String NounPossessiveFrame = lexinfo + "NounPossessiveFrame";
+    public String AdjectivePPFrame = lexinfo + "AdjectivePPFrame";
+    public String PrepositionalFrame = lexinfo + "PrepositionalFrame";
     
     public Vocabulary() {
-
-        TransitiveFrame     = "http://www.lexinfo.net/ontology/2.0/lexinfo#TransitiveFrame";
-        IntransitivePPFrame = "http://www.lexinfo.net/ontology/2.0/lexinfo#IntransitivePPFrame";
-        NounPPFrame         = "http://www.lexinfo.net/ontology/2.0/lexinfo#NounPPFrame";
-        NounPossessiveFrame = "http://www.lexinfo.net/ontology/2.0/lexinfo#NounPossessiveFrame";
-        AdjectivePPFrame    = "http://www.lexinfo.net/ontology/2.0/lexinfo#AdjectivePPFrame";        
     }
 }
