@@ -2,6 +2,7 @@ package interQA.elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 
 public class StringElement extends ParsableElement {
@@ -26,7 +27,7 @@ public class StringElement extends ParsableElement {
             }
 
             if (!longestMatch.isEmpty()) {
-                return string.replaceFirst(longestMatch,"").trim();
+                return StringUtils.replaceOnce(string,longestMatch,"").trim();
             }                
             return null;
         }
