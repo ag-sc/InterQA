@@ -103,16 +103,20 @@ public class LiteralSource {
 	// domain query to get label literals for specific property
 	private String domainLabelLiteralQueryForProperty(String property){
 		
-		return "SELECT DISTINCT ?lit  { ?x <"+property+"> ?y."
-				+ label("?x","?lit")
-				+"filter langMatches( lang(?lit),\""+lang+"\")}";
+		return "SELECT DISTINCT ?lit WHERE { "
+                                + " ?lit <"+property+"> ?y . " 
+                        //      + " ?x <"+property+"> ?y ."
+			//	+ label("?x","?lit")
+				+ "filter langMatches( lang(?lit),\""+lang+"\") }";
 		
 	}
 	//range query to get label literals for specific property
 	private String rangeLabelLiteralQueryForProperty(String property){
 		
-		return "SELECT DISTINCT ?lit  { ?object <"+property+"> ?x."
-				+ label("?x","?lit")
+		return "SELECT DISTINCT ?lit WHERE { "
+                                + " ?x <"+property+"> ?lit . "
+                        //      + " ?x <"+property+"> ?y."
+			//	+ label("?y","?lit")
 				+"filter langMatches( lang(?lit), \""+lang+"\")}";
 		
 	}
@@ -120,13 +124,13 @@ public class LiteralSource {
 	// domain query to get literals for specific property
 	private String domainLiteralQueryForProperty(String property){
 		
-		return "SELECT DISTINCT ?y  { ?x <"+property+"> ?y. }";
+		return "SELECT DISTINCT ?y WHERE { ?x <"+property+"> ?y. }";
 		
 	}
 	//range query to get literals for specific property
 	private String rangeLiteralQueryForProperty(String property){
 		
-		return "SELECT DISTINCT ?y  { ?y <"+property+"> ?x. }";
+		return "SELECT DISTINCT ?y WHERE { ?y <"+property+"> ?x. }";
 		
 	}
 	
@@ -135,27 +139,27 @@ public class LiteralSource {
 	//domain query to get literals for specific property that returns IRI 
 	private String domainLiteralQueryForPropertyAndInstance(String property){
 		
-		return "SELECT DISTINCT ?lit  { ?x <"+property+"> ?y."
+		return "SELECT DISTINCT ?lit WHERE { ?x <"+property+"> ?y."
 				+label("?y","?lit") 
 				+ " }";
 	}
 	//range query to get literals for specific property that returns IRI 
 	private String rangeLiteralQueryForPropertyAndInstance(String property){
 		
-		return "SELECT DISTINCT ?lit  { ?y <"+property+"> ?x."
+		return "SELECT DISTINCT ?lit WHERE { ?y <"+property+"> ?x."
 				+label("?y","?lit") 
 				+ " }";
 	} 
 	//query to get gYearLiterals by the chosen Literal
 	private String gYearLiteralQueryForChosenLiteral(String literal){
-		return "SELECT DISTINCT ?lit {"
+		return "SELECT DISTINCT ?lit WHERE {"
 				+ "?x <http://lod.springer.com/data/ontology/property/hasConference> ?conference."
 				+ "?conference <http://lod.springer.com/data/ontology/property/confYear> ?lit."
 				+label("?conference",literal) +"}";
 	}
 
 	private String LiteralQueryForChosenLiteralAndProperty(String prop_name,String propoflit_name,String literal){
-		return	"SELECT DISTINCT ?lit { ?uri <"+prop_name+">  ?lit."
+		return	"SELECT DISTINCT ?lit WHERE { ?uri <"+prop_name+">  ?lit."
 				+ "?uri <"+propoflit_name+">  "+literal+". }";
 	}
 	
@@ -173,11 +177,11 @@ public class LiteralSource {
 			switch(index.getSemArg(syn)){
 			
 				case SUBJOFPROP:
-					query = rangeLabelLiteralQueryForProperty(index.getReference());
+					query = domainLabelLiteralQueryForProperty(index.getReference());
 					literals.putAll(getLiteralIndex(query,"?lit"));
 					break;
 				case OBJOFPROP:
-					query = domainLabelLiteralQueryForProperty(index.getReference());
+					query = rangeLabelLiteralQueryForProperty(index.getReference());
 					literals.putAll(getLiteralIndex(query,"?lit"));
 					break;
 			}

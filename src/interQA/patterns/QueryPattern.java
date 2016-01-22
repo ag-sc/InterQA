@@ -36,10 +36,10 @@ public abstract class QueryPattern {
             currentElement = -1;
 
             int i = 0;
-            while (!input.isEmpty() && elements.size() >= i-1) {
-		    
+            while (!input.isEmpty() && elements.size() > i) {
+                   
                     String rest  = elements.get(i).parse(input); 
-                    
+
                     if (rest == null) { return false; }
                     
                     currentElement = i;

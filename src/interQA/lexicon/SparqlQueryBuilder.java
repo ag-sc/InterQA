@@ -45,8 +45,8 @@ public class SparqlQueryBuilder {
 	    }
 	
 	 public boolean SPARQLQueryValidator(String check_query){
-			QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,check_query); 
-	        return ex.execAsk();
+                QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,check_query);
+                return ex.execAsk();
 		}
 
 	 
@@ -119,15 +119,15 @@ public class SparqlQueryBuilder {
 	
 	//query for property (w.r.t class) and literal
 	private String queryForincasePropertyAndLiteral(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry lit_entry){
-		//SELECT DISTINCT ?uri { ?uri rdf:type Conference . ?uri confYear "2015" . }
-		return "SELECT DISTINCT ?uri "
+		//SELECT DISTINCT ?uri WHERE { ?uri rdf:type Conference . ?uri confYear "2015" . }
+		return "SELECT DISTINCT ?uri WHERE "
 				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
 				+ "  ?uri  <"+prop_entry.getReference()+">  "+lit_entry.getReference()+". }";
 	}
 	
 	private String queryForincase2PropertyAnd2Literal(LexicalEntry class_entry,LexicalEntry prop1_entry,LexicalEntry lit1_entry,
 			LexicalEntry prop2_entry,LexicalEntry lit2_entry){
-		return "SELECT DISTINCT ?uri "
+		return "SELECT DISTINCT ?uri WHERE "
 				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
 				+ "  ?uri  <"+prop1_entry.getReference()+">  "+lit1_entry.getReference()+". "
 				+ "  ?uri  <"+prop2_entry.getReference()+">  "+lit2_entry.getReference()+".}";
@@ -153,7 +153,7 @@ public class SparqlQueryBuilder {
 	
 	//query for gYear Literal and Name Literal of Conference and Property
 	private String queryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
-		return "SELECT DISTINCT ?x "
+		return "SELECT DISTINCT ?x WHERE "
 				+ "{?x <"+prop_entry.getReference()+"> ?lit."
 				+label("?lit",name_entry.getReference(),LabelProperties)
 				+label("?lit",gYear_entry.getReference(),DateProperties)
@@ -413,7 +413,7 @@ LiteralElement literal_elements){
 							check_query=AskQueryincase2PropertyAnd2Literal(class_element,property1_element,literal1_element,
 									property2_element,literal2_element);
 						}
-						if(SPARQLQueryValidator(check_query)) queries.add(query);
+						if(!query.isEmpty() && SPARQLQueryValidator(check_query)) queries.add(query);
 					}
 				}
 			}

@@ -81,7 +81,7 @@ public class SpringerQueryPattern0_1_2 extends QueryPattern {
 		
 		if(i==4){
 			
-			elements.get(5).addToIndex(literals.getLiteralByPropertyAndLiteral(elements.get(4).getActiveEntries(),elements.get(2).getActiveEntries(),
+                    elements.get(5).addToIndex(literals.getLiteralByPropertyAndLiteral(elements.get(4).getActiveEntries(),elements.get(2).getActiveEntries(),
 					elements.get(3).getActiveEntries()));
 			
 		}
@@ -97,8 +97,8 @@ public class SpringerQueryPattern0_1_2 extends QueryPattern {
         LiteralElement literal = (LiteralElement) elements.get(3);
         PropertyElement verb2 = (PropertyElement) elements.get(4);
         LiteralElement literal2 = (LiteralElement)elements.get(5);
-		
-		
+
+                
 		
 		return sqb.BuildQueryForClassAnd2PropertyAnd2Literal(noun,verb,literal,verb2,literal2);
 	}
