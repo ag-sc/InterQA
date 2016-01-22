@@ -77,7 +77,7 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 		
 		if(i==4){
 			
-			elements.get(5).addToIndex(literals.getLabelLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
+			elements.get(5).addToIndex(literals.getLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
 		}
 		if(i==5){
 			

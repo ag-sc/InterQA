@@ -29,7 +29,7 @@ public class interQACLI {
         
         // INIT
         List<String> LabelProps = new ArrayList<>();
-        //LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
+        LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
         LabelProps.add("http://lod.springer.com/data/ontology/property/confAcronym");
         
         // Load lexicon     
