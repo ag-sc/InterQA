@@ -236,7 +236,7 @@ public class LiteralSource {
 			
 					query = LiteralQueryForChosenLiteralAndProperty(prop_index.getReference(),propoflit_index.getReference(),lit_index.getReference()) ; 
 					literals.putAll(getLiteralIndex(query,"?lit"));
-					System.out.println(query);
+					
 					
 					if(!literals.containsValue(lit_index.getReference())) filtered_literals.putAll(literals);
 		    
