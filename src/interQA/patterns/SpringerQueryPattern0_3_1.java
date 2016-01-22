@@ -96,6 +96,9 @@ public class SpringerQueryPattern0_3_1 extends QueryPattern{
 		
 		
 	}
+	
+	
+	
 	@Override
 	public List<String> buildSPARQLqueries(){
 		

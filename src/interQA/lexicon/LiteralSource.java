@@ -154,8 +154,10 @@ public class LiteralSource {
 				+label("?conference",literal) +"}";
 	}
 
-	
-	
+	private String LiteralQueryForChosenLiteralAndProperty(String prop_name,String propoflit_name,String literal){
+		return	"SELECT DISTINCT ?lit { ?uri <"+prop_name+">  ?lit."
+				+ "?uri <"+propoflit_name+">  "+literal+". }";
+	}
 	
 	
 	
@@ -194,7 +196,7 @@ public class LiteralSource {
 		String query;
 		
 		for(LexicalEntry index : indexes){
-
+			
 			if (index.getSemArg(syn)== null) continue;
 			switch(index.getSemArg(syn)){
 			
@@ -214,7 +216,33 @@ public class LiteralSource {
 		return literals;
 		
 	}
-	
+
+	public Map<String,List<LexicalEntry>> getLiteralByPropertyAndLiteral(List<LexicalEntry> prop_indexes,List<LexicalEntry> propoflit_indexes,List<LexicalEntry> lit_indexes){
+		
+		
+		Map<String,List<LexicalEntry>> literals = new HashMap<>();
+		Map<String,List<LexicalEntry>> filtered_literals = new HashMap<>();
+		
+		String query;
+		
+		for(LexicalEntry prop_index : prop_indexes){	
+		for(LexicalEntry propoflit_index : propoflit_indexes){
+		for(LexicalEntry lit_index : lit_indexes){
+			
+			
+					query = LiteralQueryForChosenLiteralAndProperty(prop_index.getReference(),propoflit_index.getReference(),lit_index.getReference()) ; 
+					literals.putAll(getLiteralIndex(query,"?lit"));
+					
+					if(!literals.containsKey(lit_index.getCanonicalForm())) filtered_literals.putAll(literals);
+		    
+		}
+						
+		}
+		
+		}
+		
+		return filtered_literals;
+	}
 	
 	public Map<String,List<LexicalEntry>> getLiteralByPropertyAndInstance(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
         

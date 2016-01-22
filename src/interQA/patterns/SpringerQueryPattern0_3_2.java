@@ -41,12 +41,12 @@ public class SpringerQueryPattern0_3_2 extends QueryPattern{
 		
 		StringElement element0 = new StringElement();
 		element0.add("show me");
-                element0.add("give me");
+        element0.add("give me");
 		elements.add(element0);
                 
-                StringElement element1 = new StringElement();
+        StringElement element1 = new StringElement();
 		element1.add("all");
-                element1.add("the");
+        element1.add("the");
 		elements.add(element1);
 		
 		ClassElement element2 =  new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
@@ -62,8 +62,7 @@ public class SpringerQueryPattern0_3_2 extends QueryPattern{
 		LiteralElement element5 = new LiteralElement();
 		elements.add(element5);
 		
-		StringElement element6 = new StringElement();
-		element6.add("in");
+		PropertyElement element6 = new PropertyElement(lexicon,LexicalEntry.POS.PREPOSITION,vocab.PrepositionalFrame);
 		elements.add(element6);
 		
 		LiteralElement element7 = new LiteralElement();
@@ -96,8 +95,10 @@ public class SpringerQueryPattern0_3_2 extends QueryPattern{
 			
 		}
 		if(i==6){
+
+			elements.get(7).addToIndex(literals.getLiteralByPropertyAndLiteral(elements.get(6).getActiveEntries(),elements.get(4).getActiveEntries(),
+					elements.get(5).getActiveEntries()));
 			
-			elements.get(7).addToIndex(literals.getLiteralByLiteral(elements.get(5).getActiveEntries()));
 		}
 		
 	}
@@ -109,9 +110,11 @@ public class SpringerQueryPattern0_3_2 extends QueryPattern{
 		ClassElement    noun = (ClassElement)    elements.get(2);
         PropertyElement    verb = (PropertyElement)    elements.get(4);
         LiteralElement literal = (LiteralElement) elements.get(5);
+        PropertyElement verb2 = (PropertyElement) elements.get(6);
+        LiteralElement literal2 = (LiteralElement)elements.get(7);
 		
 		
 		
-		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,verb,literal);
+		return sqb.BuildQueryForClassAnd2PropertyAnd2Literal(noun,verb,literal,verb2,literal2);
 	}
 }

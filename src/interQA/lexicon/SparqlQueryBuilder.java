@@ -124,6 +124,15 @@ public class SparqlQueryBuilder {
 				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
 				+ "  ?uri  <"+prop_entry.getReference()+">  "+lit_entry.getReference()+". }";
 	}
+	
+	private String queryForincase2PropertyAnd2Literal(LexicalEntry class_entry,LexicalEntry prop1_entry,LexicalEntry lit1_entry,
+			LexicalEntry prop2_entry,LexicalEntry lit2_entry){
+		return "SELECT DISTINCT ?uri "
+				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
+				+ "  ?uri  <"+prop1_entry.getReference()+">  "+lit1_entry.getReference()+". "
+				+ "  ?uri  <"+prop2_entry.getReference()+">  "+lit2_entry.getReference()+".}";
+	}
+	
 	// create query to ensure whether it works or not (property (w.r.t class) and literal)
 	private String AskQueryForincasePropertyAndLiteral(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry lit_entry){
 		
@@ -131,6 +140,17 @@ public class SparqlQueryBuilder {
 				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
 				+ "  ?uri  <"+prop_entry.getReference()+">  "+lit_entry.getReference()+". }";
 	}
+	
+	private String AskQueryincase2PropertyAnd2Literal(LexicalEntry class_entry,LexicalEntry prop1_entry,LexicalEntry lit1_entry,
+			LexicalEntry prop2_entry,LexicalEntry lit2_entry){
+		
+		return "ASK WHERE"
+				+ "{ ?uri  <"+vocab.rdfType+">  <"+class_entry.getReference()+">. "
+				+ "  ?uri  <"+prop1_entry.getReference()+">  "+lit1_entry.getReference()+". "
+				+ "  ?uri  <"+prop2_entry.getReference()+">  "+lit2_entry.getReference()+".}";
+	}
+	
+	
 	//query for gYear Literal and Name Literal of Conference and Property
 	private String queryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
 		return "SELECT DISTINCT ?x "
@@ -376,7 +396,36 @@ LiteralElement literal_elements){
 		
 		return queries;
 	}
-
+	
+	public List<String> BuildQueryForClassAnd2PropertyAnd2Literal(ClassElement class_elements,PropertyElement property1_elements,
+			LiteralElement literal1_elements,PropertyElement property2_elements,LiteralElement literal2_elements){
+		List<String> queries = new ArrayList<>();
+		String query ="";
+		String check_query = "";
+		
+		for(LexicalEntry class_element: class_elements.getActiveEntries()){
+			for(LexicalEntry property1_element: property1_elements.getActiveEntries()){
+				for(LexicalEntry literal1_element:literal1_elements.getActiveEntries()){
+					for(LexicalEntry property2_element:property2_elements.getActiveEntries()){
+						for(LexicalEntry literal2_element : literal2_elements.getActiveEntries()){
+							query= queryForincase2PropertyAnd2Literal(class_element,property1_element,literal1_element,
+									property2_element,literal2_element);
+							check_query=AskQueryincase2PropertyAnd2Literal(class_element,property1_element,literal1_element,
+									property2_element,literal2_element);
+						}
+						if(SPARQLQueryValidator(check_query)) queries.add(query);
+					}
+				}
+			}
+		}
+		
+		
+		
+		return queries;
+		
+	}
+	
+	
 	public List<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,LiteralElement gYear_elements,
 LiteralElement name_elements){
 		

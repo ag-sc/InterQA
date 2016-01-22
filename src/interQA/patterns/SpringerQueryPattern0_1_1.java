@@ -18,14 +18,14 @@ import interQA.lexicon.SparqlQueryBuilder;
 
 
 
-public class SpringerQueryPattern0_1 extends QueryPattern {
+public class SpringerQueryPattern0_1_1 extends QueryPattern {
 	
 	
 	//Which <Class:Noun> <Property:IntransitivePPframe> <Literal:gYear>
 	
 	//Which conferences took place in 2015?
 	
-	public SpringerQueryPattern0_1(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
+	public SpringerQueryPattern0_1_1(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;

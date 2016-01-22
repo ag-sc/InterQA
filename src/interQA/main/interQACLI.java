@@ -41,12 +41,14 @@ public class interQACLI {
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         
-        qm.addQueryPattern(new SpringerQueryPattern0_1(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_1_1(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_1_2(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_2(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_3_1(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_3_2(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_4(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_5(lexicon,instances,literals));
+        
         /*qm.addQueryPattern(new QueryPattern0_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern0_2(lexicon,instances));
         qm.addQueryPattern(new QueryPattern0_3(lexicon,instances));
