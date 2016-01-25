@@ -12,9 +12,12 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/stylesheet.css">
   <!--[if IE 8]><script src="js/es5.js"></script><![endif]-->
-  <script src="js/jquery.js"></script>
-  <script src="js/dist/js/standalone/selectize.js"></script>
+  <script src="selectize/jquery-2.1.4.min.js"></script>
+  <!--<script src="js/jquery.js"></script>-->
   <script src="js/index.js"></script>
+  <script src="selectize/selectize.js"></script>
+  <link rel="stylesheet" href="selectize/selectize.css">
+  <script src="selectize/jquery.caret.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -29,71 +32,10 @@
      </div>
 
     <script>
-
-// Prevent the backspace key from navigating back.
-$(document).unbind('keydown').bind('keydown', function (event) {
-    var doPrevent = false;
-    if (event.keyCode === 8) {
-        var d = event.srcElement || event.target;
-        if ((d.tagName.toUpperCase() === 'INPUT' &&
-             (
-                 d.type.toUpperCase() === 'TEXT' ||
-                 d.type.toUpperCase() === 'PASSWORD' ||
-                 d.type.toUpperCase() === 'FILE' ||
-                 d.type.toUpperCase() === 'SEARCH' ||
-                 d.type.toUpperCase() === 'EMAIL' ||
-                 d.type.toUpperCase() === 'NUMBER' ||
-                 d.type.toUpperCase() === 'DATE' )
-             ) ||
-             d.tagName.toUpperCase() === 'TEXTAREA') {
-            doPrevent = true;
-        }
-        else {
-            doPrevent = false;
-        }
-    }
-
-    if (doPrevent) {
-        event.preventDefault();
-    }
-});
-
-      var urlsrc = "";
-      var optionsGlobal = [];
-      var isOnlyGetOptions = true;
-      var isOptionDeleted = false;
-      var selecInput = null;
-      var createSelect = function createSelect ()
-      {
-        var eventHandler = function() {
-          return function() {
-            if (arguments[0] === null)
-            {
-              // Empty or deleted all elements
-              optionsGlobal = [];
-            }
-            else
-            {
-              // One or more elements (deleted or added)
-              optionsGlobal = arguments[0];
-            }
-            // Delete the selectize floor :-D
-            $("#selectize-wrapper").empty();
-            initSelect();
-            //Clear SPARQL box
-            $("#sparql").html("");
-          };
-        };
-        var selecInput = $('#select-state').selectize({
-          maxItems		: null,
-          create          : false,
-          persist         : false,
-          onChange        : eventHandler()
-        });
-        //  $('#select-state')[0].selectize.focus()
-        selecInput[0].selectize.focus();
-      };
-
+      //Create the selectize
+      var mySelectize = Selectize.createSelectize(jQuery("#selectize-wrapper"),[]);
+      var optionsGlobal = [];      
+      
       var get_options_success = function get_options_success(e) {
 
         if (e.length == 0) {
@@ -110,29 +52,15 @@ $(document).unbind('keydown').bind('keydown', function (event) {
                   function(e){  //Server error
                      console.log("Error at get queries");
                   });
-
         }
-
-      var htmlText = '<div class="control-group"><label for="select-state">Input:</label><select id="select-state" name="state[]" multiple class="demo-default" style="width:50%" placeholder="Select an option..."><option value="">Select a state...</option>';
-      if (optionsGlobal.length > 0) {
-        for (var i in optionsGlobal) {
-          htmlText += '<option value="' + optionsGlobal[i] +
-                  '" selected="selected">' + optionsGlobal[i] + '</option>';
-        }
+	mySelectize.setSelectizeStates(e);
       }
-      for (var i in e) {
-        htmlText += '<option value="' + e[i] + '">' + e[i] + '</option>';
-      }
-      htmlText += '</select></div>';
-      $("#selectize-wrapper").html(htmlText);
-      createSelect();
-
-      };
-
       var initSelect = function initSelect () {
+	$("#sparql").html("");
+	mySelectize.setSelectizeStates([]);
+	optionsGlobal = mySelectize.getSelectizedItems();
         var getoptions_url = "/interQAWebApp/ServletInterQA?command=getOptions";
         var selected_url = "/interQAWebApp/ServletInterQA?command=selected&selection=";
-
         for (var i in optionsGlobal) {
           selected_url += '' + optionsGlobal[i];
         }
@@ -144,6 +72,8 @@ $(document).unbind('keydown').bind('keydown', function (event) {
           console.log("Error at selected_url");
         });
       };
+      //Manage change event
+      mySelectize.onChange(initSelect);
       $(document).ready(function () {
         initSelect();
       });
