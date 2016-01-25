@@ -15,6 +15,8 @@ public class Inflector_en implements Inflector {
     @Override
     public String getPlural(String noun) {
       
+        if (noun.length() < 2) return noun;
+        
         String n = noun.toLowerCase();
         
         if (n.endsWith("s")  ||
@@ -76,6 +78,8 @@ public class Inflector_en implements Inflector {
     @Override
     public String getPast(String verb, int person) {
      
+        if (verb.length() < 2) return verb;
+        
         String v = verb.toLowerCase();
         
         if (v.endsWith("s")  ||
@@ -87,10 +91,9 @@ public class Inflector_en implements Inflector {
         }
         String lastChar       = v.charAt(v.length()-1)+"";
         String secondLastChar = v.charAt(v.length()-2)+"";
-        String thirdLastChar  = v.charAt(v.length()-3)+"";
         if (!Arrays.asList(vowels).contains(lastChar) 
          &&  Arrays.asList(vowels).contains(secondLastChar)
-         && !Arrays.asList(vowels).contains(thirdLastChar)) {
+         && !(v.length() > 2 && Arrays.asList(vowels).contains(v.charAt(v.length()-3)+""))) {
          return verb + lastChar + "ed";
         }
         if (lastChar.equals("y") && !Arrays.asList(vowels).contains(secondLastChar)) {
