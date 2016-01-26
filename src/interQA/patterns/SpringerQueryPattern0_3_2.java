@@ -95,7 +95,7 @@ public class SpringerQueryPattern0_3_2 extends QueryPattern{
 		
 		if(i==4){
 			
-			elements.get(5).addToIndex(literals.getLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+			elements.get(5).addToIndex(literals.getJustLiteralByProperty(elements.get(4).getActiveEntries()));
 			
 		}
 		if(i==6){

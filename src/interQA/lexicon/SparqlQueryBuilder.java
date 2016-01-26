@@ -157,7 +157,7 @@ public class SparqlQueryBuilder {
 	
 	
 	//query for gYear Literal and Name Literal of Conference and Property
-	private String queryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
+	private String DomainqueryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
                         
 		return "SELECT DISTINCT ?x WHERE "
 				+ "{?x <"+prop_entry.getReference()+"> ?lit."
@@ -165,16 +165,39 @@ public class SparqlQueryBuilder {
 				+label("?lit",gYear_entry.getReference(),DateProperties)
 				+" }";
 	}
-	// create query to ensure whether it works or not (property (w.r.t class) and gYear and Name Literal)
-	private String AskQueryForincasePropertyAndgYearAndNameLiteral(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
-		return "ASK WHERE "
+    private String RangequeryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
+                        
+		return "SELECT DISTINCT ?x WHERE "
 				+ "{?x <"+prop_entry.getReference()+"> ?lit."
-				+label("?lit",name_entry.getReference(),LabelProperties)
+				+label(name_entry.getReference(),"?lit",LabelProperties)
 				+label("?lit",gYear_entry.getReference(),DateProperties)
 				+" }";
+	}
+
+
+// create query to ensure whether it works or not (property (w.r.t class) and gYear and Name Literal)
+	private String DomainAskQueryForincasePropertyAndgYearAndNameLiteral(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
+		return "ASK WHERE "
+				+ "{?x <"+prop_entry.getReference()+"> ?y."
+				+label("?x",name_entry.getReference(),LabelProperties)
+				+label("?x",gYear_entry.getReference(),DateProperties)
+				+" }";
+                
+                
 		
 	}
 	
+        private String RangeAskQueryForincasePropertyAndgYearAndNameLiteral(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
+		return "ASK WHERE "
+				+ "{?x <"+prop_entry.getReference()+"> ?y."
+				+label("?y",name_entry.getReference(),LabelProperties)
+				+label("?y",gYear_entry.getReference(),DateProperties)
+				+" }";
+                
+                
+		
+	}
+        
 	private String queryForSUBJOFPROPinCasePropertyBeginning(LexicalEntry prop_entry){
 		return "SELECT DISTINCT ?lit1 ?lit2  { ?x  <"+prop_entry.getReference()+"> ?lit1.";
 	}
@@ -433,7 +456,7 @@ LiteralElement literal_elements){
 	
 	
 	public List<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,LiteralElement gYear_elements,
-LiteralElement name_elements){
+LiteralElement name_elements, LexicalEntry.SynArg syn){
 		
 		List<String> queries = new ArrayList<>();
 		String query = "";
@@ -441,8 +464,20 @@ LiteralElement name_elements){
 		for(LexicalEntry property_element: property_elements.getActiveEntries()){
 			for(LexicalEntry name_element : name_elements.getActiveEntries()){
 				for(LexicalEntry gYear_element : gYear_elements.getActiveEntries()){
-					query = queryForincasegYearNameandProperty(gYear_element,name_element,property_element);
-					check_query = AskQueryForincasePropertyAndgYearAndNameLiteral(gYear_element,name_element,property_element);
+                                    
+                                    if (property_element.getSemArg(syn)== null) continue;
+                                    switch(property_element.getSemArg(syn)){
+ 			
+                                        case SUBJOFPROP:
+                                            query = DomainqueryForincasegYearNameandProperty(gYear_element,name_element,property_element);
+                                            check_query = DomainAskQueryForincasePropertyAndgYearAndNameLiteral(gYear_element,name_element,property_element);
+                                            break;
+                                        case OBJOFPROP:
+                                            query = RangequeryForincasegYearNameandProperty(gYear_element,name_element,property_element);
+                                            check_query = RangeAskQueryForincasePropertyAndgYearAndNameLiteral(gYear_element,name_element,property_element);
+                                            break;
+ 			}
+					
 				}
 				if(SPARQLQueryValidator(check_query)&& !queries.contains(query)) queries.add(query);
 			}

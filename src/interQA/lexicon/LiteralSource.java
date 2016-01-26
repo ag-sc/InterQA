@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -101,44 +100,45 @@ public class LiteralSource {
 		return literals;
 		
 	}
-	
+
+        //domain query to get label literals for specific property
+	private String rangeLiteralQueryForProperty(String property){
+		
+		return "SELECT DISTINCT ?lit WHERE { ?x <"+property+"> ?lit. }" ;
+		
+	}
+        
+        //domain query to get label literals for specific property
+	private String domainLabelLiteralQueryForProperty(String property){
+		
+		return "SELECT DISTINCT ?lit WHERE { "
+                                + " ?x <"+property+"> ?y."
+				+ label("?x","?lit")
+				+"filter langMatches( lang(?lit), \""+lang+"\")}";
+		
+	}
+        
 	//range query to get label literals for specific property
 	private String rangeLabelLiteralQueryForProperty(String property){
 		
 		return "SELECT DISTINCT ?lit WHERE { "
-                                + " ?x <"+property+"> ?lit . "
-                        //      + " ?x <"+property+"> ?y."
-			//	+ label("?y","?lit")
+                                + " ?x <"+property+"> ?y."
+				+ label("?y","?lit")
 				+"filter langMatches( lang(?lit), \""+lang+"\")}";
 		
 	}
-	
-	// domain query to get literals for specific property
-	private String domainLiteralQueryForProperty(String property){
-		
-		return "SELECT DISTINCT ?y WHERE { ?x <"+property+"> ?y. }";
-		
-	}
-	//range query to get literals for specific property
-	private String rangeLiteralQueryForProperty(String property){
-		
-		return "SELECT DISTINCT ?y WHERE { ?y <"+property+"> ?x. }";
-		
-	}
-	
-	
 	
 	//domain query to get literals for specific property that returns IRI 
 	private String domainLiteralQueryForPropertyAndInstance(String property){
 		
 		return "SELECT DISTINCT ?lit WHERE { ?x <"+property+"> ?y."
-				+label("?y","?lit") 
+				+label("?x","?lit") 
 				+ " }";
 	}
 	//range query to get literals for specific property that returns IRI 
 	private String rangeLiteralQueryForPropertyAndInstance(String property){
 		
-		return "SELECT DISTINCT ?lit WHERE { ?y <"+property+"> ?x."
+		return "SELECT DISTINCT ?lit WHERE { ?x <"+property+"> ?y."
 				+label("?y","?lit") 
 				+ " }";
 	} 
@@ -165,8 +165,18 @@ public class LiteralSource {
 		
 		for(LexicalEntry index : indexes){
 
-			query = rangeLabelLiteralQueryForProperty(index.getReference());
-			literals.putAll(getLiteralIndex(query,"?lit"));
+                    if (index.getSemArg(syn)== null) continue;
+ 			switch(index.getSemArg(syn)){
+ 			
+ 				case SUBJOFPROP:
+ 					query = domainLabelLiteralQueryForProperty(index.getReference());
+ 					literals.putAll(getLiteralIndex(query,"?lit"));
+ 					break;
+ 				case OBJOFPROP:
+ 					query = rangeLabelLiteralQueryForProperty(index.getReference());
+ 					literals.putAll(getLiteralIndex(query,"?lit"));
+ 					break;
+ 			}
 						
 		}
 				
@@ -174,6 +184,22 @@ public class LiteralSource {
 		
 	}
 	
+        public Map<String,List<LexicalEntry>> getJustLiteralByProperty(List<LexicalEntry> indexes){
+        
+		Map<String,List<LexicalEntry>> literals = new HashMap<>();
+		
+		String query;
+		
+		for(LexicalEntry index : indexes){
+                    
+                    query = rangeLiteralQueryForProperty(index.getReference());
+                    literals.putAll(getLiteralIndex(query,"?lit"));
+		}
+				
+		return literals;
+		
+	}
+        
 	public Map<String,List<LexicalEntry>> getLiteralByProperty(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
         
 		Map<String,List<LexicalEntry>> literals = new HashMap<>();
@@ -181,9 +207,19 @@ public class LiteralSource {
 		String query;
 		
 		for(LexicalEntry index : indexes){
-			
-			query = domainLiteralQueryForProperty(index.getReference());
-			literals.putAll(getLiteralIndex(query,"?y"));	    
+                    
+                    if (index.getSemArg(syn)== null) continue;
+ 			switch(index.getSemArg(syn)){
+ 			
+ 				case SUBJOFPROP:
+ 					query = domainLabelLiteralQueryForProperty(index.getReference());
+ 					literals.putAll(getLiteralIndex(query,"?lit"));
+ 					break;
+ 				case OBJOFPROP:
+ 					query = rangeLabelLiteralQueryForProperty(index.getReference());
+ 					literals.putAll(getLiteralIndex(query,"?lit"));
+ 					break;
+ 			}    
 							
 		}
 				
@@ -220,15 +256,26 @@ public class LiteralSource {
 	}
 	
 	public Map<String,List<LexicalEntry>> getLiteralByPropertyAndInstance(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
-        
+                   
 		Map<String,List<LexicalEntry>> literals = new HashMap<>();
 		
 		String query;
 		
 		for(LexicalEntry index : indexes){
-
-			query = domainLiteralQueryForPropertyAndInstance(index.getReference());
-			literals.putAll(getLiteralIndex(query,"?lit"));
+                    
+                        if (index.getSemArg(syn)== null) continue;
+ 			switch(index.getSemArg(syn)){
+                            
+                            
+ 				case SUBJOFPROP:
+ 					query = domainLiteralQueryForPropertyAndInstance(index.getReference());
+ 					literals.putAll(getLiteralIndex(query,"?lit"));
+ 					break;
+ 				case OBJOFPROP:
+ 					query = rangeLiteralQueryForPropertyAndInstance(index.getReference());
+ 					literals.putAll(getLiteralIndex(query,"?lit"));
+ 					break;
+ 			}    
 							
 		}
 				

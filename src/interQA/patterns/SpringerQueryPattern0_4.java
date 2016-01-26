@@ -66,12 +66,12 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
                 
 		if(i==2){
 		
-            elements.get(3).addToIndex(literals.getLiteralByPropertyAndInstance(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
+                    elements.get(3).addToIndex(literals.getLiteralByPropertyAndInstance(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
 			
 		}
 		if(i==3){
 			
-			elements.get(4).addToIndex(literals.getLiteralByLiteral(elements.get(3).getActiveEntries()));
+                    elements.get(4).addToIndex(literals.getLiteralByLiteral(elements.get(3).getActiveEntries()));
 		}
 		
 	}
@@ -85,7 +85,7 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
 		LiteralElement name_literal = (LiteralElement) elements.get(3);
 		LiteralElement gYear_literal = (LiteralElement) elements.get(4);
 		
-		return sqb.BuildQueryForPropertyAndgYearAndNameLiteral(prop_element, gYear_literal, name_literal);
+		return sqb.BuildQueryForPropertyAndgYearAndNameLiteral(prop_element, gYear_literal, name_literal, LexicalEntry.SynArg.POSSESSIVEADJUNCT);
 		
 	}
 }
