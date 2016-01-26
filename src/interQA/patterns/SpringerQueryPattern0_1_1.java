@@ -50,6 +50,10 @@ public class SpringerQueryPattern0_1_1 extends QueryPattern {
 		
 		LiteralElement element3 = new LiteralElement();
 		elements.add(element3);
+                
+                StringElement element4 = new StringElement();
+                element4.add("?");
+                elements.add(element4);
 	}
 	
 	@Override

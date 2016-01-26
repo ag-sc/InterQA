@@ -53,6 +53,10 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
 		
 		LiteralElement element4 = new LiteralElement();
 		elements.add(element4);
+                
+                StringElement element5 = new StringElement();
+                element5.add(".");
+                elements.add(element5);
 		
 	}
 	

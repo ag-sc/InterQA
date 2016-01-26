@@ -57,11 +57,15 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 		element4.add("were");
 		elements.add(element4);
                 
-		PropertyElement element5 = new PropertyElement(lexicon,LexicalEntry.POS.ADJECTIVE,vocab.AdjectivePPFrame);
+	PropertyElement element5 = new PropertyElement(lexicon,LexicalEntry.POS.ADJECTIVE,vocab.AdjectivePPFrame);
 		elements.add(element5);
 		
-		LiteralElement element6 = new LiteralElement();
+	LiteralElement element6 = new LiteralElement();
 		elements.add(element6);
+                
+        StringElement element7 = new StringElement();
+                element7.add("?");
+                elements.add(element7);
 	}
 	
 	@Override

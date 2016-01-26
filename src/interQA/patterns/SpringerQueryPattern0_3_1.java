@@ -64,8 +64,9 @@ public class SpringerQueryPattern0_3_1 extends QueryPattern{
 		elements.add(element5);
 		
 		StringElement element6 = new StringElement();
-		element6.add("question mark");
+		element6.add(".");
 		elements.add(element6);
+                
 	}
 	
 	@Override

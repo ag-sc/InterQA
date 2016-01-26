@@ -1,30 +1,35 @@
 package interQA.lexicon;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import interQA.elements.ClassElement;
 import interQA.elements.IndividualElement;
 import interQA.elements.LiteralElement;
 import interQA.elements.PropertyElement;
+
 
 public class SparqlQueryBuilder {
 
 	Vocabulary vocab = new Vocabulary();
 	String endpoint = "http://es.dbpedia.org/sparql";
 	
-	List<String> LabelProperties = new ArrayList<String>(){{add("http://lod.springer.com/data/ontology/property/confAcronym");
-	add("http://lod.springer.com/data/ontology/property/confName");}};
+	List<String> LabelProperties; 
+	List<String> DateProperties;
 	
-	List<String> DateProperties = new ArrayList<String>(){{add("http://lod.springer.com/data/ontology/property/confYear");}};
-	
+        public SparqlQueryBuilder() {
+               
+            LabelProperties = new ArrayList<>();
+            LabelProperties.add("http://lod.springer.com/data/ontology/property/confAcronym");
+            LabelProperties.add("http://lod.springer.com/data/ontology/property/confName");
+        
+            DateProperties = new ArrayList<>();
+            DateProperties.add("http://lod.springer.com/data/ontology/property/confYear");
+        }
+        
 	
 	 private String label(String var1, String var2,List<String> Labelprops) {
 	        
@@ -35,8 +40,8 @@ public class SparqlQueryBuilder {
 	        }
 	        else if (Labelprops.size() > 1) {
 	            out = "{ " + var1 + "  <" + Labelprops.get(0) + ">  " + var2 + " . }";
-	            for (String prop : Labelprops.subList(1,Labelprops.size()-1)) {
-	                 out += " UNION { " + var1 + " <" + prop + "> " + var2 + " . }";
+	            for (int i = 1; i < Labelprops.size(); i++) {
+	                 out += " UNION { " + var1 + " <" + Labelprops.get(i) + "> " + var2 + " . }";
 	            }
 	        }
 	        else out = "";
@@ -153,6 +158,7 @@ public class SparqlQueryBuilder {
 	
 	//query for gYear Literal and Name Literal of Conference and Property
 	private String queryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
+                        
 		return "SELECT DISTINCT ?x WHERE "
 				+ "{?x <"+prop_entry.getReference()+"> ?lit."
 				+label("?lit",name_entry.getReference(),LabelProperties)

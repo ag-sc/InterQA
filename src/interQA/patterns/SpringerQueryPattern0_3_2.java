@@ -67,6 +67,10 @@ public class SpringerQueryPattern0_3_2 extends QueryPattern{
 		
 		LiteralElement element7 = new LiteralElement();
 		elements.add(element7);
+                
+                StringElement element8 = new StringElement();
+                element8.add(".");
+                elements.add(element8);
 	}
 	
 	@Override
