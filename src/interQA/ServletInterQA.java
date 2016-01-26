@@ -3,14 +3,14 @@ package interQA;
 import com.google.gson.Gson;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
-import interQA.patterns.QueryPattern1_1;
-import interQA.patterns.QueryPattern9_1;
-import interQA.patterns.QueryPattern9_2;
-import interQA.patterns.QueryPatternManager;
+import interQA.lexicon.LiteralSource;
+import interQA.patterns.*;
 
 import java.io.IOException;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -66,20 +66,42 @@ public class ServletInterQA extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        // Initialization code... loading local files
-        //String fullPath = getServletContext().getRealPath("/") + "WEB-INF" + java.io.File.separator;
-        //String fileName1 = fullPath + "test1.rdf";
-        //String fileName2 = fullPath + "test2.rdf";
+        //log("Query pattern load started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
+
+        // Load lexicon
+//        Lexicon lexicon = new Lexicon("en");
+//        lexicon.load("resources/dbpedia_en.rdf");
+//        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+
+        // Load query patterns
+
+        qm = new QueryPatternManager();
+//        qm.addQueryPattern(new QueryPattern1_1(lexicon,instances));
+//        qm.addQueryPattern(new QueryPattern9_1(lexicon,instances));
+//        qm.addQueryPattern(new QueryPattern9_2(lexicon,instances));
+
+
+        List<String> LabelProps = new ArrayList<>();
+        LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
+        LabelProps.add("http://lod.springer.com/data/ontology/property/confAcronym");
 
         // Load lexicon
         Lexicon lexicon = new Lexicon("en");
-        lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+        lexicon.load("resources/springer_en.ttl");
+        InstanceSource instances = new InstanceSource("http://es.dbpedia.org/sparql","en");
+        LiteralSource literals = new LiteralSource("http://es.dbpedia.org/sparql","en",LabelProps);
 
         // Load query patterns
-        qm = new QueryPatternManager();
-        qm.addQueryPattern(new QueryPattern1_1(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern9_1(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern9_2(lexicon,instances));
+        //QueryPatternManager qm = new QueryPatternManager();
+
+        qm.addQueryPattern(new SpringerQueryPattern0_1_1(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_1_2(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_2(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_3_1(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_3_2(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_4(lexicon,instances,literals));
+        qm.addQueryPattern(new SpringerQueryPattern0_5(lexicon,instances,literals));
+
+        //log("Query pattern load finished at " + LocalDateTime.now());  //LocalDateTime requires Java 8
     }
 }
