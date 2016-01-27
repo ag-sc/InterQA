@@ -66,7 +66,7 @@ public class ServletInterQA extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        //log("Query pattern load started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
+        log("Query pattern load started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
 
         // Load lexicon
 //        Lexicon lexicon = new Lexicon("en");
