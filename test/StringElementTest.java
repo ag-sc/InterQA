@@ -23,7 +23,7 @@ public class StringElementTest extends TestCase {
         element.add("what");
         element.add("who");
         assertEquals(element.parse("whois"), "is");
-        assertEquals(element.parse("who is"), " is");
+        assertEquals(element.parse("who is"), "is");
         assertEquals(element.parse("my"), null);
     }
     public void test2Parse() throws Exception {
@@ -31,9 +31,9 @@ public class StringElementTest extends TestCase {
         element.add("which are");
         element.add("what is");
         element.add("who are");
-        assertEquals(element.parse("which are the"), " the");
-        assertEquals(element.parse("who are people"), " people");
-        assertEquals(element.parse("what is the capital"), " the capital");
+        assertEquals(element.parse("which are the"), "the");
+        assertEquals(element.parse("who are people"), "people");
+        assertEquals(element.parse("what is the capital"), "the capital");
     }
 
     public void test3Parse() throws Exception {
