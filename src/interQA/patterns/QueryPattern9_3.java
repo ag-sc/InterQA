@@ -55,7 +55,7 @@ public class QueryPattern9_3 extends QueryPattern {
 	}
 
         @Override
-        public void updateAt(int i) {
+        public void updateAt(int i,String s) {
             
             if (i == 2) {
             // If parse is at element2, fill element3 with possible instances...

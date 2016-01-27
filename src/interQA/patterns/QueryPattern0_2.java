@@ -56,7 +56,7 @@ public class QueryPattern0_2 extends QueryPattern {
 	}
 	
 	@Override
-	public void updateAt(int i){
+	public void updateAt(int i,String s){
 		
 		if(i==1){
 			

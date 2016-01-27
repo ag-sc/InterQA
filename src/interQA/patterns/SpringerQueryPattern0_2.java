@@ -11,6 +11,7 @@ import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
+import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
@@ -38,8 +39,8 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
                 element0.add("show me");
 		elements.add(element0);
                 
-        StringElement element1 = new StringElement();
-		element1.add("all");
+                StringElement element1 = new StringElement();
+		element1.add("all",Feature.PLURAL);
                 element1.add("the");
 		elements.add(element1);
 		
@@ -50,11 +51,11 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 		element3.add("that");
 		elements.add(element3);
 
-        StringElement element4 = new StringElement();
-		element4.add("is");
-                element4.add("are");
-		element4.add("was");
-		element4.add("were");
+                StringElement element4 = new StringElement();
+		element4.add("is",Feature.SINGULAR);
+                element4.add("are",Feature.PLURAL);
+		element4.add("was",Feature.SINGULAR);
+		element4.add("were",Feature.PLURAL);
 		elements.add(element4);
                 
 	PropertyElement element5 = new PropertyElement(lexicon,LexicalEntry.POS.ADJECTIVE,vocab.AdjectivePPFrame);
@@ -64,15 +65,20 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 		elements.add(element6);
                 
         StringElement element7 = new StringElement();
-                element7.add("?");
+                element7.add(".");
                 elements.add(element7);
 	}
 	
 	@Override
-	public void updateAt(int i){
+	public void updateAt(int i,String s){
 		
+                if (i==1) {
+                    ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
+                }
+            
 		if(i==2){
-			Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
+                    setFeatures(2,4,s);
+                    Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
             
     		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
     		

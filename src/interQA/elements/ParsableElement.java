@@ -1,6 +1,7 @@
 package interQA.elements;
 
 import interQA.lexicon.LexicalEntry;
+import interQA.lexicon.LexicalEntry.Feature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,8 @@ public abstract class ParsableElement {
     // = all active entries
     // Usually set during initialization (based on lexicon)
     // and then reduced during parsing.
-
+    
+    List<Feature> features;
     
     public Map<String,List<LexicalEntry>> getIndex() {        
         return index;
@@ -37,6 +39,10 @@ public abstract class ParsableElement {
     public void addToIndex(Map<String,List<LexicalEntry>> map) {        
         this.index.putAll(map); 
         // TODO need to make sure values are merged when keys overlap?
+    }
+    
+    public void addFeature(Feature f) {
+        this.features.add(f);
     }
     
     public String parse(String string) {
@@ -65,11 +71,32 @@ public abstract class ParsableElement {
     public List<String> getOptions() {
             
         List<String> options = new ArrayList<>();
-        
-        options.addAll(index.keySet());
-        // TODO Filter and order them?
+                
+        if (features.isEmpty()) options.addAll(index.keySet());
+        else {
+            for (String key : index.keySet()) {
+                boolean include = true;
+                for (LexicalEntry entry : index.get(key)) {
+                    if (!compatible(entry.getFeatures(key),features)) {
+                        include = false;
+                        break;
+                    }
+                }
+                if (include) options.add(key);
+            }
+        }
         
         return options;     
+    }
+    
+    public boolean compatible(List<Feature> fs1, List<Feature> fs2) {
+        
+        if (fs1.contains(Feature.SINGULAR)) return !fs2.contains(Feature.PLURAL)    || fs1.contains(Feature.PLURAL);
+        if (fs1.contains(Feature.PLURAL))   return !fs2.contains(Feature.SINGULAR)  || fs1.contains(Feature.SINGULAR);
+        if (fs1.contains(Feature.PRESENT))  return !fs2.contains(Feature.PAST)      || fs1.contains(Feature.PAST);
+        if (fs1.contains(Feature.PAST))     return !fs2.contains(Feature.PRESENT)   || fs1.contains(Feature.PRESENT);
+        
+        return true;
     }
 
 }

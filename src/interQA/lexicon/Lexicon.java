@@ -2,6 +2,7 @@ package interQA.lexicon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,9 @@ public class Lexicon {
             collectAdjectivePPs();
             collectPrepositions();
             
+            for (String key : index.keySet()) {
+                index.put(key,removeDuplicates(index.get(key)));
+            }
         }
         
         public HashMap<String,List<LexicalEntry>> getSubindex(LexicalEntry.POS pos, String frame) {
@@ -138,13 +142,15 @@ public class Lexicon {
             
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?canonicalForm ?pres ?past ?reference ?subjOfProp ?objOfProp ?subject ?directObject WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?pres ?past ?sg ?pl ?reference ?subjOfProp ?objOfProp ?subject ?directObject WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
                                + " ?entry   lexinfo:partOfSpeech lexinfo:verb . "
                                + " ?entry   lemon:canonicalForm ?form . " 
                                + " ?form    lemon:writtenRep ?canonicalForm ."
                                + " OPTIONAL { { ?entry lemon:canonicalForm ?f1 . } UNION { ?entry lemon:otherForm ?f1 . } ?f1 lemon:writtenRep ?pres . ?f1 lexinfo:tense lexinfo:present . } "
                                + " OPTIONAL { { ?entry lemon:canonicalForm ?f2 . } UNION { ?entry lemon:otherForm ?f2 . } ?f2 lemon:writtenRep ?past . ?f2 lexinfo:tense lexinfo:past . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f3 . } UNION { ?entry lemon:otherForm ?f3 . } ?f3 lemon:writtenRep ?sg   . ?f3 lexinfo:number lexinfo:singular . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f4 . } UNION { ?entry lemon:otherForm ?f4 . } ?f4 lemon:writtenRep ?pl   . ?f4 lexinfo:number lexinfo:plural . } "
                                + " ?entry   lemon:sense ?sense . "
                                + " ?sense   lemon:reference ?reference ."
                                + " ?sense   lemon:subjOfProp ?subjOfProp ."
@@ -188,6 +194,8 @@ public class Lexicon {
                         
                         entry.addForm(LexicalEntry.Feature.PRESENT,pres);
                         entry.addForm(LexicalEntry.Feature.PAST,past);
+                        if (sol.contains("sg")) entry.addForm(LexicalEntry.Feature.SINGULAR,sol.get("sg").asLiteral().getValue().toString());
+                        if (sol.contains("pl")) entry.addForm(LexicalEntry.Feature.PLURAL,sol.get("pl").asLiteral().getValue().toString());
                         
                         if (subject.equals(subjOfProp) && directObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
@@ -217,13 +225,15 @@ public class Lexicon {
             
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?canonicalForm ?pres ?past ?reference ?subjOfProp ?objOfProp ?subject ?prepositionalObject ?marker WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?pres ?past ?sg ?pl ?reference ?subjOfProp ?objOfProp ?subject ?prepositionalObject ?marker WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
                                + " ?entry   lexinfo:partOfSpeech lexinfo:verb . "
                                + " ?entry   lemon:canonicalForm ?form . " 
                                + " ?form    lemon:writtenRep ?canonicalForm ."
-                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f1 . } UNION { ?entry lemon:otherForm ?f1 . } ?f1 lemon:writtenRep ?pres . ?f1 lexinfo:tense lexinfo:present . } "
-                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f2 . } UNION { ?entry lemon:otherForm ?f2 . } ?f2 lemon:writtenRep ?past . ?f2 lexinfo:tense lexinfo:past . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f1 . } UNION { ?entry lemon:otherForm ?f1 . } ?f1 lemon:writtenRep ?pres . ?f1 lexinfo:tense  lexinfo:present . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f2 . } UNION { ?entry lemon:otherForm ?f2 . } ?f2 lemon:writtenRep ?past . ?f2 lexinfo:tense  lexinfo:past . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f3 . } UNION { ?entry lemon:otherForm ?f3 . } ?f3 lemon:writtenRep ?sg   . ?f3 lexinfo:number lexinfo:singular . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f4 . } UNION { ?entry lemon:otherForm ?f4 . } ?f4 lemon:writtenRep ?pl   . ?f4 lexinfo:number lexinfo:plural . } "
                                + " ?entry   lemon:sense ?sense . "
                                + " ?sense   lemon:reference ?reference ."
                                + " ?sense   lemon:subjOfProp ?subjOfProp ."
@@ -258,20 +268,38 @@ public class Lexicon {
                     
                     try {      
                         LexicalEntry entry = new LexicalEntry(); 
-                        entry.setCanonicalForm(canonicalForm);
+                        entry.setCanonicalForm(canonicalForm + " " + marker);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.VERB);
                         entry.setFrame(vocab.lexinfo + "IntransitivePPFrame");
                         
                         String pres; String past; 
                         
-                        if (sol.contains("pres")) pres = sol.get("pres").asLiteral().getValue().toString();
-                        else                      pres = canonicalForm;
-                        if (sol.contains("past")) past = sol.get("past").asLiteral().getValue().toString();
-                        else                      past = inflector.getPast(canonicalForm,3);
-                        
+                        if (sol.contains("pres")) pres = sol.get("pres").asLiteral().getValue().toString() + " " + marker;
+                        else                      pres = canonicalForm + " " + marker;
+                        if (sol.contains("past")) past = sol.get("past").asLiteral().getValue().toString() + " " + marker;
+                        else                      past = inflector.getPast(canonicalForm,3) + " " + marker;
+                                               
                         entry.addForm(LexicalEntry.Feature.PRESENT,pres);
                         entry.addForm(LexicalEntry.Feature.PAST,past);
+                        
+                        if (!index.containsKey(pres)) index.put(pres,new ArrayList<>());
+                        index.get(pres).add(entry);
+                        if (!index.containsKey(past)) index.put(past,new ArrayList<>());
+                        index.get(past).add(entry);
+                        
+                        if (sol.contains("sg")) {
+                            String sg = sol.get("sg").asLiteral().getValue().toString() + " " + marker;
+                            entry.addForm(LexicalEntry.Feature.SINGULAR,sg);
+                            if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
+                            index.get(sg).add(entry);
+                        }
+                        if (sol.contains("pl")) {
+                            String pl = sol.get("pl").asLiteral().getValue().toString()   + " " + marker;
+                            entry.addForm(LexicalEntry.Feature.PLURAL,pl);
+                            if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
+                            index.get(pl).add(entry);
+                        }
                         
                         if (subject.equals(subjOfProp) && prepObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
@@ -285,15 +313,6 @@ public class Lexicon {
                             continue;
                         }
                         
-                        entry.addMarker(LexicalEntry.SynArg.PREPOSITIONALOBJECT,marker);
-                        
-                        String form1 = pres + " " + marker;
-                        String form2 = past + " " + marker;   
-                        
-                        if (!index.containsKey(form1)) index.put(form1 ,new ArrayList<>());
-                        index.get(form1).add(entry);
-                        if (!index.containsKey(form2)) index.put(form2 ,new ArrayList<>());
-                        index.get(form2).add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -306,7 +325,7 @@ public class Lexicon {
             
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?canonicalForm ?sg ?pl ?reference ?subjOfProp ?objOfProp ?copArg ?prepObject WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?sg ?pl ?reference ?subjOfProp ?objOfProp ?copArg ?prepObject ?marker WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
                                + " ?entry   lexinfo:partOfSpeech lexinfo:noun . "
                                + " ?entry   lemon:canonicalForm ?form . " 
@@ -321,10 +340,13 @@ public class Lexicon {
                                + " ?frame   <" + vocab.rdfType + "> lexinfo:NounPPFrame ."
                                + " ?frame   lexinfo:copulativeArg ?copArg ."
                                + " ?frame   lexinfo:prepositionalObject ?prepObject ."
+                               + " ?prepObject lemon:marker ?mentry ."
+                               + " ?mentry  lemon:canonicalForm ?mform ."
+                               + " ?mform   lemon:writtenRep ?marker . "
                                + "}";
             
             Query query = QueryFactory.create(queryString) ;
-  
+              
             try (QueryExecution qexec = QueryExecutionFactory.create(query,model)) {
     
                 ResultSet results = qexec.execSelect() ;
@@ -339,21 +361,22 @@ public class Lexicon {
                     String objOfProp     = sol.get("objOfProp").toString();
                     String copArg        = sol.get("copArg").toString();
                     String prepObject    = sol.get("prepObject").toString();
+                    String marker        = sol.get("marker").asLiteral().getValue().toString();
                     
                     try {      
                         LexicalEntry entry = new LexicalEntry(); 
-                        entry.setCanonicalForm(canonicalForm);
+                        entry.setCanonicalForm(canonicalForm + " " + marker);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.NOUN);
                         entry.setFrame(vocab.lexinfo + "NounPPFrame");
                         
                         String sg; String pl; 
                         
-                        if (sol.contains("sg")) sg = sol.get("sg").asLiteral().getValue().toString();
-                        else                    sg = canonicalForm;
-                        if (sol.contains("pl")) pl = sol.get("pl").asLiteral().getValue().toString();
-                        else                    pl = inflector.getPlural(canonicalForm);
-                        
+                        if (sol.contains("sg")) sg = sol.get("sg").asLiteral().getValue().toString() + " " + marker;
+                        else                    sg = canonicalForm + " " + marker;
+                        if (sol.contains("pl")) pl = sol.get("pl").asLiteral().getValue().toString() + " " + marker;
+                        else                    pl = inflector.getPlural(canonicalForm) + " " + marker;
+                                                
                         entry.addForm(LexicalEntry.Feature.SINGULAR,sg);
                         entry.addForm(LexicalEntry.Feature.PLURAL,pl);
                         
@@ -369,10 +392,10 @@ public class Lexicon {
                             continue;
                         }
                         
-                        if (!index.containsKey(sg)) index.put(sg ,new ArrayList<>());
+                        if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
                         index.get(sg).add(entry);
-                        if (!index.containsKey(pl)) index.put(pl ,new ArrayList<>());
-                        index.get(pl).add(entry);
+                        if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
+                        index.get(pl).add(entry);                        
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -421,17 +444,17 @@ public class Lexicon {
                     
                     try {      
                         LexicalEntry entry = new LexicalEntry(); 
-                        entry.setCanonicalForm(canonicalForm);
+                        entry.setCanonicalForm(canonicalForm + " of"); // TODO specific for English
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.NOUN);
                         entry.setFrame(vocab.lexinfo + "NounPossessiveFrame");
                         
                         String sg; String pl; 
                         
-                        if (sol.contains("sg")) sg = sol.get("sg").asLiteral().getValue().toString();
-                        else                    sg = canonicalForm;
-                        if (sol.contains("pl")) pl = sol.get("pl").asLiteral().getValue().toString();
-                        else                    pl = inflector.getPlural(canonicalForm);
+                        if (sol.contains("sg")) sg = sol.get("sg").asLiteral().getValue().toString() + " of"; // TODO specific for English
+                        else                    sg = canonicalForm + " of";                                   // TODO specific for English
+                        if (sol.contains("pl")) pl = sol.get("pl").asLiteral().getValue().toString() + " of"; // TODO specific for English
+                        else                    pl = inflector.getPlural(canonicalForm) + " of";              // TODO specific for English
                         
                         entry.addForm(LexicalEntry.Feature.SINGULAR,sg);
                         entry.addForm(LexicalEntry.Feature.PLURAL,pl);
@@ -447,20 +470,11 @@ public class Lexicon {
                         else {
                             continue;
                         }
-                                                
-                        String form1 = sg + " of"; // TODO still specific for English
-                        String form2 = pl + " of"; // TODO still specific for English
-//                        String form3 = "'s " + sg; // TODO still specific for English
-//                        String form4 = "'s " + pl; // TODO still specific for English
 
-                        if (!index.containsKey(form1)) index.put(form1,new ArrayList<>());
-                        index.get(form1).add(entry); 
-                        if (!index.containsKey(form2)) index.put(form2,new ArrayList<>());
-                        index.get(form2).add(entry);
-//                        if (!index.containsKey(form3)) index.put(form3,new ArrayList<>());
-//                        index.get(form3).add(entry);
-//                        if (!index.containsKey(form4)) index.put(form4,new ArrayList<>());
-//                        index.get(form4).add(entry);
+                        if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
+                        index.get(sg).add(entry); 
+                        if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
+                        index.get(pl).add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -511,7 +525,7 @@ public class Lexicon {
                         String marker        = sol.get("marker").asLiteral().getValue().toString();
                                                 
                         LexicalEntry entry = new LexicalEntry(); 
-                        entry.setCanonicalForm(canonicalForm);
+                        entry.setCanonicalForm(canonicalForm + " " + marker);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.ADJECTIVE);
                         entry.setFrame(vocab.lexinfo + "AdjectivePPFrame");
@@ -527,9 +541,7 @@ public class Lexicon {
                         else {
                             continue;
                         }
-                        
-                        entry.addMarker(LexicalEntry.SynArg.PREPOSITIONALOBJECT,marker);
-                        
+                                                
                         String form = canonicalForm + " " + marker;
                         if (!index.containsKey(form)) index.put(form ,new ArrayList<>());
                         index.get(form).add(entry);
@@ -606,4 +618,18 @@ public class Lexicon {
                 }
             }
         }
+        
+        private List<LexicalEntry> removeDuplicates(List<LexicalEntry> list) {
+
+	List<LexicalEntry> result = new ArrayList<>();
+	HashSet<LexicalEntry> set = new HashSet<>();
+
+	for (LexicalEntry item : list) {
+	    if (!set.contains(item)) {
+		result.add(item);
+		set.add(item);
+	    }
+	}
+	return result;
+    }
 }
