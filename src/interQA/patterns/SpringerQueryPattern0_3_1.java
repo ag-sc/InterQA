@@ -64,8 +64,9 @@ public class SpringerQueryPattern0_3_1 extends QueryPattern{
 		elements.add(element5);
 		
 		StringElement element6 = new StringElement();
-		element6.add("question mark");
+		element6.add(".");
 		elements.add(element6);
+                
 	}
 	
 	@Override
@@ -90,7 +91,7 @@ public class SpringerQueryPattern0_3_1 extends QueryPattern{
 		
 		if(i==4){
 			
-			elements.get(5).addToIndex(literals.getLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+			elements.get(5).addToIndex(literals.getJustLiteralByProperty(elements.get(4).getActiveEntries()));
 			
 		}
 		

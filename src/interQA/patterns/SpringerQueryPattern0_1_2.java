@@ -54,6 +54,9 @@ public class SpringerQueryPattern0_1_2 extends QueryPattern {
 		LiteralElement element5 = new LiteralElement();
 		elements.add(element5);
 		
+                StringElement element6 = new StringElement();
+                element6.add("?");
+                elements.add(element6);
 	}
 	
 	
@@ -75,7 +78,7 @@ public class SpringerQueryPattern0_1_2 extends QueryPattern {
 		
 		if(i==2){
 	
-                    elements.get(3).addToIndex(literals.getLiteralByProperty(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.PREPOSITIONALOBJECT));
+                    elements.get(3).addToIndex(literals.getJustLiteralByProperty(elements.get(2).getActiveEntries()));
 		
 		}
 		
