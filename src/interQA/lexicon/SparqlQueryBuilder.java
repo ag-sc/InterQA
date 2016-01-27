@@ -161,16 +161,16 @@ public class SparqlQueryBuilder {
                         
 		return "SELECT DISTINCT ?x WHERE "
 				+ "{?x <"+prop_entry.getReference()+"> ?lit."
-				+label("?lit",name_entry.getReference(),LabelProperties)
-				+label("?lit",gYear_entry.getReference(),DateProperties)
+				+label("?x",name_entry.getReference(),LabelProperties)
+				+label("?x",gYear_entry.getReference(),DateProperties)
 				+" }";
 	}
     private String RangequeryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
                         
 		return "SELECT DISTINCT ?x WHERE "
-				+ "{?x <"+prop_entry.getReference()+"> ?lit."
-				+label(name_entry.getReference(),"?lit",LabelProperties)
-				+label("?lit",gYear_entry.getReference(),DateProperties)
+				+ "{?x <"+prop_entry.getReference()+"> ?y."
+				+label("?y",name_entry.getReference(),LabelProperties)
+				+label("?y",gYear_entry.getReference(),DateProperties)
 				+" }";
 	}
 

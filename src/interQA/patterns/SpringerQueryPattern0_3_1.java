@@ -11,6 +11,7 @@ import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
+import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
@@ -42,12 +43,12 @@ public class SpringerQueryPattern0_3_1 extends QueryPattern{
 		
 		StringElement element0 = new StringElement();
 		element0.add("show me");
-        element0.add("give me");
+                element0.add("give me");
 		elements.add(element0);
                 
-        StringElement element1 = new StringElement();
-		element1.add("all");
-        element1.add("the");
+                StringElement element1 = new StringElement();
+		element1.add("all",Feature.PLURAL);
+                element1.add("the");
 		elements.add(element1);
 		
 		ClassElement element2 =  new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
@@ -70,8 +71,16 @@ public class SpringerQueryPattern0_3_1 extends QueryPattern{
 	}
 	
 	@Override
-	public void updateAt(int i){
+	public void updateAt(int i,String s){
 		
+                if (i==1) {
+                    ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
+                }
+                
+                if (i==2) {
+                    setFeatures(2,4,s);
+                }
+            
 		if(i==3){
 			
 			Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();

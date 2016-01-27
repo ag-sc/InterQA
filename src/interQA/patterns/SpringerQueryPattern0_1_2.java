@@ -61,9 +61,11 @@ public class SpringerQueryPattern0_1_2 extends QueryPattern {
 	
 	
 	@Override
-	public void updateAt(int i){
+	public void updateAt(int i,String s){
 		
 		if(i==1){
+                    
+                    setFeatures(1,2,s);
                     
                     Map<String,List<LexicalEntry>> old_element2index = elements.get(1).getIndex();
        	            Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();

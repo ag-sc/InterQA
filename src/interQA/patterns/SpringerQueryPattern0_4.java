@@ -8,6 +8,7 @@ import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 import interQA.elements.*;
+import interQA.lexicon.LexicalEntry.Feature;
 import java.util.List;
 
 public class SpringerQueryPattern0_4 extends QueryPattern{
@@ -37,12 +38,12 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
 		
 		StringElement element0 = new StringElement();
 		element0.add("give me");
-        element0.add("show me");
+                element0.add("show me");
 		elements.add(element0);
                 
-        StringElement element1 = new StringElement();
-		element1.add("all");
-        element1.add("the");
+                StringElement element1 = new StringElement();
+		element1.add("all",Feature.PLURAL);
+                element1.add("the");
 		elements.add(element1);
 		
 		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
@@ -61,8 +62,11 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
 	}
 	
 	@Override
-	public void updateAt(int i){
-            		
+	public void updateAt(int i,String s){
+            	
+                if (i==1) {
+                    ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
+                }
                 
 		if(i==2){
 		

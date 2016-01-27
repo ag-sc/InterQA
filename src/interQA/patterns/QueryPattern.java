@@ -3,6 +3,7 @@ package interQA.patterns;
 import interQA.lexicon.Vocabulary;
 import interQA.elements.ParsableElement;
 import interQA.lexicon.InstanceSource;
+import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 
@@ -38,12 +39,12 @@ public abstract class QueryPattern {
             int i = 0;
             while (!input.isEmpty() && elements.size() > i) {
                    
-                    String rest  = elements.get(i).parse(input); 
-
-                    if (rest == null) { return false; }
+                    String rest = elements.get(i).parse(input); 
                     
+                    if (rest == null) { return false; }
+                                       
                     currentElement = i;
-                    updateAt(currentElement);
+                    updateAt(currentElement,input.replace(rest,""));
 
 		    input = rest;
                     i++;                   
@@ -67,8 +68,17 @@ public abstract class QueryPattern {
         
         // update(int i) and buildSPARQLqueries() is where the pattern-specific magic happens
         
-        public void updateAt(int i) {
+        public void updateAt(int i,String parsed) {
             // Needs to be overwritten by all concrete query patterns.
+        }
+        
+        public void setFeatures(int from, int to, String parsed) {
+            
+            for (LexicalEntry entry : elements.get(from).getActiveEntries()){                      
+                    for (LexicalEntry.Feature f : entry.getFeatures(parsed)) {
+                         elements.get(to).addFeature(f);
+                    }
+                }
         }
 
 	public List<String> buildSPARQLqueries() {

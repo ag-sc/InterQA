@@ -59,7 +59,7 @@ public class QueryPattern0_1 extends QueryPattern {
 	}
         
         @Override
-        public void updateAt(int i) {
+        public void updateAt(int i,String s) {
             
             if (i == 1) {
             // If parse is at element1, filter possible entries of element2.

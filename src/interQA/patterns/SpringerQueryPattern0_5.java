@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import interQA.elements.*;
+import interQA.lexicon.LexicalEntry.Feature;
 public class SpringerQueryPattern0_5 extends QueryPattern{
 	
 	//Give me the <Property:Noun> and <Property:Noun> <Literal> <Literal>
@@ -38,7 +39,7 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 		elements.add(element0);
 		
         StringElement element1 = new StringElement();
-		element1.add("all");
+		element1.add("all",Feature.PLURAL);
                 element1.add("the");
 		elements.add(element1);
 		
@@ -64,9 +65,13 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 	}
 	
 	@Override
-	public void updateAt(int i){
+	public void updateAt(int i,String s){
+            
+                if (i==1) {
+                    ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
+                }
 		
-		if(i==3){
+		if (i==3){
 			
 			Map<String,List<LexicalEntry>> old_element2index = elements.get(4).getIndex();
 			Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
@@ -78,11 +83,11 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 			elements.get(4).setIndex(new_element2index);
 		}
 		
-		if(i==4){
+		if (i==4){
 			
 			elements.get(5).addToIndex(literals.getLabelLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
 		}
-		if(i==5){
+		if (i==5){
 			
 			elements.get(6).addToIndex(literals.getLiteralByLiteral(elements.get(5).getActiveEntries()));
 		}

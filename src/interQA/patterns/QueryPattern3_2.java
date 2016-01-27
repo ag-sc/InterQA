@@ -56,7 +56,7 @@ public class QueryPattern3_2 extends QueryPattern{
 	
 	
 	@Override
-	public void updateAt(int i){
+	public void updateAt(int i,String s){
 		if(i==4){
 			
 			Map<String,List<LexicalEntry>> old_elementindex = elements.get(4).getIndex();

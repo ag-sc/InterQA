@@ -37,15 +37,19 @@ lex:conference_sense lemon:reference <http://lod.springer.com/data/ontology/clas
 
 lex:takePlaceIn a lemon:lexicalEntry ;
   lemon:canonicalForm lex:takePlaceIn_canonicalForm ;
-  lemon:otherForm lex:takePlaceIn_otherForm ;
+  lemon:otherForm lex:takePlaceIn_otherForm1, lex:takePlaceIn_otherForm2 ;
   lexinfo:partOfSpeech lexinfo:verb ;
   lemon:synBehavior lex:takePlaceIn_synBehavior ;
   lemon:sense lex:takePlaceIn_sense1, lex:takePlaceIn_sense2, lex:takePlaceIn_sense3 .
 
 lex:takePlaceIn_canonicalForm lemon:writtenRep "take place"@en ;
-  lexinfo:tense lexinfo:present .
-lex:takePlaceIn_otherForm lemon:writtenRep "took place"@en ;
-  lexinfo:tense lexinfo:past .
+  lexinfo:tense  lexinfo:present ; 
+  lexinfo:number lexinfo:plural.
+lex:takePlaceIn_otherForm1 lemon:writtenRep "takes place"@en ;
+  lexinfo:tense  lexinfo:present ;
+  lexinfo:number lexinfo:singular .
+lex:takePlaceIn_otherForm2 lemon:writtenRep "took place"@en ;
+  lexinfo:tense  lexinfo:past .
 
 lex:takePlaceIn_synBehavior a lexinfo:IntransitivePPFrame ;
   lexinfo:subject lex:takePlaceIn_subj ;
