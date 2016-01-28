@@ -231,7 +231,6 @@ public class LiteralSource {
 		
 		
 		Map<String,List<LexicalEntry>> literals = new HashMap<>();
-		Map<String,List<LexicalEntry>> filtered_literals = new HashMap<>();
 		
 		String query;
 		
@@ -239,20 +238,18 @@ public class LiteralSource {
 		for(LexicalEntry propoflit_index : propoflit_indexes){
 		for(LexicalEntry lit_index : lit_indexes){
 			
+                    if (!prop_index.getReference().equals(propoflit_index.getReference())) {
 			
-					query = LiteralQueryForChosenLiteralAndProperty(prop_index.getReference(),propoflit_index.getReference(),lit_index.getReference()) ; 
-					literals.putAll(getLiteralIndex(query,"?lit"));
-					
-
-					if(!literals.containsValue(lit_index.getReference())) filtered_literals.putAll(literals);
-		    
+			query = LiteralQueryForChosenLiteralAndProperty(prop_index.getReference(),propoflit_index.getReference(),lit_index.getReference()) ; 
+                                        
+			literals.putAll(getLiteralIndex(query,"?lit"));
+		
+                    }
 		}
-						
+		}
 		}
 		
-		}
-		
-		return filtered_literals;
+		return literals;
 	}
 	
 	public Map<String,List<LexicalEntry>> getLiteralByPropertyAndInstance(List<LexicalEntry> indexes,LexicalEntry.SynArg syn){
