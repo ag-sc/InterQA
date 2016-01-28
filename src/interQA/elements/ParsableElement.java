@@ -32,6 +32,10 @@ public abstract class ParsableElement {
         return active;
     }
     
+    public List<Feature> getFeatures() {
+        return features;
+    }
+    
     public void setIndex(Map<String,List<LexicalEntry>> index) {
         this.index = index;
     }

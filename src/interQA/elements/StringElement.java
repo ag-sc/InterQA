@@ -61,18 +61,15 @@ public class StringElement extends ParsableElement {
 	public List<String> getOptions() {
             
             List<String> options = new ArrayList<>();
-
-            if  (features.isEmpty()) options.addAll(elements);
+            
+            if (features.isEmpty()) { 
+                options.addAll(elements);
+            }
             else {
                 for (String e : elements) {
-                     if (featureMap.containsKey(e)) {
-                         boolean include = true;
-                         if (!compatible(featureMap.get(e),features)) {
-                                  include = false;
-                                  break;
-                         }
-                         if (include) options.add(e);
-                     }
+                     if (!featureMap.containsKey(e) || compatible(featureMap.get(e),features)) {
+                         options.add(e);
+                     } 
                 }
             }
             
