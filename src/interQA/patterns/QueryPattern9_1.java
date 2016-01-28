@@ -10,6 +10,7 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 
@@ -64,7 +65,7 @@ public class QueryPattern9_1 extends QueryPattern {
         }
 
         @Override
-	public List<String> buildSPARQLqueries() {
+	public Set<String> buildSPARQLqueries() {
             
             SparqlQueryBuilder sqb = new SparqlQueryBuilder();
             

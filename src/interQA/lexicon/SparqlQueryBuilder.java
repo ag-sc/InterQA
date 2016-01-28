@@ -10,6 +10,8 @@ import interQA.elements.ClassElement;
 import interQA.elements.IndividualElement;
 import interQA.elements.LiteralElement;
 import interQA.elements.PropertyElement;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class SparqlQueryBuilder {
@@ -225,19 +227,19 @@ public class SparqlQueryBuilder {
 
 	
 	
-	public List<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries){
+	public Set<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries){
 		
-		List<String> queries = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		for(LexicalEntry class_entry: class_entries)
 			queries.add(queryForClassInstances(class_entry));
 		return queries;
 	}
 	
 	//without class IRI
-	public List<String> BuildQueryForIndividualAndPropery(IndividualElement instance_elements,PropertyElement property_elements,
+	public Set<String> BuildQueryForIndividualAndPropery(IndividualElement instance_elements,PropertyElement property_elements,
 LexicalEntry.SynArg syn){
 		
-		List<String> queries = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		
 		for(LexicalEntry prop_entry : property_elements.getActiveEntries()){
 			//LexicalEntry.SynArg.DIRECTOBJECT
@@ -267,10 +269,10 @@ LexicalEntry.SynArg syn){
 		
 	}
 	//with class IRI of Instances
-	public List<String> BuildQueryForIndividualAndProperty(ClassElement class_elements,IndividualElement instance_elements,
+	public Set<String> BuildQueryForIndividualAndProperty(ClassElement class_elements,IndividualElement instance_elements,
 PropertyElement property_elements,LexicalEntry.SynArg syn){
 		
-		List<String> queries = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		
 		for(LexicalEntry noun_entry :class_elements.getActiveEntries()){
 			for(LexicalEntry nounprop_entry: property_elements.getActiveEntries()){
@@ -303,10 +305,10 @@ PropertyElement property_elements,LexicalEntry.SynArg syn){
 		return queries;
 	}
 
-	public List<String> BuildQueryForClassAndProperty(ClassElement class_elements,PropertyElement property_elements,
+	public Set<String> BuildQueryForClassAndProperty(ClassElement class_elements,PropertyElement property_elements,
 LexicalEntry.SynArg syn){
 		
-		List<String> queries  = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		
 		for(LexicalEntry class_entry : class_elements.getActiveEntries()){
 			for(LexicalEntry property_entry : property_elements.getActiveEntries()){
@@ -336,10 +338,10 @@ LexicalEntry.SynArg syn){
 		
 	}
 
-	public List<String> BuildQueryForClassAnd2Properties(ClassElement class_elements,PropertyElement property_element1,
+	public Set<String> BuildQueryForClassAnd2Properties(ClassElement class_elements,PropertyElement property_element1,
 PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg syn2){
 		
-		List<String> queries = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		
 		for(LexicalEntry class_entry : class_elements.getActiveEntries()){
 		for(LexicalEntry property_entry1 : property_element1.getActiveEntries()){
@@ -407,10 +409,10 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
 
 	
 	//SPRINGER
-	public List<String> BuildQueryForClassAndPropertyAndLiteral(ClassElement class_elements,PropertyElement property_elements,
+	public Set<String> BuildQueryForClassAndPropertyAndLiteral(ClassElement class_elements,PropertyElement property_elements,
 LiteralElement literal_elements){
 		
-		List<String> queries = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		String query="";
 		String check_query="";
 		for(LexicalEntry noun_entry : class_elements.getActiveEntries()){
@@ -426,9 +428,9 @@ LiteralElement literal_elements){
 		return queries;
 	}
 	
-	public List<String> BuildQueryForClassAnd2PropertyAnd2Literal(ClassElement class_elements,PropertyElement property1_elements,
+	public Set<String> BuildQueryForClassAnd2PropertyAnd2Literal(ClassElement class_elements,PropertyElement property1_elements,
 			LiteralElement literal1_elements,PropertyElement property2_elements,LiteralElement literal2_elements){
-		List<String> queries = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		String query ="";
 		String check_query = "";
 		
@@ -455,10 +457,10 @@ LiteralElement literal_elements){
 	}
 	
 	
-	public List<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,LiteralElement gYear_elements,
+	public Set<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,LiteralElement gYear_elements,
 LiteralElement name_elements, LexicalEntry.SynArg syn){
 		
-		List<String> queries = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		String query = "";
 		String check_query="";
 		for(LexicalEntry property_element: property_elements.getActiveEntries()){
@@ -487,10 +489,10 @@ LiteralElement name_elements, LexicalEntry.SynArg syn){
 		return queries;
 	}
 
-	public List<String> BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(PropertyElement property_elements1,LexicalEntry.SynArg syn1,
+	public Set<String> BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(PropertyElement property_elements1,LexicalEntry.SynArg syn1,
 			PropertyElement property_elements2,LexicalEntry.SynArg syn2,LiteralElement name_literals,LiteralElement gYear_literals){
 		
-		List<String> queries = new ArrayList<>();
+		Set<String> queries = new HashSet<>();
 		
 		for(LexicalEntry property_entry1 : property_elements1.getActiveEntries()){
 			

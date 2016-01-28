@@ -8,7 +8,9 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -65,9 +67,9 @@ public class QueryPattern9_3 extends QueryPattern {
         }        
         
         @Override
-	public List<String> buildSPARQLqueries() {
+	public Set<String> buildSPARQLqueries() {
             
-            List<String> queries = new ArrayList<>();
+            Set<String> queries = new HashSet<>();
             
             ClassElement  noun     = (ClassElement)  elements.get(2);
             IndividualElement instance = (IndividualElement) elements.get(3);

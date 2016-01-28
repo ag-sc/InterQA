@@ -8,7 +8,9 @@ import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public abstract class QueryPattern {
@@ -81,10 +83,10 @@ public abstract class QueryPattern {
                 }
         }
 
-	public List<String> buildSPARQLqueries() {
+	public Set<String> buildSPARQLqueries() {
             // Needs to be overwritten by all concrete query patterns.
             
-            return new ArrayList<>();
+            return new HashSet<>();
         }
 
 	

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import interQA.elements.*;
 import interQA.lexicon.LexicalEntry.Feature;
+import java.util.Set;
 public class SpringerQueryPattern0_5 extends QueryPattern{
 	
 	//Give me the <Property:Noun> and <Property:Noun> <Literal> <Literal>
@@ -98,7 +99,7 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 	
 	
 	@Override
-	public List<String> buildSPARQLqueries(){
+	public Set<String> buildSPARQLqueries(){
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
 		PropertyElement noun_prop1 = (PropertyElement) elements.get(2);

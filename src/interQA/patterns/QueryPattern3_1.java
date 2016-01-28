@@ -90,7 +90,7 @@ public class QueryPattern3_1 extends QueryPattern{
 		//SELECT ?x ?y WHERE {?a rdf:type <Class>. ?a <propert1> ?x. ?a <property2> ?y. }
 		//TODO : mince instance position possibility for properties !!
 		@Override
-		public List<String> buildSPARQLqueries(){
+		public Set<String> buildSPARQLqueries(){
 			SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 			
 			PropertyElement nounpos1 = (PropertyElement) elements.get(4);
