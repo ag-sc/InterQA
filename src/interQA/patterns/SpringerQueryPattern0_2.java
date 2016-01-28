@@ -77,19 +77,16 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
                     ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
                 }
             
-		if(i==2){
+		if(i==2) {
                     setFeatures(2,4,s);
+                                        
                     Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
-            
-    		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+                    Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
     		
-    		
-    		
-    		for(LexicalEntry entry : elements.get(2).getActiveEntries()){
+                    for(LexicalEntry entry : elements.get(2).getActiveEntries()){
     			
     			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
-    			
-    		}
+                    }
 			elements.get(5).addToIndex(new_element2index);
 		}
 		

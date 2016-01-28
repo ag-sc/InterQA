@@ -161,7 +161,7 @@ public class SparqlQueryBuilder {
 	//query for gYear Literal and Name Literal of Conference and Property
 	private String DomainqueryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
                         
-		return "SELECT DISTINCT ?x WHERE "
+		return "SELECT DISTINCT ?lit WHERE "
 				+ "{?x <"+prop_entry.getReference()+"> ?lit."
 				+label("?x",name_entry.getReference(),LabelProperties)
 				+label("?x",gYear_entry.getReference(),DateProperties)
