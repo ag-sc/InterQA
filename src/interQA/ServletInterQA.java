@@ -5,15 +5,15 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.patterns.*;
-
 import java.io.IOException;
 
-import java.io.*;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 public class ServletInterQA extends HttpServlet {
 
     QueryPatternManager qm = null;
@@ -27,32 +27,41 @@ public class ServletInterQA extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Origin", "*"); //May be too much. Anyone could use this as a service.
         PrintWriter out = response.getWriter();
+        //log("The URL is " + request.getQueryString());
+        //log("The page encoding is "+ request.getCharacterEncoding());
         String command = request.getParameter("command"); ///ServletInterQA?command=whatever
         List<String> options = qm.getUIoptions();
         if (options == null){
-            out.println("No options");
+            out.write("No options");
             return;
         }
         switch (command){
+            //Warning! set response header/status BEFORE sending any content to the client
             case "getOptions":  //command=getOptions  server returns a list of option
-                //Warning! set response header/status BEFORE sending any content to the client
                 response.setStatus(response.SC_OK); //Code 200
+                //log("getOptions command with options: " + options);
                 out.write(gson.toJson(options));
                 break;
             case "selected":    //command=selected&selection=text   server is informed. Nothing in returned
                 response.setStatus(response.SC_OK);
-                String text = request.getParameter("selection");
+                String encoded = request.getParameter("selection"); //The value was sent as URLable
+                //log("decoded as ISO-8859-1): " + URLDecoder.decode(encoded, "ISO-8859-1"));
+                String text = new String(encoded.getBytes("iso-8859-1"), "UTF-8"); //Valid only for Tomcat default conf?
                 List<String> availableQPNames = qm.userSentence(text);
+                //log("selected command with text: " + text + " and with availableQPNames: " + availableQPNames);
                 out.write(gson.toJson(availableQPNames));
                 break;
             case "getQueries":    //command=getQueries server returns a list of SPARQL queries
                 response.setStatus(response.SC_OK);
-                out.write(gson.toJson(qm.buildSPARQLqueries()));
+                List<String> queries = qm.buildSPARQLqueries();
+                //log("getQueries command with queries: " + queries);
+                out.write(gson.toJson(queries));
                 break;
             default:           // unsupported command
                 response.setStatus(response.SC_BAD_REQUEST); //code 400
+                //log("unsupported command. Error! ");
                 break;
         }
     }
@@ -102,6 +111,6 @@ public class ServletInterQA extends HttpServlet {
         qm.addQueryPattern(new SpringerQueryPattern0_4(lexicon,instances,literals));
         qm.addQueryPattern(new SpringerQueryPattern0_5(lexicon,instances,literals));
 
-        //log("Query pattern load finished at " + LocalDateTime.now());  //LocalDateTime requires Java 8
+        log("Query pattern load finished at " + LocalDateTime.now());  //LocalDateTime requires Java 8
     }
 }

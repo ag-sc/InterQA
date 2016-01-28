@@ -26,7 +26,8 @@
     <p>Type (or select from the list) to create a guided natural language query about Springer conferences.</p>
     <p>Shortcuts while typing:
        <ul>
-        <li><b>Space</b>: autocomplete (only if there is one world in the options list).<b>Ctrl+Space</b> avoids autocomplete.</li>
+        <li><b>Space</b>: autocomplete (only if there is one world in the options list). <b>Ctrl+Space</b> avoids autocomplete.</li>
+        <li><b>Backspace</b>: delete previous word.</li>
         <li><b>Left arrow</b>: edit previous word.</li>
       </ul>
     </p>
@@ -96,7 +97,7 @@
         var getoptions_url = "/interQAWebApp/ServletInterQA?command=getOptions";
         var selected_url = "/interQAWebApp/ServletInterQA?command=selected&selection=";
         for (var i in optionsGlobal) {
-          selected_url += '' + optionsGlobal[i];
+          selected_url += '' + encodeURIComponent(optionsGlobal[i]); //Converts UTF-8 to a valid URLable string (avoids Cáceres-> CÃ¡ceres)
         }
         execute_ajax(selected_url, function (e) {
           execute_ajax(getoptions_url, get_options_success, function(e){
