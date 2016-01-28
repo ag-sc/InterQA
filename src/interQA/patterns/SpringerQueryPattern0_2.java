@@ -15,6 +15,7 @@ import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
+import java.util.Set;
 
 public class SpringerQueryPattern0_2 extends QueryPattern{
 	
@@ -100,15 +101,13 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 	}
 	
 	@Override
-	public List<String> buildSPARQLqueries(){
+	public Set<String> buildSPARQLqueries(){
 		
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
 		ClassElement    noun = (ClassElement)    elements.get(2);
-        PropertyElement    adjective = (PropertyElement)    elements.get(5);
-        LiteralElement literal = (LiteralElement) elements.get(6);
-		
-		
+                PropertyElement    adjective = (PropertyElement)    elements.get(5);
+                LiteralElement literal = (LiteralElement) elements.get(6);
 		
 		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,adjective,literal);
 		

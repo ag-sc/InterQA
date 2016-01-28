@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Mariano on 26/06/2015.
@@ -45,7 +46,7 @@ public class QueryPattern1_1Test {
         List<String> lsElem3 = qp1.getNext(); // Last element ==> returns null
         //End
         if (lsElem3 == null){
-            List<String> sparql = qp1.buildSPARQLqueries();
+            Set<String> sparql = qp1.buildSPARQLqueries();
             System.out.println(sparql);
         }
 

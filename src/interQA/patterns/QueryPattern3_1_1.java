@@ -73,7 +73,7 @@ public class QueryPattern3_1_1 extends QueryPattern{
 			}
 			//SELECT ?x WHERE {?a rdf:type <Class>. ?a <property> ?x. }
 			@Override
-			public List<String> buildSPARQLqueries(){
+			public Set<String> buildSPARQLqueries(){
 				
 				SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 				

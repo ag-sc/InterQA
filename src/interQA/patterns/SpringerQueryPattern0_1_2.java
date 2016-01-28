@@ -14,6 +14,7 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
+import java.util.Set;
 
 public class SpringerQueryPattern0_1_2 extends QueryPattern {
 	
@@ -93,7 +94,7 @@ public class SpringerQueryPattern0_1_2 extends QueryPattern {
 		
 	}
 	@Override
-	public List<String> buildSPARQLqueries(){
+	public Set<String> buildSPARQLqueries(){
 		
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		

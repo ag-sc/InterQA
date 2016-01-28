@@ -84,7 +84,7 @@ public class QueryPattern3_2 extends QueryPattern{
 	}
 	
 	@Override
-	public List<String> buildSPARQLqueries(){
+	public Set<String> buildSPARQLqueries(){
 		
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		

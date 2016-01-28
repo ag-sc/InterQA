@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -83,7 +84,7 @@ public class QueryPattern0_1 extends QueryPattern {
         }
 
         @Override
-	public List<String> buildSPARQLqueries() {
+	public Set<String> buildSPARQLqueries() {
             
         	SparqlQueryBuilder sqb = new SparqlQueryBuilder();
             
