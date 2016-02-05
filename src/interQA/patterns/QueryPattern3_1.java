@@ -45,21 +45,24 @@ public class QueryPattern3_1 extends QueryPattern{
             element2.add("the");
             elements.add(element2);
 		
-            PropertyElement element3 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+            PropertyElement element3 = new PropertyElement();
+            element3.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
             elements.add(element3);
 		
             StringElement element4 = new StringElement();
             element4.add("and");
             elements.add(element4);
 		
-            PropertyElement element5 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+            PropertyElement element5 = new PropertyElement();
+            element5.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
             elements.add(element5);
 		
             StringElement element6 = new StringElement();
             element6.add("of");
             elements.add(element6);
 		
-            ClassElement element7 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
+            ClassElement element7 = new ClassElement();
+            element7.addEntries(lexicon, LexicalEntry.POS.NOUN, null);
             elements.add(element7);
 		
 	}
@@ -80,7 +83,7 @@ public class QueryPattern3_1 extends QueryPattern{
 			if (i==6){
 				
 				   elements.get(8).addToIndex(instances.filterBy2PropertiesForInstances(elements.get(4).getActiveEntries(),
-						   elements.get(6).getActiveEntries(), LexicalEntry.SynArg.DIRECTOBJECT));       
+						   elements.get(6).getActiveEntries(), LexicalEntry.SynArg.OBJECT));       
 		            
 				
 			}
@@ -91,13 +94,12 @@ public class QueryPattern3_1 extends QueryPattern{
 		//TODO : mince instance position possibility for properties !!
 		@Override
 		public Set<String> buildSPARQLqueries(){
-			SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 			
 			PropertyElement nounpos1 = (PropertyElement) elements.get(4);
 			PropertyElement nounpos2 = (PropertyElement) elements.get(6);
 			ClassElement nounclass = (ClassElement) elements.get(8);
 			
-			return sqb.BuildQueryForClassAnd2Properties(nounclass, nounpos1, nounpos2, LexicalEntry.SynArg.DIRECTOBJECT, LexicalEntry.SynArg.DIRECTOBJECT);
+			return sqb.BuildQueryForClassAnd2Properties(nounclass, nounpos1, nounpos2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
 			
 		}
 		

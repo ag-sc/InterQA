@@ -13,17 +13,21 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
-import interQA.lexicon.SparqlQueryBuilder;
 import java.util.Set;
 
-public class SpringerQueryPattern0_1_2 extends QueryPattern {
+public class Which_C_P_L_P_L extends QueryPattern {
 	
-	//Which <Class:Noun> <Property:IntransitivePPframe> <Literal:gYear> <Property:Preposition> <Literal>
+    
+        /*
+        SELECT DISTINCT ?uri { ?uri rdf:type <Class> . ?uri <Property> <Literal> . ?uri <Property> <Literal> . }
 	
-	//Which conferences took place in 2015 in Berlin?
+        Which <Class:Noun> <Property:Verb> <Literal> <Property:Preposition> <Literal> ?
 	
+	  Which conferences took place in 2015 in Berlin?
+	*/
+    
 	
-	public SpringerQueryPattern0_1_2(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
+	public Which_C_P_L_P_L(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
 	
 		this.lexicon = lexicon;
 		this.instances = instances;
@@ -40,16 +44,20 @@ public class SpringerQueryPattern0_1_2 extends QueryPattern {
 		element0.add("which");
 		elements.add(element0);
 		
-		ClassElement element1 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
+		ClassElement element1 = new ClassElement();
+                element1.addEntries(lexicon, LexicalEntry.POS.NOUN, null);
 		elements.add(element1);	
 		
-		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame);
+		PropertyElement element2 = new PropertyElement();
+                element2.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.TransitiveFrame);
+                element2.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame);
 		elements.add(element2);
 		
 		LiteralElement element3 = new LiteralElement();
 		elements.add(element3);
 		
-		PropertyElement element4 = new PropertyElement(lexicon,LexicalEntry.POS.PREPOSITION,vocab.PrepositionalFrame);
+		PropertyElement element4 = new PropertyElement();
+                element4.addEntries(lexicon, LexicalEntry.POS.PREPOSITION, vocab.PrepositionalFrame);
 		elements.add(element4);
 		
 		LiteralElement element5 = new LiteralElement();
@@ -96,7 +104,6 @@ public class SpringerQueryPattern0_1_2 extends QueryPattern {
 	@Override
 	public Set<String> buildSPARQLqueries(){
 		
-		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
 		ClassElement    noun = (ClassElement)    elements.get(1);
         PropertyElement    verb = (PropertyElement)    elements.get(2);

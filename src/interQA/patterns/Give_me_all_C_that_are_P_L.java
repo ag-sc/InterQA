@@ -14,16 +14,20 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
-import interQA.lexicon.SparqlQueryBuilder;
 import java.util.Set;
 
-public class SpringerQueryPattern0_2 extends QueryPattern{
+public class Give_me_all_C_that_are_P_L extends QueryPattern{
 	
-	//Give me all <Class:Noun> that <Property:AdjectivePPFrame> <Literal> 
-	//Give me all conferences that are held in Berlin.
+        /* 
+        SELECT DISTINCT ?x WHERE { ?x rdf:type <Class> . ?x <Property> <Literal> . }
+    
+        Give me all <Class:Noun> that is|are|was|were <Property:AdjectivePP> <Literal>.
+    
+          Give me all conferences that are held in Berlin.
+        */
 	
 	
-	public SpringerQueryPattern0_2(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
+	public Give_me_all_C_that_are_P_L(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
@@ -45,7 +49,8 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
                 element1.add("the");
 		elements.add(element1);
 		
-		ClassElement element2 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
+		ClassElement element2 = new ClassElement();
+                element2.addEntries(lexicon, LexicalEntry.POS.NOUN, null);
 		elements.add(element2);
 		
 		StringElement element3 = new StringElement();
@@ -59,13 +64,14 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 		element4.add("were",Feature.PLURAL);
 		elements.add(element4);
                 
-	PropertyElement element5 = new PropertyElement(lexicon,LexicalEntry.POS.ADJECTIVE,vocab.AdjectivePPFrame);
+                PropertyElement element5 = new PropertyElement();
+                element5.addEntries(lexicon, LexicalEntry.POS.ADJECTIVE, vocab.AdjectivePPFrame);
 		elements.add(element5);
 		
-	LiteralElement element6 = new LiteralElement();
+                LiteralElement element6 = new LiteralElement();
 		elements.add(element6);
                 
-        StringElement element7 = new StringElement();
+                StringElement element7 = new StringElement();
                 element7.add(".");
                 elements.add(element7);
 	}
@@ -99,9 +105,7 @@ public class SpringerQueryPattern0_2 extends QueryPattern{
 	
 	@Override
 	public Set<String> buildSPARQLqueries(){
-		
-		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
-		
+				
 		ClassElement    noun = (ClassElement)    elements.get(2);
                 PropertyElement    adjective = (PropertyElement)    elements.get(5);
                 LiteralElement literal = (LiteralElement) elements.get(6);

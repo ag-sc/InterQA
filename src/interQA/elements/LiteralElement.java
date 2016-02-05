@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 
 
-public class LiteralElement extends ParsableElement {
+public class LiteralElement extends Element {
 	
 	public LiteralElement(){
 		

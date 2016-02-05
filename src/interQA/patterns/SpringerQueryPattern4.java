@@ -9,21 +9,21 @@ import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 import interQA.elements.*;
 import interQA.lexicon.LexicalEntry.Feature;
-import java.util.List;
 import java.util.Set;
 
-public class SpringerQueryPattern0_4 extends QueryPattern{
+public class SpringerQueryPattern4 extends QueryPattern{
 
-	//Show me <Property:NounPossessiveFrame> <Literal> <Literal>
-	//Show me the proceedings of ISWC 2015
+
+        /*
+        SELECT ?x WHERE { ?x <Property> <Literal> . ?x <Property <Literal> . } 
+
+        List|(Give|Show me) all|the <NounPP:Property> <Literal> <Literal>.
+
+          Give me the proceedings of ISWC 2015. 
+        */
     
-//    SELECT DISTINCT ?uri WHERE {
-//       ?uri hasConference ?conf . 
-//       ?conf confAcronym "ISWC" .
-//       ?conf confYear "2015" .
-//}
-//	
-	public SpringerQueryPattern0_4(Lexicon lexicon,InstanceSource source,LiteralSource literals){
+    
+	public SpringerQueryPattern4(Lexicon lexicon,InstanceSource source,LiteralSource literals){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
@@ -47,7 +47,8 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
                 element1.add("the");
 		elements.add(element1);
 		
-		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+		PropertyElement element2 = new PropertyElement();
+                element2.addEntries(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
 		elements.add(element2);
 		
 		LiteralElement element3 = new LiteralElement();
@@ -71,7 +72,7 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
                 
 		if(i==2){
 		
-                    elements.get(3).addToIndex(literals.getLiteralByPropertyAndInstance(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
+                    elements.get(3).addToIndex(literals.getLiteralByPropertyAndInstance(elements.get(2).getActiveEntries(),LexicalEntry.SynArg.OBJECT));
 			
 		}
 		if(i==3){
@@ -90,7 +91,7 @@ public class SpringerQueryPattern0_4 extends QueryPattern{
 		LiteralElement name_literal = (LiteralElement) elements.get(3);
 		LiteralElement gYear_literal = (LiteralElement) elements.get(4);
 		
-		return sqb.BuildQueryForPropertyAndgYearAndNameLiteral(prop_element, gYear_literal, name_literal, LexicalEntry.SynArg.POSSESSIVEADJUNCT);
+		return sqb.BuildQueryForPropertyAndgYearAndNameLiteral(prop_element, gYear_literal, name_literal, LexicalEntry.SynArg.OBJECT);
 		
 	}
 }

@@ -16,22 +16,20 @@ import org.apache.jena.rdf.model.RDFNode;
  *
  * @author cunger
  */
-
-public class InstanceSource {
-    
+// domainqueryPTI limit and offset set
+public class IndividualSource {
     
     String endpoint;
+    String lang ;
     Vocabulary vocab = new Vocabulary();
     List<String> labelProperties;
-    String lang ;
 
-
-    public InstanceSource(String url,String language) {
+    public IndividualSource(String url,String language) {
         
        this(url,language,Arrays.asList("http://www.w3.org/2000/01/rdf-schema#label"));
     }
         
-    public InstanceSource(String url,String language,List<String> props) {
+    public IndividualSource(String url,String language,List<String> props) {
         
         endpoint = url;
         lang = language;
@@ -56,7 +54,6 @@ public class InstanceSource {
         return out;
     }
     
-        
     public Map<String,List<LexicalEntry>> getInstanceIndex(String query, String var_uri, String var_label) {
        
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
@@ -67,8 +64,8 @@ public class InstanceSource {
 
               QuerySolution result = results.nextSolution();
                
-              RDFNode uri   = result.get(var_uri);
-              RDFNode label = result.get(var_label); 
+               RDFNode uri   = result.get(var_uri);
+               RDFNode label = result.get(var_label); 
                
               if (uri != null && label != null) {
             	  
@@ -91,12 +88,18 @@ public class InstanceSource {
             	  
         }
         
+        // For testing:
+//        
+//        LexicalEntry entry = new LexicalEntry();
+//        entry.setCanonicalForm("fnord");
+//        entry.setReference("http://fnord.org/Fnord");
+//        List<LexicalEntry> entries = new ArrayList<>();
+//        entries.add(entry);
+//        instances.put("fnord",entries);
+        
+        
         return instances;
     }
-    
-    
-    
-    
     //to confirm property of class at domain position (CTP = Class To Property)
     private String domainQueryForCTP(String domain, String property) {
         

@@ -14,19 +14,24 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
-import interQA.lexicon.SparqlQueryBuilder;
 import java.util.Set;
 
 
 
-public class SpringerQueryPattern0_1_1 extends QueryPattern {
+public class Which_C_P_L extends QueryPattern {
 	
+    
+	/* 
+        SELECT ?x WHERE { ?x rdf:type <Class> . ?x <Property> <Literal> . } 
+
+        Which <Class:Noun> <Property:Verb> <Literal>?
 	
-	//Which <Class:Noun> <Property:IntransitivePPframe> <Literal:gYear>
-	
-	//Which conferences took place in 2015?
-	
-	public SpringerQueryPattern0_1_1(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
+	  Which conferences took place in 2015?
+          Which actors died in 1999?
+        */
+    
+    
+	public Which_C_P_L(Lexicon lexicon,InstanceSource instances,LiteralSource literals){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
@@ -43,10 +48,13 @@ public class SpringerQueryPattern0_1_1 extends QueryPattern {
 		element0.add("which");
 		elements.add(element0);
 		
-		ClassElement element1 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
+		ClassElement element1 = new ClassElement();
+                element1.addEntries(lexicon, LexicalEntry.POS.NOUN, null);
 		elements.add(element1);	
 		
-		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.VERB,vocab.IntransitivePPFrame);
+		PropertyElement element2 = new PropertyElement();
+                element2.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.TransitiveFrame);
+                element2.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame);
 		elements.add(element2);
 		
 		LiteralElement element3 = new LiteralElement();
@@ -82,9 +90,7 @@ public class SpringerQueryPattern0_1_1 extends QueryPattern {
 	
 	@Override
 	public Set<String> buildSPARQLqueries(){
-		
-		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
-		
+				
 		ClassElement    noun    = (ClassElement)    elements.get(1);
                 PropertyElement verb    = (PropertyElement) elements.get(2);
                 LiteralElement  literal = (LiteralElement)  elements.get(3);

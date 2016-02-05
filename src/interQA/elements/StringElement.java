@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 
-public class StringElement extends ParsableElement {
+public class StringElement extends Element {
 
 	List<String> elements;
         HashMap<String,List<Feature>> featureMap;
@@ -30,7 +30,7 @@ public class StringElement extends ParsableElement {
             featureMap.get(token).add(f);
 	}
         
-        public void transferFeatures(ParsableElement e,String s) {
+        public void transferFeatures(Element e,String s) {
 
             if (featureMap.containsKey(s)) {
                 for (LexicalEntry.Feature f : featureMap.get(s)) {
