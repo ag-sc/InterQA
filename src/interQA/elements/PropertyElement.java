@@ -1,16 +1,15 @@
 package interQA.elements;
 
-import interQA.lexicon.LexicalEntry;
-import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
-public class PropertyElement extends ParsableElement {
+public class PropertyElement extends Element {
 
 	
-	public PropertyElement(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
+	public PropertyElement() {
             
-            this.index = lexicon.getSubindex(pos,frame);
+            this.index = new HashMap<>();
             this.features = new ArrayList<>();
 	}
 

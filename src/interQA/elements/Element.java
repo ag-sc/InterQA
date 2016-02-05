@@ -2,13 +2,14 @@ package interQA.elements;
 
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
+import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public abstract class ParsableElement {
+public abstract class Element {
 
     Map<String,List<LexicalEntry>> index; 
     // = all active entries
@@ -16,6 +17,17 @@ public abstract class ParsableElement {
     // and then reduced during parsing.
     
     List<Feature> features;
+    boolean optional = false;
+    
+    
+    public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
+            
+        this.index = lexicon.getSubindex(pos,frame);
+    }
+    
+    public void setOptional() {
+        optional = true;
+    }
     
     public Map<String,List<LexicalEntry>> getIndex() {        
         return index;

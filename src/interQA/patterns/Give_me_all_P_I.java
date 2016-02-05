@@ -6,28 +6,32 @@ import interQA.elements.ClassElement;
 import interQA.elements.PropertyElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
+import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
  *
  * @author cunger
  */
-public class QueryPattern9_3 extends QueryPattern {
+public class Give_me_all_P_I extends QueryPattern {
     
-    // SELECT ?x WHERE { ?x <Property> <Individual> . } 
-    // SELECT ?x WHERE { <Individual> <Property> ?x . } 
     
-    // Give me (all|the) <NounPP:Property> <Name:Individual>.
-    
-    // Give me all movies by Tarantino. 
-    // Give me all rivers in Turkmenistan.
-    // Give me the founding date of Boston.
+        /*
+        SELECT ?x WHERE { ?x <Property> <Individual> . } 
+        SELECT ?x WHERE { <Individual> <Property> ?x . } 
 
-	public QueryPattern9_3(Lexicon lexicon, InstanceSource instances) {
+        List|(Give|Show me) all|the <NounPP:Property> <Name:Individual>.
+
+          Give me all movies by Tarantino. 
+          Give me all rivers in Turkmenistan.
+          Give me the founding date of Boston.
+        */
+    
+    
+	public Give_me_all_P_I(Lexicon lexicon, InstanceSource instances) {
             
             this.lexicon = lexicon;
             this.instances = instances; 
@@ -42,27 +46,39 @@ public class QueryPattern9_3 extends QueryPattern {
             
             StringElement element0 = new StringElement(); 
             element0.add("give me");
+            element0.add("show me");
+            element0.add("list me");
             elements.add(element0);
 	
             StringElement element1 = new StringElement(); 
-            element1.add("all");
+            element1.add("all",Feature.PLURAL);
             element1.add("the");
             elements.add(element1);
             
-            PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPPFrame); 
+            PropertyElement element2 = new PropertyElement();
+            element2.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPPFrame);
+            element2.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
             elements.add(element2);
 		
             IndividualElement element3 = new IndividualElement(); 
             elements.add(element3);
+            
+            StringElement element4 = new StringElement();
+            element4.add(".");
+            elements.add(element4);
 	}
 
         @Override
         public void updateAt(int i,String s) {
             
+            if (i==1) {
+            
+                ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
+            }
+            
             if (i == 2) {
-            // If parse is at element2, fill element3 with possible instances...
-                elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.PREPOSITIONALOBJECT));
-                   
+
+                elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.OBJECT));                  
             }
         }        
         
@@ -76,7 +92,7 @@ public class QueryPattern9_3 extends QueryPattern {
                  
             for (LexicalEntry noun_entry : noun.getActiveEntries()) {
                 
-                 switch (noun_entry.getSemArg(LexicalEntry.SynArg.PREPOSITIONALOBJECT)) {
+                 switch (noun_entry.getSemArg(LexicalEntry.SynArg.OBJECT)) {
                      
                     case SUBJOFPROP: 
                          for (LexicalEntry inst_entry : instance.getActiveEntries()) {

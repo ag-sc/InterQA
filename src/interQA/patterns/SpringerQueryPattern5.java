@@ -4,7 +4,6 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
-import interQA.lexicon.SparqlQueryBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +13,15 @@ import java.util.Map;
 import interQA.elements.*;
 import interQA.lexicon.LexicalEntry.Feature;
 import java.util.Set;
-public class SpringerQueryPattern0_5 extends QueryPattern{
+
+
+public class SpringerQueryPattern5 extends QueryPattern{
 	
 	//Give me the <Property:Noun> and <Property:Noun> <Literal> <Literal>
 	
 	//Give me the start and end date of ISWC 2015.
 	
-	public SpringerQueryPattern0_5(Lexicon lexicon, InstanceSource instances,LiteralSource literals ){
+	public SpringerQueryPattern5(Lexicon lexicon, InstanceSource instances,LiteralSource literals ){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
@@ -44,14 +45,18 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
                 element1.add("the");
 		elements.add(element1);
 		
-		PropertyElement element2 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+		PropertyElement element2 = new PropertyElement();
+                element2.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPPFrame);
+                element2.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
 		elements.add(element2);
 		
 		StringElement element3 = new StringElement();
 		element3.add("and");
 		elements.add(element3);
 		
-		PropertyElement element4 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+		PropertyElement element4 = new PropertyElement();
+                element4.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPPFrame);
+                element4.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
 		elements.add(element4);
 		
 		LiteralElement element5 = new LiteralElement();
@@ -78,7 +83,7 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 			Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
 			
 			for(LexicalEntry entry1 : elements.get(2).getActiveEntries()){
-				new_element2index.putAll(instances.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.COPULATIVEARG, entry1.getReference()));
+				new_element2index.putAll(instances.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.OBJECT, entry1.getReference()));
 				
 			}
 			elements.get(4).setIndex(new_element2index);
@@ -86,7 +91,7 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 		
 		if (i==4){
 			
-			elements.get(5).addToIndex(literals.getLabelLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.POSSESSIVEADJUNCT));
+			elements.get(5).addToIndex(literals.getLabelLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.OBJECT));
 		}
 		if (i==5){
 			
@@ -100,15 +105,14 @@ public class SpringerQueryPattern0_5 extends QueryPattern{
 	
 	@Override
 	public Set<String> buildSPARQLqueries(){
-		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
 		PropertyElement noun_prop1 = (PropertyElement) elements.get(2);
 		PropertyElement noun_prop2 = (PropertyElement) elements.get(4);
 		LiteralElement literal1 = (LiteralElement) elements.get(5);
 		LiteralElement literal2 = (LiteralElement) elements.get(6);
 		
-		return sqb.BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(noun_prop1,LexicalEntry.SynArg.COPULATIVEARG,
-				noun_prop2,LexicalEntry.SynArg.COPULATIVEARG, literal1, literal2);
+		return sqb.BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(noun_prop1,LexicalEntry.SynArg.SUBJECT,
+				noun_prop2,LexicalEntry.SynArg.SUBJECT, literal1, literal2);
 	}
 
 }

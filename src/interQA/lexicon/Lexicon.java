@@ -199,11 +199,11 @@ public class Lexicon {
                         
                         if (subject.equals(subjOfProp) && directObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.DIRECTOBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else if (subject.equals(objOfProp) && directObject.equals(subjOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.DIRECTOBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else {
                             continue;
@@ -303,11 +303,11 @@ public class Lexicon {
                         
                         if (subject.equals(subjOfProp) && prepObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else if (subject.equals(objOfProp) && prepObject.equals(subjOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else {
                             continue;
@@ -381,12 +381,12 @@ public class Lexicon {
                         entry.addForm(LexicalEntry.Feature.PLURAL,pl);
                         
                         if (copArg.equals(subjOfProp) && prepObject.equals(objOfProp)) {
-                            entry.addArgumentMapping(LexicalEntry.SynArg.COPULATIVEARG,LexicalEntry.SemArg.SUBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else if (copArg.equals(objOfProp) && prepObject.equals(subjOfProp)) {
-                            entry.addArgumentMapping(LexicalEntry.SynArg.COPULATIVEARG,LexicalEntry.SemArg.OBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else {
                             continue;
@@ -460,12 +460,12 @@ public class Lexicon {
                         entry.addForm(LexicalEntry.Feature.PLURAL,pl);
                         
                         if (copArg.equals(subjOfProp) && possAdj.equals(objOfProp)) {
-                            entry.addArgumentMapping(LexicalEntry.SynArg.COPULATIVEARG,LexicalEntry.SemArg.SUBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.POSSESSIVEADJUNCT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else if (copArg.equals(objOfProp) && possAdj.equals(subjOfProp)) {
-                            entry.addArgumentMapping(LexicalEntry.SynArg.COPULATIVEARG,LexicalEntry.SemArg.OBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.POSSESSIVEADJUNCT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else {
                             continue;
@@ -532,11 +532,11 @@ public class Lexicon {
                         
                         if (subject.equals(subjOfProp) && prepObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else if (subject.equals(objOfProp) && prepObject.equals(subjOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALOBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else {
                             continue;
@@ -598,12 +598,12 @@ public class Lexicon {
                         entry.setFrame(vocab.lexinfo + "PrepositionalFrame");
                         
                         if (subject.equals(subjOfProp) && object.equals(objOfProp)) {
-                            entry.addArgumentMapping(LexicalEntry.SynArg.ATTRIBUTIVEARG,LexicalEntry.SemArg.SUBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALADJUNCT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else if (subject.equals(objOfProp) && object.equals(subjOfProp)) {
-                            entry.addArgumentMapping(LexicalEntry.SynArg.ATTRIBUTIVEARG,LexicalEntry.SemArg.OBJOFPROP);
-                            entry.addArgumentMapping(LexicalEntry.SynArg.PREPOSITIONALADJUNCT,LexicalEntry.SemArg.SUBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else {
                             continue;

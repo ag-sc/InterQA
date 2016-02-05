@@ -35,10 +35,12 @@ public class QueryPattern3_2 extends QueryPattern{
 		element2.add("the");
 		elements.add(element2);
 		
-		ClassElement element3 = new ClassElement(lexicon,LexicalEntry.POS.NOUN,null);
+		ClassElement element3 = new ClassElement();
+                element3.addEntries(lexicon, LexicalEntry.POS.NOUN, null);
 		elements.add(element3);
 		
-		PropertyElement element4 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+		PropertyElement element4 = new PropertyElement();
+                element4.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
 		elements.add(element4);
 		
 		StringElement element5 = new StringElement();
@@ -49,7 +51,8 @@ public class QueryPattern3_2 extends QueryPattern{
 		element6.add("their");
 		elements.add(element6);
 		
-		PropertyElement element7 = new PropertyElement(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
+		PropertyElement element7 = new PropertyElement();
+                element7.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
 		elements.add(element7);	
 		
 	}
@@ -63,7 +66,7 @@ public class QueryPattern3_2 extends QueryPattern{
 			Map<String,List<LexicalEntry>> new_elementindex  = new HashMap<>();
 			
 			for(LexicalEntry entry : elements.get(3).getActiveEntries()){
-				new_elementindex.putAll(instances.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.PREPOSITIONALOBJECT,entry.getReference()));
+				new_elementindex.putAll(instances.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
 			}
 			elements.get(4).setIndex(new_elementindex);
 			
@@ -75,7 +78,7 @@ public class QueryPattern3_2 extends QueryPattern{
 			
 			for(LexicalEntry entry : elements.get(3).getActiveEntries()){
 				
-				new_elementindex.putAll(instances.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.PREPOSITIONALOBJECT,entry.getReference()));
+				new_elementindex.putAll(instances.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
 			}
 			
 			//to ensure second suggestion(property) is different from previous property suggestion
@@ -85,14 +88,12 @@ public class QueryPattern3_2 extends QueryPattern{
 	
 	@Override
 	public Set<String> buildSPARQLqueries(){
-		
-		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
-		
+				
 		ClassElement nounclass = (ClassElement) elements.get(3);
 		PropertyElement prop_elemenet1 = (PropertyElement) elements.get(4);
 		PropertyElement prop_element2 = (PropertyElement) elements.get(7);
 		
-		return sqb.BuildQueryForClassAnd2Properties(nounclass, prop_element2, prop_element2, LexicalEntry.SynArg.DIRECTOBJECT, LexicalEntry.SynArg.DIRECTOBJECT);
+		return sqb.BuildQueryForClassAnd2Properties(nounclass, prop_element2, prop_element2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
 	}
 	
 }

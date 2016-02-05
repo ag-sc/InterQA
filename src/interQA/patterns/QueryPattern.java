@@ -1,11 +1,12 @@
 package interQA.patterns;
 
 import interQA.lexicon.Vocabulary;
-import interQA.elements.ParsableElement;
+import interQA.elements.Element;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
+import interQA.lexicon.SparqlQueryBuilder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,11 +17,14 @@ import java.util.Set;
 public abstract class QueryPattern {
 
         Vocabulary vocab = new Vocabulary();
+        SparqlQueryBuilder sqb = new SparqlQueryBuilder();
+        
         Lexicon lexicon;
+        
         InstanceSource instances;
         LiteralSource literals;
         
-	List<ParsableElement> elements = new ArrayList<>();
+	List<Element> elements = new ArrayList<>();
         
 	private int currentElement = -1;    
     

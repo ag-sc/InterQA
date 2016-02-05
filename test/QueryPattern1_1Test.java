@@ -1,6 +1,6 @@
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
-import interQA.patterns.QueryPattern1_1;
+import interQA.patterns.Give_me_all_C;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,14 +14,14 @@ public class QueryPattern1_1Test {
     // Load lexicon
     private Lexicon lexicon = new Lexicon("en");
     private InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
-    private QueryPattern1_1 qp1 = null;
+    private Give_me_all_C qp1 = null;
 
 
     @Test
     public void testFullSequence() {
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon,instances);
+        qp1 = new Give_me_all_C(lexicon,instances);
 
         StringBuffer parsedText = new StringBuffer();
 
@@ -57,7 +57,7 @@ public class QueryPattern1_1Test {
     public void testSequenceWithDelete(){
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon, instances);
+        qp1 = new Give_me_all_C(lexicon, instances);
 
         StringBuffer parsedText = new StringBuffer();
 
@@ -83,7 +83,7 @@ public class QueryPattern1_1Test {
     public void testSequenceWithCompleteDelete(){
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon, instances);
+        qp1 = new Give_me_all_C(lexicon, instances);
 
         StringBuffer parsedText = new StringBuffer();
 
@@ -109,7 +109,7 @@ public class QueryPattern1_1Test {
     public void testStartsAllDeleted(){
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon, instances);
+        qp1 = new Give_me_all_C(lexicon, instances);
 
         StringBuffer parsedText = new StringBuffer();
 
@@ -129,7 +129,7 @@ public class QueryPattern1_1Test {
     public void testStartsAllDeletedV2(){
         // Load lexicon
         lexicon.load("resources/dbpedia_en.rdf");
-        qp1 = new QueryPattern1_1(lexicon, instances);
+        qp1 = new Give_me_all_C(lexicon, instances);
 
         boolean parsesElem1 = qp1.parses("");
         //returns true
