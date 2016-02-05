@@ -15,6 +15,7 @@ import interQA.patterns.QueryPattern3_1;
 import interQA.patterns.*;
 import interQA.patterns.*;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -66,7 +67,28 @@ public class interQACLI {
         
         
         
-        // RUN 
+        // RUN
+
+        //If we provide arguments, they will be interpreted as file paths
+        if (args.length != 0){
+            if (args.length != 2) { //We allow only two params
+               System.out.println("Only two params are allowed. Both are file paths. The first is the stdin, the second is the stdout.");
+                System.exit(1);
+            }
+            //Follows only if there are two params
+            String inFileWithPath =  args[0];  //First argument
+            String outFileWithPath = args[1];  //Second argument
+            try {
+                //Reassign the standard input to the given file
+                System.setIn(new FileInputStream(new File(inFileWithPath)));
+                //Reassign the standard output to the given file
+                System.setOut(new PrintStream(new FileOutputStream(new File(outFileWithPath))));
+            }catch (FileNotFoundException e){
+                System.out.println("Fatal error. The argument " + inFileWithPath + " is not a valid input file, or " +
+                                                "the argument " + outFileWithPath + " is not a valid output file.");
+                System.exit(1);
+            }
+        }
         
         Scanner scanner = new Scanner(System.in);
         StringBuffer sbWholeSentenceInternal = new StringBuffer();
@@ -85,7 +107,7 @@ public class interQACLI {
                 for (String query : qm.buildSPARQLqueries()) {
                      System.out.println(query);
                 }
-                System.exit(0);
+                break; //Better than exit in order to be used in test units
             } 
             
             int index = 1;

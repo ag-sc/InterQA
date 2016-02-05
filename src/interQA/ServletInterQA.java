@@ -27,7 +27,7 @@ public class ServletInterQA extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
-        response.setHeader("Access-Control-Allow-Origin", "*"); //May be too much. Anyone could use this as a service.
+        response.setHeader("Access-Control-Allow-Origin", "*"); // "*" May be too much. Anyone could use this as a service.
         PrintWriter out = response.getWriter();
         //log("The URL is " + request.getQueryString());
         //log("The page encoding is "+ request.getCharacterEncoding());
