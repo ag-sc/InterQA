@@ -27,7 +27,7 @@
     <p>Type (or select from the list) to create a guided natural language query about Springer conferences.</p>
     <p>Shortcuts while typing:
        <ul>
-        <li><b>Space</b>: autocomplete (only if there is one world in the options list). <b>Ctrl+Space</b> avoids autocomplete.</li>
+        <li><b>Space</b>: autocomplete (only if there is one word in the options list). <b>Ctrl+Space</b> avoids autocomplete.</li>
         <li><b>Backspace</b>: delete previous word.</li>
         <li><b>Left arrow</b>: edit previous word.</li>
       </ul>
@@ -87,21 +87,31 @@
                      console.log("Error at get queries");
                   });
         }
+	currentCallback = null;
+        mySelectize.cancelLoading();
 	mySelectize.setSelectizeStates(e);
       }
+	var currentCallback = null;
       var initSelect = function initSelect () {
+        if(currentCallback != null){
+          currentCallback.abort();
+          currentCallback = null;
+        }
         $("#sparql").html("");
         jQuery("#execButton").css("display", "none");
         jQuery("#executor").empty();
         mySelectize.setSelectizeStates([]);
+        mySelectize.startLoading();
+
         optionsGlobal = mySelectize.getSelectizedItems();
         var getoptions_url = "/interQAWebApp/ServletInterQA?command=getOptions";
         var selected_url = "/interQAWebApp/ServletInterQA?command=selected&selection=";
         for (var i in optionsGlobal) {
           selected_url += '' + encodeURIComponent(optionsGlobal[i]); //Converts UTF-8 to a valid URLable string (avoids Cáceres-> CÃ¡ceres)
         }
-        execute_ajax(selected_url, function (e) {
-          execute_ajax(getoptions_url, get_options_success, function(e){
+
+        currentCallback = execute_ajax(selected_url, function (e) {
+          currentCallback = execute_ajax(getoptions_url, get_options_success, function(e){
             console.log("Error at get options (after selected)");
           });
         }, function (e) {
@@ -126,6 +136,7 @@
         request.fail(function( jqXHR, textStatus ) { //Returned 500
           func_fail("error 500");
         });
+	return request;
       };
     </script>
   </div>
