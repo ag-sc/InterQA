@@ -43,12 +43,12 @@ public class InstanceSource {
         String out; 
         
         if (labelProperties.size() == 1) {
-            out = var1 + " " + labelProperties.get(0) + " " + var2 + " .";
+            out = var1 + " <" + labelProperties.get(0) + "> " + var2 + " .";
         }
         else if (labelProperties.size() > 1) {
-            out = "{ " + var1 + " " + labelProperties.get(0) + " " + var2 + " . }";
+            out = "{ " + var1 + " <" + labelProperties.get(0) + "> " + var2 + " . }";
             for (String prop : labelProperties.subList(1,labelProperties.size()-1)) {
-                 out += " UNION { " + var1 + " " + prop + " " + var2 + " . }";
+                 out += " UNION { " + var1 + " <" + prop + "> " + var2 + " . }";
             }
         }
         else out = "";
