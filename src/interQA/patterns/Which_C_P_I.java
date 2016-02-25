@@ -9,6 +9,7 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,30 +65,31 @@ public class Which_C_P_I extends QueryPattern {
             
             IndividualElement element3 = new IndividualElement(); 
             elements.add(element3);
-            
-            StringElement element4 = new StringElement();
-            element4.add("?");
-            elements.add(element4);
 	}
         
         @Override
-        public void updateAt(int i,String s) {
+        public void update(String s) {
             
-            if (i == 1) {
+            switch (currentElement) {
                 
-                Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
-                Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
-                     
-                for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
-                                        
-                    new_element2index.putAll(instances.filterByClassForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+                case 1: {
+                
+                    Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
+                    Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+
+                    for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
+
+                        new_element2index.putAll(instances.filterByClassForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+                    }
+                    elements.get(2).setIndex(new_element2index);
+                    break;
                 }
-                elements.get(2).setIndex(new_element2index);
-            } 
             
-            if (i == 2) {
+                case 2: {
             	
-            	elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                    elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                    break;
+                }
             	  
             }
             
@@ -100,6 +102,15 @@ public class Which_C_P_I extends QueryPattern {
             PropertyElement   verb = (PropertyElement)   elements.get(2);
             IndividualElement indi = (IndividualElement) elements.get(3);
             
-            return sqb.BuildQueryForIndividualAndProperty(noun, indi, verb, LexicalEntry.SynArg.OBJECT);
+            switch (currentElement) {
+                
+                // case 1: TODO 
+                        
+                // case 2: TODO
+                   
+                case 3: return sqb.BuildQueryForIndividualAndProperty(noun, indi, verb, LexicalEntry.SynArg.OBJECT);
+                    
+                default: return new HashSet<>();
+            }
 	}
 }

@@ -108,8 +108,6 @@ public class ServletInterQA extends HttpServlet {
         qm.addQueryPattern(new Give_me_all_C_that_are_P_L(lexicon,instances,literals));
         qm.addQueryPattern(new Give_me_all_C_that_P_L(lexicon,instances,literals));
         qm.addQueryPattern(new Give_me_all_C_that_P_L_P_L(lexicon,instances,literals));
-        qm.addQueryPattern(new SpringerQueryPattern4(lexicon,instances,literals));
-        qm.addQueryPattern(new SpringerQueryPattern5(lexicon,instances,literals));
 
         log("Query pattern load finished at " + LocalDateTime.now());  //LocalDateTime requires Java 8
     }

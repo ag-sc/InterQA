@@ -59,8 +59,9 @@ public class QueryPattern3_2 extends QueryPattern{
 	
 	
 	@Override
-	public void updateAt(int i,String s){
-		if(i==4){
+	public void update(String s){
+		
+                if(currentElement==4){
 			
 			Map<String,List<LexicalEntry>> old_elementindex = elements.get(4).getIndex();
 			Map<String,List<LexicalEntry>> new_elementindex  = new HashMap<>();
@@ -72,7 +73,7 @@ public class QueryPattern3_2 extends QueryPattern{
 			
 		}
 		
-		if(i==6){
+		if(currentElement==6){
 			Map<String,List<LexicalEntry>> old_elementindex = elements.get(7).getIndex();
 			Map<String,List<LexicalEntry>> new_elementindex = new HashMap<>();
 			
@@ -93,7 +94,11 @@ public class QueryPattern3_2 extends QueryPattern{
 		PropertyElement prop_elemenet1 = (PropertyElement) elements.get(4);
 		PropertyElement prop_element2 = (PropertyElement) elements.get(7);
 		
-		return sqb.BuildQueryForClassAnd2Properties(nounclass, prop_element2, prop_element2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
+                if (currentElement == 7) {
+                    return sqb.BuildQueryForClassAnd2Properties(nounclass, prop_element2, prop_element2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
+                }
+                
+                return new HashSet<>();
 	}
 	
 }

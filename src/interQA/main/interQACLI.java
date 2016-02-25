@@ -48,8 +48,6 @@ public class interQACLI {
         qm.addQueryPattern(new Which_C_P_L_P_L(lexicon,instances,literals));
         qm.addQueryPattern(new Give_me_all_C_that_P_L(lexicon,instances,literals));
         qm.addQueryPattern(new Give_me_all_C_that_P_L_P_L(lexicon,instances,literals));
-        qm.addQueryPattern(new SpringerQueryPattern4(lexicon,instances,literals));
-        qm.addQueryPattern(new SpringerQueryPattern5(lexicon,instances,literals));
        
         
         

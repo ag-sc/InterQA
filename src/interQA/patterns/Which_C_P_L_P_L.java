@@ -13,6 +13,7 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Which_C_P_L_P_L extends QueryPattern {
@@ -62,17 +63,15 @@ public class Which_C_P_L_P_L extends QueryPattern {
 		
 		LiteralElement element5 = new LiteralElement();
 		elements.add(element5);
-		
-                StringElement element6 = new StringElement();
-                element6.add("?");
-                elements.add(element6);
 	}
 	
 	
 	@Override
-	public void updateAt(int i,String s){
+	public void update(String s){
 		
-		if(i==1){
+            switch (currentElement) {
+                
+                case 1: {
                     
                     setFeatures(1,2,s);
                     
@@ -85,35 +84,48 @@ public class Which_C_P_L_P_L extends QueryPattern {
     			
                     }
                     elements.get(2).addToIndex(new_element2index);
+                    break;
 		}
 		
-		if(i==2){
+		case 2: {
 	
                     elements.get(3).addToIndex(literals.getJustLiteralByProperty(elements.get(2).getActiveEntries()));
-		
+                    break;
 		}
 		
-		if(i==4){
+                case 4: {
 			
                     elements.get(5).addToIndex(literals.getLiteralByPropertyAndLiteral(elements.get(4).getActiveEntries(),elements.get(2).getActiveEntries(),
-					elements.get(3).getActiveEntries()));
-			
+                    elements.get(3).getActiveEntries()));
+                    break;
 		}
-		
+            }
 	}
+        
 	@Override
 	public Set<String> buildSPARQLqueries(){
 		
 		
-		ClassElement    noun = (ClassElement)    elements.get(1);
-        PropertyElement    verb = (PropertyElement)    elements.get(2);
-        LiteralElement literal = (LiteralElement) elements.get(3);
-        PropertyElement verb2 = (PropertyElement) elements.get(4);
-        LiteralElement literal2 = (LiteralElement)elements.get(5);
+            ClassElement    noun     = (ClassElement)    elements.get(1);
+            PropertyElement verb     = (PropertyElement) elements.get(2);
+            LiteralElement  literal  = (LiteralElement)  elements.get(3);
+            PropertyElement verb2    = (PropertyElement) elements.get(4);
+            LiteralElement  literal2 = (LiteralElement)  elements.get(5);
 
+            switch (currentElement) {
                 
-		
-		return sqb.BuildQueryForClassAnd2PropertyAnd2Literal(noun,verb,literal,verb2,literal2);
+                // case 1: TODO 
+                
+                // case 2: TODO 
+                
+                // case 3: TODO 
+                
+                // case 4: TODO 
+
+                case 5: return sqb.BuildQueryForClassAnd2PropertyAnd2Literal(noun,verb,literal,verb2,literal2);
+                    
+                default: return new HashSet<>();
+            }
 	}
 	
 }

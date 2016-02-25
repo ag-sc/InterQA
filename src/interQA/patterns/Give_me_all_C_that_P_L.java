@@ -14,6 +14,7 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Give_me_all_C_that_P_L extends QueryPattern{
@@ -65,60 +66,57 @@ public class Give_me_all_C_that_P_L extends QueryPattern{
 		elements.add(element4);
 		
 		LiteralElement element5 = new LiteralElement();
-		elements.add(element5);
-		
-		StringElement element6 = new StringElement();
-		element6.add(".");
-		elements.add(element6);
-                
+		elements.add(element5);                
 	}
 	
 	@Override
-	public void updateAt(int i,String s){
+	public void update(String s){
 		
-                if (i==1) {
-                    ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
-                }
+            switch (currentElement) {
                 
-                if (i==2) {
-                    setFeatures(2,4,s);
-                }
-            
-		if(i==3){
-			
-			Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
-            
-    		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+                case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s); break;
+                
+                case 2: setFeatures(2,4,s); break;
+                
+                case 3: {
+                    
+                    Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
+                    Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
     		
-    		
-    		
-    		for(LexicalEntry entry : elements.get(2).getActiveEntries()){
+                    for (LexicalEntry entry : elements.get(2).getActiveEntries()) {
     			
     			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
     			
-    		}
-			elements.get(4).addToIndex(new_element2index);
-			
-		}
-		
-		if(i==4){
-			
-			elements.get(5).addToIndex(literals.getJustLiteralByProperty(elements.get(4).getActiveEntries()));
-			
-		}
-		
-		
+                    }
+                    elements.get(4).addToIndex(new_element2index);
+                    break;
+                }
+
+                case 4: {
+	
+                    elements.get(5).addToIndex(literals.getJustLiteralByProperty(elements.get(4).getActiveEntries()));
+                    break;
+                }
+            }
 	}
 	
 	
-	
 	@Override
-	public Set<String> buildSPARQLqueries(){
-				
-		ClassElement    noun    = (ClassElement)    elements.get(2);
-                PropertyElement verb    = (PropertyElement) elements.get(4);
-                LiteralElement  literal = (LiteralElement)  elements.get(5);
-		
-		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,verb,literal);
+	public Set<String> buildSPARQLqueries() {
+			
+            ClassElement    noun    = (ClassElement)    elements.get(2);
+            PropertyElement verb    = (PropertyElement) elements.get(4);
+            LiteralElement  literal = (LiteralElement)  elements.get(5);
+                    
+            switch (currentElement) {
+                
+                // case 2: TODO 
+                
+                // case 4: TODO 
+                
+                case 5: return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,verb,literal);
+                    
+                default: return new HashSet<>();
+            }
 	}
 }

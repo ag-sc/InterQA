@@ -7,6 +7,7 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -52,16 +53,12 @@ public class Who_P_I extends QueryPattern {
             
             IndividualElement element2 = new IndividualElement(); 
             elements.add(element2);
-            
-            StringElement element3 = new StringElement();
-            element3.add("?");
-            elements.add(element3);
 	}
 
         @Override
-        public void updateAt(int i,String s) {
+        public void update(String s) {
             
-            if (i == 2) {
+            if (currentElement == 2) {
                   
             	elements.get(2).addToIndex(instances.filterByPropertyForInstances(elements.get(1).getActiveEntries(), LexicalEntry.SynArg.OBJECT));    
             }
@@ -73,6 +70,13 @@ public class Who_P_I extends QueryPattern {
             PropertyElement   verb     = (PropertyElement)   elements.get(1);
             IndividualElement instance = (IndividualElement) elements.get(2);
                  
-            return sqb.BuildQueryForIndividualAndPropery(instance, verb, LexicalEntry.SynArg.OBJECT);
+            switch (currentElement) {
+                
+                // case 1: TODO
+                
+                case 2: return sqb.BuildQueryForIndividualAndPropery(instance, verb, LexicalEntry.SynArg.OBJECT);
+                    
+                default: return new HashSet<>();
+            }
         }
 }

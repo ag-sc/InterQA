@@ -14,6 +14,7 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Give_me_all_C_that_P_L_P_L extends QueryPattern{
@@ -74,53 +75,46 @@ public class Give_me_all_C_that_P_L_P_L extends QueryPattern{
 		
 		LiteralElement element7 = new LiteralElement();
 		elements.add(element7);
-                
-                StringElement element8 = new StringElement();
-                element8.add(".");
-                elements.add(element8);
 	}
 	
 	@Override
-	public void updateAt(int i,String s){
+	public void update(String s){
 		
-                if (i==1) {
-                    ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
-                }
+                switch (currentElement) {
+                    
+                    case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s); break;
                 
-                if (i==2) {
-                    setFeatures(2,4,s);
-                }
+                    case 2: setFeatures(2,4,s); break;
                             
-		if(i==3){
+                    case 3: {
 			
 			Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
-            
-    		Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+                        Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
     		
-    		
-    		
-    		for(LexicalEntry entry : elements.get(2).getActiveEntries()){
+                        for(LexicalEntry entry : elements.get(2).getActiveEntries()){
     			
-    			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
-    			
-    		}
-			elements.get(4).addToIndex(new_element2index);
+                            new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
+                        }
 			
-		}
+                        elements.get(4).addToIndex(new_element2index);
+			break;
+                    }
 		
-		if(i==4){
+                    case 4: {
 			
 			elements.get(5).addToIndex(literals.getJustLiteralByProperty(elements.get(4).getActiveEntries()));
-			
-		}
-		if(i==6){
+			break;
+                    }
+		
+                    case 6: {
 
 			elements.get(7).addToIndex(literals.getLiteralByPropertyAndLiteral(elements.get(6).getActiveEntries(),elements.get(4).getActiveEntries(),
-					elements.get(5).getActiveEntries()));
-			
+			elements.get(5).getActiveEntries()));
+			break;
+                    }
 		}
-		
 	}
+        
 	@Override
 	public Set<String> buildSPARQLqueries(){
 				
@@ -130,6 +124,19 @@ public class Give_me_all_C_that_P_L_P_L extends QueryPattern{
                 PropertyElement verb2    = (PropertyElement) elements.get(6);
                 LiteralElement  literal2 = (LiteralElement)  elements.get(7);
 		
-		return sqb.BuildQueryForClassAnd2PropertyAnd2Literal(noun,verb,literal,verb2,literal2);
+                switch (currentElement) {
+                    
+                    // case 2: TODO 
+                    
+                    // case 4: TODO 
+                    
+                    // case 5: TODO
+                    
+                    // case 6: TODO
+                    
+                    case 7: return sqb.BuildQueryForClassAnd2PropertyAnd2Literal(noun,verb,literal,verb2,literal2);
+                        
+                    default: return new HashSet<>();
+                }
 	}
 }

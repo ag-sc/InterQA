@@ -14,6 +14,7 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Give_me_all_C_that_are_P_L extends QueryPattern{
@@ -70,20 +71,16 @@ public class Give_me_all_C_that_are_P_L extends QueryPattern{
 		
                 LiteralElement element6 = new LiteralElement();
 		elements.add(element6);
-                
-                StringElement element7 = new StringElement();
-                element7.add(".");
-                elements.add(element7);
 	}
 	
 	@Override
-	public void updateAt(int i,String s){
+	public void update(String s){
 		
-                if (i==1) {
-                    ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
-                }
+            switch (currentElement) {
+                
+                case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s); break;
             
-		if(i==2) {
+                case 2: {
                     setFeatures(2,4,s);
                                         
                     Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
@@ -93,24 +90,32 @@ public class Give_me_all_C_that_are_P_L extends QueryPattern{
     			
     			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
                     }
-			elements.get(5).addToIndex(new_element2index);
+                    elements.get(5).addToIndex(new_element2index);
 		}
 		
-		if(i==5){
+                case 5: {
 			
 			elements.get(6).addToIndex(literals.getJustLiteralByProperty(elements.get(5).getActiveEntries()));
-		}
-		
+                }
+            }
 	}
 	
 	@Override
 	public Set<String> buildSPARQLqueries(){
 				
-		ClassElement    noun = (ClassElement)    elements.get(2);
-                PropertyElement    adjective = (PropertyElement)    elements.get(5);
+		ClassElement    noun = (ClassElement) elements.get(2);
+                PropertyElement adjective = (PropertyElement) elements.get(5);
                 LiteralElement literal = (LiteralElement) elements.get(6);
 		
-		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,adjective,literal);
-		
+                switch (currentElement) {
+                    
+                    // case 2: TODO
+                    
+                    // case 5: TODO
+                    
+                    case 6: return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,adjective,literal);
+                        
+                    default: return new HashSet<>();
+                }
 	}
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import interQA.elements.*;
 import interQA.lexicon.LexicalEntry.Feature;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -71,13 +72,13 @@ public class SpringerQueryPattern5 extends QueryPattern{
 	}
 	
 	@Override
-	public void updateAt(int i,String s){
+	public void update(String s){
             
-                if (i==1) {
+                if (currentElement==1) {
                     ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
                 }
 		
-		if (i==3){
+		if (currentElement==3){
 			
 			Map<String,List<LexicalEntry>> old_element2index = elements.get(4).getIndex();
 			Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
@@ -89,11 +90,11 @@ public class SpringerQueryPattern5 extends QueryPattern{
 			elements.get(4).setIndex(new_element2index);
 		}
 		
-		if (i==4){
+		if (currentElement==4){
 			
 			elements.get(5).addToIndex(literals.getLabelLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.OBJECT));
 		}
-		if (i==5){
+		if (currentElement==5){
 			
 			elements.get(6).addToIndex(literals.getLiteralByLiteral(elements.get(5).getActiveEntries()));
 		}
@@ -111,8 +112,12 @@ public class SpringerQueryPattern5 extends QueryPattern{
 		LiteralElement literal1 = (LiteralElement) elements.get(5);
 		LiteralElement literal2 = (LiteralElement) elements.get(6);
 		
-		return sqb.BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(noun_prop1,LexicalEntry.SynArg.SUBJECT,
+                if (currentElement == 6) {
+                    return sqb.BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(noun_prop1,LexicalEntry.SynArg.SUBJECT,
 				noun_prop2,LexicalEntry.SynArg.SUBJECT, literal1, literal2);
+                }
+                
+                return new HashSet<>();
 	}
 
 }

@@ -14,6 +14,7 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LiteralSource;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -59,16 +60,14 @@ public class Which_C_P_L extends QueryPattern {
 		
 		LiteralElement element3 = new LiteralElement();
 		elements.add(element3);
-                
-                StringElement element4 = new StringElement();
-                element4.add("?");
-                elements.add(element4);
 	}
 	
 	@Override
-	public void updateAt(int i,String s){
+	public void update(String s){
                 
-		if(i==1){
+            switch (currentElement){ 
+            
+                case 1: {
                     
                     setFeatures(1,2,s);
                     
@@ -80,12 +79,15 @@ public class Which_C_P_L extends QueryPattern {
     			new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));                      
                     }
                     elements.get(2).addToIndex(new_element2index);
+                    break;
 		}
 		
-		if(i==2){
+                case 2: {
 	
                     elements.get(3).addToIndex(literals.getJustLiteralByProperty(elements.get(2).getActiveEntries()));
+                    break;
 		}
+            }
 	}
 	
 	@Override
@@ -95,7 +97,16 @@ public class Which_C_P_L extends QueryPattern {
                 PropertyElement verb    = (PropertyElement) elements.get(2);
                 LiteralElement  literal = (LiteralElement)  elements.get(3);
 		
-		return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,verb,literal);
+                switch (currentElement) {
+                    
+                    // case 1: TODO
+                    
+                    // case 2: TODO
+                    
+                    case 3: return sqb.BuildQueryForClassAndPropertyAndLiteral(noun,verb,literal);
+                        
+                    default: return new HashSet<>();
+                }
 	}
 	
 	
