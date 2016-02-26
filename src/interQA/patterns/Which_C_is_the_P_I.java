@@ -98,11 +98,11 @@ public class Which_C_is_the_P_I extends QueryPattern {
     	 
         switch (currentElement) {
             
-            // case 1: TODO
+        	case 1:return sqb.BuildQueryForClassInstances(noun.getActiveEntries());
             
-            // case 4: TODO
+        	case 4: return sqb.BuildQueryForClassAndProperty(noun, nounprop, LexicalEntry.SynArg.OBJECT);
     	
-            case 5: return sqb.BuildQueryForIndividualAndProperty(noun, indi, nounprop,LexicalEntry.SynArg.OBJECT);
+            case 5: return sqb.BuildQueryForClassAndIndividualAndProperty(noun, indi, nounprop,LexicalEntry.SynArg.OBJECT);
                 
             default: return new HashSet<>();
         }

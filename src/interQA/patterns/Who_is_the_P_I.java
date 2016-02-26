@@ -85,7 +85,7 @@ public class Who_is_the_P_I extends QueryPattern{
 			
                 switch (currentElement) {
                 
-                    // case 3: TODO
+                case 3: return sqb.BuildQueryForProperty(nounpos1);
                     
                     case 4: return sqb.BuildQueryForClassAndProperty(nounclass, nounpos1, LexicalEntry.SynArg.OBJECT);
                         

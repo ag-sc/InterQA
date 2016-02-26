@@ -89,29 +89,10 @@ public class Give_me_all_P_I extends QueryPattern {
                  
             switch (currentElement) {
                 
-                // case 2: TODO
+                case 2: return sqb.BuildQueryForProperty(noun);
                 
-                case 3: {
-                    for (LexicalEntry noun_entry : noun.getActiveEntries()) {
-
-                         switch (noun_entry.getSemArg(LexicalEntry.SynArg.OBJECT)) {
-
-                            case SUBJOFPROP: 
-                                 for (LexicalEntry inst_entry : instance.getActiveEntries()) {
-                                      queries.add("SELECT DISTINCT ?x WHERE {"
-                                                + " <" + inst_entry.getReference() + "> <" + noun_entry.getReference() + "> ?x . }");
-                                 }
-                                 break;
-                            case OBJOFPROP: 
-                                 for (LexicalEntry inst_entry : instance.getActiveEntries()) {
-                                      queries.add("SELECT DISTINCT ?x WHERE {"
-                                                + " ?x <" + noun_entry.getReference() + "> <" + inst_entry.getReference() + "> . }");
-                                 }
-                                 break;
-                         }
-                    }
-                    return queries;
-                }
+                case 3: return sqb.BuildQueryForPropertyAndInstance(noun, instance);
+                
                 
                 default: return new HashSet<>();
             }

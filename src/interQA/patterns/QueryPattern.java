@@ -5,7 +5,6 @@ import interQA.elements.Element;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ public abstract class QueryPattern {
         Lexicon lexicon;
         
         InstanceSource instances;
-        LiteralSource literals;
         
 	List<Element> elements = new ArrayList<>();
         

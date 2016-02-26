@@ -72,7 +72,7 @@ public class Who_P_I extends QueryPattern {
                  
             switch (currentElement) {
                 
-                // case 1: TODO
+                 case 1: return sqb.BuildQueryForProperty(verb);
                 
                 case 2: return sqb.BuildQueryForIndividualAndPropery(instance, verb, LexicalEntry.SynArg.OBJECT);
                     

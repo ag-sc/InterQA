@@ -3,9 +3,12 @@ package interQA.lexicon;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
@@ -40,26 +43,103 @@ public class InstanceSource {
     
     private String label(String var1, String var2) {
         
-        String out; 
+        String out;
         
         if (labelProperties.size() == 1) {
             out = var1 + " <" + labelProperties.get(0) + "> " + var2 + " .";
         }
         else if (labelProperties.size() > 1) {
             out = "{ " + var1 + " <" + labelProperties.get(0) + "> " + var2 + " . }";
-            for (String prop : labelProperties.subList(1,labelProperties.size()-1)) {
+            for (String prop : labelProperties.subList(1,labelProperties.size())) {
                  out += " UNION { " + var1 + " <" + prop + "> " + var2 + " . }";
             }
         }
-        else out = "";
+        else out = "" ;
         
         return out;
     }
     
-        
-    public Map<String,List<LexicalEntry>> getInstanceIndex(String query, String var_uri, String var_label) {
+
+    
+    public Map<String,List<LexicalEntry>> getInstanceIndex(String query, String var_uri) {
        
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
+        List<String> collected_IRI = new ArrayList<>();
+        String query_first ="SELECT DISTINCT "+var_uri+"{ "+query+ "}";
+ 
+        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query_first);
+        ResultSet results = ex.execSelect();
+        while (results.hasNext()) {
+        	
+        	  List<String> labels= new ArrayList<>(); 	
+              QuerySolution result = results.nextSolution();  
+              RDFNode uri   = result.get(var_uri);
+              String form_IRI ="";
+              if (uri != null ) {
+		            	String form = uri.toString();
+		  				
+		  				
+	  						
+	  						
+				  				if(form.matches(".*http://www.w3.org/2001/XMLSchema#gYear")){
+				  					form =form.substring(form.indexOf('"') + 1, form.indexOf("-"));
+				  					labels.add(form);
+				  					form_IRI = "\""+form+"\"^^<http://www.w3.org/2001/XMLSchema#gYear>";
+				  				}
+				  				else if(form.matches("\\d{4}-\\d{2}-\\d{2}.*")){
+				  					form = form.substring(form.indexOf('"') + 1, form.indexOf("+"));
+				  					labels.add(form);
+				  					form_IRI = "\""+form+"\"^^<http://www.w3.org/2001/XMLSchema#date>";
+				  				}
+				  				else if(form.matches("http://.*")){
+				  					collected_IRI.add(form);
+				  					}
+				  				else{
+				  					form = form.substring(0,form.indexOf("@"));
+				  					labels.add(form);
+				  					form_IRI="\""+form+"\"@"+lang;	
+				  					
+				  				}
+	  				
+            	  }
+	  			
+              
+              
+              
+                  
+              for(String form :labels){
+            	  
+            	  LexicalEntry entry = new LexicalEntry();
+                  entry.setCanonicalForm(form);
+                  entry.setReference(form_IRI);
+                 
+                  if (!instances.containsKey(form)) {
+                       instances.put(form,new ArrayList<>());
+                 }
+                  
+                  instances.get(form).add(entry);
+            	  
+              }
+              
+              
+            	  
+        }
+        
+        if(!collected_IRI.isEmpty()){
+        	
+        	query = "SELECT DISTINCT "+var_uri+" ?l { "+query
+        			+label(var_uri,"?l")
+        			+"filter langMatches( lang(?l), \""+lang+"\") }";
+        	
+      	    instances.putAll(getInstanceLabel(query,var_uri,"?l"));;
+      	    
+        }
+        
+        return instances;
+    }
+   
+    public Map<String,List<LexicalEntry>> getInstanceLabel(String query,String var_uri,String var_label){
+    	Map<String,List<LexicalEntry>> instances = new HashMap<>();
 
         QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
         ResultSet results = ex.execSelect();
@@ -74,6 +154,64 @@ public class InstanceSource {
             	  
             	  
             		  String form = label.asLiteral().getValue().toString().replaceAll(" \\(.*?\\)", "");
+                	  
+                      LexicalEntry entry = new LexicalEntry();
+                      entry.setCanonicalForm(form);
+                      entry.setReference("<"+uri.toString()+">");
+                     
+                      if (!instances.containsKey(form)) {
+                           instances.put(form,new ArrayList<>());
+                     }
+                      
+                      instances.get(form).add(entry);
+                  
+                  
+            	  }
+                      
+            	  
+        }
+        
+        return instances;
+
+    	
+    	
+    }
+    
+    public Map<String,List<LexicalEntry>> getInstanceIndex(String query, String var_uri, String var_label) {
+        
+        Map<String,List<LexicalEntry>> instances = new HashMap<>();
+
+        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
+        ResultSet results = ex.execSelect();
+        while (results.hasNext()) {
+
+              QuerySolution result = results.nextSolution();
+               
+              RDFNode uri   = result.get(var_uri);
+              RDFNode label = result.get(var_label); 
+               
+              if (uri != null && label != null) {
+            	  
+            	  	String form = label.toString();	
+            	    String form_IRI = "";  
+            	  	if(form.matches(".*http://www.w3.org/2001/XMLSchema#gYear")){
+    					form =	form.substring(form.indexOf('"') + 1, form.indexOf("-"));
+    					form_IRI = "\""+form+"\"^^<http://www.w3.org/2001/XMLSchema#gYear>";
+    				}
+    				else if(form.matches("\\d{4}-\\d{2}-\\d{2}.*")){
+    					form =	form.substring(form.indexOf('"') + 1, form.indexOf("+"));
+    					form_IRI = "\""+form+"\"^^<http://www.w3.org/2001/XMLSchema#date>";
+    				}
+    				 
+    				else if(form.matches(".*@"+lang+"")){
+    					form = form.substring(0,form.indexOf("@"));
+    					form_IRI="\""+form+"\"@en";	
+    				}
+    				else{
+    					form = label.asLiteral().getValue().toString().replaceAll(" \\(.*?\\)", "");
+    					form_IRI = uri.toString();
+    				}
+            		   
                 	  
                       LexicalEntry entry = new LexicalEntry();
                       entry.setCanonicalForm(form);
@@ -96,7 +234,6 @@ public class InstanceSource {
     
     
     
-    
     //to confirm property of class at domain position (CTP = Class To Property)
     private String domainQueryForCTP(String domain, String property) {
         
@@ -116,18 +253,12 @@ public class InstanceSource {
     //to query instances(domain pos) that are suitable with property(Property to Instance)
     private String domainQueryForPTI(String property_uri){
     	
-    	return "SELECT DISTINCT ?x ?l WHERE { "
-                + " ?x <" + property_uri + "> ?object . "
-                + label("?x","?l")
-                + "filter langMatches( lang(?l), \""+lang+"\") }";
+    	return " ?x <" + property_uri + "> ?object .";
     }
     //to query instances(domain pos) that are suitable with property(Property to Instance)
     private String rangeQueryForPTI(String property_uri){
     	
-        return "SELECT DISTINCT ?x ?l WHERE { "
-               + " ?subject <" + property_uri + "> ?x . "
-               + label("?x","?l")
-               + "filter langMatches( lang(?l), \""+lang+"\") }";
+        return " ?subject <" + property_uri + "> ?x . ";
     }
     //to query instances for the case; both property share same domain
     private String domainQueryFor2PTI(String property_uri1,String property_uri2){
@@ -147,6 +278,32 @@ public class InstanceSource {
 		+ label("?x","?l")
 		+ "filter langMatches( lang(?l), \""+lang+"\")}";
     }
+    //to query property's instance for property and its instance and property share same domain
+    private String domainQueryFor2PAIFI(String property_uri1,String property_uri2,String instanceofprop1){
+    	
+    	return "SELECT DISTINCT ?y  WHERE { "
+		+" "+instanceofprop1+ "  <"+ property_uri1 +"> ?x ."
+            + " ?y <" + property_uri2 + "> ?x . }";
+    }
+    
+  //to query property's instance for property and its instance and property share same range
+    private String rangeQueryFor2PAIFI(String property_uri1,String property_uri2,String instanceofprop1){
+    	return "SELECT DISTINCT ?y  WHERE { "
+    			+ " ?x <" + property_uri1 + "> "+instanceofprop1+" . "
+    			+ " ?x <" + property_uri2 +"> ?y}";
+    }
+	//query to get gYearLiterals by the chosen Literal
+	private String gYearLiteralQueryForChosenLiteral(String literal){
+		return "SELECT DISTINCT ?lit WHERE {"
+				+ "?y <http://lod.springer.com/data/ontology/property/hasConference> ?conference."
+				+ "?conference <http://lod.springer.com/data/ontology/property/confYear> ?lit."
+				+label("?conference",literal) +"}";
+	}
+	private String gYearInstancesQueryForChosenLiteral(String instances){
+		return  "?y <http://lod.springer.com/data/ontology/property/hasConference> ?conference."
+				+ "?conference <http://lod.springer.com/data/ontology/property/confYear> ?lit.";
+	}
+    
     //to confirm the latter property (w.r.t the former property) of class at domain position (May be the former method can be implemented for
     //for this method too) 
     private String domainQueryForPTP(String latterproperty, String formerproperty){
@@ -161,7 +318,7 @@ public class InstanceSource {
     }
     //to confirm the latter property (w.r.t the former property) of class at range position  
     private String rangeQueryForPTP(String latterproperty, String formerproperty){
-    	return "ASK WHERE {  ?subject1  <"+latterproperty+">  ?object . "
+    	return "ASK WHERE { { ?subject1  <"+latterproperty+">  ?object . "
     					 + " ?subject2  <"+formerproperty+">  ?object . }"
     					 		+ " UNION { ?subject1  <"+latterproperty+">  ?object . "
     					 				 + "?object  <"+formerproperty+">  ?subject2 . } "
@@ -257,16 +414,17 @@ public class InstanceSource {
     		
     		for(LexicalEntry entry : entries){
     			String query;
+    			if (entry.getSemArg(syn)== null) continue;
     			switch(entry.getSemArg(syn)){
     				
     				case SUBJOFPROP:
     				    query = domainQueryForPTI(entry.getReference());
-    				    
-    				    filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+    				    filtered_instances_index.putAll(getInstanceIndex(query, "?x"));
     					break;
     				case OBJOFPROP:
     					query= rangeQueryForPTI(entry.getReference());
-    					filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+    					filtered_instances_index.putAll(getInstanceIndex(query, "?x"));
+    					
     					break;
     				default:
     					break;		
@@ -274,7 +432,6 @@ public class InstanceSource {
     			
     			
     		}
-    	
     	
     	return filtered_instances_index;
     }
@@ -308,7 +465,59 @@ public class InstanceSource {
 	return filtered_instances_index;
     	
     }
- 	
     
+    
+    public Map<String,List<LexicalEntry>> filterBy2PropertiesAndInstanceForInstances(List<LexicalEntry> entriesForPre1,List<LexicalEntry> entriesForIns, List<LexicalEntry> entriesForPre2, LexicalEntry.SynArg syn ){
+    	Map<String,List<LexicalEntry>> filtered_instances_index = new HashMap<>();
+		
+		for(LexicalEntry entry1 : entriesForPre1){
+		for(LexicalEntry entry2: entriesForPre2){
+			String query;
+			switch(entry1.getSemArg(syn)){
+			//TODO mince: The position of instance may vary depending on property (think on all cases) !! 
+			// instance for first property may locate at subject and for second property at domain 
+				case SUBJOFPROP:
+					
+					for(LexicalEntry InstEntry: entriesForIns){
+					
+				    query = domainQueryFor2PAIFI(entry1.getReference(),entry2.getReference(),InstEntry.getReference()); 
+				    filtered_instances_index.putAll(getInstanceIndex(query, "?y"));
+					}
+					break;
+				case OBJOFPROP:
+					for(LexicalEntry InstEntry: entriesForIns){
+					query= rangeQueryFor2PAIFI(entry1.getReference(),entry2.getReference(),InstEntry.getReference());
+					filtered_instances_index.putAll(getInstanceIndex(query, "?y"));
+					}
+					break;
+				default:
+					break;		
+			}
+		}
+			
+		}
+	
+	
+	return filtered_instances_index;
+    	
+    }
+    
+    public Map<String,List<LexicalEntry>> filterByInstanceForInstance(List<LexicalEntry> indexes){
+		
+		Map<String,List<LexicalEntry>> literals = new HashMap();
+		String query;
+		
+		for(LexicalEntry index: indexes){
+			
+			query =gYearInstancesQueryForChosenLiteral(index.getReference()); 
+			
+			literals.putAll(getInstanceIndex(query,"?lit"));		
+		}
+		
+		
+		
+		return literals;
+		
+	}
 
 }

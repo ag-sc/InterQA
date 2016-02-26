@@ -3,7 +3,6 @@ package interQA.main;
 
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.Lexicon;
-import interQA.lexicon.LiteralSource;
 import interQA.patterns.*;
 
 import java.io.*;
@@ -20,7 +19,8 @@ public class interQACLI {
     public static void  main(String args[]){
         
         // INIT
-        List<String> LabelProps = new ArrayList<>();
+    	List<String> LabelProps = new ArrayList<>();
+        LabelProps.add("http://www.w3.org/2000/01/rdf-schema#label");
         LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
         LabelProps.add("http://lod.springer.com/data/ontology/property/confAcronym");
         
@@ -28,7 +28,7 @@ public class interQACLI {
         Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/springer_en.ttl");
         InstanceSource instances = new InstanceSource("http://es.dbpedia.org/sparql","en");
-        LiteralSource literals = new LiteralSource("http://es.dbpedia.org/sparql","en",LabelProps);
+       
                 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
@@ -36,18 +36,17 @@ public class interQACLI {
         qm.addQueryPattern(new Are_there_any_C(lexicon,instances));
         qm.addQueryPattern(new Which_C_are_there(lexicon,instances));
         qm.addQueryPattern(new Give_me_all_C(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_C_that_are_P_L(lexicon,instances,literals));
+        qm.addQueryPattern(new Give_me_all_C_that_are_P_I(lexicon,instances));
         qm.addQueryPattern(new Give_me_all_P_I(lexicon,instances));
         qm.addQueryPattern(new Which_C_P_I(lexicon,instances));
-        qm.addQueryPattern(new Which_C_P_L(lexicon,instances,literals));
         qm.addQueryPattern(new Which_C_is_the_P_I(lexicon,instances));
         qm.addQueryPattern(new Who_is_the_P_I(lexicon,instances));
         qm.addQueryPattern(new Who_P_I(lexicon,instances));
         qm.addQueryPattern(new QueryPattern3_1(lexicon,instances));
         qm.addQueryPattern(new QueryPattern3_2(lexicon,instances));        
-        qm.addQueryPattern(new Which_C_P_L_P_L(lexicon,instances,literals));
-        qm.addQueryPattern(new Give_me_all_C_that_P_L(lexicon,instances,literals));
-        qm.addQueryPattern(new Give_me_all_C_that_P_L_P_L(lexicon,instances,literals));
+        qm.addQueryPattern(new Which_C_P_I_P_I(lexicon,instances));
+        qm.addQueryPattern(new Give_me_all_C_that_P_I(lexicon,instances));
+        qm.addQueryPattern(new Give_me_all_C_that_P_I_P_I(lexicon,instances));
        
         
         
