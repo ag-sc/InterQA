@@ -1,0 +1,144 @@
+[1]  PREFIX dbp-owl: <http://dbpedia.org/ontology/> 
+     PREFIX dc: <http://purl.org/dc/terms/> 
+     SELECT ?entity WHERE { 
+         ?entity a dbp-owl:Song }       
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+[2]  PREFIX dcterms: <http://purl.org/dc/terms/> 
+     Select ?s Where {
+         ?s dcterms:subject <>}
+
+[3]  PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+     SELECT ?name ?email WHERE {
+         ?person a foaf:Person.
+         ?person foaf:name ?name.
+         ?person foaf:mbox ?email.}
+
+[4]  PREFIX esdbpp: <http://es.dbpedia.org/property/>
+     PREFIX esdbpr: <http://es.dbpedia.org/resource/> 
+     SELECT ?grupo  WHERE{
+         ?grupo  dbpedia-owl:ocupation ?oc .
+         ?oc     a dbpedia-owl:Singer.
+         ?grupo  dbpedia-owl:activeYearsStartYear ?inicio .
+         ?grupo  dbpedia-owl:activeYearsEndYear   ?fin.
+       FILTER ( (?inicio > \"1980-01-01T00:00:00Z\"^^xsd:dateTime  && 
+                 ?inicio < \"1990-01-01T00:00:00Z\"^^xsd:dateTime ) ||
+                (?fin    > \"1980-01-01T00:00:00Z\"^^xsd:dateTime  && 
+                 ?fin < \"1990-01-01T00:00:00Z\"^^xsd:dateTime ) ||
+                (?inicio < \"1980-01-01T00:00:00Z\"^^xsd:dateTime  && 
+                 ?fin > \"1990-01-01T00:00:00Z\"^^xsd:dateTime ) 
+               ) 
+      }ORDER BY DESC(?inicio) 
+
+[5]  PREFIX esdbp: <http://es.dbpedia.org/property/> 
+     PREFIX esres: <http://es.dbpedia.org/resource/> 
+     SELECT DISTINCT ?uri ?a WHERE {
+       ?uri esdbp:liga esres:NBA .
+       ?uri esbdp:altura ?a .
+     }
+
+[6]  PREFIX onto: <http://dbpedia.org/ontology/>
+     SELECT ?x WHERE {
+         ?x a foaf:Person.
+         ?x foaf:name ?y
+     }                                                                                                                                                  
+
+[7]  PREFIX esdbp: <http://es.dbpedia.org/property/>
+     PREFIX esres: <http://es.dbpedia.org/resource/> 
+     SELECT DISTINCT ?c
+       WHERE {?uri esdbp:alcalde ?o .
+              ?uri a ?c . 
+     }                                                                                                                                                  
+
+[8]  PREFIX dbp: <http://dbpedia.org/property/>
+     PREFIX dbr: <http://dbpedia.org/resource/>
+     prefix dbp-owl: <http://dbpedia.org/ontology/>
+     prefix dcterms: <http://purl.org/dc/terms/>
+     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+     SELECT   ?ent WHERE{
+          ?torero rdf:type dbp-owl:Holiday  .
+          ?torero foaf:name  ?ent.
+     }                                                                                                                                                                                                                                               
+ [9]  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      PREFIX db: <http://dbpedia.org/ontology#>
+      SELECT ?x WHERE { 
+         ?y ?x db:Politician 
+      }   
+                                                                                            
+[10]  PREFIX dbp: <http://es.dbpedia.org/property/>
+      PREFIX dbr: <http://es.dbpedia.org/resource/>
+      prefix dbp-owl: <http://dbpedia.org/ontology/>
+      prefix dcterms: <http://purl.org/dc/terms/>
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      select ?produ where {
+        dbr:Robert_Redford dbp-owl:producer ?produ
+      }
+
+[11] PREFIX dcterms: <http://purl.org/dc/terms/>
+     select * where{
+        ?musico dcterms:subject <http://es.dbpedia.org/resource/Categoría:pop> .
+        OPTIONAL{?musico dbpedia-owl:alias ?alias }
+        OPTIONAL{?musico foaf:givenName ?given }
+        OPTIONAL{?musico foaf:name ?name }   
+     }
+                                                                                                                                                                                                                                                                                                      
+[12] PREFIX onto: <http://dbpedia.org/ontology/>
+     SELECT * WHERE {
+        ?x  onto:name ?y
+     }                                                                                                                                                                               
+[13] PREFIX  dbr:  <http://es.dbpedia.org/resource/>
+     PREFIX  dbp-owl: <http://dbpedia.org/ontology/>
+     PREFIX  dbp:  <http://es.dbpedia.org/property/>
+     PREFIX  dcterms: <http://purl.org/dc/terms/>
+     SELECT  ?place WHERE {
+         ?uri  dbp:liga  dbr:La_Liga .
+     } 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+[14] PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+     SELECT ?name ?mbox WHERE { 
+       ?x foaf:name ?name .
+       ?x foaf:mbox ?mbox 
+     }
+                                                                                                                                                                                                                                                                                                                                                     
+[15] PREFIX onto: <http://dbpedia.org/ontology/>
+     SELECT * WHERE {
+        ?x  foaf:name ?y.
+        ?x  a onto:person.
+     }
+                                                                                                            
+[16] PREFIX  dbres: <http://es.dbpedia.org/resource/>
+     PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+     PREFIX  dbpediaowl: <http://dbpedia.org/ontology/>
+     PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+     PREFIX  dbpprop: <http://dbpedia.org/property/>
+     SELECT  ?p WHERE { 
+       dbres:21330 rdf:type ?p
+     }
+                                                                                                                                                                                                                                                                                                                                                                                                    
+[17] PREFIX es:<http://es.dbpedia.org/property/> 
+     PREFIX db:<http://dbpedia.org/ontology/> 
+     PREFIX dbpedia:<http://es.dbpedia.org/resource/>
+     SELECT DISTINCT ?label WHERE {
+        dbpedia:Ajolote es:binomial ?label.
+     }
+                                                                                                                                                                                                                                                                     
+[18] PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+     SELECT ?x ?name WHERE  {
+        ?x foaf:name ?name 
+     }                                                                                                                                                                
+[19] PREFIX r: <http://es.dbpedia.org/resource/>
+     PREFIX o: <http://dbpedia.org/ontology/> 
+     select distinct ?x  ?e where {
+        ?x o:country ?e .
+        ?x o:country r:Spain .
+     } LIMIT 100  
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+[20] PREFIX es:<http://es.dbpedia.org/property/> 
+     PREFIX db:<http://dbpedia.org/ontology/> 
+     PREFIX dbpedia:<http://es.dbpedia.org/resource/>
+     SELECT DISTINCT ?label WHERE {
+        ?animal es:subphylum dbpedia:Vertebrata. 
+        ?animal a dbpedia:Pisces. 
+        ?animal es:name ?label.
+     }
