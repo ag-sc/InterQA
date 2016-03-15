@@ -1,0 +1,111 @@
+
+@prefix lex: <http://example.org/lexicon#> .
+@prefix lemon: <http://lemon-model.net/lemon#> .
+@prefix lexinfo: <http://www.lexinfo.net/ontology/2.0/lexinfo#> .
+
+
+lex:lexicon a lemon:Lexicon ;
+  lemon:language "de";
+  lemon:entry lex:Konferenz ;
+  lemon:entry lex:stattfindenIn ;
+  lemon:entry lex:ProceedingsOf ; 
+  lemon:entry lex:in .
+
+
+#### Konferenz ####
+
+lex:Konferenz a lemon:LexicalEntry ;
+  lemon:canonicalForm lex:Konferenz_canonicalForm ;
+  lemon:otherForm lex:Konferenz_otherForm ;
+  lexinfo:partOfSpeech lexinfo:commonNoun ;
+  lemon:sense lex:Konferenz_sense .
+
+lex:Konferenz_canonicalForm lemon:writtenRep "Konferenz"@de ;
+   lexinfo:number lexinfo:singular .
+lex:Konferenz_otherForm lemon:writtenRep "Konferenzen"@de ;
+   lexinfo:number lexinfo:plural .
+
+lex:Konferenz_sense lemon:reference <http://lod.springer.com/data/ontology/class/Conference> .
+
+
+#### stattfinden in ####
+
+lex:stattfindenIn a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:stattfindenIn_canonicalForm ;
+  lemon:otherForm lex:stattfindenIn_otherForm1, lex:stattfindenIn_otherForm2 ;
+  lexinfo:partOfSpeech lexinfo:verb ;
+  lemon:synBehavior lex:stattfindenIn_synBehavior ;
+  lemon:sense lex:stattfindenIn_sense1, lex:stattfindenIn_sense2, lex:stattfindenIn_sense3 .
+
+lex:stattfindenIn_canonicalForm lemon:writtenRep "stattfinden"@de ;
+  lexinfo:tense  lexinfo:present ; 
+  lexinfo:number lexinfo:plural.
+lex:stattfindenIn_otherForm1 lemon:writtenRep "findet statt"@de ;
+  lexinfo:tense  lexinfo:present ;
+  lexinfo:number lexinfo:singular .
+lex:stattfindenIn_otherForm2 lemon:writtenRep "fand statt"@de ;
+  lexinfo:tense  lexinfo:past .
+
+lex:stattfindenIn_synBehavior a lexinfo:IntransitivePPFrame ;
+  lexinfo:subject lex:stattfindenIn_subj ;
+  lexinfo:prepositionalObject lex:stattfindenIn_obj .
+
+lex:stattfindenIn_obj lemon:marker lex:in .
+
+lex:stattfindenIn_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confYear> ;
+  lemon:subjOfProp lex:stattfindenIn_subj ;
+  lemon:objOfProp  lex:stattfindenIn_obj  .
+lex:stattfindenIn_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
+  lemon:subjOfProp lex:stattfindenIn_subj ;
+  lemon:objOfProp  lex:stattfindenIn_obj  .
+lex:stattfindenIn_sense3 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
+  lemon:subjOfProp lex:stattfindenIn_subj ;
+  lemon:objOfProp  lex:stattfindenIn_obj  .
+
+
+#### Proceedings of ####
+
+lex:ProceedingsOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:ProceedingsOf_canonicalForm ;
+  lemon:otherForm lex:ProceedingsOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:ProceedingsOf_synBehavior ;
+  lemon:sense lex:ProceedingsOf_sense .
+
+lex:ProceedingsOf_canonicalForm lemon:writtenRep "Proceedings"@de ;
+  lexinfo:number lexinfo:singular .
+lex:ProceedingsOf_otherForm lemon:writtenRep "Proceedings"@de ;
+  lexinfo:number lexinfo:plural .
+
+lex:ProceedingsOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:ProceedingsOf_copArg ;
+  lexinfo:possessiveAdjunct lex:ProceedingsOf_posAdj .
+
+lex:ProceedingsOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/hasConference> ;
+    lemon:subjOfProp lex:ProceedingsOf_copArg ;
+    lemon:objOfProp  lex:ProceedingsOf_posAdj .
+
+
+#### Markers #### 
+
+lex:in a lemon:LexicalEntry ; 
+  lemon:canonicalForm lex:in_form ; 
+  lexinfo:partOfSpeech lexinfo:preposition ;
+  lemon:synBehavior lex:in_synBehavior ; 
+  lemon:sense lex:in_sense1, lex:in_sense2, lex:in_sense3 .
+
+lex:in_form lemon:writtenRep "in"@de .
+
+lex:in_synBehavior a lexinfo:PrepositionalFrame ;
+  lexinfo:attributiveArg lex:in_arg1 ;
+  lexinfo:prepositionalAdjunct lex:in_arg2 .
+
+lex:in_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .
+lex:in_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .
+lex:in_sense3 lemon:reference <http://lod.springer.com/data/ontology/property/confYear> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .
