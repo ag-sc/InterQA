@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class IndividualElement extends Element {
+public class InstanceElement extends Element {
  
     
-    public IndividualElement() {
+    public InstanceElement() {
 
         // Starts with an empty index,
         // which is filled with possible instances during parsing.

@@ -1,23 +1,11 @@
 package interQA.main;
 
 
-import interQA.patterns.Which_C_is_the_P_I;
-import interQA.patterns.QueryPattern3_2;
-import interQA.patterns.Who_is_the_P_I;
-import interQA.patterns.Are_there_any_C;
-import interQA.patterns.Give_me_all_C;
-import interQA.patterns.Give_me_all_C_that_P_I_P_I;
-import interQA.patterns.Give_me_all_C_that_P_I;
-import interQA.patterns.QueryPattern3_1;
-import interQA.patterns.Which_C_are_there;
-import interQA.patterns.Which_C_P_I;
-import interQA.patterns.Who_P_I;
-import interQA.patterns.Give_me_all_P_I;
 import interQA.patterns.QueryPatternManager;
-import interQA.patterns.Give_me_all_C_that_are_P_I;
-import interQA.patterns.Which_C_P_I_P_I;
-import interQA.lexicon.InstanceSource;
+import interQA.lexicon.DatasetConnector;
+import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
+import interQA.patterns.QueryPatternFactory_EN;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -33,35 +21,25 @@ public class interQACLI {
     public static void  main(String args[]){
         
         // INIT
-    	List<String> LabelProps = new ArrayList<>();
-        LabelProps.add("http://www.w3.org/2000/01/rdf-schema#label");
-        LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
-        LabelProps.add("http://lod.springer.com/data/ontology/property/confAcronym");
         
-        // Load lexicon     
-        Lexicon lexicon = new Lexicon("en");
+    	List<String> labels = new ArrayList<>();
+        labels.add("http://www.w3.org/2000/01/rdf-schema#label");
+        labels.add("http://lod.springer.com/data/ontology/property/confName");
+        labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
+        
+        // Load lexicon  
+        
+        Lexicon lexicon = new Lexicon(Language.EN);
         lexicon.load("./src/main/java/resources/springer_en.ttl");
-        InstanceSource instances = new InstanceSource("http://es.dbpedia.org/sparql","en");
+        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,labels);
        
                 
         // Load query patterns
-        QueryPatternManager qm = new QueryPatternManager();
         
-        qm.addQueryPattern(new Are_there_any_C(lexicon,instances));
-        qm.addQueryPattern(new Which_C_are_there(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_C(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_C_that_are_P_I(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_P_I(lexicon,instances));
-        qm.addQueryPattern(new Which_C_P_I(lexicon,instances));
-        qm.addQueryPattern(new Which_C_is_the_P_I(lexicon,instances));
-        qm.addQueryPattern(new Who_is_the_P_I(lexicon,instances));
-        qm.addQueryPattern(new Who_P_I(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern3_1(lexicon,instances));
-        qm.addQueryPattern(new QueryPattern3_2(lexicon,instances));        
-        qm.addQueryPattern(new Which_C_P_I_P_I(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_C_that_P_I(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_C_that_P_I_P_I(lexicon,instances));
-       
+        QueryPatternManager    qm = new QueryPatternManager(); 
+        QueryPatternFactory_EN qf = new QueryPatternFactory_EN(lexicon,dataset);
+        
+        qm.addQueryPatterns(qf.rollout());
         
         
         // RUN

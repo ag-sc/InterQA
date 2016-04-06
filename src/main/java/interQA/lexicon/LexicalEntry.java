@@ -12,10 +12,13 @@ import java.util.Objects;
 public class LexicalEntry {
     
     
+    public enum Language { EN, DE, ES };
+
     public enum SemArg  { SUBJOFPROP, OBJOFPROP };
     public enum SynArg  { SUBJECT, OBJECT };
     public enum POS     { NOUN, VERB, ADJECTIVE, PREPOSITION };
     public enum Feature { SINGULAR, PLURAL, PRESENT, PAST, COMPARATIVE, SUPERLATIVE };
+    
     
     String canonicalForm;     
     String reference; 

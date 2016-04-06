@@ -1,8 +1,10 @@
 package interQA.patterns;
 
+import interQA.patterns.templates.QueryPattern;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Mariano on 13/07/2015.
@@ -22,11 +24,11 @@ public class QueryPatternManager {
     /**
      * Intended to add patterns at the beginning of the process. This will not work if patterns are added once the
      * process has started and patterns have been rejected
-     * @param pattern
+     * @param patterns
      */
-    public void addQueryPattern(QueryPattern pattern){
-        availableQueryPatterns.add(pattern);
-        allQueryPatterns.add(pattern);
+    public void addQueryPatterns(Set<QueryPattern> patterns){
+        availableQueryPatterns.addAll(patterns);
+        allQueryPatterns.addAll(patterns);
     }
 
     /**

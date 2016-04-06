@@ -1,6 +1,7 @@
-package interQA.patterns;
+package interQA.patterns.deprecate;
 
-import interQA.lexicon.InstanceSource;
+import interQA.patterns.templates.QueryPattern;
+import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.LexicalEntry;
 import interQA.elements.ClassElement;
@@ -21,9 +22,9 @@ public class QueryPattern3_1 extends QueryPattern{
 	//What is the model and price of BMW cars?
 	//What are the side effects and harms of Alzheimer drugs?
 	
-	InstanceSource instances;
+	DatasetConnector instances;
 	
-	public QueryPattern3_1(Lexicon lexicon,InstanceSource instances){
+	public QueryPattern3_1(Lexicon lexicon,DatasetConnector instances){
 				            
             this.lexicon = lexicon;
             this.instances = instances; 

@@ -2,13 +2,11 @@
 package interQA;
 
 import interQA.patterns.QueryPatternManager;
-import interQA.patterns.Give_me_all_C_that_P_I_P_I;
-import interQA.patterns.Give_me_all_C_that_P_I;
-import interQA.patterns.Give_me_all_C_that_are_P_I;
-import interQA.patterns.Which_C_P_I_P_I;
 import com.google.gson.Gson;
-import interQA.lexicon.InstanceSource;
+import interQA.lexicon.DatasetConnector;
+import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
+import interQA.patterns.QueryPatternFactory_EN;
 import java.io.IOException;
 
 import java.io.PrintWriter;
@@ -78,41 +76,32 @@ public class ServletInterQA extends HttpServlet {
     }
 
     public void init(ServletConfig config) throws ServletException {
+
         super.init(config);
-        log("Query pattern load started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
+        
+        log("Loading started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
+
+        // Init
+
+        List<String> labels = new ArrayList<>();
+        labels.add("http://www.w3.org/2000/01/rdf-schema#label");
+        labels.add("http://lod.springer.com/data/ontology/property/confName");
+        labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
 
         // Load lexicon
-//        Lexicon lexicon = new Lexicon("en");
-//        lexicon.load("resources/dbpedia_en.rdf");
-//        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
-
-        // Load query patterns
-
-        qm = new QueryPatternManager();
-//        qm.addQueryPattern(new QueryPattern1_1(lexicon,instances));
-//        qm.addQueryPattern(new QueryPattern9_1(lexicon,instances));
-//        qm.addQueryPattern(new QueryPattern9_2(lexicon,instances));
-
-
-        List<String> LabelProps = new ArrayList<>();
-        LabelProps.add("http://lod.springer.com/data/ontology/property/confName");
-        LabelProps.add("http://lod.springer.com/data/ontology/property/confAcronym");
-
-        // Load lexicon
-        Lexicon lexicon = new Lexicon("en");
+        
+        Lexicon lexicon = new Lexicon(Language.EN);
         lexicon.load("resources/springer_en.ttl");
-        InstanceSource instances = new InstanceSource("http://es.dbpedia.org/sparql","en");
-        
+        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,labels);
 
         // Load query patterns
-        //QueryPatternManager qm = new QueryPatternManager();
-
         
-        qm.addQueryPattern(new Which_C_P_I_P_I(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_C_that_are_P_I(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_C_that_P_I(lexicon,instances));
-        qm.addQueryPattern(new Give_me_all_C_that_P_I_P_I(lexicon,instances));
+        qm = new QueryPatternManager();
 
-        log("Query pattern load finished at " + LocalDateTime.now());  //LocalDateTime requires Java 8
+        QueryPatternFactory_EN qf = new QueryPatternFactory_EN(lexicon,dataset);
+        
+        qm.addQueryPatterns(qf.rollout());
+
+        log("Loading finished at " + LocalDateTime.now());  //LocalDateTime requires Java 8
     }
 }

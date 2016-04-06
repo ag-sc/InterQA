@@ -1,9 +1,10 @@
-package interQA.patterns;
+package interQA.patterns.deprecate;
 
+import interQA.patterns.templates.QueryPattern;
 import interQA.elements.ClassElement;
 import interQA.elements.StringElement;
 import interQA.elements.PropertyElement;
-import interQA.lexicon.InstanceSource;
+import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.*;
@@ -17,10 +18,10 @@ public class QueryPattern3_2 extends QueryPattern{
 	//what are the NBA players` names and their heights?		
 	//what are the BMW cars models and their prizes ?
 
-	public QueryPattern3_2(Lexicon lexicon, InstanceSource instances){
+	public QueryPattern3_2(Lexicon lexicon, DatasetConnector instances){
 		
 		this.lexicon = lexicon;
-		this.instances = instances;
+		this.dataset = instances;
 		init();
 	}
 	
@@ -71,7 +72,7 @@ public class QueryPattern3_2 extends QueryPattern{
 			Map<String,List<LexicalEntry>> new_elementindex  = new HashMap<>();
 			
 			for(LexicalEntry entry : elements.get(3).getActiveEntries()){
-				new_elementindex.putAll(instances.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
+				new_elementindex.putAll(dataset.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
 			}
 			elements.get(4).setIndex(new_elementindex);
 			
@@ -83,7 +84,7 @@ public class QueryPattern3_2 extends QueryPattern{
 			
 			for(LexicalEntry entry : elements.get(3).getActiveEntries()){
 				
-				new_elementindex.putAll(instances.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
+				new_elementindex.putAll(dataset.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
 			}
 			
 			//to ensure second suggestion(property) is different from previous property suggestion

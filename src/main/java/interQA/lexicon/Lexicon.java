@@ -1,5 +1,6 @@
 package interQA.lexicon;
 
+import interQA.lexicon.LexicalEntry.Language;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,13 +30,13 @@ public class Lexicon {
         Vocabulary vocab = new Vocabulary();
         Inflector inflector;
 	
-	public Lexicon(String language) {
+	public Lexicon(Language language) {
             
             model = ModelFactory.createDefaultModel();          
             index = new HashMap<>();
             switch (language) {
-               case "en": inflector = new Inflector_en(); break;
-               default:   inflector = new Inflector_en();
+               case EN: inflector = new Inflector_en(); break;
+               default: inflector = new Inflector_en();
             }
         }
         

@@ -1,12 +1,13 @@
-package interQA.patterns;
+package interQA.patterns.deprecate;
 
+import interQA.patterns.templates.QueryPattern;
 import interQA.elements.StringElement;
 import interQA.elements.PropertyElement;
-import interQA.elements.IndividualElement;
+import interQA.elements.InstanceElement;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import interQA.lexicon.InstanceSource;
+import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.SparqlQueryBuilder;
@@ -25,10 +26,10 @@ public class SpringerQueryPattern4 extends QueryPattern{
         */
     
     
-	public SpringerQueryPattern4(Lexicon lexicon,InstanceSource instances){
+	public SpringerQueryPattern4(Lexicon lexicon,DatasetConnector instances){
 		
 		this.lexicon = lexicon;
-		this.instances = instances;
+		this.dataset = instances;
 		
 		
 		init();
@@ -53,10 +54,10 @@ public class SpringerQueryPattern4 extends QueryPattern{
                 element2.addEntries(lexicon,LexicalEntry.POS.NOUN,vocab.NounPossessiveFrame);
 		elements.add(element2);
 		
-		IndividualElement element3 = new IndividualElement();
+		InstanceElement element3 = new InstanceElement();
 		elements.add(element3);
 		
-		IndividualElement element4 = new IndividualElement();
+		InstanceElement element4 = new InstanceElement();
 		elements.add(element4);
                 
                 StringElement element5 = new StringElement();
@@ -74,11 +75,11 @@ public class SpringerQueryPattern4 extends QueryPattern{
                 
 		if(currentElement==2){
 		
-			elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+			elements.get(3).addToIndex(dataset.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
 		}
 		if(currentElement==3){
 			
-		elements.get(4).addToIndex(instances.filterByInstanceForInstance(elements.get(3).getActiveEntries()));
+		elements.get(4).addToIndex(dataset.filterByInstanceForInstance(elements.get(3).getActiveEntries()));
 		}
 		
 	}
@@ -91,8 +92,8 @@ public class SpringerQueryPattern4 extends QueryPattern{
 		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
 		
 		PropertyElement prop_element = (PropertyElement) elements.get(2);
-		IndividualElement name_literal = (IndividualElement) elements.get(3);
-		IndividualElement gYear_literal = (IndividualElement) elements.get(4);
+		InstanceElement name_literal = (InstanceElement) elements.get(3);
+		InstanceElement gYear_literal = (InstanceElement) elements.get(4);
 		switch(currentElement){
 			case 2:SPARQLQueries = sqb.BuildQueryForProperty(prop_element);
 			

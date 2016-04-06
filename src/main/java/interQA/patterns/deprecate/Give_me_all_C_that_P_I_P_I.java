@@ -1,15 +1,16 @@
-package interQA.patterns;
+package interQA.patterns.deprecate;
 
+import interQA.patterns.templates.QueryPattern;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import interQA.elements.ClassElement;
-import interQA.elements.IndividualElement;
+import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
-import interQA.lexicon.InstanceSource;
+import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
@@ -28,10 +29,10 @@ public class Give_me_all_C_that_P_I_P_I extends QueryPattern{
         */
 
 	
-	public Give_me_all_C_that_P_I_P_I(Lexicon lexicon,InstanceSource instances){
+	public Give_me_all_C_that_P_I_P_I(Lexicon lexicon,DatasetConnector instances){
 		
 		this.lexicon = lexicon;
-		this.instances = instances;
+		this.dataset = instances;
 		
 		
 		init();
@@ -65,14 +66,14 @@ public class Give_me_all_C_that_P_I_P_I extends QueryPattern{
         element4.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame);
         elements.add(element4);
 
-		IndividualElement element5 = new IndividualElement();
+		InstanceElement element5 = new InstanceElement();
 		elements.add(element5);
 		
 		PropertyElement element6 = new PropertyElement();
 		element6.addEntries(lexicon, LexicalEntry.POS.PREPOSITION, vocab.PrepositionalFrame);
 		elements.add(element6);
 
-		IndividualElement element7 = new IndividualElement();
+		InstanceElement element7 = new InstanceElement();
 		elements.add(element7);
 	}
 	
@@ -92,7 +93,7 @@ public class Give_me_all_C_that_P_I_P_I extends QueryPattern{
     		
                         for(LexicalEntry entry : elements.get(2).getActiveEntries()){
     			
-                            new_element2index.putAll(instances.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
+                            new_element2index.putAll(dataset.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
                         }
 			
                         elements.get(4).addToIndex(new_element2index);
@@ -101,13 +102,13 @@ public class Give_me_all_C_that_P_I_P_I extends QueryPattern{
 		
                     case 4: {
 			
-                    	elements.get(5).addToIndex(instances.filterByPropertyForInstances(elements.get(4).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                    	elements.get(5).addToIndex(dataset.filterByPropertyForInstances(elements.get(4).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
 			break;
                     }
 		
                     case 6: {
 
-                    	elements.get(7).addToIndex(instances.filterBy2PropertiesAndInstanceForInstances(elements.get(4).getActiveEntries(), elements.get(5).getActiveEntries(), 
+                    	elements.get(7).addToIndex(dataset.filterBy2PropertiesAndInstanceForInstances(elements.get(4).getActiveEntries(), elements.get(5).getActiveEntries(), 
                     			elements.get(6).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
 			break;
                     }
@@ -120,9 +121,9 @@ public class Give_me_all_C_that_P_I_P_I extends QueryPattern{
 		
 		ClassElement    noun     = (ClassElement)    elements.get(2);
 		PropertyElement verb     = (PropertyElement) elements.get(4);
-        IndividualElement  individual  = (IndividualElement)  elements.get(5);
+        InstanceElement  individual  = (InstanceElement)  elements.get(5);
         PropertyElement verb2    = (PropertyElement) elements.get(6);
-        IndividualElement  individual2 = (IndividualElement)  elements.get(7);
+        InstanceElement  individual2 = (InstanceElement)  elements.get(7);
 		
                 switch (currentElement) {
                     

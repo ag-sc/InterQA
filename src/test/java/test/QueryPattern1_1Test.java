@@ -1,6 +1,6 @@
 package test;
 
-import interQA.lexicon.InstanceSource;
+import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.Lexicon;
 import interQA.patterns.Give_me_all_C;
 import org.junit.Assert;
@@ -15,7 +15,7 @@ import java.util.Set;
 public class QueryPattern1_1Test {
     // Load lexicon
     private Lexicon lexicon = new Lexicon("en");
-    private InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+    private DatasetConnector instances = new DatasetConnector("http://dbpedia.org/sparql","en");
     private Give_me_all_C qp1 = null;
 
 

@@ -11,24 +11,20 @@ import java.util.Map;
 
 public abstract class Element {
 
+    // Active entries
     Map<String,List<LexicalEntry>> index; 
-    // = all active entries
     // Usually set during initialization (based on lexicon)
     // and then reduced during parsing.
     
+    // Grammatical features such as singular/plural, gender, etc. (needed for morphological agreement)
     List<Feature> features;
-    boolean optional = false;
-    
+        
     
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
             
         this.index = lexicon.getSubindex(pos,frame);
     }
-    
-    public void setOptional() {
-        optional = true;
-    }
-    
+
     public Map<String,List<LexicalEntry>> getIndex() {        
         return index;
     }  
@@ -80,7 +76,8 @@ public abstract class Element {
             index.put(longestMatch,entries);
             
             return string.replaceFirst(longestMatch,"").trim();
-        }                
+        }
+        
 	return null;
     }
     

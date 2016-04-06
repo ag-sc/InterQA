@@ -1,13 +1,12 @@
 package interQA.lexicon;
 
+import interQA.lexicon.LexicalEntry.Language;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -20,21 +19,21 @@ import org.apache.jena.rdf.model.RDFNode;
  * @author cunger
  */
 
-public class InstanceSource {
+public class DatasetConnector {
     
     
     String endpoint;
     Vocabulary vocab = new Vocabulary();
     List<String> labelProperties;
-    String lang ;
+    Language lang ;
 
 
-    public InstanceSource(String url,String language) {
+    public DatasetConnector(String url,Language language) {
         
        this(url,language,Arrays.asList("http://www.w3.org/2000/01/rdf-schema#label"));
     }
         
-    public InstanceSource(String url,String language,List<String> props) {
+    public DatasetConnector(String url,Language language,List<String> props) {
         
         endpoint = url;
         lang = language;

@@ -24,11 +24,21 @@ public class StringElement extends Element {
             elements.add(token);
 	}
         
-        public void add(String token,Feature f) {
-            elements.add(token);
+        public void add(String token, Feature f) {
+            add(token);
+            registerFeature(token,f);
+	}
+        
+        public void add(String token,Feature f1, Feature f2) {
+            add(token);
+            registerFeature(token,f1);
+            registerFeature(token,f2);
+        }
+        
+        private void registerFeature(String token, Feature f) {
             if (!featureMap.containsKey(token)) featureMap.put(token,new ArrayList<>());
             featureMap.get(token).add(f);
-	}
+        }
         
         public void transferFeatures(Element e,String s) {
 
@@ -43,6 +53,8 @@ public class StringElement extends Element {
         public String parse(String string) {
             // consumes prefix of input string
 
+            if (elements.isEmpty()) return string;
+            
             String longestMatch = "";
 
             for (String form : elements) {
@@ -53,7 +65,8 @@ public class StringElement extends Element {
 
             if (!longestMatch.isEmpty()) {
                 return StringUtils.replaceOnce(string,longestMatch,"").trim();
-            }                
+            } 
+            
             return null;
         }
 

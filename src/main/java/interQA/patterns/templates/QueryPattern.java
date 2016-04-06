@@ -1,8 +1,8 @@
-package interQA.patterns;
+package interQA.patterns.templates;
 
 import interQA.lexicon.Vocabulary;
 import interQA.elements.Element;
-import interQA.lexicon.InstanceSource;
+import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.SparqlQueryBuilder;
@@ -19,16 +19,24 @@ public abstract class QueryPattern {
         SparqlQueryBuilder sqb = new SparqlQueryBuilder();
         
         Lexicon lexicon;
-        
-        InstanceSource instances;
+        DatasetConnector dataset;
         
 	List<Element> elements = new ArrayList<>();
         
-	public int currentElement = -1;    
+	public int currentElement = -1;   
+        
+        Set<String> queries = new HashSet<>();
     
         
         public void init() {
         }
+        
+            
+        public Element getElement(int i) {
+            
+            return elements.get(i);
+        }
+        
 
         /**
 	 * @param input The whole string from the UI (e.g."who is the")
@@ -88,7 +96,7 @@ public abstract class QueryPattern {
 	public Set<String> buildSPARQLqueries() {
             // Needs to be overwritten by all concrete query patterns.
             
-            return new HashSet<>();
+            return queries;
         }
 
 	

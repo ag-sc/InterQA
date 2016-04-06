@@ -7,7 +7,7 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 
 import interQA.elements.ClassElement;
-import interQA.elements.IndividualElement;
+import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import java.util.HashSet;
 import java.util.Set;
@@ -294,7 +294,7 @@ public class SparqlQueryBuilder {
 		return queries;
 	}
 	
-	public Set<String> BuildQueryForPropertyAndInstance(PropertyElement property_element,IndividualElement instance_element){
+	public Set<String> BuildQueryForPropertyAndInstance(PropertyElement property_element,InstanceElement instance_element){
 		Set<String> queries = new HashSet<>();
 		for (LexicalEntry property_entry : property_element.getActiveEntries()) {
 
@@ -325,7 +325,7 @@ public class SparqlQueryBuilder {
 		return queries;
 	}
 	//without class IRI
-	public Set<String> BuildQueryForIndividualAndPropery(IndividualElement instance_elements,PropertyElement property_elements,
+	public Set<String> BuildQueryForIndividualAndPropery(InstanceElement instance_elements,PropertyElement property_elements,
 LexicalEntry.SynArg syn){
 		
 		Set<String> queries = new HashSet<>();
@@ -358,7 +358,7 @@ LexicalEntry.SynArg syn){
 		
 	}
 	//with class IRI of Instances
-	public Set<String> BuildQueryForClassAndIndividualAndProperty(ClassElement class_elements,IndividualElement instance_elements,
+	public Set<String> BuildQueryForClassAndIndividualAndProperty(ClassElement class_elements,InstanceElement instance_elements,
 PropertyElement property_elements,LexicalEntry.SynArg syn){
 		
 		Set<String> queries = new HashSet<>();
@@ -496,7 +496,7 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
 		return queries;
 	}
 
-	public Set<String> BuildQueryForClassPropertyAndInstance(ClassElement class_elements, PropertyElement property_element,IndividualElement instance_element,
+	public Set<String> BuildQueryForClassPropertyAndInstance(ClassElement class_elements, PropertyElement property_element,InstanceElement instance_element,
 			LexicalEntry.SynArg syn){
 		
 		Set<String> queries = new HashSet<>();
@@ -528,7 +528,7 @@ LiteralElement literal_elements){
 	*/ 
 	
 	public Set<String> BuildQueryForClassAnd2PropertyAndIndividual(ClassElement class_elements,PropertyElement property1_elements,
-			IndividualElement indv1_elements,LexicalEntry.SynArg syn1,PropertyElement property2_elements,LexicalEntry.SynArg syn2){
+			InstanceElement indv1_elements,LexicalEntry.SynArg syn1,PropertyElement property2_elements,LexicalEntry.SynArg syn2){
 		Set<String> queries = new HashSet<>();
 		String query ="";
 		String check_query = "";
@@ -597,7 +597,7 @@ LiteralElement literal_elements){
 	
 	
 	public Set<String> BuildQueryForClassAnd2PropertyAnd2Individual(ClassElement class_elements,PropertyElement property1_elements,
-			IndividualElement indv1_elements,LexicalEntry.SynArg syn1,PropertyElement property2_elements,IndividualElement indv2_elements
+			InstanceElement indv1_elements,LexicalEntry.SynArg syn1,PropertyElement property2_elements,InstanceElement indv2_elements
 			,LexicalEntry.SynArg syn2){
 		Set<String> queries = new HashSet<>();
 		String query ="";
@@ -675,8 +675,8 @@ LiteralElement literal_elements){
 	}
 	
 	
-	public Set<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,IndividualElement gYear_elements,
-IndividualElement name_elements, LexicalEntry.SynArg syn){
+	public Set<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,InstanceElement gYear_elements,
+InstanceElement name_elements, LexicalEntry.SynArg syn){
 		
 		Set<String> queries = new HashSet<>();
 		String query = "";
@@ -710,7 +710,7 @@ IndividualElement name_elements, LexicalEntry.SynArg syn){
 	}
 
 	public Set<String> BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(PropertyElement property_elements1,LexicalEntry.SynArg syn1,
-			PropertyElement property_elements2,LexicalEntry.SynArg syn2,IndividualElement name_literals,IndividualElement gYear_literals){
+			PropertyElement property_elements2,LexicalEntry.SynArg syn2,InstanceElement name_literals,InstanceElement gYear_literals){
 		
 		Set<String> queries = new HashSet<>();
 		

@@ -3,7 +3,7 @@ package test;
 /**
  * Created by Mariano on 13/07/2015.
  */
-import interQA.lexicon.InstanceSource;
+import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.Lexicon;
 import interQA.patterns.Give_me_all_C;
 import interQA.patterns.Who_P_I;
@@ -20,14 +20,14 @@ public class QueryPatternManagerTest {
         // Load lexicon
         Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+        DatasetConnector instances = new DatasetConnector("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         Give_me_all_C qp11 = new Give_me_all_C(lexicon, instances);
         Who_P_I qp22 = new Who_P_I(lexicon, instances);
-        qm.addQueryPattern(qp11);
-        qm.addQueryPattern(qp22);
+        qm.addQueryPatterns(qp11);
+        qm.addQueryPatterns(qp22);
 
         StringBuffer parsedText = new StringBuffer();
         List<String> opts = qm.getUIoptions();  // "what", "give me", "who"
@@ -58,14 +58,14 @@ public class QueryPatternManagerTest {
         // Load lexicon
         Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+        DatasetConnector instances = new DatasetConnector("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         Give_me_all_C qp11 = new Give_me_all_C(lexicon, instances);
         Who_P_I qp22 = new Who_P_I(lexicon, instances);
-        qm.addQueryPattern(qp11);
-        qm.addQueryPattern(qp22);
+        qm.addQueryPatterns(qp11);
+        qm.addQueryPatterns(qp22);
 
         List<String> opts = qm.getUIoptions();  // "what", "give me", "who"
         qm.userSentence("give me"); //Sends the user selection to the qm
@@ -83,14 +83,14 @@ public class QueryPatternManagerTest {
         // Load lexicon
         Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+        DatasetConnector instances = new DatasetConnector("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         Give_me_all_C qp11 = new Give_me_all_C(lexicon, instances);
         Who_P_I qp22 = new Who_P_I(lexicon, instances);
-        qm.addQueryPattern(qp11);
-        qm.addQueryPattern(qp22);
+        qm.addQueryPatterns(qp11);
+        qm.addQueryPatterns(qp22);
 
         StringBuffer parsedText = new StringBuffer();
         List<String> opts = qm.getUIoptions();  // "what", "give me", "who"
@@ -116,14 +116,14 @@ public class QueryPatternManagerTest {
         // Load lexicon
         Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+        DatasetConnector instances = new DatasetConnector("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         Give_me_all_C qp11 = new Give_me_all_C(lexicon, instances);
         Who_P_I qp22 = new Who_P_I(lexicon, instances);
-        qm.addQueryPattern(qp11);
-        qm.addQueryPattern(qp22);
+        qm.addQueryPatterns(qp11);
+        qm.addQueryPatterns(qp22);
 
         qm.userSentence("give meallpopes");
         List<String> opts = null;
@@ -142,14 +142,14 @@ public class QueryPatternManagerTest {
         // Load lexicon
         Lexicon lexicon = new Lexicon("en");
         lexicon.load("resources/dbpedia_en.rdf");
-        InstanceSource instances = new InstanceSource("http://dbpedia.org/sparql","en");
+        DatasetConnector instances = new DatasetConnector("http://dbpedia.org/sparql","en");
 
         // Load query patterns
         QueryPatternManager qm = new QueryPatternManager();
         Give_me_all_C qp11 = new Give_me_all_C(lexicon, instances);
         Who_P_I qp22 = new Who_P_I(lexicon, instances);
-        qm.addQueryPattern(qp11);
-        qm.addQueryPattern(qp22);
+        qm.addQueryPatterns(qp11);
+        qm.addQueryPatterns(qp22);
 
         qm.userSentence("give meallpope");
         List<String> opts = null;
