@@ -1,4 +1,4 @@
-package test;
+package interQA.patterns.deprecate;
 
 /**
  * Created by Mariano on 13/07/2015.

@@ -2,4 +2,5 @@
 /build/
 /dist/
 .DS_Store
+/target/
 /bin/

@@ -2,6 +2,7 @@ package test;
 
 
 import interQA.lexicon.LexicalEntry;
+import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import junit.framework.TestCase;
  */
 public class LexiconTest extends TestCase {
 
-    Lexicon lexicon = new Lexicon("en");
+    Lexicon lexicon = new Lexicon(Language.EN);
 
     public void test() throws Exception {
         
