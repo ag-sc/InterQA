@@ -180,8 +180,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         addNouns(q10.getElement(1));
         
-        StringElement e10_2 = (StringElement) q10.getElement(2);
-        e10_2.add("that");
+        
         addVerbs(q10.getElement(3));
         
         patterns.add(q10);

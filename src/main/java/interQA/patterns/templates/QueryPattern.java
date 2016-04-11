@@ -66,16 +66,18 @@ public abstract class QueryPattern {
 	public List<String> getNext(){
             	
             if (currentElement < elements.size()-1) {                
-                return elements.get(currentElement+1).getOptions();
+                
+                List<String> options = elements.get(currentElement+1).getOptions();
+                
+                if (options.isEmpty()) {
+                    currentElement += 1;
+                    return getNext();
+                } 
+                else return options;
             } else {
                 return new ArrayList<>();
             }
 	}
-        
-        public boolean isComplete() { 
-            
-            return currentElement == elements.size()-1;
-        }
         
         // update(int i) and buildSPARQLqueries() is where the pattern-specific magic happens
         
