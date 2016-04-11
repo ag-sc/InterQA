@@ -62,8 +62,10 @@ public class QueryPatternManager {
      * @return the names of available query patterns
      */
     public List<String> userSentence(String str){
+        System.out.println(str);
         List<QueryPattern> toRemove = new ArrayList<>();
         for(QueryPattern pat: allQueryPatterns){
+           System.out.println(pat.toString());
             if (pat.parses(str) == false){ //does not parse str
                 toRemove.add(pat); //Add it to the toRemove list
             }

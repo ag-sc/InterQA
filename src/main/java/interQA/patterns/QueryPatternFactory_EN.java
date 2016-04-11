@@ -30,14 +30,14 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         
         // Give me all mountains.
-
+/*
         QueryPattern q1 = new C(lexicon,instances);
         
         addGiveMePrefixes((StringElement) q1.getElement(0));
         addNouns(q1.getElement(1));
 
         patterns.add(q1);
-        
+        */
         // Which movies are there?
         
         QueryPattern q2 = new C(lexicon,instances);
@@ -53,7 +53,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
         patterns.add(q2);
         
-        
+        /*
         // Give me the mayor of Paris. 
         // Who is the president of Cameroon?
         
@@ -103,12 +103,12 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
         addNouns(q6.getElement(1));
         
-        StringElement e6_3 = (StringElement) q6.getElement(3);
-        e6_3.add("that");
-        e6_3.add("which");
-        e6_3.add("who");
+        StringElement e6_2 = (StringElement) q6.getElement(2);
+        e6_2.add("that");
+        e6_2.add("which");
+        e6_2.add("who");
         
-        addVerbs(q6.getElement(4));
+        addVerbs(q6.getElement(3));
         
         patterns.add(q6);
         
@@ -123,22 +123,70 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
         addNouns(q7.getElement(1));
         
-        StringElement e7_3 = (StringElement) q7.getElement(3);
-        e7_3.add("is a",Feature.SINGULAR,Feature.PRESENT);
-        e7_3.add("is the",Feature.SINGULAR,Feature.PRESENT);
-        e7_3.add("are the",Feature.SINGULAR,Feature.PRESENT);
-        e7_3.add("was a",Feature.SINGULAR,Feature.PAST);
-        e7_3.add("was the",Feature.SINGULAR,Feature.PAST);
-        e7_3.add("were the",Feature.SINGULAR,Feature.PAST);
+        StringElement e7_2 = (StringElement) q7.getElement(2);
+        e7_2.add("is a",Feature.SINGULAR,Feature.PRESENT);
+        e7_2.add("is the",Feature.SINGULAR,Feature.PRESENT);
+        e7_2.add("are the",Feature.SINGULAR,Feature.PRESENT);
+        e7_2.add("was a",Feature.SINGULAR,Feature.PAST);
+        e7_2.add("was the",Feature.SINGULAR,Feature.PAST);
+        e7_2.add("were the",Feature.SINGULAR,Feature.PAST);
         
-        addRelationalNouns(q7.getElement(4));
+        addRelationalNouns(q7.getElement(3));
         
         patterns.add(q7);
         
         
         
-        // Done. (Yay!)
+        //Show me all conferences that took place in Berlin in 2015.
+        QueryPattern q8 = new C_P_I_P_I(lexicon,instances);
         
+        StringElement e8_0 = (StringElement) q8.getElement(0);
+        addGiveMePrefixes(e8_0);
+        
+        addNouns(q8.getElement(1));
+        
+        StringElement e8_2 = (StringElement) q8.getElement(2);
+        e8_2.add("that");
+        
+        addVerbs(q8.getElement(3));
+        
+        addVerbs(q8.getElement(6));
+        
+        patterns.add(q8);
+        
+        
+        //Which conferences took place in Berlin in 2015? // 
+        
+        QueryPattern q9 = new C_P_I_P_I(lexicon,instances);
+        StringElement q9_0 = (StringElement) q9.getElement(0);
+        addWhichPrefixes(q9_0);
+        
+        addNouns(q9.getElement(1));
+        
+        addVerbs(q9.getElement(3));
+        
+        addVerbs(q9.getElement(6));
+        
+        patterns.add(q9);*/
+        
+        
+
+        //Which conference took place in Berlin|2014? 
+        
+        QueryPattern q10 = new C_P_I(lexicon,instances);
+        
+        StringElement e10_0 = (StringElement) q10.getElement(0);
+        addWhichPrefixes(e10_0);
+        
+        addNouns(q10.getElement(1));
+        
+        StringElement e10_2 = (StringElement) q10.getElement(2);
+        e10_2.add("that");
+        addVerbs(q10.getElement(3));
+        
+        patterns.add(q10);
+        
+        // Done. (Yay!)
         return patterns;
     
     }
@@ -158,9 +206,12 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
     }
     
     private void addVerbs(Element e) {
-        
-        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.TransitiveFrame);
-        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.IntransitivePPFrame);
+        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.TransitiveFrame);
+        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame);
+    }
+    
+    private void addPrepositionalVerbs(Element e){
+        e.addEntries(lexicon,LexicalEntry.POS.PREPOSITION,vocab.PrepositionalFrame);
     }
     
     private void addGiveMePrefixes(StringElement e) {

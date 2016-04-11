@@ -54,12 +54,14 @@ public class StringElement extends Element {
             // consumes prefix of input string
 
             if (elements.isEmpty()) return string;
+           
             
             String longestMatch = "";
 
             for (String form : elements) {
                 if (string.startsWith(form) && form.length() > longestMatch.length()) {
                     longestMatch = form;
+                    
                 }
             }
 

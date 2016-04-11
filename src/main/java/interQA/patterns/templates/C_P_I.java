@@ -35,8 +35,6 @@ public class C_P_I extends QueryPattern{
 	@Override
 	public void init(){
 		
-            elements = new ArrayList<>();
-		
             StringElement element0 = new StringElement();
             elements.add(element0);
 		
@@ -65,14 +63,13 @@ public class C_P_I extends QueryPattern{
             switch (currentElement) {
                 
                 case 0: ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); break;
-                case 2: ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break;
+                case 2:((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break; 
                 case 4: ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s); break;
                 case 5: setFeatures(5,6,s); break;
                                 
                 case 1: {
                     
                     setFeatures(1,2,s);
-                    
                     Map<String,List<LexicalEntry>> old_element3index = elements.get(3).getIndex();
                     Map<String,List<LexicalEntry>> new_element3index = new HashMap<>();
     		
@@ -82,6 +79,8 @@ public class C_P_I extends QueryPattern{
     			
                     }
                     elements.get(3).addToIndex(new_element3index);
+                    
+                    
                     break;
                 }
 

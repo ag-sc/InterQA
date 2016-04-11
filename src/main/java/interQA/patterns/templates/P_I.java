@@ -33,8 +33,6 @@ public class P_I extends QueryPattern {
         @Override
         public void init() {  
             
-            elements = new ArrayList<>();
-            
             StringElement element0 = new StringElement(); 
             elements.add(element0);
             

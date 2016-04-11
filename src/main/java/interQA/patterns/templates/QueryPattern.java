@@ -51,13 +51,12 @@ public abstract class QueryPattern {
             int i = 0;
             while (!input.isEmpty() && elements.size() > i) {
                    
-                    String rest = elements.get(i).parse(input); 
-                    
+                    String rest = elements.get(i).parse(input);
                     if (rest == null) { return false; }
                                        
                     currentElement = i;
+                    System.out.println(currentElement);
                     update(input.replace(rest,""));
-
 		    input = rest;
                     i++;                   
             }
