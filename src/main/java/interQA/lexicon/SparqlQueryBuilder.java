@@ -54,22 +54,36 @@ public class SparqlQueryBuilder {
                 QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,check_query);
                 return ex.execAsk();
 		}
-
+         
+        //depends on the value of flag puts ?x or COUNT(?x) for How many questions 
+        private String countFlag(boolean flag){
+            
+            if(flag==true){
+                return "COUNT(?x)";
+            }
+            else return  "?x";
+         
+        } 
 	 
 	 // query to reach Instances of a Class
-	private String queryForClassInstances(LexicalEntry classvar){
-		return "SELECT DISTINCT ?x WHERE { "
-                + " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + classvar.getReference() + "> . }";
+	private String queryForClassInstances(LexicalEntry classvar,boolean flag){
+            
+            return "SELECT DISTINCT "+countFlag(flag)+" WHERE { "
+            + " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + classvar.getReference() + "> . }";
 	}
 	// query for SUBJOFPROP pos -- Individual has its class info and Property
-	private String queryForSUBJOFPROPinCaseClassAndIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry){
-		return "SELECT DISTINCT ?x WHERE { "
+	private String queryForSUBJOFPROPinCaseClassAndIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry,
+                            boolean flag){
+                           
+		return "SELECT DISTINCT "+countFlag(flag)+" WHERE { "
 				+ "?x <"+vocab.rdfType+"> <"+noun_entry.getReference()+"> ."
     			+ "?x <"+nounprop_entry.getReference()+"> <"+inst_entry.getReference()+"> . }";
 	}
 	// query for OBJOFPROP pos -- Individual has its class info and Property
-	private String queryForOBJOFPROPinCaseClassAndIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry){
-		return "SELECT DISTINCT ?x WHERE { "
+	private String queryForOBJOFPROPinCaseClassAndIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry,
+                    boolean flag){
+            
+		return "SELECT DISTINCT "+countFlag(flag)+" WHERE { "
 				+ "?x <"+vocab.rdfType+"> <"+noun_entry.getReference()+"> ."
 				+ " <"+inst_entry.getReference()+"> <"+nounprop_entry.getReference()+"> ?x . }";
 	}
@@ -86,16 +100,17 @@ public class SparqlQueryBuilder {
 				+ " <"+inst_entry.getReference()+"> <"+prop_entry.getReference()+"> ?x . }";
 	}
 	//query for SUBJOFPROP pos -- There is a Class and a Property
-	private String queryForSUBJOFPROPinCaseClassAndProperty(LexicalEntry class_entry,LexicalEntry prop_entry){
+	private String queryForSUBJOFPROPinCaseClassAndProperty(LexicalEntry class_entry,LexicalEntry prop_entry,boolean flag){
 		
-		return "SELECT DISTINCT ?x {"
+            
+		return "SELECT DISTINCT "+countFlag(flag)+" {"
 				+ " ?a  <" + vocab.rdfType + ">  <" + class_entry.getReference() + "> ."
 				+ " ?a  <" + prop_entry.getReference() + "> ?x . }";
 	}
 	//query for OBJOFPROP pos -- There is a Class and a Property
-	private String queryForOBJOFPROPinCaseClassAndProperty(LexicalEntry class_entry,LexicalEntry prop_entry){
+	private String queryForOBJOFPROPinCaseClassAndProperty(LexicalEntry class_entry,LexicalEntry prop_entry,boolean flag){
 		
-		return "SELECT DISTINCT ?x {"
+		return "SELECT DISTINCT "+countFlag(flag)+" {"
 				+ " ?a  <" + vocab.rdfType + ">  <" + class_entry.getReference() + "> ."
 				+ " ?x  <" + prop_entry.getReference() + "> ?a . }"; 
 	}
@@ -254,13 +269,17 @@ public class SparqlQueryBuilder {
 		return " ?lit2  <"+prop_entry.getReference()+"> "+inst_entry+". ";
 	}
 	
-	private String queryForSUBJOFPROPinCasePropertyAndInstance(LexicalEntry property_entry,LexicalEntry inst_entry){
-		return "SELECT DISTINCT ?x WHERE {"
+	private String queryForSUBJOFPROPinCasePropertyAndInstance(LexicalEntry property_entry,LexicalEntry inst_entry,
+                boolean flag){
+		
+            
+            return "SELECT DISTINCT "+countFlag(flag)+" WHERE {"
                                    + " <" + inst_entry.getReference() + "> <" + property_entry.getReference() + "> ?x . }";
 	}
 
-	private String queryForOBJOFPROPinCasePropertyAndInstance(LexicalEntry property_entry,LexicalEntry inst_entry){
-		return "SELECT DISTINCT ?x WHERE {"
+	private String queryForOBJOFPROPinCasePropertyAndInstance(LexicalEntry property_entry,LexicalEntry inst_entry,
+                        boolean flag){
+		return "SELECT DISTINCT "+countFlag(flag)+" WHERE {"
                 + " ?x <" + property_entry.getReference() + "> <" + inst_entry.getReference() + "> . }";
 	}
 	
@@ -294,7 +313,8 @@ public class SparqlQueryBuilder {
 		return queries;
 	}
 	
-	public Set<String> BuildQueryForPropertyAndInstance(PropertyElement property_element,InstanceElement instance_element){
+	public Set<String> BuildQueryForPropertyAndInstance(PropertyElement property_element,InstanceElement instance_element,
+                boolean flag){
 		Set<String> queries = new HashSet<>();
 		for (LexicalEntry property_entry : property_element.getActiveEntries()) {
 
@@ -302,12 +322,12 @@ public class SparqlQueryBuilder {
 
                case SUBJOFPROP: 
                     for (LexicalEntry inst_entry : instance_element.getActiveEntries()) {
-                         queries.add(queryForSUBJOFPROPinCasePropertyAndInstance(property_entry,inst_entry));
+                         queries.add(queryForSUBJOFPROPinCasePropertyAndInstance(property_entry,inst_entry,flag));
                     }
                     break;
                case OBJOFPROP: 
                     for (LexicalEntry inst_entry : instance_element.getActiveEntries()) {
-                         queries.add(queryForOBJOFPROPinCasePropertyAndInstance(property_entry,inst_entry));
+                         queries.add(queryForOBJOFPROPinCasePropertyAndInstance(property_entry,inst_entry,flag));
                     }
                     break;
             }
@@ -317,11 +337,13 @@ public class SparqlQueryBuilder {
 		return queries;
 	}
 	
-	public Set<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries){
+	public Set<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries,boolean flag){
 		
 		Set<String> queries = new HashSet<>();
-		for(LexicalEntry class_entry: class_entries)
-			queries.add(queryForClassInstances(class_entry));
+		for(LexicalEntry class_entry: class_entries){
+		    queries.add(queryForClassInstances(class_entry,flag));
+                }
+                
 		return queries;
 	}
 	//without class IRI
@@ -359,7 +381,7 @@ LexicalEntry.SynArg syn){
 	}
 	//with class IRI of Instances
 	public Set<String> BuildQueryForClassAndIndividualAndProperty(ClassElement class_elements,InstanceElement instance_elements,
-PropertyElement property_elements,LexicalEntry.SynArg syn){
+PropertyElement property_elements,LexicalEntry.SynArg syn,boolean flag){
 		
 		Set<String> queries = new HashSet<>();
 		
@@ -370,12 +392,12 @@ PropertyElement property_elements,LexicalEntry.SynArg syn){
 					
 				case SUBJOFPROP:
 					for(LexicalEntry inst_entry : instance_elements.getActiveEntries()){
-					queries.add(queryForSUBJOFPROPinCaseClassAndIndividualAndProperty(noun_entry,nounprop_entry,inst_entry));
+					queries.add(queryForSUBJOFPROPinCaseClassAndIndividualAndProperty(noun_entry,nounprop_entry,inst_entry,flag));
 					}
 					break;
 				case OBJOFPROP:
 					for(LexicalEntry inst_entry : instance_elements.getActiveEntries()){
-						queries.add(queryForOBJOFPROPinCaseClassAndIndividualAndProperty(noun_entry,nounprop_entry,inst_entry));
+						queries.add(queryForOBJOFPROPinCaseClassAndIndividualAndProperty(noun_entry,nounprop_entry,inst_entry,flag));
 					}
 					
 					break;
@@ -395,7 +417,7 @@ PropertyElement property_elements,LexicalEntry.SynArg syn){
 	}
 
 	public Set<String> BuildQueryForClassAndProperty(ClassElement class_elements,PropertyElement property_elements,
-LexicalEntry.SynArg syn){
+LexicalEntry.SynArg syn,boolean flag){
 		
 		Set<String> queries = new HashSet<>();
 		
@@ -405,11 +427,11 @@ LexicalEntry.SynArg syn){
 				switch(property_entry.getSemArg(syn)){
 				
 				case SUBJOFPROP:
-					queries.add(queryForSUBJOFPROPinCaseClassAndProperty(class_entry,property_entry));
+					queries.add(queryForSUBJOFPROPinCaseClassAndProperty(class_entry,property_entry,flag));
 					break;
 					
 				case OBJOFPROP:
-					queries.add(queryForOBJOFPROPinCaseClassAndProperty(class_entry,property_entry));
+					queries.add(queryForOBJOFPROPinCaseClassAndProperty(class_entry,property_entry,flag));
 					break;
 				
 				default:
@@ -528,7 +550,8 @@ LiteralElement literal_elements){
 	*/ 
 	
 	public Set<String> BuildQueryForClassAnd2PropertyAndIndividual(ClassElement class_elements,PropertyElement property1_elements,
-			InstanceElement indv1_elements,LexicalEntry.SynArg syn1,PropertyElement property2_elements,LexicalEntry.SynArg syn2){
+			InstanceElement indv1_elements,LexicalEntry.SynArg syn1,PropertyElement property2_elements,LexicalEntry.SynArg syn2
+                        ){
 		Set<String> queries = new HashSet<>();
 		String query ="";
 		String check_query = "";
@@ -691,12 +714,12 @@ InstanceElement name_elements, LexicalEntry.SynArg syn){
                                         case SUBJOFPROP:
                                             query = DomainqueryForincasegYearNameandProperty(gYear_element,name_element,property_element);
                                             check_query = DomainAskQueryForincasePropertyAndgYearAndNameLiteral(gYear_element,name_element,property_element);
-                                            System.out.println(check_query);
+                                            
                                             break;
                                         case OBJOFPROP:
                                             query = RangequeryForincasegYearNameandProperty(gYear_element,name_element,property_element);
                                             check_query = RangeAskQueryForincasePropertyAndgYearAndNameLiteral(gYear_element,name_element,property_element);
-                                            System.out.println(check_query);
+                                            
                                             break;
  			}
 					

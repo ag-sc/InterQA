@@ -51,7 +51,8 @@ public class P_C extends QueryPattern{
 		
                 switch (currentElement) {
                 
-                    case 0: ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); break;
+                    case 0: {checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+                }break;
                     case 2: ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break;
                     case 3: setFeatures(3,4,s); break;
 
@@ -75,7 +76,7 @@ public class P_C extends QueryPattern{
                 
                     case 1: queries = sqb.BuildQueryForProperty(p);
                     
-                    case 3: queries = sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.OBJECT);                        
+                    case 3: queries = sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.OBJECT,flag);                        
                 }
                 
                 return queries;

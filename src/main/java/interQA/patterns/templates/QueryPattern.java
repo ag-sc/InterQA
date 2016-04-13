@@ -17,6 +17,8 @@ public abstract class QueryPattern {
 
         Vocabulary vocab = new Vocabulary();
         SparqlQueryBuilder sqb = new SparqlQueryBuilder();
+        boolean flag = false;
+        
         
         Lexicon lexicon;
         DatasetConnector dataset;
@@ -42,12 +44,13 @@ public abstract class QueryPattern {
 	 * @param input The whole string from the UI (e.g."who is the")
 	 * @return whether the input string matches the query pattern
 	 */
-	public boolean parses(String input) {
+	
+        public boolean parses(String input) {
 
             init();
             
             currentElement = -1;
-
+            
             int i = 0;
             while (!input.isEmpty() && elements.size() > i) {
                    
@@ -55,7 +58,6 @@ public abstract class QueryPattern {
                     if (rest == null) { return false; }
                                        
                     currentElement = i;
-                    System.out.println(currentElement);
                     update(input.replace(rest,""));
 		    input = rest;
                     i++;                   
@@ -74,6 +76,7 @@ public abstract class QueryPattern {
                     return getNext();
                 } 
                 else return options;
+     
             } else {
                 return new ArrayList<>();
             }
@@ -100,5 +103,12 @@ public abstract class QueryPattern {
             return queries;
         }
 
-	
+	public void checkHowMany(String s){
+            
+            if(s.equals("how many")){
+                flag=true;
+            }
+                
+            
+        }
 }

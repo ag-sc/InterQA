@@ -21,8 +21,7 @@ public class C_P_I extends QueryPattern{
 	/*
         SELECT DISTINCT ?uri { ?uri rdf:type <Class> . ?uri <Property> <Instance> . ?uri <Property> <Instance> . }
         */
-
-    
+        
 	public C_P_I(Lexicon lexicon,DatasetConnector dataset){
 		
             this.lexicon = lexicon;
@@ -62,19 +61,20 @@ public class C_P_I extends QueryPattern{
 		
             switch (currentElement) {
                 
-                case 0: ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); break;
+                case 0: {checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+                } break;
                 case 2:((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break; 
                 case 4: ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s); break;
-                case 5: setFeatures(5,6,s); break;
+                //case 5: setFeatures(5,6,s); break;
                                 
                 case 1: {
-                    
                     setFeatures(1,2,s);
+                    
                     Map<String,List<LexicalEntry>> old_element3index = elements.get(3).getIndex();
                     Map<String,List<LexicalEntry>> new_element3index = new HashMap<>();
     		
                     for (LexicalEntry entry : elements.get(1).getActiveEntries()) {
-    			
+                        
     			new_element3index.putAll(dataset.filterByClassForProperty(old_element3index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
     			
                     }
@@ -101,14 +101,14 @@ public class C_P_I extends QueryPattern{
             ClassElement    c = (ClassElement)    elements.get(1);
             PropertyElement p = (PropertyElement) elements.get(3);
             InstanceElement i = (InstanceElement) elements.get(5);
-                    
+            
             switch (currentElement) {
                 
-            	case 1: queries = sqb.BuildQueryForClassInstances(c.getActiveEntries());  
+            	case 1: queries = sqb.BuildQueryForClassInstances(c.getActiveEntries(),flag);  
                 
-                case 3: queries = sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.SUBJECT);
+                case 3: queries = sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.SUBJECT,flag);
                 
-                case 5: queries = sqb.BuildQueryForClassAndIndividualAndProperty(c,i,p,LexicalEntry.SynArg.OBJECT);
+                case 5: queries = sqb.BuildQueryForClassAndIndividualAndProperty(c,i,p,LexicalEntry.SynArg.OBJECT,flag);
             }
             
             return queries;

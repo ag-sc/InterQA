@@ -76,14 +76,14 @@ public class interQACLI {
             System.out.println("Current sentence: " + sbWholeSentenceExternal.toString());
 
             opts = qm.getUIoptions();
-            
+           
             if (opts.isEmpty()) {
                 System.out.println("SPARQL queries:");
                 for (String query : qm.buildSPARQLqueries()) {
                      System.out.println(query);
                 }
                 break; //Better than exit in order to be used in test units
-            } 
+            }
             
             int index = 1;
             System.out.println("Choose one option (or 'q' to quit, 'd' to delete the last selection):");

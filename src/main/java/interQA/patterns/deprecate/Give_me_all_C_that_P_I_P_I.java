@@ -28,7 +28,7 @@ public class Give_me_all_C_that_P_I_P_I extends QueryPattern{
 	  Show me all conferences that took place in Berlin in 2015.	
         */
 
-	
+	/*
 	public Give_me_all_C_that_P_I_P_I(Lexicon lexicon,DatasetConnector instances){
 		
 		this.lexicon = lexicon;
@@ -139,5 +139,5 @@ public class Give_me_all_C_that_P_I_P_I extends QueryPattern{
                         
                     default: return new HashSet<>();
                 }
-	}
+	}*/
 }

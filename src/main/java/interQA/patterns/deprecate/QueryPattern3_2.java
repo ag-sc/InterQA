@@ -17,7 +17,7 @@ public class QueryPattern3_2 extends QueryPattern{
 	
 	//what are the NBA players` names and their heights?		
 	//what are the BMW cars models and their prizes ?
-
+        /*
 	public QueryPattern3_2(Lexicon lexicon, DatasetConnector instances){
 		
 		this.lexicon = lexicon;
@@ -105,5 +105,5 @@ public class QueryPattern3_2 extends QueryPattern{
                 
                 return new HashSet<>();
 	}
-	
+	*/
 }

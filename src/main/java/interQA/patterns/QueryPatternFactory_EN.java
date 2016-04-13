@@ -44,6 +44,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         StringElement e2_0 = (StringElement) q2.getElement(0);
         addWhichPrefixes(e2_0);
+        e2_0.add("how many");
         
         addNouns(q2.getElement(1));
         
@@ -177,7 +178,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         StringElement e10_0 = (StringElement) q10.getElement(0);
         addWhichPrefixes(e10_0);
-        
+        e10_0.add("how many");
         addNouns(q10.getElement(1));
         
         
