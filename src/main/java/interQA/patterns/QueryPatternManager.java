@@ -45,6 +45,9 @@ public class QueryPatternManager {
         return new ArrayList<>(new HashSet<>(allOpts)); //Removes duplicates
     }
     
+    
+    
+    
     public List<String> buildSPARQLqueries() {
         
         List<String> queries = new ArrayList<>();

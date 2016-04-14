@@ -60,7 +60,8 @@ public abstract class QueryPattern {
                     currentElement = i;
                     update(input.replace(rest,""));
 		    input = rest;
-                    i++;                   
+                    i++;    
+                    
             }
             return true;
 	}

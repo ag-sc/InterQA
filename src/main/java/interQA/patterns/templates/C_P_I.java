@@ -104,11 +104,12 @@ public class C_P_I extends QueryPattern{
             
             switch (currentElement) {
                 
-            	case 1: queries = sqb.BuildQueryForClassInstances(c.getActiveEntries(),flag);  
+            	case 1:return sqb.BuildQueryForClassInstances(c.getActiveEntries(),flag);
                 
-                case 3: queries = sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.SUBJECT,flag);
+                case 3:return sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.SUBJECT,flag);
                 
-                case 5: queries = sqb.BuildQueryForClassAndIndividualAndProperty(c,i,p,LexicalEntry.SynArg.OBJECT,flag);
+                case 5:return sqb.BuildQueryForClassAndIndividualAndProperty(c,i,p,LexicalEntry.SynArg.OBJECT,flag);
+                
             }
             
             return queries;
