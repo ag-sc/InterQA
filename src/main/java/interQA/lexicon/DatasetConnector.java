@@ -299,8 +299,8 @@ public class DatasetConnector {
 				+label("?conference",literal) +"}";
 	}
 	private String gYearInstancesQueryForChosenLiteral(String instances){
-		return  "?y <http://lod.springer.com/data/ontology/property/hasConference> ?conference."
-				+ "?conference <http://lod.springer.com/data/ontology/property/confYear> ?lit.";
+		return  "?y <http://lod.springer.com/data/ontology/property/hasConference> "+instances+". "
+				+instances+ " <http://lod.springer.com/data/ontology/property/confYear> ?lit.";
 	}
     
     //to confirm the latter property (w.r.t the former property) of class at domain position (May be the former method can be implemented for
@@ -505,15 +505,10 @@ public class DatasetConnector {
 		
 		Map<String,List<LexicalEntry>> literals = new HashMap();
 		String query;
-		
 		for(LexicalEntry index: indexes){
-			
 			query =gYearInstancesQueryForChosenLiteral(index.getReference()); 
-			
 			literals.putAll(getInstanceIndex(query,"?lit"));		
 		}
-		
-		
 		
 		return literals;
 		

@@ -26,6 +26,10 @@ import java.util.Set;
  */
 public class C_P_I_P_I extends QueryPattern{
     
+    
+        //SELECT DISTINCT ?uri { ?uri rdf:type <Class> . ?uri <Property> <Literal> . ?uri <Property> <Literal> . }
+
+    
     boolean flag = false;
     
     public C_P_I_P_I(Lexicon lexicon,DatasetConnector dataset){
@@ -73,8 +77,7 @@ public class C_P_I_P_I extends QueryPattern{
                             
                     case 2: {
 			
-                        setFeatures(2,3,s);
-			Map<String,List<LexicalEntry>> old_element2index = elements.get(2).getIndex();
+			Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
                         Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
     		
                         for(LexicalEntry entry : elements.get(1).getActiveEntries()){
@@ -88,14 +91,13 @@ public class C_P_I_P_I extends QueryPattern{
 		
                     case 3: {
 			
-                        setFeatures(3,4,s);
+                        
                     	elements.get(4).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
 			break;
                     }
 		
                     case 5: {
                         
-                        setFeatures(5,6,s);
                     	elements.get(6).addToIndex(dataset.filterBy2PropertiesAndInstanceForInstances(elements.get(3).getActiveEntries(), elements.get(4).getActiveEntries(), 
                     			elements.get(5).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
 			break;
@@ -115,15 +117,16 @@ public class C_P_I_P_I extends QueryPattern{
 		
                 switch (currentElement) {
                     
-                	case 2 : return sqb.BuildQueryForClassInstances(elements.get(3).getActiveEntries(),flag);
+                	case 1 : return sqb.BuildQueryForClassInstances(elements.get(1).getActiveEntries(),flag);
                     
-                	case 4 : return sqb.BuildQueryForClassAndProperty(c, p, LexicalEntry.SynArg.SUBJECT,flag);  
+                	case 3 : return sqb.BuildQueryForClassAndProperty(c, p, LexicalEntry.SynArg.SUBJECT,flag);  
                     
+                        case 4 : return sqb.BuildQueryForClassAndIndividualAndProperty(c, ind, p, LexicalEntry.SynArg.SUBJECT, flag);
                     
-                    case 6: return sqb.BuildQueryForClassAnd2PropertyAndIndividual(c, p, ind, LexicalEntry.SynArg.OBJECT,p2, LexicalEntry.SynArg.OBJECT);
+                        case 5: return sqb.BuildQueryForClassAnd2PropertyAndIndividual(c, p, ind, LexicalEntry.SynArg.OBJECT,p2, LexicalEntry.SynArg.OBJECT,flag);
                     
-                  	case 7: return sqb.BuildQueryForClassAnd2PropertyAnd2Individual(c,p,ind,LexicalEntry.SynArg.OBJECT,p2,ind2
-                  			,LexicalEntry.SynArg.OBJECT);
+                  	case 6: return sqb.BuildQueryForClassAnd2PropertyAnd2Individual(c,p,ind,LexicalEntry.SynArg.OBJECT,p2,ind2
+                  			,LexicalEntry.SynArg.OBJECT,flag);
                         
                     default: return new HashSet<>();
                 }

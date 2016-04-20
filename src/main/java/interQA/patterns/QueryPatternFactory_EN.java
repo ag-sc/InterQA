@@ -6,6 +6,8 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
+import interQA.patterns.deprecate.SpringerQueryPattern4;
+import interQA.patterns.deprecate.SpringerQueryPattern5;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,16 +31,16 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         Set<QueryPattern> patterns = new HashSet<>();
         
         
-        // Give me all mountains.
-/*
+//        // Give me all mountains.
+
         QueryPattern q1 = new C(lexicon,instances);
         
         addGiveMePrefixes((StringElement) q1.getElement(0));
         addNouns(q1.getElement(1));
 
         patterns.add(q1);
-        */
-        // Which movies are there?
+        
+//        // Which movies are there?
         
         QueryPattern q2 = new C(lexicon,instances);
         
@@ -54,9 +56,9 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
         patterns.add(q2);
         
-        /*
-        // Give me the mayor of Paris. 
-        // Who is the president of Cameroon?
+        
+//        // Give me the mayor of Paris. 
+//        // Who is the president of Cameroon?
         
         QueryPattern q3 = new P_I(lexicon,instances);
 
@@ -69,8 +71,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         patterns.add(q3);
         
         
-        // Who created Miffy? 
-        // Who died in Berlin?
+//        // Who created Miffy? 
+//        // Who died in Berlin?
         
         QueryPattern q4 = new P_I(lexicon,instances);
 
@@ -83,7 +85,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         patterns.add(q4);
         
         
-        // What actors play in Batman?
+//        // What actors play in Batman?
         
         QueryPattern q5 = new C_P_I(lexicon,instances);
 
@@ -95,7 +97,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         patterns.add(q5);
         
         
-        // Give me all actors that play in Batman.
+//        // Give me all actors that play in Batman.
         
         QueryPattern q6 = new C_P_I(lexicon,instances);
 
@@ -114,7 +116,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         patterns.add(q6);
         
         
-        // Which city is the capital of Denmark? 
+//        // Which city is the capital of Denmark? 
         
         QueryPattern q7 = new C_P_I(lexicon,instances);
 
@@ -138,7 +140,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         
         
-        //Show me all conferences that took place in Berlin in 2015.
+//        //Show me all conferences that took place in Berlin in 2015.
         QueryPattern q8 = new C_P_I_P_I(lexicon,instances);
         
         StringElement e8_0 = (StringElement) q8.getElement(0);
@@ -156,7 +158,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         patterns.add(q8);
         
         
-        //Which conferences took place in Berlin in 2015? // 
+//        //Which conferences took place in Berlin in 2015? // 
         
         QueryPattern q9 = new C_P_I_P_I(lexicon,instances);
         StringElement q9_0 = (StringElement) q9.getElement(0);
@@ -168,11 +170,12 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         addVerbs(q9.getElement(6));
         
-        patterns.add(q9);*/
+        patterns.add(q9);
         
         
-
-        //Which conference took place in Berlin|2014? 
+//        //Which movie star was born in Bielefeld ?
+//        //Which conference took place in Berlin|2014? 
+//        //How many conference took place in Berlin|2014?
         
         QueryPattern q10 = new C_P_I(lexicon,instances);
         
@@ -185,6 +188,136 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         addVerbs(q10.getElement(3));
         
         patterns.add(q10);
+        
+        
+//        //Which conference took place in Berlin|2004 in Berlin|2014 ?
+//        //How many conference took place in Berlin|2004 in Berlin|2014 ?
+//        //Which university was established in Bielefeld in 1969 ?
+        
+        QueryPattern q11 = new C_P_I_P_I(lexicon,instances);
+        
+        StringElement e11_0 = (StringElement) q11.getElement(0);
+        addWhichPrefixes(e11_0);
+        e11_0.add("how many");
+        addNouns(q11.getElement(1));
+        
+        addVerbs(q11.getElement(3));
+        
+        addVerbs(q11.getElement(5));
+        
+        patterns.add(q11);
+        
+        
+        //Show me all conferences that took place in Berlin in 2015.
+        QueryPattern q12 = new C_P_I_P_I(lexicon,instances);
+        
+        StringElement e12_0 = (StringElement) q12.getElement(0);
+        addGiveMePrefixes(e12_0);
+        
+        addNouns(q12.getElement(1));
+        
+        StringElement e12_2 = (StringElement) q12.getElement(2);
+        e12_2.add("that");
+        
+        addVerbs(q12.getElement(3));
+        
+        addPrepositionalVerbs(q12.getElement(5));
+        
+        patterns.add(q12);
+        
+//        
+//        //What is the height and weight of nba players_?
+        
+        QueryPattern q13 = new P_P_C(lexicon,instances);
+        
+        StringElement e13_0 = (StringElement) q13.getElement(0);
+        addWhoWhatPrefixes(e13_0);
+        
+        addRelationalNouns(q13.getElement(1));
+        
+        StringElement e13_2 = (StringElement) q13.getElement(2);
+        e13_2.add("and");
+        
+        addRelationalNouns(q13.getElement(3));
+        
+        StringElement e13_4 = (StringElement) q13.getElement(4);
+        e13_4.add("of");
+        
+        addNouns(q13.getElement(5));
+        
+        patterns.add(q13);
+        
+        
+//        //what are the BMW cars models and their prizes ?
+        QueryPattern q14 = new C_P_P(lexicon,instances);
+        
+        StringElement e14_0 = (StringElement) q14.getElement(0);
+        addWhoWhatPrefixes(e14_0);
+        
+        addNouns(q14.getElement(1));
+        
+        addRelationalNouns(q14.getElement(2));
+        
+        StringElement e14_3 = (StringElement) q14.getElement(3);
+        e14_3.add("and");
+        
+        StringElement e14_4 = (StringElement) q14.getElement(4);
+        e14_4.add("his",Feature.SINGULAR);
+        e14_4.add("their", Feature.PLURAL);
+        
+        addRelationalNouns(q14.getElement(5));
+        
+        patterns.add(q14);
+        
+          
+        
+        //SPECIFICS
+        
+        
+//        //Give me the proceedings of ISWC 2015.
+        QueryPattern q15 = new SpringerQueryPattern4(lexicon,instances);
+        
+        StringElement e15_0 = (StringElement) q15.getElement(0);
+        addGiveMePrefixes(e15_0);
+        
+        addRelationalNouns(q15.getElement(1));
+        
+        patterns.add(q15);
+        
+        
+           //proceedings of ISWC 2015
+
+       QueryPattern q17 = new SpringerQueryPattern4(lexicon,instances);
+
+       addRelationalNouns(q17.getElement(1));
+
+       patterns.add(q17);
+
+        //conferences in Spain/2015
+        
+        QueryPattern q18 = new C_P_I(lexicon,instances);
+        
+        addNouns(q18.getElement(1));
+        
+        addPrepositionalVerbs(q18.getElement(3));
+        
+        patterns.add(q18);
+            
+        //Give me the start and end date of ISWC 2015.
+        QueryPattern q16 = new SpringerQueryPattern5(lexicon,instances);
+        
+        StringElement e16_0 = (StringElement) q16.getElement(0);
+        addGiveMePrefixes(e16_0);
+        
+        addRelationalNouns(q16.getElement(1));
+        
+        StringElement e16_2 = (StringElement) q16.getElement(2);
+        e16_2.add("and");
+        
+        addRelationalNouns(q16.getElement(3));
+        
+        patterns.add(q16);
+        
         
         // Done. (Yay!)
         return patterns;

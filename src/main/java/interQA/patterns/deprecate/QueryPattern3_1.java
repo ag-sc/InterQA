@@ -23,7 +23,7 @@ public class QueryPattern3_1 extends QueryPattern{
 	//What are the side effects and harms of Alzheimer drugs?
 	
 	DatasetConnector instances;
-	/*
+	
 	public QueryPattern3_1(Lexicon lexicon,DatasetConnector instances){
 				            
             this.lexicon = lexicon;
@@ -109,7 +109,7 @@ public class QueryPattern3_1 extends QueryPattern{
                         }
 			
                         return new HashSet<>();
-		}*/
+		}
 		
 		
 	

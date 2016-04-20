@@ -15,19 +15,19 @@ import java.util.Set;
 
 public abstract class QueryPattern {
 
-        Vocabulary vocab = new Vocabulary();
-        SparqlQueryBuilder sqb = new SparqlQueryBuilder();
-        boolean flag = false;
+        public Vocabulary vocab = new Vocabulary();
+        public SparqlQueryBuilder sqb = new SparqlQueryBuilder();
+        public boolean flag = false;
         
         
-        Lexicon lexicon;
-        DatasetConnector dataset;
+        public Lexicon lexicon;
+        public DatasetConnector dataset;
         
-	List<Element> elements = new ArrayList<>();
+	public List<Element> elements = new ArrayList<>();
         
 	public int currentElement = -1;   
         
-        Set<String> queries = new HashSet<>();
+        public Set<String> queries = new HashSet<>();
     
         
         public void init() {
