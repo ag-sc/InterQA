@@ -21,8 +21,10 @@ public abstract class Element {
         
     
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
-            
-        this.index = lexicon.getSubindex(pos,frame);
+        this.index = lexicon.getSubindex(pos,frame,true);
+    }
+    public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame, boolean withMarker) {
+        this.index = lexicon.getSubindex(pos,frame,withMarker);
     }
 
     public Map<String,List<LexicalEntry>> getIndex() {        
@@ -62,10 +64,12 @@ public abstract class Element {
 	// keeps only the longest match in index.
                 
         String longestMatch = "";
+        String input = string.toLowerCase();
             
-	for (String form : index.keySet()) {
-            if (string.startsWith(form) && form.length() > longestMatch.length()) {
-                longestMatch = form;
+	for (String s : index.keySet()) {
+            String form = s.toLowerCase();
+            if (input.startsWith(form) && form.length() > longestMatch.length()) {
+                longestMatch = s;
             }
         }
                 
@@ -80,7 +84,7 @@ public abstract class Element {
         
 	return null;
     }
-    
+
     public List<String> getOptions() {
             
         List<String> options = new ArrayList<>();
@@ -104,10 +108,13 @@ public abstract class Element {
     
     public boolean compatible(List<Feature> fs1, List<Feature> fs2) {
         
-        if (fs1.contains(Feature.SINGULAR)) return !fs2.contains(Feature.PLURAL)    || fs1.contains(Feature.PLURAL);
-        if (fs1.contains(Feature.PLURAL))   return !fs2.contains(Feature.SINGULAR)  || fs1.contains(Feature.SINGULAR);
-        if (fs1.contains(Feature.PRESENT))  return !fs2.contains(Feature.PAST)      || fs1.contains(Feature.PAST);
-        if (fs1.contains(Feature.PAST))     return !fs2.contains(Feature.PRESENT)   || fs1.contains(Feature.PRESENT);
+        if (fs1.contains(Feature.SINGULAR))  return !fs2.contains(Feature.PLURAL)    || fs1.contains(Feature.PLURAL);
+        if (fs1.contains(Feature.PLURAL))    return !fs2.contains(Feature.SINGULAR)  || fs1.contains(Feature.SINGULAR);
+        if (fs1.contains(Feature.PRESENT))   return !fs2.contains(Feature.PAST)      || fs1.contains(Feature.PAST);
+        if (fs1.contains(Feature.PAST))      return !fs2.contains(Feature.PRESENT)   || fs1.contains(Feature.PRESENT);
+        if (fs1.contains(Feature.FEMININE))  return !fs2.contains(Feature.MASCULINE) && !fs2.contains(Feature.NEUTER);
+        if (fs1.contains(Feature.MASCULINE)) return !fs2.contains(Feature.FEMININE)  && !fs2.contains(Feature.NEUTER);
+        if (fs1.contains(Feature.NEUTER))    return !fs2.contains(Feature.FEMININE)  && !fs2.contains(Feature.MASCULINE);
         
         return true;
     }

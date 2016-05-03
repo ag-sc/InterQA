@@ -21,6 +21,7 @@ public class LexicalEntry {
     
     String canonicalForm;  
     String particle;
+    String marker;
     
     String reference; 
     String frame;
@@ -48,8 +49,12 @@ public class LexicalEntry {
         canonicalForm = form;
     }
     
-    public void setParticle(String part) {
-        particle = part;
+    public void setParticle(String p) {
+        particle = p;
+    }
+    
+    public void setMarker(String m) {
+        marker = m;
     }
     
     public void setReference(String uri) {
@@ -65,9 +70,16 @@ public class LexicalEntry {
     }
     
     public void addForm(Feature f, String form) {
-        forms.put(f,form);
-        if (!features.containsKey(form)) features.put(form,new ArrayList<>()); 
-        features.get(form).add(f);
+        
+        String lemma = form;
+        if (form.contains("+")) {
+            String[] parts = form.split("\\+");
+            particle = parts[0];
+            lemma    = parts[1];
+        }
+        forms.put(f,lemma);
+        if (!features.containsKey(lemma)) features.put(lemma,new ArrayList<>()); 
+        features.get(lemma).add(f);
     }
     
     public void addInherentFeature(Feature f) {
@@ -90,16 +102,22 @@ public class LexicalEntry {
         return forms.get(f);
     }
     
+    public String getMarker() {
+        return marker;
+    }
+    
     public List<Feature> getFeatures(String f) {
-        return features.get(f);
+        List<Feature> out = features.get(f);
+        out.addAll(inherentFeatures);
+        return out;
     } 
     
     public HashMap<String,List<Feature>> getFeatures() {
-        return features;
-    }
-    
-    public List<Feature> getInherentFeatures() {
-        return inherentFeatures;
+        HashMap<String,List<Feature>> out = features;
+        for (String key : out.keySet()) {
+             out.get(key).addAll(inherentFeatures);
+        }
+        return out;
     }
     
     public String getReference() {

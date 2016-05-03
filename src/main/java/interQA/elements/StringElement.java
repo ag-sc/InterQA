@@ -35,6 +35,13 @@ public class StringElement extends Element {
             registerFeature(token,f2);
         }
         
+        public void add(String token,Feature f1, Feature f2, Feature f3) {
+            add(token);
+            registerFeature(token,f1);
+            registerFeature(token,f2);
+            registerFeature(token,f3);
+        }
+        
         private void registerFeature(String token, Feature f) {
             if (!featureMap.containsKey(token)) featureMap.put(token,new ArrayList<>());
             featureMap.get(token).add(f);

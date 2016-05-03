@@ -236,7 +236,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         StringElement e13_0 = (StringElement) q13.getElement(0);
         addWhoWhatPrefixes(e13_0);
         
-        addRelationalNouns(q13.getElement(1));
+        addRelationalNouns(q13.getElement(1),false);
         
         StringElement e13_2 = (StringElement) q13.getElement(2);
         e13_2.add("and");
@@ -244,7 +244,6 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         addRelationalNouns(q13.getElement(3));
         
         StringElement e13_4 = (StringElement) q13.getElement(4);
-        e13_4.add("of");
         
         addNouns(q13.getElement(5));
         
@@ -338,14 +337,20 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
     }
     
     private void addRelationalNouns(Element e) {
+        addRelationalNouns(e,true);
+    }    
+    private void addRelationalNouns(Element e, boolean withMarker) {
         
-        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPPFrame);
-        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
+        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPPFrame, withMarker);
+        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame, withMarker);
     }
     
     private void addVerbs(Element e) {
-        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.TransitiveFrame);
-        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame);
+        addVerbs(e,true);
+    }
+    private void addVerbs(Element e, boolean withMarker) {
+        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.TransitiveFrame, withMarker);
+        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame, withMarker);
     }
     
     private void addPrepositionalVerbs(Element e){

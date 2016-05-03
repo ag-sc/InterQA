@@ -31,7 +31,7 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         Set<QueryPattern> patterns = new HashSet<>();
         
         
-//        // Give me all mountains.
+        // Zeig mir alle Berge.
 
         QueryPattern q1 = new C(lexicon,instances);
         
@@ -40,25 +40,24 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
 
         patterns.add(q1);
         
-//        // Which movies are there?
+        // Welche Filme gibt es?
         
         QueryPattern q2 = new C(lexicon,instances);
         
         StringElement e2_0 = (StringElement) q2.getElement(0);
         addWhichPrefixes(e2_0);
-        e2_0.add("how many");
+        addHowManyPrefixes(e2_0);
         
         addNouns(q2.getElement(1));
         
         StringElement e2_2 = (StringElement) q2.getElement(2);
-        e2_2.add("is there",Feature.SINGULAR);
-        e2_2.add("are there",Feature.PLURAL);
+        e2_2.add("gibt es");
 
         patterns.add(q2);
         
         
-//        // Give me the mayor of Paris. 
-//        // Who is the president of Cameroon?
+        // Gib mir den Bürgermeister von Paris. 
+        // Wer ist der Bürgermeister von Paris?
         
         QueryPattern q3 = new P_I(lexicon,instances);
 
@@ -71,21 +70,21 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         patterns.add(q3);
         
         
-//        // Who created Miffy? 
-//        // Who died in Berlin?
+        // Wer entwickelte Minecraft? 
+        // Wer starb in Berlin?
         
         QueryPattern q4 = new P_I(lexicon,instances);
 
         StringElement e4_0 = (StringElement) q4.getElement(0);
-        e4_0.add("who");
-        e4_0.add("what");
+        e4_0.add("wer");
+        e4_0.add("was");
 
         addVerbs(q4.getElement(3));
         
         patterns.add(q4);
         
         
-//        // What actors play in Batman?
+        // Welche Schauspieler spielen in Batman mit?
         
         QueryPattern q5 = new C_P_I(lexicon,instances);
 
@@ -97,7 +96,7 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         patterns.add(q5);
         
         
-//        // Give me all actors that play in Batman.
+        // Zeige alle Schauspieler die in Batman mitspielen.
         
         QueryPattern q6 = new C_P_I(lexicon,instances);
 
@@ -107,16 +106,14 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         addNouns(q6.getElement(1));
         
         StringElement e6_2 = (StringElement) q6.getElement(2);
-        e6_2.add("that");
-        e6_2.add("which");
-        e6_2.add("who");
+        addRelativePronouns(e6_2);
         
         addVerbs(q6.getElement(3));
         
         patterns.add(q6);
         
         
-//        // Which city is the capital of Denmark? 
+        // Welche Stadt ist die Hauptstadt von Dänemark? 
         
         QueryPattern q7 = new C_P_I(lexicon,instances);
 
@@ -127,12 +124,20 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         addNouns(q7.getElement(1));
         
         StringElement e7_2 = (StringElement) q7.getElement(2);
-        e7_2.add("is a",Feature.SINGULAR,Feature.PRESENT);
-        e7_2.add("is the",Feature.SINGULAR,Feature.PRESENT);
-        e7_2.add("are the",Feature.SINGULAR,Feature.PRESENT);
-        e7_2.add("was a",Feature.SINGULAR,Feature.PAST);
-        e7_2.add("was the",Feature.SINGULAR,Feature.PAST);
-        e7_2.add("were the",Feature.SINGULAR,Feature.PAST);
+        e7_2.add("ist eine",Feature.SINGULAR,Feature.PRESENT,Feature.FEMININE);
+        e7_2.add("ist ein",Feature.SINGULAR,Feature.PRESENT,Feature.MASCULINE);
+        e7_2.add("ist ein",Feature.SINGULAR,Feature.PRESENT,Feature.NEUTER);
+        e7_2.add("ist die",Feature.SINGULAR,Feature.PRESENT,Feature.FEMININE);
+        e7_2.add("ist der",Feature.SINGULAR,Feature.PRESENT,Feature.MASCULINE);
+        e7_2.add("ist das",Feature.SINGULAR,Feature.PRESENT,Feature.NEUTER);
+        e7_2.add("sind die",Feature.SINGULAR,Feature.PRESENT);
+        e7_2.add("war eine",Feature.SINGULAR,Feature.PAST,Feature.FEMININE);
+        e7_2.add("war ein",Feature.SINGULAR,Feature.PAST,Feature.MASCULINE);
+        e7_2.add("war ein",Feature.SINGULAR,Feature.PAST,Feature.NEUTER);
+        e7_2.add("war die",Feature.SINGULAR,Feature.PAST,Feature.FEMININE);
+        e7_2.add("war der",Feature.SINGULAR,Feature.PAST,Feature.MASCULINE);
+        e7_2.add("war das",Feature.SINGULAR,Feature.PAST,Feature.NEUTER);
+        e7_2.add("waren die",Feature.SINGULAR,Feature.PAST);
         
         addRelationalNouns(q7.getElement(3));
         
@@ -140,7 +145,7 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         
         
         
-//        //Show me all conferences that took place in Berlin in 2015.
+        // Ziege alle Konferenzen die 2015 in Berlin stattfanden. 
         QueryPattern q8 = new C_P_I_P_I(lexicon,instances);
         
         StringElement e8_0 = (StringElement) q8.getElement(0);
@@ -149,16 +154,16 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         addNouns(q8.getElement(1));
         
         StringElement e8_2 = (StringElement) q8.getElement(2);
-        e8_2.add("that");
+        addRelativePronouns(e8_2);
         
         addVerbs(q8.getElement(3));
         
-        addPrepositionalVerbs(q8.getElement(6));
+        addPrepositionalVerbs(q8.getElement(6)); // TODO "2015" is without preposition or verb or any other string!
         
         patterns.add(q8);
         
         
-//        //Which conferences took place in Berlin in 2015? // 
+        // Welche Konferenzen fanden 105 in Berlin statt? 
         
         QueryPattern q9 = new C_P_I_P_I(lexicon,instances);
         StringElement q9_0 = (StringElement) q9.getElement(0);
@@ -168,31 +173,30 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         
         addVerbs(q9.getElement(3));
         
-        addPrepositionalVerbs(q9.getElement(6));
+        addPrepositionalVerbs(q9.getElement(6)); // TODO dito
         
         patterns.add(q9);
         
         
-//        //Which movie star was born in Bielefeld ?
-//        //Which conference took place in Berlin|2014? 
-//        //How many conference took place in Berlin|2014?
+        // Welche Schriftsteller wurden in Bielefeld geboren? // TODO This probably works differently in German...
+        // Welche Konferenz fand in Berlin statt? 
+        // Wieviele Konferenzen fanden in Berlin statt?
         
         QueryPattern q10 = new C_P_I(lexicon,instances);
         
         StringElement e10_0 = (StringElement) q10.getElement(0);
         addWhichPrefixes(e10_0);
-        e10_0.add("how many");
+        addHowManyPrefixes(e10_0);
         addNouns(q10.getElement(1));
-        
         
         addVerbs(q10.getElement(3));
         
         patterns.add(q10);
         
         
-//        //Which conference took place in Berlin|2004 in Berlin|2014 ?
-//        //How many conference took place in Berlin|2004 in Berlin|2014 ?
-//        //Which university was established in Bielefeld in 1969 ?
+        // Which conference took place in Berlin|2004 in Berlin|2014 ?
+        // How many conference took place in Berlin|2004 in Berlin|2014 ?
+        // Which university was established in Bielefeld in 1969 ?
         
         QueryPattern q11 = new C_P_I_P_I(lexicon,instances);
         
@@ -208,7 +212,8 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         patterns.add(q11);
         
         
-        //Show me all conferences that took place in Berlin in 2015.
+        // Zeige alle Konferenzen die 2015 in Berlin stattfanden.
+        
         QueryPattern q12 = new C_P_I_P_I(lexicon,instances);
         
         StringElement e12_0 = (StringElement) q12.getElement(0);
@@ -217,41 +222,43 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         addNouns(q12.getElement(1));
         
         StringElement e12_2 = (StringElement) q12.getElement(2);
-        e12_2.add("that");
+        addRelativePronouns(e12_2);
         
         addVerbs(q12.getElement(3));
         
-        addPrepositionalVerbs(q12.getElement(5));
+        addPrepositionalVerbs(q12.getElement(5)); // TODO dito
         
         patterns.add(q12);
         
-//        
-//        //What is the height and weight of nba players_?
+        
+        // Was ist die Höhe und Breite von Autos? 
         
         QueryPattern q13 = new P_P_C(lexicon,instances);
         
         StringElement e13_0 = (StringElement) q13.getElement(0);
+        addDefiniteGiveMePrefixes(e13_0);
         addWhoWhatPrefixes(e13_0);
         
-        addRelationalNouns(q13.getElement(1));
+        addRelationalNouns(q13.getElement(1),false);
         
         StringElement e13_2 = (StringElement) q13.getElement(2);
-        e13_2.add("and");
+        e13_2.add("und");
         
         addRelationalNouns(q13.getElement(3));
         
         StringElement e13_4 = (StringElement) q13.getElement(4);
-        e13_4.add("of");
         
         addNouns(q13.getElement(5));
         
         patterns.add(q13);
         
         
-//        //what are the BMW cars models and their prizes ?
+        // Was sind BMW-Modelle und ihr Preis? 
+        
         QueryPattern q14 = new C_P_P(lexicon,instances);
         
         StringElement e14_0 = (StringElement) q14.getElement(0);
+        addDefiniteGiveMePrefixes(e14_0);
         addWhoWhatPrefixes(e14_0);
         
         addNouns(q14.getElement(1));
@@ -259,22 +266,39 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         addRelationalNouns(q14.getElement(2));
         
         StringElement e14_3 = (StringElement) q14.getElement(3);
-        e14_3.add("and");
+        e14_3.add("und");
         
         StringElement e14_4 = (StringElement) q14.getElement(4);
-        e14_4.add("his",Feature.SINGULAR);
-        e14_4.add("their", Feature.PLURAL);
+        e14_4.add("ihre",Feature.SINGULAR,Feature.FEMININE);
+        e14_4.add("ihr",Feature.SINGULAR,Feature.MASCULINE);
+        e14_4.add("ihr",Feature.SINGULAR,Feature.NEUTER);
+        e14_4.add("ihre", Feature.PLURAL);
         
         addRelationalNouns(q14.getElement(5));
         
         patterns.add(q14);
+
+       
+        
+        // KEYWORD-LIKE PATTERNS
+        
+        // Konferenzen in Spanien
+        
+        QueryPattern q18 = new C_P_I(lexicon,instances);
+        
+        addNouns(q18.getElement(1));
+        
+        addPrepositionalVerbs(q18.getElement(3));
+        
+        patterns.add(q18);
+        
         
           
         
         //SPECIFICS
         
         
-//        //Give me the proceedings of ISWC 2015.
+        //Give me the proceedings of ISWC 2015.
         QueryPattern q15 = new SpringerQueryPattern4(lexicon,instances);
         
         StringElement e15_0 = (StringElement) q15.getElement(0);
@@ -284,24 +308,13 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         
         patterns.add(q15);
         
-        
-           //proceedings of ISWC 2015
+        // proceedings of ISWC 2015
 
-       QueryPattern q17 = new SpringerQueryPattern4(lexicon,instances);
+        QueryPattern q17 = new SpringerQueryPattern4(lexicon,instances);
 
-       addRelationalNouns(q17.getElement(1));
+        addRelationalNouns(q17.getElement(1));
 
-       patterns.add(q17);
-
-        //conferences in Spain/2015
-        
-        QueryPattern q18 = new C_P_I(lexicon,instances);
-        
-        addNouns(q18.getElement(1));
-        
-        addPrepositionalVerbs(q18.getElement(3));
-        
-        patterns.add(q18);
+        patterns.add(q17);       
             
         //Give me the start and end date of ISWC 2015.
         QueryPattern q16 = new SpringerQueryPattern5(lexicon,instances);
@@ -312,7 +325,7 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         addRelationalNouns(q16.getElement(1));
         
         StringElement e16_2 = (StringElement) q16.getElement(2);
-        e16_2.add("and");
+        e16_2.add("und");
         
         addRelationalNouns(q16.getElement(3));
         
@@ -333,14 +346,20 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
     }
     
     private void addRelationalNouns(Element e) {
+        addRelationalNouns(e,true);
+    }    
+    private void addRelationalNouns(Element e, boolean withMarker) {
         
-        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPPFrame);
-        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
+        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPPFrame, withMarker);
+        e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame, withMarker);
     }
     
     private void addVerbs(Element e) {
-        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.TransitiveFrame);
-        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame);
+        addVerbs(e,true);
+    }
+    private void addVerbs(Element e, boolean withMarker) {
+        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.TransitiveFrame, withMarker);
+        e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame, withMarker);
     }
     
     private void addPrepositionalVerbs(Element e){
@@ -349,34 +368,62 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
     
     private void addGiveMePrefixes(StringElement e) {
 
-        e.add("give me");
-        e.add("give me all",Feature.PLURAL);
-        e.add("give me the",Feature.PLURAL);
-        e.add("show me all",Feature.PLURAL);
-        e.add("show me the");
-        e.add("list all",Feature.PLURAL);
+        e.add("gib mir");
+        e.add("gib mir alle",Feature.PLURAL);
+        e.add("gib mir die",Feature.PLURAL);
+        e.add("gib mir die",Feature.SINGULAR,Feature.FEMININE);
+        e.add("gib mir das",Feature.SINGULAR,Feature.NEUTER);
+        e.add("gib mir den",Feature.SINGULAR,Feature.MASCULINE);
+        e.add("zeige alle",Feature.PLURAL);
+        e.add("zeig mir");
         
-        e.add("do you know any",Feature.PLURAL);
-        e.add("are there any",Feature.PLURAL);
+        e.add("gibt es",Feature.PLURAL);
+    }
+    
+    private void addDefiniteGiveMePrefixes(StringElement e) {
+
+        e.add("gib mir die",Feature.PLURAL);
+        e.add("gib mir die",Feature.SINGULAR,Feature.FEMININE);
+        e.add("gib mir das",Feature.SINGULAR,Feature.NEUTER);
+        e.add("gib mir den",Feature.SINGULAR,Feature.MASCULINE);
     }
     
     private void addWhichPrefixes(StringElement e) {
         
-        e.add("which");
-        e.add("what");
+        e.add("welche",Feature.PLURAL);
+        e.add("welche",Feature.SINGULAR,Feature.FEMININE);
+        e.add("welcher",Feature.SINGULAR,Feature.MASCULINE);
+        e.add("welches",Feature.SINGULAR,Feature.NEUTER);
+    }
+    
+    private void addHowManyPrefixes(StringElement e) {
+        
+        e.add("wieviel",Feature.PLURAL);
+        e.add("wieviele",Feature.PLURAL);
     }
     
     private void addWhoWhatPrefixes(StringElement e) {
         
-        e.add("who is the",Feature.SINGULAR,Feature.PRESENT);
-        e.add("who are the",Feature.PLURAL,Feature.PRESENT);
-        e.add("who was the",Feature.SINGULAR,Feature.PAST);
-        e.add("who were the",Feature.PLURAL,Feature.PAST);
+        e.add("wer ist der",Feature.SINGULAR,Feature.PRESENT,Feature.MASCULINE);
+        e.add("wer ist die",Feature.PLURAL,Feature.PRESENT,Feature.FEMININE);
+        e.add("wer war der",Feature.SINGULAR,Feature.PAST,Feature.MASCULINE);
+        e.add("wer war die",Feature.PLURAL,Feature.PAST,Feature.FEMININE);
+        e.add("wer waren die",Feature.PLURAL,Feature.PAST);
         
-        e.add("what is the",Feature.SINGULAR,Feature.PRESENT);
-        e.add("what are the",Feature.PLURAL,Feature.PRESENT);
-        e.add("what was the",Feature.SINGULAR,Feature.PAST);
-        e.add("what were the",Feature.PLURAL,Feature.PAST);
+        e.add("was ist der",Feature.SINGULAR,Feature.PRESENT,Feature.MASCULINE);
+        e.add("was ist die",Feature.PLURAL,Feature.PRESENT,Feature.FEMININE);
+        e.add("was ist das",Feature.PLURAL,Feature.PRESENT,Feature.NEUTER);
+        e.add("was war der",Feature.SINGULAR,Feature.PAST,Feature.MASCULINE);
+        e.add("was war die",Feature.PLURAL,Feature.PAST,Feature.FEMININE);
+        e.add("was war das",Feature.PLURAL,Feature.PAST,Feature.NEUTER);
+        e.add("was waren die",Feature.PLURAL,Feature.PAST);
     }
     
+    private void addRelativePronouns(StringElement e) {
+        
+        e.add("die",Feature.PLURAL);
+        e.add("die",Feature.FEMININE);
+        e.add("der",Feature.MASCULINE);
+        e.add("das",Feature.NEUTER);
+    }
 }

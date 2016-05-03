@@ -16,11 +16,11 @@ public class LexiconTest extends TestCase {
 
     Lexicon lexicon = new Lexicon(Language.EN);
 
-    public void test() throws Exception {
+    public void test_en() throws Exception {
         
         lexicon.load("resources/springer_en.ttl");
 
-        HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,null);
+        HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,null,true);
         
         assertEquals(true,commonNouns.containsKey("conference"));
         
@@ -29,6 +29,22 @@ public class LexiconTest extends TestCase {
         assertEquals("conference",entries.get(0).getCanonicalForm());
         assertEquals("conference",entries.get(0).getForm(LexicalEntry.Feature.SINGULAR));
         assertEquals("conferences",entries.get(0).getForm(LexicalEntry.Feature.PLURAL));
+
+    }
+    
+    public void test_de() throws Exception {
+        
+        lexicon.load("resources/springer_de.ttl");
+
+        HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,null,true);
+        
+        assertEquals(true,commonNouns.containsKey("Konferenz"));
+        
+        List<LexicalEntry> entries = commonNouns.get("Konferenz");
+        assertEquals(1,entries.size());
+        assertEquals("Konferenz",entries.get(0).getCanonicalForm());
+        assertEquals("Konferenz",entries.get(0).getForm(LexicalEntry.Feature.SINGULAR));
+        assertEquals("Konferenzen",entries.get(0).getForm(LexicalEntry.Feature.PLURAL));
 
     }
 

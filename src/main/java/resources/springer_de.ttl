@@ -38,7 +38,7 @@ lex:stattfindenIn a lemon:lexicalEntry ;
   lemon:synBehavior lex:stattfindenIn_synBehavior ;
   lemon:sense lex:stattfindenIn_sense1, lex:stattfindenIn_sense2, lex:stattfindenIn_sense3 .
 
-lex:stattfindenIn_canonicalForm lemon:writtenRep "stattfinden"@de ;
+lex:stattfindenIn_canonicalForm lemon:writtenRep "stattfinden"@de .
 lex:stattfindenIn_otherForm1 lemon:writtenRep "statt+findet"@de ;
   lexinfo:tense  lexinfo:present ;
   lexinfo:number lexinfo:singular .

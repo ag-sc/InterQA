@@ -72,7 +72,7 @@ public abstract class QueryPattern {
                 
                 List<String> options = elements.get(currentElement+1).getOptions();
                 
-                if (options.isEmpty()) {
+                if (options.isEmpty() && elements.get(currentElement+1).getClass().toString().equals("StringElement")) {
                     currentElement += 1;
                     return getNext();
                 } 
