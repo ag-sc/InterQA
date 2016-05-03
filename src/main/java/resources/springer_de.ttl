@@ -18,6 +18,7 @@ lex:Konferenz a lemon:LexicalEntry ;
   lemon:canonicalForm lex:Konferenz_canonicalForm ;
   lemon:otherForm lex:Konferenz_otherForm ;
   lexinfo:partOfSpeech lexinfo:commonNoun ;
+  lexinfo:gender lexinfo:feminine ;
   lemon:sense lex:Konferenz_sense .
 
 lex:Konferenz_canonicalForm lemon:writtenRep "Konferenz"@de ;
@@ -32,19 +33,24 @@ lex:Konferenz_sense lemon:reference <http://lod.springer.com/data/ontology/class
 
 lex:stattfindenIn a lemon:lexicalEntry ;
   lemon:canonicalForm lex:stattfindenIn_canonicalForm ;
-  lemon:otherForm lex:stattfindenIn_otherForm1, lex:stattfindenIn_otherForm2 ;
+  lemon:otherForm lex:stattfindenIn_otherForm1, lex:stattfindenIn_otherForm2, lex:stattfindenIn_otherForm3, lex:stattfindenIn_otherForm4 ;
   lexinfo:partOfSpeech lexinfo:verb ;
   lemon:synBehavior lex:stattfindenIn_synBehavior ;
   lemon:sense lex:stattfindenIn_sense1, lex:stattfindenIn_sense2, lex:stattfindenIn_sense3 .
 
 lex:stattfindenIn_canonicalForm lemon:writtenRep "stattfinden"@de ;
-  lexinfo:tense  lexinfo:present ; 
-  lexinfo:number lexinfo:plural.
-lex:stattfindenIn_otherForm1 lemon:writtenRep "findet statt"@de ;
+lex:stattfindenIn_otherForm1 lemon:writtenRep "statt+findet"@de ;
   lexinfo:tense  lexinfo:present ;
   lexinfo:number lexinfo:singular .
-lex:stattfindenIn_otherForm2 lemon:writtenRep "fand statt"@de ;
-  lexinfo:tense  lexinfo:past .
+lex:stattfindenIn_otherForm2 lemon:writtenRep "statt+finden"@de ;
+  lexinfo:tense  lexinfo:present ;
+  lexinfo:number lexinfo:plural .
+lex:stattfindenIn_otherForm3 lemon:writtenRep "statt+fand"@de ;
+  lexinfo:tense  lexinfo:past ;
+  lexinfo:number lexinfo:singular .
+lex:stattfindenIn_otherForm4 lemon:writtenRep "statt+fanden"@de ;
+  lexinfo:tense  lexinfo:past ;
+  lexinfo:number lexinfo:plural .
 
 lex:stattfindenIn_synBehavior a lexinfo:IntransitivePPFrame ;
   lexinfo:subject lex:stattfindenIn_subj ;
@@ -68,7 +74,8 @@ lex:stattfindenIn_sense3 lemon:reference <http://lod.springer.com/data/ontology/
 lex:ProceedingsOf a lemon:lexicalEntry ;
   lemon:canonicalForm lex:ProceedingsOf_canonicalForm ;
   lemon:otherForm lex:ProceedingsOf_otherForm ;
-  lexinfo:partOfSpeech lexinfo:noun ;
+  lexinfo:partOfSpeech lexinfo:commonNoun ;
+  lexinfo:gender lexinfo:feminine ;
   lemon:synBehavior lex:ProceedingsOf_synBehavior ;
   lemon:sense lex:ProceedingsOf_sense .
 

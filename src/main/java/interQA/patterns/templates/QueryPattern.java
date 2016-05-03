@@ -17,8 +17,8 @@ public abstract class QueryPattern {
 
         public Vocabulary vocab = new Vocabulary();
         public SparqlQueryBuilder sqb = new SparqlQueryBuilder();
-        public boolean flag = false;
         
+        public boolean count = false;        
         
         public Lexicon lexicon;
         public DatasetConnector dataset;
@@ -106,8 +106,9 @@ public abstract class QueryPattern {
 
 	public void checkHowMany(String s){
             
+            // TODO language-dependent list of strings somewhere?
             if(s.equals("how many")){
-                flag=true;
+                count=true;
             }
                 
             

@@ -53,7 +53,7 @@ public class C extends QueryPattern {
             ClassElement c = (ClassElement) elements.get(1);
             switch (currentElement) {
                 
-                case 1: queries = sqb.BuildQueryForClassInstances(c.getActiveEntries(),flag);
+                case 1: queries = sqb.BuildQueryForClassInstances(c.getActiveEntries(),count);
             }
             
             return queries;

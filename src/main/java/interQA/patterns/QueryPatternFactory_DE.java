@@ -12,13 +12,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class QueryPatternFactory_EN implements QueryPatternFactory {    
+public class QueryPatternFactory_DE implements QueryPatternFactory {    
     
     Lexicon lexicon;
     DatasetConnector instances;   
     
     
-    public QueryPatternFactory_EN(Lexicon l, DatasetConnector is) {
+    public QueryPatternFactory_DE(Lexicon l, DatasetConnector is) {
     
         lexicon = l;
         instances = is;
@@ -225,10 +225,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         patterns.add(q12);
         
-      
-//        //What is the height and weight of Michael Jordan?
-        // P_P_I
-
+//        
 //        //What is the height and weight of nba players_?
         
         QueryPattern q13 = new P_P_C(lexicon,instances);
@@ -265,9 +262,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         e14_3.add("and");
         
         StringElement e14_4 = (StringElement) q14.getElement(4);
-        e14_4.add("its",Feature.SINGULAR,Feature.NEUTER);
-        e14_4.add("his",Feature.SINGULAR,Feature.MASCULINE);
-        e14_4.add("her",Feature.SINGULAR,Feature.FEMININE);
+        e14_4.add("his",Feature.SINGULAR);
         e14_4.add("their", Feature.PLURAL);
         
         addRelationalNouns(q14.getElement(5));

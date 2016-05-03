@@ -77,7 +77,7 @@ public class P_I extends QueryPattern {
                 
                 case 2: queries = sqb.BuildQueryForProperty(p); break;
                 
-                case 3: queries = sqb.BuildQueryForPropertyAndInstance(p,i,flag); break;          
+                case 3: queries = sqb.BuildQueryForPropertyAndInstance(p,i,count); break;          
             }
             
             return queries;

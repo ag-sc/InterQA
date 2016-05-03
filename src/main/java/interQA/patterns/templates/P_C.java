@@ -76,7 +76,7 @@ public class P_C extends QueryPattern{
                 
                     case 1: queries = sqb.BuildQueryForProperty(p);
                     
-                    case 3: queries = sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.OBJECT,flag);                        
+                    case 3: queries = sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.OBJECT,count);                        
                 }
                 
                 return queries;

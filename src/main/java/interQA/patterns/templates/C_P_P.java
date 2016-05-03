@@ -119,7 +119,7 @@ public class C_P_P extends QueryPattern{
                     
                     
                     case 2:{
-                        return sqb.BuildQueryForClassAndProperty(c, p2, LexicalEntry.SynArg.OBJECT, flag);
+                        return sqb.BuildQueryForClassAndProperty(c, p2, LexicalEntry.SynArg.OBJECT, count);
                     }
                     
                     case 5:{

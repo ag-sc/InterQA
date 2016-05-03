@@ -116,15 +116,15 @@ public class C_that_P_I_P_I extends QueryPattern{
 		
                 switch (currentElement) {
                     
-                	case 2 : return sqb.BuildQueryForClassInstances(elements.get(3).getActiveEntries(),flag);
+                	case 2 : return sqb.BuildQueryForClassInstances(elements.get(3).getActiveEntries(),count);
                     
-                	case 4 : return sqb.BuildQueryForClassAndProperty(c, p1, LexicalEntry.SynArg.SUBJECT,flag);  
+                	case 4 : return sqb.BuildQueryForClassAndProperty(c, p1, LexicalEntry.SynArg.SUBJECT,count);  
                     
                     
-                    case 6: return sqb.BuildQueryForClassAnd2PropertyAndIndividual(c, p1, ind1, LexicalEntry.SynArg.OBJECT,p2, LexicalEntry.SynArg.OBJECT,flag);
+                    case 6: return sqb.BuildQueryForClassAnd2PropertyAndIndividual(c, p1, ind1, LexicalEntry.SynArg.OBJECT,p2, LexicalEntry.SynArg.OBJECT,count);
                     
                   	case 7: return sqb.BuildQueryForClassAnd2PropertyAnd2Individual(c,p1,ind1,LexicalEntry.SynArg.OBJECT,p2,ind2
-                  			,LexicalEntry.SynArg.OBJECT,flag);
+                  			,LexicalEntry.SynArg.OBJECT,count);
                         
                     default: return new HashSet<>();
                 }

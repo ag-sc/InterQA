@@ -83,7 +83,7 @@ public class SpringerQueryPattern4 extends QueryPattern{
                     
 			case 1:SPARQLQueries = sqb.BuildQueryForProperty(prop_element);break;
 			
-			case 2:SPARQLQueries = sqb.BuildQueryForPropertyAndInstance(prop_element, name_literal,flag);break;
+			case 2:SPARQLQueries = sqb.BuildQueryForPropertyAndInstance(prop_element, name_literal,count);break;
 				
 			case 3:SPARQLQueries = sqb.BuildQueryForPropertyAndgYearAndNameLiteral(prop_element, gYear_literal, name_literal, LexicalEntry.SynArg.OBJECT);
                            break;

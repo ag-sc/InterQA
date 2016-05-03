@@ -5,6 +5,7 @@ import interQA.patterns.QueryPatternManager;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
+import interQA.patterns.QueryPatternFactory_DE;
 import interQA.patterns.QueryPatternFactory_EN;
 
 import java.io.*;
@@ -18,28 +19,94 @@ import java.util.regex.Pattern;
  */
 public class interQACLI {
     
+    public enum USECASE  { SPRINGER, DBPEDIA }
+    
+    
     public static void  main(String args[]){
+        
+        // SETTINGS
+        
+        USECASE usecase = USECASE.DBPEDIA;
+        Language language = Language.EN;
+        
         
         // INIT
         
-    	List<String> labels = new ArrayList<>();
-        labels.add("http://www.w3.org/2000/01/rdf-schema#label");
-        labels.add("http://lod.springer.com/data/ontology/property/confName");
-        labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
+        Lexicon lexicon = new Lexicon(language);
+        DatasetConnector dataset;
+        QueryPatternManager qm = new QueryPatternManager(); 
         
-        // Load lexicon  
-        
-        Lexicon lexicon = new Lexicon(Language.EN);
-        lexicon.load("./src/main/java/resources/springer_en.ttl");
-        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,labels);
-       
+        switch (usecase) {
+            
+            case SPRINGER: {
                 
-        // Load query patterns
+                List<String> labels = new ArrayList<>();
+                labels.add("http://www.w3.org/2000/01/rdf-schema#label");
+                labels.add("http://lod.springer.com/data/ontology/property/confName");
+                labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
+
+                // Load lexicon  
+
+                switch (language) {
+                    case EN: lexicon.load("./src/main/java/resources/springer_en.ttl"); break;
+                    case DE: lexicon.load("./src/main/java/resources/springer_de.ttl"); break;
+                }
+                
+                dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,labels);
+                
+                // Load query patterns
         
-        QueryPatternManager    qm = new QueryPatternManager(); 
-        QueryPatternFactory_EN qf = new QueryPatternFactory_EN(lexicon,dataset);
+                switch (language) {
+                    case EN: { 
+                        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(lexicon,dataset);
+                        qm.addQueryPatterns(qf_en.rollout());
+                        break;
+                    }
+                    case DE: {
+                        QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(lexicon,dataset);
+                        qm.addQueryPatterns(qf_de.rollout());
+                        break;
+                    } 
+                }
+
+                break;
+            }
+            
+            case DBPEDIA: { 
+                
+                List<String> labels = new ArrayList<>();
+                labels.add("http://www.w3.org/2000/01/rdf-schema#label");
+
+                // Load lexicon  
+
+                switch (language) {
+                    case EN: lexicon.load("./src/main/java/resources/dbpedia_en.rdf"); break;
+                    case DE: lexicon.load("./src/main/java/resources/dbpedia_de.rdf"); break;
+                }
+                
+                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,labels);
+                
+                // Load query patterns
         
-        qm.addQueryPatterns(qf.rollout());
+                switch (language) {
+                    case EN: { 
+                        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(lexicon,dataset);
+                        qm.addQueryPatterns(qf_en.rollout());
+                        break;
+                    }
+                    case DE: {
+                        QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(lexicon,dataset);
+                        qm.addQueryPatterns(qf_de.rollout());
+                        break;
+                    }
+                }
+                                
+                break;
+            }
+        }
+      
+        
+
         
         
         // RUN

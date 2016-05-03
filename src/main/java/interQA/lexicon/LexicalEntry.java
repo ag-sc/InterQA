@@ -17,14 +17,17 @@ public class LexicalEntry {
     public enum SemArg  { SUBJOFPROP, OBJOFPROP };
     public enum SynArg  { SUBJECT, OBJECT };
     public enum POS     { NOUN, VERB, ADJECTIVE, PREPOSITION };
-    public enum Feature { SINGULAR, PLURAL, PRESENT, PAST, COMPARATIVE, SUPERLATIVE };
+    public enum Feature { SINGULAR, PLURAL, PRESENT, PAST, FEMININE, MASCULINE, NEUTER, COMPARATIVE, SUPERLATIVE };
     
+    String canonicalForm;  
+    String particle;
     
-    String canonicalForm;     
     String reference; 
+    String frame;
     
     POS    pos;
-    String frame;
+
+    List<Feature> inherentFeatures;
     
     HashMap<Feature,String> forms;
     HashMap<String,List<Feature>> features;
@@ -36,12 +39,17 @@ public class LexicalEntry {
 
         forms = new HashMap<>();
         features = new HashMap<>();
+        inherentFeatures = new ArrayList<>();
         argumentMapping = new HashMap<>();
     }
     
     
     public void setCanonicalForm(String form) {
         canonicalForm = form;
+    }
+    
+    public void setParticle(String part) {
+        particle = part;
     }
     
     public void setReference(String uri) {
@@ -62,12 +70,20 @@ public class LexicalEntry {
         features.get(form).add(f);
     }
     
+    public void addInherentFeature(Feature f) {
+        inherentFeatures.add(f);
+    }
+    
     public void addArgumentMapping(SynArg syn, SemArg sem) {
         argumentMapping.put(syn,sem);
     }   
     
     public String getCanonicalForm() {
         return canonicalForm;
+    }
+    
+    public String getParticle() {
+        return particle;
     }
 
     public String getForm(Feature f) {
@@ -80,6 +96,10 @@ public class LexicalEntry {
     
     public HashMap<String,List<Feature>> getFeatures() {
         return features;
+    }
+    
+    public List<Feature> getInherentFeatures() {
+        return inherentFeatures;
     }
     
     public String getReference() {
@@ -100,11 +120,13 @@ public class LexicalEntry {
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = 7;
         hash = 43 * hash + Objects.hashCode(this.canonicalForm);
+        hash = 43 * hash + Objects.hashCode(this.particle);
         hash = 43 * hash + Objects.hashCode(this.reference);
-        hash = 43 * hash + Objects.hashCode(this.pos);
         hash = 43 * hash + Objects.hashCode(this.frame);
+        hash = 43 * hash + Objects.hashCode(this.pos);
+        hash = 43 * hash + Objects.hashCode(this.inherentFeatures);
         hash = 43 * hash + Objects.hashCode(this.forms);
         hash = 43 * hash + Objects.hashCode(this.argumentMapping);
         return hash;
@@ -122,13 +144,19 @@ public class LexicalEntry {
         if (!Objects.equals(this.canonicalForm, other.canonicalForm)) {
             return false;
         }
+        if (!Objects.equals(this.particle, other.particle)) {
+            return false;
+        }
         if (!Objects.equals(this.reference, other.reference)) {
+            return false;
+        }
+        if (!Objects.equals(this.frame, other.frame)) {
             return false;
         }
         if (this.pos != other.pos) {
             return false;
         }
-        if (!Objects.equals(this.frame, other.frame)) {
+        if (!Objects.equals(this.inherentFeatures, other.inherentFeatures)) {
             return false;
         }
         if (!Objects.equals(this.forms, other.forms)) {
@@ -139,6 +167,7 @@ public class LexicalEntry {
         }
         return true;
     }
- 
+
+
     
 }

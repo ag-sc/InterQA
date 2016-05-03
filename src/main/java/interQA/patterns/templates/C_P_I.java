@@ -61,8 +61,11 @@ public class C_P_I extends QueryPattern{
 		
             switch (currentElement) {
                 
-                case 0: {checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
-                } break;
+                case 0: { 
+                    checkHowMany(s);
+                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+                    break;
+                } 
                 case 2:((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break; 
                 case 4: ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s); break;
                 //case 5: setFeatures(5,6,s); break;
@@ -103,11 +106,11 @@ public class C_P_I extends QueryPattern{
             
             switch (currentElement) {
                 
-            	case 1:return sqb.BuildQueryForClassInstances(c.getActiveEntries(),flag);
+            	case 1:return sqb.BuildQueryForClassInstances(c.getActiveEntries(),count);
                 
-                case 3:return sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.SUBJECT,flag);
+                case 3:return sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.SUBJECT,count);
                 
-                case 5:return sqb.BuildQueryForClassAndIndividualAndProperty(c,i,p,LexicalEntry.SynArg.OBJECT,flag);
+                case 5:return sqb.BuildQueryForClassAndIndividualAndProperty(c,i,p,LexicalEntry.SynArg.OBJECT,count);
                 
             }
             

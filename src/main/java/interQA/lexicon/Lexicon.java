@@ -87,9 +87,10 @@ public class Lexicon {
                                     
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?canonicalForm ?sg ?pl ?reference WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?sg ?pl ?gender ?reference WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
-                               + " ?entry   lexinfo:partOfSpeech lexinfo:commonNoun . "
+                               + " ?entry   lexinfo:partOfSpeech lexinfo:commonNoun . " 
+                               + " OPTIONAL { ?entry lexinfo:gender ?gender } "
                                + " ?entry   lemon:canonicalForm ?form . " 
                                + " ?form    lemon:writtenRep ?canonicalForm ."
                                + " OPTIONAL { { ?entry lemon:canonicalForm ?f1 . } UNION { ?entry lemon:otherForm ?f1 . } ?f1 lemon:writtenRep ?sg . ?f1 lexinfo:number lexinfo:singular . } "
@@ -116,7 +117,14 @@ public class Lexicon {
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.NOUN);
-                           
+                        
+                        if (sol.contains("gender")) {
+                            String gender = sol.get("gender").asResource().getLocalName();
+                            //switch ()
+                            //14
+                            entry.addInherentFeature(LexicalEntry.Feature.PAST);
+                        }
+                        
                         String sg; String pl; 
                         
                         if (sol.contains("sg")) sg = sol.get("sg").asLiteral().getValue().toString();
