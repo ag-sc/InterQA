@@ -108,15 +108,17 @@ public abstract class Element {
     
     public boolean compatible(List<Feature> fs1, List<Feature> fs2) {
         
-        if (fs1.contains(Feature.SINGULAR))  return !fs2.contains(Feature.PLURAL)    || fs1.contains(Feature.PLURAL);
-        if (fs1.contains(Feature.PLURAL))    return !fs2.contains(Feature.SINGULAR)  || fs1.contains(Feature.SINGULAR);
-        if (fs1.contains(Feature.PRESENT))   return !fs2.contains(Feature.PAST)      || fs1.contains(Feature.PAST);
-        if (fs1.contains(Feature.PAST))      return !fs2.contains(Feature.PRESENT)   || fs1.contains(Feature.PRESENT);
-        if (fs1.contains(Feature.FEMININE))  return !fs2.contains(Feature.MASCULINE) && !fs2.contains(Feature.NEUTER);
-        if (fs1.contains(Feature.MASCULINE)) return !fs2.contains(Feature.FEMININE)  && !fs2.contains(Feature.NEUTER);
-        if (fs1.contains(Feature.NEUTER))    return !fs2.contains(Feature.FEMININE)  && !fs2.contains(Feature.MASCULINE);
+        boolean compatible = true;
         
-        return true;
+        if (fs1.contains(Feature.SINGULAR)  && fs2.contains(Feature.PLURAL))   compatible = false;
+        if (fs1.contains(Feature.PLURAL)    && fs2.contains(Feature.SINGULAR)) compatible = false;
+        if (fs1.contains(Feature.PRESENT)   && fs2.contains(Feature.PAST))     compatible = false;
+        if (fs1.contains(Feature.PAST)      && fs2.contains(Feature.PRESENT))  compatible = false;
+        if (fs1.contains(Feature.FEMININE)  && (fs2.contains(Feature.MASCULINE) || fs2.contains(Feature.NEUTER)))   compatible = false;
+        if (fs1.contains(Feature.MASCULINE) && (fs2.contains(Feature.FEMININE)  || fs2.contains(Feature.NEUTER)))   compatible = false;
+        if (fs1.contains(Feature.NEUTER)    && (fs2.contains(Feature.MASCULINE) || fs2.contains(Feature.FEMININE))) compatible = false;
+        
+        return compatible;
     }
 
 }

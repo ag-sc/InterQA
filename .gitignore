@@ -2,6 +2,6 @@
 /build/
 /dist/
 .DS_Store
-.class
-/target/*
+*.class
+target/
 /bin/
