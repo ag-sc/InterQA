@@ -5,6 +5,7 @@ import interQA.elements.StringElement;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -41,9 +42,9 @@ public class Are_there_any_C extends QueryPattern{
 	}
 
         @Override
-        public void updateAt(int i, String s) {
+        public void update(String s) {
             
-            if (i == 0) {
+            if (currentElement == 0) {
                 
                 ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
             }
@@ -52,6 +53,9 @@ public class Are_there_any_C extends QueryPattern{
         @Override
         public Set<String> buildSPARQLqueries() {
 
-            return sqb.BuildQueryForClassInstances(elements.get(4).getActiveEntries());
+            if (currentElement > 0) {
+                return sqb.BuildQueryForClassInstances(elements.get(4).getActiveEntries());
+            }
+            return new HashSet<>();
         }	
 }

@@ -3,7 +3,6 @@ package interQA.patterns;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import interQA.lexicon.LiteralSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +11,7 @@ import java.util.Map;
 
 import interQA.elements.*;
 import interQA.lexicon.LexicalEntry.Feature;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -21,11 +21,11 @@ public class SpringerQueryPattern5 extends QueryPattern{
 	
 	//Give me the start and end date of ISWC 2015.
 	
-	public SpringerQueryPattern5(Lexicon lexicon, InstanceSource instances,LiteralSource literals ){
+	public SpringerQueryPattern5(Lexicon lexicon, InstanceSource instances ){
 		
 		this.lexicon = lexicon;
 		this.instances = instances;
-		this.literals = literals;
+		
 		
 		init();
 	}
@@ -59,25 +59,22 @@ public class SpringerQueryPattern5 extends QueryPattern{
                 element4.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame);
 		elements.add(element4);
 		
-		LiteralElement element5 = new LiteralElement();
+		IndividualElement element5 = new IndividualElement();
 		elements.add(element5);
 		
-		LiteralElement element6 = new LiteralElement();
+		IndividualElement element6 = new IndividualElement();
 		elements.add(element6);
 		
-                StringElement element7 = new StringElement();
-                element7.add(".");
-                elements.add(element7);
 	}
 	
 	@Override
-	public void updateAt(int i,String s){
+	public void update(String s){
             
-                if (i==1) {
+                if (currentElement==1) {
                     ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
                 }
 		
-		if (i==3){
+		if (currentElement==3){
 			
 			Map<String,List<LexicalEntry>> old_element2index = elements.get(4).getIndex();
 			Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
@@ -89,13 +86,13 @@ public class SpringerQueryPattern5 extends QueryPattern{
 			elements.get(4).setIndex(new_element2index);
 		}
 		
-		if (i==4){
+		if (currentElement==4){
 			
-			elements.get(5).addToIndex(literals.getLabelLiteralByProperty(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.OBJECT));
-		}
-		if (i==5){
+			elements.get(5).addToIndex(instances.filterByPropertyForInstances(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.OBJECT));
+			}
+		if (currentElement==5){
 			
-			elements.get(6).addToIndex(literals.getLiteralByLiteral(elements.get(5).getActiveEntries()));
+			elements.get(6).addToIndex(instances.filterByInstanceForInstance(elements.get(5).getActiveEntries()));
 		}
 		
 		
@@ -108,11 +105,15 @@ public class SpringerQueryPattern5 extends QueryPattern{
 		
 		PropertyElement noun_prop1 = (PropertyElement) elements.get(2);
 		PropertyElement noun_prop2 = (PropertyElement) elements.get(4);
-		LiteralElement literal1 = (LiteralElement) elements.get(5);
-		LiteralElement literal2 = (LiteralElement) elements.get(6);
+		IndividualElement literal1 = (IndividualElement) elements.get(5);
+		IndividualElement literal2 = (IndividualElement) elements.get(6);
 		
-		return sqb.BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(noun_prop1,LexicalEntry.SynArg.SUBJECT,
-				noun_prop2,LexicalEntry.SynArg.SUBJECT, literal1, literal2);
+                if (currentElement == 6) {
+                    return sqb.BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(noun_prop1,LexicalEntry.SynArg.SUBJECT,
+            				noun_prop2,LexicalEntry.SynArg.SUBJECT, literal1, literal2);
+                }
+                
+                return new HashSet<>();
 	}
 
 }

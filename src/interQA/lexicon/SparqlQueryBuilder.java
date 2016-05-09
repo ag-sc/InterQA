@@ -8,7 +8,6 @@ import org.apache.jena.query.QueryExecutionFactory;
 
 import interQA.elements.ClassElement;
 import interQA.elements.IndividualElement;
-import interQA.elements.LiteralElement;
 import interQA.elements.PropertyElement;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,17 +62,18 @@ public class SparqlQueryBuilder {
                 + " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + classvar.getReference() + "> . }";
 	}
 	// query for SUBJOFPROP pos -- Individual has its class info and Property
-	private String queryForSUBJOFPROPinCaseIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry){
+	private String queryForSUBJOFPROPinCaseClassAndIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry){
 		return "SELECT DISTINCT ?x WHERE { "
 				+ "?x <"+vocab.rdfType+"> <"+noun_entry.getReference()+"> ."
     			+ "?x <"+nounprop_entry.getReference()+"> <"+inst_entry.getReference()+"> . }";
 	}
 	// query for OBJOFPROP pos -- Individual has its class info and Property
-	private String queryForOBJOFPROPinCaseIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry){
+	private String queryForOBJOFPROPinCaseClassAndIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry){
 		return "SELECT DISTINCT ?x WHERE { "
 				+ "?x <"+vocab.rdfType+"> <"+noun_entry.getReference()+"> ."
 				+ " <"+inst_entry.getReference()+"> <"+nounprop_entry.getReference()+"> ?x . }";
 	}
+	
 	//query for SUBJOFPROP pos -- Individual has NOT its class info ,contrary has Property
 	private String queryForSUBJOFPROPinCaseIndividualAndProperty(LexicalEntry prop_entry, LexicalEntry inst_entry ){
 
@@ -140,6 +140,8 @@ public class SparqlQueryBuilder {
 				+ "  ?uri  <"+prop2_entry.getReference()+">  "+lit2_entry.getReference()+".}";
 	}
 	
+	
+	
 	// create query to ensure whether it works or not (property (w.r.t class) and literal)
 	private String AskQueryForincasePropertyAndLiteral(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry lit_entry){
 		
@@ -189,7 +191,7 @@ public class SparqlQueryBuilder {
 		
 	}
 	
-        private String RangeAskQueryForincasePropertyAndgYearAndNameLiteral(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
+    private String RangeAskQueryForincasePropertyAndgYearAndNameLiteral(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
 		return "ASK WHERE "
 				+ "{?x <"+prop_entry.getReference()+"> ?y."
 				+label("?y",name_entry.getReference(),LabelProperties)
@@ -208,6 +210,16 @@ public class SparqlQueryBuilder {
 		return "SELECT DISTINCT ?lit1 ?lit2  { ?lit1  <"+prop_entry.getReference()+"> ?x.";
 	}
 	
+	private String queryForSUBJOFPROPinCaseClassPropertyAndInstanceBeginning(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry inst_entry){
+		return "SELECT DISTINCT ?lit1 ?lit2  { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
+				+ ""+inst_entry.getReference()+"  <"+prop_entry.getReference()+"> ?lit1.";
+	}
+	
+	private String queryForOBJOFPROPinCaseClassPropertyAndInstanceBeginning(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry inst_entry){
+		return "SELECT DISTINCT ?lit1 ?lit2  { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
+				+ "?lit1  <"+prop_entry.getReference()+"> "+inst_entry.getReference()+".";
+	}
+	
 	private String AskQueryForSUBJOFPROPinCasePropertyBeginning(LexicalEntry prop_entry){
 		return "ASK WHERE { ?x  <"+prop_entry.getReference()+"> ?lit1.";
 	}
@@ -216,6 +228,16 @@ public class SparqlQueryBuilder {
 		return "ASK WHERE { ?lit1  <"+prop_entry.getReference()+"> ?x.";
 	}
 
+	private String AskQueryForSUBJOFPROPinCaseClassPropertyAndInstanceBeginning(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry inst_entry){
+		return "ASK WHERE { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
+				+ ""+inst_entry+"  <"+prop_entry.getReference()+"> ?lit1.";
+	}
+	
+	private String AskQueryForOBJOFPROPinCaseClassPropertyAndInstanceBeginning(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry inst_entry){
+		return "ASK WHERE { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
+				+ "?lit1  <"+prop_entry.getReference()+"> "+inst_entry+".";
+	}
+	
 	private String queryForSUBJOFPROPinCasePropertyInMiddle(LexicalEntry prop_entry){
 		return "?x <"+prop_entry.getReference()+"> ?lit2.";
 	}
@@ -224,8 +246,76 @@ public class SparqlQueryBuilder {
 		return "?lit2 <"+prop_entry.getReference()+"> ?x. ";
 	}
 	
-
+	private String queryForSUBJOFPROPinCasePropertyAndInstanceInMiddle(LexicalEntry prop_entry,LexicalEntry inst_entry){
+		return " "+inst_entry+" <"+prop_entry.getReference()+"> ?lit2.";
+	}
 	
+	private String queryForOBJOFPROPinCasePropertyAndInstanceInMiddle(LexicalEntry prop_entry,LexicalEntry inst_entry){
+		return " ?lit2  <"+prop_entry.getReference()+"> "+inst_entry+". ";
+	}
+	
+	private String queryForSUBJOFPROPinCasePropertyAndInstance(LexicalEntry property_entry,LexicalEntry inst_entry){
+		return "SELECT DISTINCT ?x WHERE {"
+                                   + " <" + inst_entry.getReference() + "> <" + property_entry.getReference() + "> ?x . }";
+	}
+
+	private String queryForOBJOFPROPinCasePropertyAndInstance(LexicalEntry property_entry,LexicalEntry inst_entry){
+		return "SELECT DISTINCT ?x WHERE {"
+                + " ?x <" + property_entry.getReference() + "> <" + inst_entry.getReference() + "> . }";
+	}
+	
+	private String queryForSUBJOFPROPinCaseProperty(LexicalEntry property_entry){
+
+		return "SELECT DISTINCT ?x WHERE {"
+                                   + " ?y <" + property_entry.getReference() + "> ?x . }";
+	}
+	
+	private String queryForOBJOFPROPinCasePropertyAndInstance(LexicalEntry property_entry){
+		return "SELECT DISTINCT ?x WHERE {"
+                + " ?x <" + property_entry.getReference() + "> ?y . }";
+	}
+	
+	public Set<String> BuildQueryForProperty(PropertyElement property_element){
+		Set<String> queries = new HashSet<>();
+		for (LexicalEntry property_entry : property_element.getActiveEntries()) {
+
+            switch (property_entry.getSemArg(LexicalEntry.SynArg.OBJECT)) {
+
+               case SUBJOFPROP: 
+                         queries.add(queryForSUBJOFPROPinCaseProperty(property_entry));
+                    break;
+               case OBJOFPROP: 
+                         queries.add(queryForOBJOFPROPinCasePropertyAndInstance(property_entry));
+                    break;
+            }
+       }
+		
+		
+		return queries;
+	}
+	
+	public Set<String> BuildQueryForPropertyAndInstance(PropertyElement property_element,IndividualElement instance_element){
+		Set<String> queries = new HashSet<>();
+		for (LexicalEntry property_entry : property_element.getActiveEntries()) {
+
+            switch (property_entry.getSemArg(LexicalEntry.SynArg.OBJECT)) {
+
+               case SUBJOFPROP: 
+                    for (LexicalEntry inst_entry : instance_element.getActiveEntries()) {
+                         queries.add(queryForSUBJOFPROPinCasePropertyAndInstance(property_entry,inst_entry));
+                    }
+                    break;
+               case OBJOFPROP: 
+                    for (LexicalEntry inst_entry : instance_element.getActiveEntries()) {
+                         queries.add(queryForOBJOFPROPinCasePropertyAndInstance(property_entry,inst_entry));
+                    }
+                    break;
+            }
+       }
+		
+		
+		return queries;
+	}
 	
 	public Set<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries){
 		
@@ -234,7 +324,6 @@ public class SparqlQueryBuilder {
 			queries.add(queryForClassInstances(class_entry));
 		return queries;
 	}
-	
 	//without class IRI
 	public Set<String> BuildQueryForIndividualAndPropery(IndividualElement instance_elements,PropertyElement property_elements,
 LexicalEntry.SynArg syn){
@@ -269,7 +358,7 @@ LexicalEntry.SynArg syn){
 		
 	}
 	//with class IRI of Instances
-	public Set<String> BuildQueryForIndividualAndProperty(ClassElement class_elements,IndividualElement instance_elements,
+	public Set<String> BuildQueryForClassAndIndividualAndProperty(ClassElement class_elements,IndividualElement instance_elements,
 PropertyElement property_elements,LexicalEntry.SynArg syn){
 		
 		Set<String> queries = new HashSet<>();
@@ -281,12 +370,12 @@ PropertyElement property_elements,LexicalEntry.SynArg syn){
 					
 				case SUBJOFPROP:
 					for(LexicalEntry inst_entry : instance_elements.getActiveEntries()){
-					queries.add(queryForSUBJOFPROPinCaseIndividualAndProperty(noun_entry,nounprop_entry,inst_entry));
+					queries.add(queryForSUBJOFPROPinCaseClassAndIndividualAndProperty(noun_entry,nounprop_entry,inst_entry));
 					}
 					break;
 				case OBJOFPROP:
 					for(LexicalEntry inst_entry : instance_elements.getActiveEntries()){
-						queries.add(queryForOBJOFPROPinCaseIndividualAndProperty(noun_entry,nounprop_entry,inst_entry));
+						queries.add(queryForOBJOFPROPinCaseClassAndIndividualAndProperty(noun_entry,nounprop_entry,inst_entry));
 					}
 					
 					break;
@@ -407,9 +496,17 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
 		return queries;
 	}
 
+	public Set<String> BuildQueryForClassPropertyAndInstance(ClassElement class_elements, PropertyElement property_element,IndividualElement instance_element,
+			LexicalEntry.SynArg syn){
+		
+		Set<String> queries = new HashSet<>();
+		
+		
+		return queries;
+	}
 	
 	//SPRINGER
-	public Set<String> BuildQueryForClassAndPropertyAndLiteral(ClassElement class_elements,PropertyElement property_elements,
+	/*public Set<String> BuildQueryForClassAndPropertyAndLiteral(ClassElement class_elements,PropertyElement property_elements,
 LiteralElement literal_elements){
 		
 		Set<String> queries = new HashSet<>();
@@ -427,28 +524,70 @@ LiteralElement literal_elements){
 		
 		return queries;
 	}
+	  Note : It will be deleted after being checked whether useful or not
+	*/ 
 	
-	public Set<String> BuildQueryForClassAnd2PropertyAnd2Literal(ClassElement class_elements,PropertyElement property1_elements,
-			LiteralElement literal1_elements,PropertyElement property2_elements,LiteralElement literal2_elements){
+	public Set<String> BuildQueryForClassAnd2PropertyAndIndividual(ClassElement class_elements,PropertyElement property1_elements,
+			IndividualElement indv1_elements,LexicalEntry.SynArg syn1,PropertyElement property2_elements,LexicalEntry.SynArg syn2){
 		Set<String> queries = new HashSet<>();
 		String query ="";
 		String check_query = "";
 		
 		for(LexicalEntry class_element: class_elements.getActiveEntries()){
 			for(LexicalEntry property1_element: property1_elements.getActiveEntries()){
-				for(LexicalEntry literal1_element:literal1_elements.getActiveEntries()){
-					for(LexicalEntry property2_element:property2_elements.getActiveEntries()){
-						for(LexicalEntry literal2_element : literal2_elements.getActiveEntries()){
-							query= queryForincase2PropertyAnd2Literal(class_element,property1_element,literal1_element,
-									property2_element,literal2_element);
-							check_query=AskQueryincase2PropertyAnd2Literal(class_element,property1_element,literal1_element,
-									property2_element,literal2_element);
+				
+				switch(property1_element.getSemArg(syn1)){
+					
+					case SUBJOFPROP:
+						
+						for(LexicalEntry indv1_element:indv1_elements.getActiveEntries()){
+							
+							query = queryForSUBJOFPROPinCaseClassPropertyAndInstanceBeginning(class_element,property1_element,indv1_element);
+							check_query = AskQueryForSUBJOFPROPinCaseClassPropertyAndInstanceBeginning(class_element,property1_element,indv1_element);
+							
+							for(LexicalEntry property2_element:property2_elements.getActiveEntries()){
+								
+								switch(property2_element.getSemArg(syn2)){
+									
+									case SUBJOFPROP:
+										query += queryForSUBJOFPROPinCasePropertyInMiddle(property2_element);
+										check_query+= queryForSUBJOFPROPinCasePropertyInMiddle(property2_element);
+									case OBJOFPROP:
+										query += queryForOBJOFPROPinCasePropertyInMiddle(property2_element);
+										check_query+= queryForOBJOFPROPinCasePropertyInMiddle(property2_element);
+								}
+							}
 						}
+						
+					case OBJOFPROP:
+						
+						for(LexicalEntry indv1_element:indv1_elements.getActiveEntries()){
+
+							query = queryForOBJOFPROPinCaseClassPropertyAndInstanceBeginning(class_element,property1_element,indv1_element);
+							check_query = AskQueryForOBJOFPROPinCaseClassPropertyAndInstanceBeginning(class_element,property1_element,indv1_element);
+							
+							for(LexicalEntry property2_element:property2_elements.getActiveEntries()){
+								switch(property2_element.getSemArg(syn2)){
+								
+										case SUBJOFPROP:
+											query += queryForSUBJOFPROPinCasePropertyInMiddle(property2_element);
+											check_query+= queryForSUBJOFPROPinCasePropertyInMiddle(property2_element);
+										case OBJOFPROP:
+											query += queryForOBJOFPROPinCasePropertyInMiddle(property2_element);
+											check_query+= queryForOBJOFPROPinCasePropertyInMiddle(property2_element);
+							}
+								
+							}
+						}
+				
+				}
+						query+= "}";
+						check_query+="}";
+				
 						if(!query.isEmpty() && SPARQLQueryValidator(check_query)) queries.add(query);
 					}
 				}
-			}
-		}
+		
 		
 		
 		
@@ -457,8 +596,87 @@ LiteralElement literal_elements){
 	}
 	
 	
-	public Set<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,LiteralElement gYear_elements,
-LiteralElement name_elements, LexicalEntry.SynArg syn){
+	public Set<String> BuildQueryForClassAnd2PropertyAnd2Individual(ClassElement class_elements,PropertyElement property1_elements,
+			IndividualElement indv1_elements,LexicalEntry.SynArg syn1,PropertyElement property2_elements,IndividualElement indv2_elements
+			,LexicalEntry.SynArg syn2){
+		Set<String> queries = new HashSet<>();
+		String query ="";
+		String check_query = "";
+		
+		for(LexicalEntry class_element: class_elements.getActiveEntries()){
+			for(LexicalEntry property1_element: property1_elements.getActiveEntries()){
+				
+				switch(property1_element.getSemArg(syn1)){
+					
+					case SUBJOFPROP:
+						
+						for(LexicalEntry indv1_element:indv1_elements.getActiveEntries()){
+							
+							query = queryForSUBJOFPROPinCaseClassPropertyAndInstanceBeginning(class_element,property1_element,indv1_element);
+							check_query = AskQueryForSUBJOFPROPinCaseClassPropertyAndInstanceBeginning(class_element,property1_element,indv1_element);
+							
+							for(LexicalEntry property2_element:property2_elements.getActiveEntries()){
+								
+								switch(property2_element.getSemArg(syn2)){
+									
+									case SUBJOFPROP:
+										for(LexicalEntry indv2_element:indv2_elements.getActiveEntries()){
+											query += queryForSUBJOFPROPinCasePropertyAndInstanceInMiddle(property2_element,indv2_element);
+											check_query+= queryForSUBJOFPROPinCasePropertyAndInstanceInMiddle(property2_element,indv2_element);
+										}
+										
+									case OBJOFPROP:
+										for(LexicalEntry indv2_element:indv2_elements.getActiveEntries()){
+											query += queryForOBJOFPROPinCasePropertyAndInstanceInMiddle(property2_element,indv2_element);
+											check_query+= queryForOBJOFPROPinCasePropertyAndInstanceInMiddle(property2_element,indv2_element);
+										}
+								}
+							}
+						}
+						
+					case OBJOFPROP:
+						
+						for(LexicalEntry indv1_element:indv1_elements.getActiveEntries()){
+
+							query = queryForOBJOFPROPinCaseClassPropertyAndInstanceBeginning(class_element,property1_element,indv1_element);
+							check_query = AskQueryForOBJOFPROPinCaseClassPropertyAndInstanceBeginning(class_element,property1_element,indv1_element);
+							
+							for(LexicalEntry property2_element:property2_elements.getActiveEntries()){
+								switch(property2_element.getSemArg(syn2)){
+								
+										case SUBJOFPROP:
+											for(LexicalEntry indv2_element:indv2_elements.getActiveEntries()){
+												query += queryForSUBJOFPROPinCasePropertyAndInstanceInMiddle(property2_element,indv2_element);
+												check_query+= queryForSUBJOFPROPinCasePropertyAndInstanceInMiddle(property2_element,indv2_element);
+											}
+										case OBJOFPROP:
+											for(LexicalEntry indv2_element:indv2_elements.getActiveEntries()){
+												query += queryForOBJOFPROPinCasePropertyAndInstanceInMiddle(property2_element,indv2_element);
+												check_query+= queryForOBJOFPROPinCasePropertyAndInstanceInMiddle(property2_element,indv2_element);
+											}
+							}
+								
+							}
+						}
+				
+				}
+						query+= "}";
+						check_query+="}";
+				
+						if(!query.isEmpty() && SPARQLQueryValidator(check_query)) queries.add(query);
+					}
+				}
+		
+		
+		
+		
+		return queries;
+		
+	}
+	
+	
+	public Set<String> BuildQueryForPropertyAndgYearAndNameLiteral(PropertyElement property_elements,IndividualElement gYear_elements,
+IndividualElement name_elements, LexicalEntry.SynArg syn){
 		
 		Set<String> queries = new HashSet<>();
 		String query = "";
@@ -473,10 +691,12 @@ LiteralElement name_elements, LexicalEntry.SynArg syn){
                                         case SUBJOFPROP:
                                             query = DomainqueryForincasegYearNameandProperty(gYear_element,name_element,property_element);
                                             check_query = DomainAskQueryForincasePropertyAndgYearAndNameLiteral(gYear_element,name_element,property_element);
+                                            System.out.println(check_query);
                                             break;
                                         case OBJOFPROP:
                                             query = RangequeryForincasegYearNameandProperty(gYear_element,name_element,property_element);
                                             check_query = RangeAskQueryForincasePropertyAndgYearAndNameLiteral(gYear_element,name_element,property_element);
+                                            System.out.println(check_query);
                                             break;
  			}
 					
@@ -490,7 +710,7 @@ LiteralElement name_elements, LexicalEntry.SynArg syn){
 	}
 
 	public Set<String> BuildQueryFor2PropertyAndNameLiteralAndGYearLiteral(PropertyElement property_elements1,LexicalEntry.SynArg syn1,
-			PropertyElement property_elements2,LexicalEntry.SynArg syn2,LiteralElement name_literals,LiteralElement gYear_literals){
+			PropertyElement property_elements2,LexicalEntry.SynArg syn2,IndividualElement name_literals,IndividualElement gYear_literals){
 		
 		Set<String> queries = new HashSet<>();
 		

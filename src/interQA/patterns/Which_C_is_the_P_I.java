@@ -58,35 +58,35 @@ public class Which_C_is_the_P_I extends QueryPattern {
 		
             IndividualElement element5 = new IndividualElement();
             elements.add(element5);	
-		
-            StringElement element6 = new StringElement();
-            element6.add("?");
-            elements.add(element6);
 	}
     
     @Override
-    public void updateAt(int i,String s){
+    public void update(String s){
     	    	
-    	if(i==1){
+        switch (currentElement) {
+            
+            case 1: {
     	
-            setFeatures(1,2,s);
-            setFeatures(1,3,s);
+                setFeatures(1,2,s);
+                setFeatures(1,3,s);
 
-            Map<String,List<LexicalEntry>> old_element2index = elements.get(4).getIndex();
-            Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
-                
-            for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
-                                    
-                new_element2index.putAll(instances.filterByClassForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+                Map<String,List<LexicalEntry>> old_element2index = elements.get(4).getIndex();
+                Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+
+                for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
+
+                    new_element2index.putAll(instances.filterByClassForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+                }
+                elements.get(4).addToIndex(new_element2index);
+                break;
             }
-            elements.get(4).addToIndex(new_element2index);
-    	}
         
-    	if (i==4) {
+            case 4: {
     		
-            elements.get(5).addToIndex(instances.filterByPropertyForInstances(elements.get(4).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                elements.get(5).addToIndex(instances.filterByPropertyForInstances(elements.get(4).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                break;
+            }
         }
-    	
   }
     
     @Override
@@ -96,8 +96,16 @@ public class Which_C_is_the_P_I extends QueryPattern {
     	PropertyElement nounprop = (PropertyElement) elements.get(4);
     	IndividualElement indi = (IndividualElement) elements.get(5);
     	 
+        switch (currentElement) {
+            
+        	case 1:return sqb.BuildQueryForClassInstances(noun.getActiveEntries());
+            
+        	case 4: return sqb.BuildQueryForClassAndProperty(noun, nounprop, LexicalEntry.SynArg.OBJECT);
     	
-    	return sqb.BuildQueryForIndividualAndProperty(noun, indi, nounprop,LexicalEntry.SynArg.OBJECT);
+            case 5: return sqb.BuildQueryForClassAndIndividualAndProperty(noun, indi, nounprop,LexicalEntry.SynArg.OBJECT);
+                
+            default: return new HashSet<>();
+        }
     }
     
 }

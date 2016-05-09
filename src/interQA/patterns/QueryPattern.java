@@ -5,7 +5,6 @@ import interQA.elements.Element;
 import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import interQA.lexicon.LiteralSource;
 import interQA.lexicon.SparqlQueryBuilder;
 
 import java.util.ArrayList;
@@ -22,11 +21,10 @@ public abstract class QueryPattern {
         Lexicon lexicon;
         
         InstanceSource instances;
-        LiteralSource literals;
         
 	List<Element> elements = new ArrayList<>();
         
-	private int currentElement = -1;    
+	public int currentElement = -1;    
     
         
         public void init() {
@@ -50,7 +48,7 @@ public abstract class QueryPattern {
                     if (rest == null) { return false; }
                                        
                     currentElement = i;
-                    updateAt(currentElement,input.replace(rest,""));
+                    update(input.replace(rest,""));
 
 		    input = rest;
                     i++;                   
@@ -74,7 +72,7 @@ public abstract class QueryPattern {
         
         // update(int i) and buildSPARQLqueries() is where the pattern-specific magic happens
         
-        public void updateAt(int i,String parsed) {
+        public void update(String parsed) {
             // Needs to be overwritten by all concrete query patterns.
         }
         

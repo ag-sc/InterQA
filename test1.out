@@ -1,0 +1,50 @@
+Current sentence: 
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+1: wieviel
+2: wer ist die
+3: zeig mir
+4: wieviele
+5: wer war die
+6: was war der
+7: welches
+8: welcher
+9: gib mir die
+10: welche
+11: was ist der
+12: wer
+13: gib mir das
+14: gib mir alle
+15: how many
+16: wer waren die
+17: was ist die
+18: gib mir
+19: wer ist der
+20: was waren die
+21: zeige alle
+22: was war das
+23: wer war der
+24: gib mir den
+25: was
+26: was ist das
+27: gibt es
+28: was war die
+Number of patterns available: [C_P_I, C_P_I_P_I, C_P_I, C_P_I_P_I, SpringerQueryPattern4, C, SpringerQueryPattern5, P_I]
+Current sentence:  zeig mir
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+1: Konferenz
+2: Konferenzen
+3: Proceedings
+Number of patterns available: [C_P_I, C_P_I_P_I, C_P_I, C_P_I_P_I, C]
+Current sentence:  zeig mir Konferenzen
+SPARQL queries:
+SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
+SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
+SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
+SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
+SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+1: der
+2: die
+3: das
+Number of patterns available: [C_P_I, C_P_I_P_I, C_P_I_P_I]
+Current sentence:  zeig mir Konferenzen das

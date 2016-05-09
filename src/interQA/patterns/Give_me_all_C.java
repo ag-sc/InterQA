@@ -6,6 +6,7 @@ import interQA.lexicon.InstanceSource;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -52,16 +53,12 @@ public class Give_me_all_C extends QueryPattern {
             ClassElement element2 = new ClassElement(); 
             element2.addEntries(lexicon, LexicalEntry.POS.NOUN, null);
             elements.add(element2);
-            
-            StringElement element3 = new StringElement();
-            element3.add(".");
-            elements.add(element3);
         }
 
         @Override 
-        public void updateAt(int i, String s) {
+        public void update(String s) {
             
-            if (i==1) {
+            if (currentElement == 1) {
             
                 ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
             }
@@ -70,7 +67,11 @@ public class Give_me_all_C extends QueryPattern {
         @Override
         public Set<String> buildSPARQLqueries() {
 
-            return sqb.BuildQueryForClassInstances(elements.get(2).getActiveEntries());
+            if (currentElement >= 2) {
+                return sqb.BuildQueryForClassInstances(elements.get(2).getActiveEntries());
+            }
+            
+            return new HashSet<>();
         }
 
 }

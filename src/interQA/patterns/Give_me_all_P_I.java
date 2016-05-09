@@ -62,23 +62,20 @@ public class Give_me_all_P_I extends QueryPattern {
 		
             IndividualElement element3 = new IndividualElement(); 
             elements.add(element3);
-            
-            StringElement element4 = new StringElement();
-            element4.add(".");
-            elements.add(element4);
 	}
 
         @Override
-        public void updateAt(int i,String s) {
+        public void update(String s) {
             
-            if (i==1) {
+            switch (currentElement) {
+                
+                case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s); break;
             
-                ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s);
-            }
-            
-            if (i == 2) {
+                case 2: {
 
-                elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.OBJECT));                  
+                    elements.get(3).addToIndex(instances.filterByPropertyForInstances(elements.get(2).getActiveEntries(), LexicalEntry.SynArg.OBJECT));  
+                    break;
+                }
             }
         }        
         
@@ -87,28 +84,17 @@ public class Give_me_all_P_I extends QueryPattern {
             
             Set<String> queries = new HashSet<>();
             
-            ClassElement  noun     = (ClassElement)  elements.get(2);
+            PropertyElement noun = (PropertyElement) elements.get(2);
             IndividualElement instance = (IndividualElement) elements.get(3);
                  
-            for (LexicalEntry noun_entry : noun.getActiveEntries()) {
+            switch (currentElement) {
                 
-                 switch (noun_entry.getSemArg(LexicalEntry.SynArg.OBJECT)) {
-                     
-                    case SUBJOFPROP: 
-                         for (LexicalEntry inst_entry : instance.getActiveEntries()) {
-                              queries.add("SELECT DISTINCT ?x WHERE {"
-                                        + " <" + inst_entry.getReference() + "> <" + noun_entry.getReference() + "> ?x . }");
-                         }
-                         break;
-                    case OBJOFPROP: 
-                         for (LexicalEntry inst_entry : instance.getActiveEntries()) {
-                              queries.add("SELECT DISTINCT ?x WHERE {"
-                                        + " ?x <" + noun_entry.getReference() + "> <" + inst_entry.getReference() + "> . }");
-                         }
-                         break;
-                 }
+                case 2: return sqb.BuildQueryForProperty(noun);
+                
+                case 3: return sqb.BuildQueryForPropertyAndInstance(noun, instance);
+                
+                
+                default: return new HashSet<>();
             }
-		
-            return queries;
 	}
 }

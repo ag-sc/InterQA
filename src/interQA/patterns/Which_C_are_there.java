@@ -8,6 +8,7 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Which_C_are_there extends QueryPattern {
@@ -47,24 +48,19 @@ public class Which_C_are_there extends QueryPattern {
             element2.add("exist");
             element2.add("do you know");
             elements.add(element2);
-
-            StringElement element3 = new StringElement();
-            element3.add("?");
-            elements.add(element3);
 	}
 	
         @Override
-        public void updateAt(int i, String s) {
+        public void update(String s) {
             
-            if (i == 1) {
-                
-                setFeatures(1,2,s);
-            }
+            if (currentElement == 1) setFeatures(1,2,s);
         }
         
 	@Override
 	public Set<String> buildSPARQLqueries() {
 	       
-            return sqb.BuildQueryForClassInstances(elements.get(1).getActiveEntries());
+            if (currentElement == 2) return sqb.BuildQueryForClassInstances(elements.get(1).getActiveEntries());
+            
+            return new HashSet<>();
 	}	
 }

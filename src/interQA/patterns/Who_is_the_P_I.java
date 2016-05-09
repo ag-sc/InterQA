@@ -60,23 +60,20 @@ public class Who_is_the_P_I extends QueryPattern{
                 ClassElement element4 = new ClassElement();
                 element4.addEntries(lexicon, LexicalEntry.POS.NOUN, null);
                 elements.add(element4);
-
-                StringElement element5 = new StringElement();
-                element5.add("?");
-                elements.add(element5);
             }
 	        
             @Override
-            public void updateAt(int i,String s) {
-			
-                if (i == 1) {
+            public void update(String s) {
+		
+                switch (currentElement) {
                 
-                    ((StringElement) elements.get(1)).transferFeatures(elements.get(3),s);
-                }
+                    case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(3),s); break;
                 
-                if (i==4){
+                    case 4: {
 					
-                    elements.get(6).addToIndex(instances.filterByPropertyForInstances(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.OBJECT));       
+                        elements.get(6).addToIndex(instances.filterByPropertyForInstances(elements.get(4).getActiveEntries(),LexicalEntry.SynArg.OBJECT)); 
+                        break;
+                    }
 		}
             }
 
@@ -85,9 +82,15 @@ public class Who_is_the_P_I extends QueryPattern{
 								
 		PropertyElement nounpos1 = (PropertyElement) elements.get(4);
 		ClassElement nounclass = (ClassElement) elements.get(6);
-						
-                return sqb.BuildQueryForClassAndProperty(nounclass, nounpos1, LexicalEntry.SynArg.OBJECT);
-				
+			
+                switch (currentElement) {
+                
+                case 3: return sqb.BuildQueryForProperty(nounpos1);
+                    
+                    case 4: return sqb.BuildQueryForClassAndProperty(nounclass, nounpos1, LexicalEntry.SynArg.OBJECT);
+                        
+                    default: return new HashSet<>();
+                }
             }
 			
 }
