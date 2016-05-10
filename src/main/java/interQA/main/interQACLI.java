@@ -141,6 +141,33 @@ public class interQACLI {
         
         List<String> opts = null;
         List<String> queries = null;
+        //Select interaction mode
+        System.out.println("Welcome to interQACLI");
+        int interMode = 0;
+        do {
+            System.out.println("Choose the interaction way:");
+            System.out.println("1) Number-based.");
+            System.out.println("2) String-based.");
+            System.out.println("Type 1 or 2 and press Enter");
+            System.out.print("My selection:");
+            try {
+                if (scanner.hasNextInt()) {//Typed an int
+                    int num = scanner.nextInt(); //If you press 1+Enter, the Enter (a \n character) keeps in the scanner
+                    scanner.skip(Pattern.compile(".*\\s")); //Skips all that finishes with a \s (whitespace character): [ \t\n\x0B\f\r]
+                    if (num != 1 && num != 2) { //INvalid num
+                        System.out.println("Please, select a valid number");
+                        throw (new NumberFormatException());
+                    } else { //Valid num
+                        System.out.println("Thanks!.");
+                        interMode = num;
+                    }
+                } else { //Typed a non-int
+
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
+            }
+        }while(interMode == 0);
         
         do {
             System.out.println("Current sentence: " + sbWholeSentenceExternal.toString());
@@ -166,35 +193,71 @@ public class interQACLI {
                 System.out.println(index++ + ": " + str);
             }
             int num = 0;
-            while (true) {
-                try {
-                    if (scanner.hasNextInt()){
-                        num = scanner.nextInt(); //If you press 1+Enter, the Enter (a \n character) keeps in the scanner
-                        scanner.skip(Pattern.compile(".*\\s")); //Skips all that finishes with a whitespace character: [ \t\n\x0B\f\r]
-                        if (num < 1 || num > opts.size()) {
-                            System.out.println("Please, select a valid number");
-                            throw(new NumberFormatException());
-                        }
-                    }else{
-                        if (scanner.hasNextLine()) {
-                            String comm = scanner.nextLine();
-                            if (comm.equals("q") || comm.equals("d")) {
-                                if (comm.equals("q")) {
-                                    System.exit(0);
+             while (true) {
+                if (interMode == 1) { //Interaction by means of numbers
+                    System.out.println("Choose one option (or 'q' to quit, 'd' to delete the last selection):");
+                    try{
+                        if (scanner.hasNextInt()) {
+                            num = scanner.nextInt(); //If you press 1+Enter, the Enter (a \n character) keeps in the scanner
+                            scanner.skip(Pattern.compile(".*\\s")); //Skips all that finishes with a \s (whitespace character): [ \t\n\x0B\f\r]
+                            if (num < 1 || num > opts.size()) {
+                                System.out.println("Please, select a valid number");
+                                throw (new NumberFormatException());
+                            }
+                        } else {
+                            if (scanner.hasNextLine()) {
+                                String comm = scanner.nextLine();
+                                if (comm.equals("q") || comm.equals("d")) {
+                                    if (comm.equals("q")) {
+                                        System.exit(0);
+                                    }
+                                    if (comm.equals("d")) {
+                                        num = -1;
+                                    }
+                                } else {
+                                    System.out.println("Invalid command");
+                                    throw (new NumberFormatException());
                                 }
-                                if (comm.equals("d")) {
-                                    num = -1;
-                                }
-                            }else {
-                                System.out.println("Invalid command");
-                                throw(new NumberFormatException());
                             }
                         }
+                        break;
+                    } catch (NumberFormatException e) {
+                        //if () = Integer.parseInt(scanner.nextLine());
+                        System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
                     }
-                    break;
-                } catch (NumberFormatException e) {
-                    //if () = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
+                }
+                if (interMode == 2) { //Interaction by means of strings
+                    System.out.println("Type in one option (or 'q' to quit, 'd' to delete the last selection):");
+                    try{
+                        if (scanner.hasNextLine()) { //This is always true
+                            String str = scanner.nextLine(); //Removes the trailing \n
+                            //scanner.skip(Pattern.compile(".*\\s")); //Skips all that finishes with a \s (whitespace character): [ \t\n\x0B\f\r]
+                            if(opts.contains(str)){ //If the str is in the list of options
+                                num = 1 + opts.indexOf(str);
+                            }else{
+                                //Check if it is a command
+                                if (str.equals("q") || str.equals("d")) {
+                                    if (str.equals("q")) {
+                                        System.exit(0);
+                                    }
+                                    if (str.equals("d")) {
+                                        num = -1;
+                                    }
+                                } else {
+                                    System.out.println("String not available in the options list. Please, type a valid string");
+                                    /**
+                                     * WARNING. If the options list has a "d" or "q" element, we will have an ambiguity:
+                                     * We do not know if you mean a command or an option.
+                                     * By now, we will assume that you mean an option.
+                                     */
+                                }
+                            }
+                        }
+                        break;
+                    } catch (NumberFormatException e) {
+                        //if () = Integer.parseInt(scanner.nextLine());
+                        System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
+                    }
                 }
 
             }
@@ -216,8 +279,9 @@ public class interQACLI {
                 sbWholeSentenceExternal.append(" " + lastSelection);
             }
             List<String> avlPats = qm.userSentence(sbWholeSentenceInternal.toString());
-            System.out.println("Number of patterns available: " + avlPats.toString());
+            System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
         }while (opts.size() != 0);
+
 
     }
 }
