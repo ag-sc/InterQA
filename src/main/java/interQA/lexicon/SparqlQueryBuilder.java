@@ -82,23 +82,23 @@ public class SparqlQueryBuilder {
         private String countFlag(boolean flag,String var){
             
             if(flag==true){
-                return "COUNT(?"+var+")";
+                return "COUNT(DISTINCT ?"+var+")";
             }
-            else return  "?"+var;
+            else return  "DISTINCT ?"+var;
          
         } 
 	 
 	 // query to reach Instances of a Class
 	private String queryForClassInstances(LexicalEntry classvar,boolean flag){
             
-            return "SELECT DISTINCT "+countFlag(flag,"x")+" WHERE { "
+            return "SELECT "+countFlag(flag,"x")+" WHERE { "
             + " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + classvar.getReference() + "> . }";
 	}
 	// query for SUBJOFPROP pos -- Individual has its class info and Property
 	private String queryForSUBJOFPROPinCaseClassAndIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry,
                             boolean flag){
                            
-		return "SELECT DISTINCT "+countFlag(flag,"x")+" WHERE { "
+		return "SELECT "+countFlag(flag,"x")+" WHERE { "
 				+ "?x <"+vocab.rdfType+"> <"+noun_entry.getReference()+"> ."
     			+ "?x <"+nounprop_entry.getReference()+"> "+inst_entry.getReference()+" . }";
 	}
@@ -106,7 +106,7 @@ public class SparqlQueryBuilder {
 	private String queryForOBJOFPROPinCaseClassAndIndividualAndProperty(LexicalEntry noun_entry,LexicalEntry nounprop_entry,LexicalEntry inst_entry,
                     boolean flag){
             
-		return "SELECT DISTINCT "+countFlag(flag,"x")+" WHERE { "
+		return "SELECT  "+countFlag(flag,"x")+" WHERE { "
 				+ "?x <"+vocab.rdfType+"> <"+noun_entry.getReference()+"> ."
 				+ " "+inst_entry.getReference()+" <"+nounprop_entry.getReference()+"> ?x . }";
 	}
@@ -142,14 +142,14 @@ public class SparqlQueryBuilder {
 	private String queryForSUBJOFPROPinCaseClassAndProperty(LexicalEntry class_entry,LexicalEntry prop_entry,boolean flag){
 		
             
-		return "SELECT DISTINCT "+countFlag(flag,"x")+" {"
+		return "SELECT "+countFlag(flag,"x")+" {"
 				+ " ?a  <" + vocab.rdfType + ">  <" + class_entry.getReference() + "> ."
 				+ " ?a  <" + prop_entry.getReference() + "> ?x . }";
 	}
 	//query for OBJOFPROP pos -- There is a Class and a Property
 	private String queryForOBJOFPROPinCaseClassAndProperty(LexicalEntry class_entry,LexicalEntry prop_entry,boolean flag){
 		
-		return "SELECT DISTINCT "+countFlag(flag,"x")+" {"
+		return "SELECT  "+countFlag(flag,"x")+" {"
 				+ " ?a  <" + vocab.rdfType + ">  <" + class_entry.getReference() + "> ."
 				+ " ?x  <" + prop_entry.getReference() + "> ?a . }"; 
 	}
@@ -161,23 +161,46 @@ public class SparqlQueryBuilder {
 				+ " ?a  <" + vocab.rdfType + ">  <" + class_entry.getReference() + "> ."
 				+ " ?a  <" + prop_entry1.getReference() + "> ?x . ";
 	}
-	// query for SUBOFPROP pos for first property -- two property case
+	// query for OBOFPROP pos for first property -- two property case
 	private String queryForOBJOFPROPinCaseClassAndPropertyBeginning(LexicalEntry class_entry,LexicalEntry prop_entry1){
 		return "SELECT DISTINCT ?x ?y {"
 				+ " ?a  <" + vocab.rdfType + ">  <" + class_entry.getReference() + "> ."
 				+ " ?x  <" + prop_entry1.getReference() + "> ?a . ";
 	}
+        
+        // query for SUBOFPROP pos for first property -- two property case
+	private String queryForSUBJOFPROPinCaseInstanceAndPropertyBeginning(LexicalEntry instance_entry,LexicalEntry prop_entry1){
+		return "SELECT DISTINCT ?x ?y {"
+				+ instance_entry+"  <" + prop_entry1.getReference() + "> ?x . ";
+	}
+        
+        // query for OBOFPROP pos for first property -- two property case
+	private String queryForOBJOFPROPinCaseInstanceAndPropertyBeginning(LexicalEntry instance_entry,LexicalEntry prop_entry1){
+		return "SELECT DISTINCT ?x ?y {"
+				+ " ?x  <" + prop_entry1.getReference() + "> "+instance_entry+" .";
+	}
+        
+        
 	// query for SUBOFPROP pos for second property -- two property case
 	private String queryForSUBJOFPROPinCaseClassAndPropertyEnding(LexicalEntry prop_entry2){
 			return " ?a  <" + prop_entry2.getReference() + "> ?y . }";
 		}
-	// query for SUBOFPROP pos for second property -- two property case
+	// query for OBJOFPROP pos for second property -- two property case
 	private String queryForOBJOFPROPinCaseClassAndPropertyEnding(LexicalEntry prop_entry2){
 				return " ?y  <" + prop_entry2.getReference() + "> ?a . }";
 			}
 	
-	
-	
+	// query for SUBOFPROP pos for second property -- two property case
+	private String queryForSUBJOFPROPinCaseInstanceAndPropertyEnding(LexicalEntry instance_entry,LexicalEntry prop_entry2){
+			return instance_entry+"  <" + prop_entry2.getReference() + "> ?y . }";
+        }
+        
+        // query for OBJOFPROP pos for second property -- two property case
+	private String queryForOBJOFPROPinCaseInstanceAndPropertyEnding(LexicalEntry instance_entry,LexicalEntry prop_entry2){
+				return " ?y  <" + prop_entry2.getReference() + "> "+instance_entry+" . }";
+			}
+        
+        
 	//SPRINGER
 	
 	//query for property (w.r.t class) and literal
@@ -566,6 +589,75 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
 		return queries;
 	}
 
+        	public Set<String> BuildQueryForInstanceAnd2Properties(InstanceElement instance_elements,PropertyElement property_element1,
+PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg syn2){
+		
+		Set<String> queries = new HashSet<>();
+		
+		for(LexicalEntry instance_entry : instance_elements.getActiveEntries()){
+		for(LexicalEntry property_entry1 : property_element1.getActiveEntries()){
+			
+			String query ="" ;
+			
+			switch(property_entry1.getSemArg(syn1)){
+				
+				case SUBJOFPROP:
+					
+					query = queryForSUBJOFPROPinCaseInstanceAndPropertyBeginning(instance_entry,property_entry1);
+					
+					for(LexicalEntry property_entry2 : property_element2.getActiveEntries()){
+						
+						switch(property_entry2.getSemArg(syn2)){
+						
+						case SUBJOFPROP:
+							query += queryForSUBJOFPROPinCaseInstanceAndPropertyEnding(instance_entry,property_entry2);
+							queries.add(query);
+							break;
+						case OBJOFPROP:
+							query += queryForOBJOFPROPinCaseInstanceAndPropertyEnding(instance_entry,property_entry2);
+							queries.add(query);
+							break;
+						default:
+							break;
+						}
+						
+					}
+					
+					
+					break;
+					
+				case OBJOFPROP:
+					for(LexicalEntry property_entry2 : property_element2.getActiveEntries()){
+						
+						query = queryForOBJOFPROPinCaseInstanceAndPropertyBeginning(instance_entry,property_entry1);
+						
+						switch(property_entry2.getSemArg(syn2)){
+						
+						case SUBJOFPROP:
+							query += queryForSUBJOFPROPinCaseInstanceAndPropertyEnding(instance_entry,property_entry2);
+							queries.add(query);
+							break;
+						case OBJOFPROP:
+							query += queryForOBJOFPROPinCaseInstanceAndPropertyEnding(instance_entry,property_entry2);
+							queries.add(query);
+							break;
+						default:
+							break;
+						}
+						
+					}
+					
+					
+					
+					
+					break;
+		}
+		}
+		
+		}
+		return queries;
+	}
+        
 	public Set<String> BuildQueryForClassPropertyAndInstance(ClassElement class_elements, PropertyElement property_element,InstanceElement instance_element,
 			LexicalEntry.SynArg syn){
 		

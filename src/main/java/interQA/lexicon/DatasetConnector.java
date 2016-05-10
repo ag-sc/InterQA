@@ -259,15 +259,71 @@ public class DatasetConnector {
     	
         return " ?subject <" + property_uri + "> ?x . ";
     }
-    //to query instances for the case; both property share same domain
-    private String domainQueryFor2PTI(String property_uri1,String property_uri2){
-    	   	
-    	return "SELECT DISTINCT ?x ?l WHERE { "
-		+ " ?x <" + property_uri1 + "> ?object1 . "
-		+ " ?x <" + property_uri2 +"> ?object2"
-		+ label("?x","?l")
-		+ "filter langMatches( lang(?l), \""+lang+"\") }";
+ 
+    
+    //to query instance for property position SUBOFPROP beginning (2Property to get instance)
+    private String SUBJOFPROPQueryForInstanceBeginning(String property_uri){
+        
+        return  "SELECT DISTINCT ?x ?l WHERE {"
+                +"?x <"+property_uri+"> ?object1. ";
     }
+    
+    //to query instance for property position OBOFPROP beginning (2Property to get instance)
+    private String OBJOFPROPQueryForInstaceBeginning(String property_uri){
+        
+        return  "SELECT DISTINCT ?x ?l WHERE {"
+                +"?object1 <"+property_uri+"> ?x. ";
+    }
+    
+        //to query instance for property position SUBOFPROP beginning (2Property to get instance)
+    private String SUBJOFPROPQueryForClassBeginning(String property_uri){
+        
+        return  "SELECT DISTINCT ?y ?l WHERE {"
+                +"?x <"+vocab.rdfType+"> ?y."
+                +"?x <"+property_uri+"> ?object1. ";
+    }
+    
+    //to query instance for property position OBOFPROP beginning (2Property to get instance)
+    private String OBJOFPROPQueryForClassBeginning(String property_uri){
+        
+        return  "SELECT DISTINCT ?y ?l WHERE {"
+                +"?x <"+vocab.rdfType+"> ?y."
+                +"?object1 <"+property_uri+"> ?x. ";
+    }
+    
+    
+    //to query instance for property position SUBOFPROP ending (2Property to get instance)
+    private String SUBJOFPROPQueryForInstaceEnding(String property_uri){
+        
+        return  "?x <"+property_uri+"> ?object2."
+                +label("?x","?l")
+                +"filter langMatches( lang(?l), \""+lang+"\") }";
+    }
+    
+      //to query instance for property position SUBOFPROP ending (2Property to get instance)
+    private String OBJOFPROPQueryForInstanceEnding(String property_uri){
+        
+        return  "?object2 <"+property_uri+"> ?x."
+                +label("?x","?l")
+                +"filter langMatches( lang(?l), \""+lang+"\") }";
+    }
+    
+        //to query class for property position SUBOFPROP ending (2Property to get instance)
+    private String SUBJOFPROPQueryForClassEnding(String property_uri){
+        
+        return  "?x <"+property_uri+"> ?object2."
+                +label("?y","?l")
+                +"filter langMatches( lang(?l), \""+lang+"\") }";
+    }
+    
+      //to query class for property position SUBOFPROP ending (2Property to get instance)
+    private String OBJOFPROPQueryForClassEnding(String property_uri){
+        
+        return  "?object2 <"+property_uri+"> ?x."
+                +label("?y","?l")
+                +"filter langMatches( lang(?l), \""+lang+"\") }";
+    }
+    
     //to query instances for the case; both property share same range
     private String rangeQueryFor2PTI(String property_uri1,String property_uri2){
     	   	
@@ -435,27 +491,64 @@ public class DatasetConnector {
     	return filtered_instances_index;
     }
 
-    public Map<String,List<LexicalEntry>> filterBy2PropertiesForInstances(List<LexicalEntry> entriesForPre1, List<LexicalEntry> entriesForPre2, LexicalEntry.SynArg syn ){
+
+      public Map<String,List<LexicalEntry>> filterBy2PropertiesForInstances(List<LexicalEntry> entriesForPre1, List<LexicalEntry> entriesForPre2, LexicalEntry.SynArg syn1,LexicalEntry.SynArg syn2 ){
     	Map<String,List<LexicalEntry>> filtered_instances_index = new HashMap<>();
 		
 		for(LexicalEntry entry1 : entriesForPre1){
-		for(LexicalEntry entry2: entriesForPre2){
-			String query;
-			switch(entry1.getSemArg(syn)){
-			//TODO mince: The position of instance may vary depending on property (think on all cases) !! 
-			// instance for first property may locate at subject and for second property at domain 
-				case SUBJOFPROP:
-				    query = domainQueryFor2PTI(entry1.getReference(),entry2.getReference());
-				    
-				    filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
-					break;
-				case OBJOFPROP:
-					query= rangeQueryFor2PTI(entry1.getReference(),entry2.getReference());
+                    String query;
+                    switch(entry1.getSemArg(syn1)){
+                    
+                        case SUBJOFPROP:
+                        
+                            query = SUBJOFPROPQueryForInstanceBeginning(entry1.getReference());
+                            
+                        for(LexicalEntry entry2: entriesForPre2){
+			
+                            switch(entry2.getSemArg(syn2)){
+                                case SUBJOFPROP:
+				
+                                query += SUBJOFPROPQueryForInstaceEnding(entry2.getReference());
+				filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+				break;
+				
+                                case OBJOFPROP:
+					query += OBJOFPROPQueryForInstanceEnding(entry2.getReference());
 					filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
 					break;
+                                        
 				default:
-					break;		
-			}
+					break;	
+                            }
+                            	
+			
+                        
+                        } 
+                        case OBJOFPROP:
+                            
+                            query = SUBJOFPROPQueryForInstanceBeginning(entry1.getReference());
+                            
+                            for(LexicalEntry entry2: entriesForPre2){
+			
+                            switch(entry2.getSemArg(syn2)){
+                                case SUBJOFPROP:
+				
+                                    query += SUBJOFPROPQueryForInstaceEnding(entry2.getReference());
+                                    filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+                                    break;
+
+                                case OBJOFPROP:
+					query += OBJOFPROPQueryForInstanceEnding(entry2.getReference());
+					filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+					break;
+                                        
+                                        
+				default:
+					break;	
+                            }
+                            }
+                            
+                            
 		}
 			
 		}
@@ -464,6 +557,90 @@ public class DatasetConnector {
 	return filtered_instances_index;
     	
     }
+    
+      
+    public Map<String,List<LexicalEntry>> filterBy2PropertiesForClasses(List<LexicalEntry> entriesForPre1, List<LexicalEntry> entriesForPre2, LexicalEntry.SynArg syn1,LexicalEntry.SynArg syn2 ){
+    	Map<String,List<LexicalEntry>> filtered_instances_index = new HashMap<>();
+		
+		for(LexicalEntry entry1 : entriesForPre1){
+                    String query;
+                    switch(entry1.getSemArg(syn1)){
+                    
+                        case SUBJOFPROP:
+                        
+                            query = SUBJOFPROPQueryForClassBeginning(entry1.getReference());
+                            
+                        for(LexicalEntry entry2: entriesForPre2){
+			
+                            switch(entry2.getSemArg(syn2)){
+                                case SUBJOFPROP:
+				
+                                query += SUBJOFPROPQueryForClassEnding(entry2.getReference());
+				filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+				break;
+				
+                                case OBJOFPROP:
+					query += OBJOFPROPQueryForClassEnding(entry2.getReference());
+					filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+					break;
+                                        
+				default:
+					break;	
+                            }
+                            	
+			
+                        
+                        } 
+                        case OBJOFPROP:
+                            
+                            query = SUBJOFPROPQueryForInstanceBeginning(entry1.getReference());
+                            
+                            for(LexicalEntry entry2: entriesForPre2){
+			
+                            switch(entry2.getSemArg(syn2)){
+                                case SUBJOFPROP:
+				
+                                    query += SUBJOFPROPQueryForClassEnding(entry2.getReference());
+                                    filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+                                    break;
+
+                                case OBJOFPROP:
+					query += OBJOFPROPQueryForClassEnding(entry2.getReference());
+					filtered_instances_index.putAll(getInstanceIndex(query, "?x", "?l"));
+					break;
+                                        
+                                        
+				default:
+					break;	
+                            }
+                            }
+                            
+                            
+		}
+			
+		}
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	return filtered_instances_index;
+    	
+    }  
+    
+    
     
     
     public Map<String,List<LexicalEntry>> filterBy2PropertiesAndInstanceForInstances(List<LexicalEntry> entriesForPre1,List<LexicalEntry> entriesForIns, List<LexicalEntry> entriesForPre2, LexicalEntry.SynArg syn ){

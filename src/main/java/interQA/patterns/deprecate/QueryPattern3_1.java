@@ -88,7 +88,7 @@ public class QueryPattern3_1 extends QueryPattern{
 			if (currentElement==6){
 				
 				   elements.get(8).addToIndex(instances.filterBy2PropertiesForInstances(elements.get(4).getActiveEntries(),
-						   elements.get(6).getActiveEntries(), LexicalEntry.SynArg.OBJECT));       
+						   elements.get(6).getActiveEntries(), LexicalEntry.SynArg.OBJECT,LexicalEntry.SynArg.OBJECT));       
 		            
 				
 			}

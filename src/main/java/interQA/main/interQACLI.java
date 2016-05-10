@@ -26,8 +26,10 @@ public class interQACLI {
         
         // SETTINGS
         
-        USECASE usecase = USECASE.SPRINGER;
-        Language language = Language.DE;
+        USECASE usecase;
+        usecase = USECASE.DBPEDIA;
+        Language language;
+        language = Language.EN;
         
         
         // INIT

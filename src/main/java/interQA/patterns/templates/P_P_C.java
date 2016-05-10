@@ -6,6 +6,7 @@
 package interQA.patterns.templates;
 
 import interQA.elements.ClassElement;
+import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
@@ -83,8 +84,8 @@ public class P_P_C extends QueryPattern{
 			}break;
                     case 4:{
 				
-				   elements.get(5).addToIndex(instances.filterBy2PropertiesForInstances(elements.get(1).getActiveEntries(),
-						   elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));       
+				   elements.get(5).addToIndex(instances.filterBy2PropertiesForClasses(elements.get(1).getActiveEntries(),
+						   elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT,LexicalEntry.SynArg.OBJECT));       
 		            
 				
 			}break;
