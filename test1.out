@@ -1,50 +1,536 @@
+Welcome to interQACLI
+Choose the interaction way:
+1) Number-based.
+2) String-based.
+Type 1 or 2 and press Enter
+My selection:Thanks!.
 Current sentence: 
 Choose one option (or 'q' to quit, 'd' to delete the last selection):
-1: wieviel
-2: wer ist die
-3: zeig mir
-4: wieviele
-5: wer war die
-6: was war der
-7: welches
-8: welcher
-9: gib mir die
-10: welche
-11: was ist der
-12: wer
-13: gib mir das
-14: gib mir alle
-15: how many
-16: wer waren die
-17: was ist die
-18: gib mir
-19: wer ist der
-20: was waren die
-21: zeige alle
-22: was war das
-23: wer war der
-24: gib mir den
-25: was
-26: was ist das
-27: gibt es
-28: was war die
-Number of patterns available: [C_P_I, C_P_I_P_I, C_P_I, C_P_I_P_I, SpringerQueryPattern4, C, SpringerQueryPattern5, P_I]
-Current sentence:  zeig mir
+1: list all
+2: what were the
+3: who are the
+4: what is the
+5: give me the
+6: what was the
+7: show me the
+8: how many
+9: give me
+10: what are the
+11: which
+12: do you know any
+13: who was the
+14: who
+15: are there any
+16: show me all
+17: give me all
+18: who is the
+19: what
+20: who were the
 Choose one option (or 'q' to quit, 'd' to delete the last selection):
-1: Konferenz
-2: Konferenzen
-3: Proceedings
-Number of patterns available: [C_P_I, C_P_I_P_I, C_P_I, C_P_I_P_I, C]
-Current sentence:  zeig mir Konferenzen
-SPARQL queries:
-SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
-SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
-SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
-SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
-SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }
+Number of patterns available: 2 [P_I, C_P_P]
+Current sentence:  who are the
 Choose one option (or 'q' to quit, 'd' to delete the last selection):
-1: der
-2: die
-3: das
-Number of patterns available: [C_P_I, C_P_I_P_I, C_P_I_P_I]
-Current sentence:  zeig mir Konferenzen das
+1: settlements
+2: minerals
+3: tournaments
+4: projects
+5: presidents
+6: arteries
+7: owners
+8: areas
+9: infirmaries
+10: deaneries
+11: mothers
+12: audiobooks
+13: installments
+14: ISBNs
+15: manhwas
+16: molluscs
+17: surfers
+18: databases
+19: provinces
+20: asteroids
+21: devices
+22: ISSNs
+23: constellations
+24: engineers
+25: insects
+26: persons
+27: biomolecules
+28: islands
+29: member of parliaments
+30: professors
+31: restaurants
+32: densities
+33: albums
+34: aristocrats
+35: successors
+36: apoapsides
+37: occupations
+38: Irishmen
+39: characters
+40: slogans
+41: lighthouses
+42: proteins
+43: departments
+44: genuses
+45: amphibians
+46: ambassadors
+47: blazons
+48: office holders
+49: actresses
+50: veins
+51: mottoes
+52: cricketers
+53: magistrates
+54: saints
+55: subsidiaries
+56: infrastructures
+57: astronauts
+58: commanders
+59: watermills
+60: shellfishes
+61: grosses
+62: interpreters
+63: curlers
+64: kingdoms
+65: museums
+66: prequels
+67: airlines
+68: spouses
+69: seasons
+70: grandchildren
+71: distributors
+72: fashions
+73: planes
+74: newspapers
+75: relatives
+76: mangas
+77: budgets
+78: buildings
+79: parts
+80: cardinals
+81: colours
+82: chancellors
+83: mountains
+84: formats
+85: operas
+86: sources
+87: killers
+88: intercommunalities
+89: prefectures
+90: African Americans
+91: theatres
+92: papers
+93: chefs
+94: states
+95: jockeys
+96: paintings
+97: teachers
+98: regencies
+99: bacterias
+100: popes
+101: governors
+102: mayors
+103: skiers
+104: tracks
+105: royalties
+106: venues
+107: pickups
+108: phylums
+109: archaeas
+110: last names
+111: monuments
+112: casualtieses
+113: Protestants
+114: nations
+115: years
+116: muscles
+117: sons
+118: altitudes
+119: religions
+120: poets
+121: animals
+122: husbands
+123: magnitudes
+124: skyscrapers
+125: letters
+126: Germans
+127: cinematographers
+128: beverages
+129: cycads
+130: researchers
+131: abbeys
+132: philosophers
+133: journals
+134: monarchies
+135: schools
+136: orders
+137: wifes
+138: weapons
+139: valleys
+140: managers
+141: Catholics
+142: women
+143: authors
+144: senators
+145: legislatures
+146: suburbs
+147: fathers
+148: works
+149: creators
+150: professions
+151: bands
+152: pickup trucks
+153: products
+154: cameras
+155: nerves
+156: grand prixes
+157: Jews
+158: ferns
+159: Muslims
+160: drugs
+161: automobiles
+162: homepages
+163: agents
+164: mushrooms
+165: vice presidents
+166: places
+167: names
+168: artworks
+169: prisons
+170: websites
+171: Russians
+172: periapsides
+173: communities
+174: predecessors
+175: bishops
+176: rockets
+177: shrines
+178: patriarches
+179: brains
+180: reviews
+181: members
+182: vice prime ministers
+183: mosques
+184: spin-offs
+185: congress men
+186: eukaryotes
+187: canals
+188: stadiums
+189: treadmills
+190: cities
+191: cultivars
+192: positions
+193: given names
+194: weights
+195: deities
+196: saleses
+197: clerks
+198: arenas
+199: Christians
+200: coupés
+201: scientists
+202: races
+203: lists
+204: deputies
+205: animes
+206: parents
+207: spacecrafts
+208: motorcyclists
+209: principals
+210: US Americans
+211: men
+212: freewares
+213: magazines
+214: capacities
+215: economists
+216: republics
+217: designers
+218: paperbacks
+219: plays
+220: sports
+221: ginkgoes
+222: mills
+223: writers
+224: families
+225: minister of defences
+226: chairmen
+227: arachnids
+228: singles
+229: hatchbacks
+230: lengths
+231: memorials
+232: activities
+233: awards
+234: minister of educations
+235: sportswomen
+236: follow-ups
+237: grandmothers
+238: murderers
+239: crustaceans
+240: foods
+241: rectors
+242: minister of justices
+243: companies
+244: Indians
+245: premiers
+246: engines
+247: B-sides
+248: events
+249: models
+250: windmills
+251: genes
+252: hosts
+253: diseases
+254: countries
+255: labels
+256: ethnicities
+257: actors
+258: territories
+259: boxers
+260: recipients
+261: caverns
+262: populations
+263: crossings
+264: cheeses
+265: nobles
+266: embryologies
+267: precursors
+268: comics
+269: enzymes
+270: networks
+271: journalists
+272: colors
+273: chemists
+274: runtimes
+275: artists
+276: Japaneses
+277: plants
+278: grandsons
+279: grottoes
+280: elevations
+281: gymnasts
+282: minister of foreign affairses
+283: languages
+284: softwares
+285: periodicals
+286: widths
+287: politicians
+288: airplanes
+289: depths
+290: medicians
+291: e-books
+292: ligaments
+293: holidays
+294: dogs
+295: homes
+296: residences
+297: results
+298: historians
+299: films
+300: prime ministers
+301: athletes
+302: boats
+303: bridges
+304: beacons
+305: airports
+306: autoes
+307: convertibles
+308: cartoons
+309: architects
+310: presenters
+311: towns
+312: parties
+313: statuses
+314: Britishes
+315: wars
+316: fields
+317: cosmonauts
+318: grapes
+319: monasteries
+320: sequels
+321: medicines
+322: classes
+323: vehicles
+324: atolls
+325: first names
+326: organisations
+327: genres
+328: sicknesses
+329: lakes
+330: surnames
+331: cases
+332: gnetophytes
+333: libraries
+334: casinoes
+335: stars
+336: pharmaceuticals
+337: swimmers
+338: cyclists
+339: malls
+340: hotels
+341: battles
+342: Poles
+343: galaxies
+344: swarms
+345: localities
+346: streets
+347: developers
+348: dioceses
+349: celebrities
+350: taxes
+351: granddaughters
+352: trains
+353: movies
+354: lieutenants
+355: instruments
+356: universities
+357: collections
+358: children
+359: games
+360: member of the European parliaments
+361: clerics
+362: arrondissements
+363: teams
+364: leagues
+365: players
+366: caves
+367: synonyms
+368: temples
+369: streams
+370: roads
+371: stations
+372: matches
+373: churches
+374: elections
+375: musicals
+376: tunnels
+377: beams
+378: cars
+379: ships
+380: Buddhists
+381: books
+382: mammals
+383: wines
+384: polyhedrons
+385: prizes
+386: patrons
+387: monarches
+388: regions
+389: ideologies
+390: Frenches
+391: flags
+392: districts
+393: birds
+394: taikonauts
+395: Canadians
+396: sculptors
+397: planets
+398: medicaments
+399: criminals
+400: ridges
+401: spaceships
+402: biologists
+403: grandfathers
+404: rivers
+405: periapses
+406: castles
+407: Dutches
+408: broadcasts
+409: skaters
+410: LPs
+411: enrollments
+412: conifers
+413: fungi
+414: songs
+415: wrestlers
+416: painters
+417: hardcovers
+418: revolutionaries
+419: currencies
+420: hospitals
+421: sculptures
+422: addresses
+423: festivals
+424: aliases
+425: illnesses
+426: leaders
+427: pseudonyms
+428: playmates
+429: suns
+430: parks
+431: comedians
+432: routes
+433: daughters
+434: shows
+435: manhuas
+436: displacements
+437: discographies
+438: publishers
+439: highways
+440: episodes
+441: sharewares
+442: Italians
+443: Americans
+444: Chineses
+445: broadcasters
+446: Hindus
+447: continents
+448: bones
+449: conventions
+450: referees
+451: epochs
+452: judges
+453: thugs
+454: synagogues
+455: novels
+456: sportsmen
+457: composers
+458: reptiles
+459: drinks
+460: musicians
+461: decorations
+462: factories
+463: founders
+464: sub-municipalities
+465: beers
+466: mascots
+467: lymphs
+468: abbreviations
+469: requirements
+470: mosses
+471: villages
+472: manufacturers
+473: colleges
+474: volcanoes
+475: groups
+476: drafts
+477: locomotives
+478: priests
+479: parishes
+480: revenues
+481: municipalities
+482: Belgians
+483: dramas
+484: heights
+485: locations
+486: constitutional monarchies
+487: frequencies
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+Number of patterns available: 1 [C_P_P]
+Current sentence:  who are the minerals
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+Please, select a valid number
+Please, type a number (or 'q' to quit, 'd' to delete the last selection)
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+Please, select a valid number
+Please, type a number (or 'q' to quit, 'd' to delete the last selection)
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+Please, select a valid number
+Please, type a number (or 'q' to quit, 'd' to delete the last selection)
+Choose one option (or 'q' to quit, 'd' to delete the last selection):
+Invalid command
+Please, type a number (or 'q' to quit, 'd' to delete the last selection)
+Choose one option (or 'q' to quit, 'd' to delete the last selection):

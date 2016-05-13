@@ -27,7 +27,7 @@ public class interQACLI {
         // SETTINGS
         
         USECASE usecase;
-        usecase = USECASE.DBPEDIA;
+        usecase = USECASE.SPRINGER;
         Language language;
         language = Language.EN;
         
@@ -60,12 +60,12 @@ public class interQACLI {
         
                 switch (language) {
                     case EN: { 
-                        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(lexicon,dataset);
+                        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
                         qm.addQueryPatterns(qf_en.rollout());
                         break;
                     }
                     case DE: {
-                        QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(lexicon,dataset);
+                        QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(usecase,lexicon,dataset);
                         qm.addQueryPatterns(qf_de.rollout());
                         break;
                     } 
@@ -92,12 +92,12 @@ public class interQACLI {
         
                 switch (language) {
                     case EN: { 
-                        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(lexicon,dataset);
+                        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
                         qm.addQueryPatterns(qf_en.rollout());
                         break;
                     }
                     case DE: {
-                        QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(lexicon,dataset);
+                        QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(usecase,lexicon,dataset);
                         qm.addQueryPatterns(qf_de.rollout());
                         break;
                     }

@@ -4,6 +4,7 @@ package test;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
+import interQA.lexicon.Vocabulary;
 import java.util.HashMap;
 import java.util.List;
 import junit.framework.TestCase;
@@ -14,21 +15,23 @@ import junit.framework.TestCase;
  */
 public class LexiconTest extends TestCase {
 
+    Vocabulary vocab = new Vocabulary();
+    
     Lexicon lexicon = new Lexicon(Language.EN);
 
     public void test_en() throws Exception {
         
         lexicon.load("resources/springer_en.ttl");
 
-        HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,null,true);
+        HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,vocab.NounPPFrame,true);
         
-        assertEquals(true,commonNouns.containsKey("conference"));
+        assertEquals(true,commonNouns.containsKey("proceedings"));
         
-        List<LexicalEntry> entries = commonNouns.get("conference");
+        List<LexicalEntry> entries = commonNouns.get("proceedings");
         assertEquals(1,entries.size());
-        assertEquals("conference",entries.get(0).getCanonicalForm());
-        assertEquals("conference",entries.get(0).getForm(LexicalEntry.Feature.SINGULAR));
-        assertEquals("conferences",entries.get(0).getForm(LexicalEntry.Feature.PLURAL));
+        assertEquals("proceedings",entries.get(0).getCanonicalForm());
+        assertEquals("proceedings",entries.get(0).getForm(LexicalEntry.Feature.SINGULAR));
+        assertEquals("proceedings",entries.get(0).getForm(LexicalEntry.Feature.PLURAL));
 
     }
     

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
+import interQA.main.interQACLI.USECASE;
 import interQA.patterns.QueryPatternFactory_EN;
 import java.io.IOException;
 
@@ -98,7 +99,7 @@ public class ServletInterQA extends HttpServlet {
         
         qm = new QueryPatternManager();
 
-        QueryPatternFactory_EN qf = new QueryPatternFactory_EN(lexicon,dataset);
+        QueryPatternFactory_EN qf = new QueryPatternFactory_EN(USECASE.SPRINGER,lexicon,dataset);
         
         qm.addQueryPatterns(qf.rollout());
 

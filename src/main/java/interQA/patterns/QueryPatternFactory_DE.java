@@ -6,6 +6,7 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
+import interQA.main.interQACLI.USECASE;
 import interQA.patterns.deprecate.SpringerQueryPattern4;
 import interQA.patterns.deprecate.SpringerQueryPattern5;
 import java.util.HashSet;
@@ -14,12 +15,14 @@ import java.util.Set;
 
 public class QueryPatternFactory_DE implements QueryPatternFactory {    
     
+    USECASE usecase;
     Lexicon lexicon;
     DatasetConnector instances;   
     
     
-    public QueryPatternFactory_DE(Lexicon l, DatasetConnector is) {
+    public QueryPatternFactory_DE(USECASE u, Lexicon l, DatasetConnector is) {
     
+        usecase = u;
         lexicon = l;
         instances = is;
     }
@@ -295,41 +298,48 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         
           
         
-        //SPECIFICS
+        // USE-CASE SPECIFIC PATTERNS
         
+        switch (usecase) {
         
-        //Give me the proceedings of ISWC 2015.
-        QueryPattern q15 = new SpringerQueryPattern4(lexicon,instances);
+            case SPRINGER: {
         
-        StringElement e15_0 = (StringElement) q15.getElement(0);
-        addGiveMePrefixes(e15_0);
-        
-        addRelationalNouns(q15.getElement(1));
-        
-        patterns.add(q15);
-        
-        // proceedings of ISWC 2015
+                //Give me the proceedings of ISWC 2015.
+                QueryPattern q15 = new SpringerQueryPattern4(lexicon,instances);
 
-        QueryPattern q17 = new SpringerQueryPattern4(lexicon,instances);
+                StringElement e15_0 = (StringElement) q15.getElement(0);
+                addGiveMePrefixes(e15_0);
 
-        addRelationalNouns(q17.getElement(1));
+                addRelationalNouns(q15.getElement(1));
 
-        patterns.add(q17);       
-            
-        //Give me the start and end date of ISWC 2015.
-        QueryPattern q16 = new SpringerQueryPattern5(lexicon,instances);
-        
-        StringElement e16_0 = (StringElement) q16.getElement(0);
-        addGiveMePrefixes(e16_0);
-        
-        addRelationalNouns(q16.getElement(1));
-        
-        StringElement e16_2 = (StringElement) q16.getElement(2);
-        e16_2.add("und");
-        
-        addRelationalNouns(q16.getElement(3));
-        
-        patterns.add(q16);
+                patterns.add(q15);
+
+                // proceedings of ISWC 2015
+
+                QueryPattern q17 = new SpringerQueryPattern4(lexicon,instances);
+
+                addRelationalNouns(q17.getElement(1));
+
+                patterns.add(q17);       
+
+                //Give me the start and end date of ISWC 2015.
+                QueryPattern q16 = new SpringerQueryPattern5(lexicon,instances);
+
+                StringElement e16_0 = (StringElement) q16.getElement(0);
+                addGiveMePrefixes(e16_0);
+
+                addRelationalNouns(q16.getElement(1));
+
+                StringElement e16_2 = (StringElement) q16.getElement(2);
+                e16_2.add("und");
+
+                addRelationalNouns(q16.getElement(3));
+
+                patterns.add(q16);
+                
+                break;
+            }
+        }
         
         
         // Done. (Yay!)
