@@ -54,14 +54,13 @@ public class P_I extends QueryPattern {
             
             switch (currentElement) {
                 
-                case 0: {checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
-                }break;
-                case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s); break;
-                case 2: ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break;
+                case 0: {checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); break;}
+                //case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s); break; // TODO
+                //case 2: ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break; // TODO
             
-                case 3: {
+                case 1: {
 
-                    elements.get(4).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));  
+                    elements.get(3).addToIndex(dataset.filterByPropertyForInstances(elements.get(1).getActiveEntries(), LexicalEntry.SynArg.OBJECT));  
                     break;
                 }
             }

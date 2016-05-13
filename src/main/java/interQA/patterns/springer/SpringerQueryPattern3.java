@@ -1,7 +1,6 @@
-package interQA.patterns.deprecate;
+package interQA.patterns.springer;
 
 import interQA.patterns.templates.QueryPattern;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
-import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +18,7 @@ import java.util.Set;
 
 
 
-public class C_that_P_I_P_I extends QueryPattern{
+public class SpringerQueryPattern3 extends QueryPattern{
 	
     
 	/*
@@ -32,7 +30,7 @@ public class C_that_P_I_P_I extends QueryPattern{
         */
 
 	
-	public C_that_P_I_P_I(Lexicon lexicon,DatasetConnector instances){
+	public SpringerQueryPattern3(Lexicon lexicon,DatasetConnector instances){
 		
 		this.lexicon = lexicon;
 		this.dataset = instances;

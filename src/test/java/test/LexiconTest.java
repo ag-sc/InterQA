@@ -25,13 +25,13 @@ public class LexiconTest extends TestCase {
 
         HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,vocab.NounPPFrame,true);
         
-        assertEquals(true,commonNouns.containsKey("proceedings"));
+        assertEquals(true,commonNouns.containsKey("start date"));
         
-        List<LexicalEntry> entries = commonNouns.get("proceedings");
+        List<LexicalEntry> entries = commonNouns.get("start date");
         assertEquals(1,entries.size());
-        assertEquals("proceedings",entries.get(0).getCanonicalForm());
-        assertEquals("proceedings",entries.get(0).getForm(LexicalEntry.Feature.SINGULAR));
-        assertEquals("proceedings",entries.get(0).getForm(LexicalEntry.Feature.PLURAL));
+        assertEquals("start date",entries.get(0).getCanonicalForm());
+        assertEquals("start date",entries.get(0).getForm(LexicalEntry.Feature.SINGULAR));
+        assertEquals("start date",entries.get(0).getForm(LexicalEntry.Feature.PLURAL));
 
     }
     

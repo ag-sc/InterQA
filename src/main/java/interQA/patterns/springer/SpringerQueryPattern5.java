@@ -1,4 +1,6 @@
-package interQA.patterns.deprecate;
+package interQA.patterns.springer;
+
+
 
 import interQA.patterns.templates.QueryPattern;
 import interQA.elements.StringElement;

@@ -7,8 +7,8 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.main.interQACLI.USECASE;
-import interQA.patterns.deprecate.SpringerQueryPattern4;
-import interQA.patterns.deprecate.SpringerQueryPattern5;
+import interQA.patterns.springer.SpringerQueryPattern4;
+import interQA.patterns.springer.SpringerQueryPattern5;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,7 +69,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         addGiveMePrefixes(e3_0);
         addWhoWhatPrefixes(e3_0);
 
-        addRelationalNouns(q3.getElement(2));
+        addRelationalNouns(q3.getElement(1));
  
         patterns.add(q3);
         

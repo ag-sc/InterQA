@@ -420,7 +420,9 @@ public class Lexicon {
                         else {
                             continue;
                         }
-                                                
+                        
+                        System.out.println(entry.toString()); //
+                        
                         if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
                         index.get(sg).add(entry);
                         if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
@@ -474,10 +476,11 @@ public class Lexicon {
                     
                     try {      
                         LexicalEntry entry = new LexicalEntry(); 
-                        entry.setCanonicalForm(canonicalForm + " of"); // TODO specific for English
+                        entry.setCanonicalForm(canonicalForm); 
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.NOUN);
                         entry.setFrame(vocab.lexinfo + "NounPossessiveFrame");
+                        entry.setMarker("of"); // TODO specific for English
                         
                         if (sol.contains("gender")) {
                             String gender = sol.get("gender").asResource().getLocalName();
@@ -509,6 +512,8 @@ public class Lexicon {
                         else {
                             continue;
                         }
+
+                                                System.out.println(entry.toString()); //
 
                         if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
                         index.get(sg).add(entry); 

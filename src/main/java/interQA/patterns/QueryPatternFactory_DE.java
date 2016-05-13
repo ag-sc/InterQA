@@ -7,8 +7,8 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.main.interQACLI.USECASE;
-import interQA.patterns.deprecate.SpringerQueryPattern4;
-import interQA.patterns.deprecate.SpringerQueryPattern5;
+import interQA.patterns.springer.SpringerQueryPattern4;
+import interQA.patterns.springer.SpringerQueryPattern5;
 import java.util.HashSet;
 import java.util.Set;
 

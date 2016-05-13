@@ -38,6 +38,10 @@ public class PatternTests_EN extends TestCase {
     
     // At least one test per pattern
     
+        // P_I 
+        // proceedings of 
+        // start date of 
+    
         public void C_P_L() throws Exception {
         //Which <Class:Noun> <Property:Verb> <Literal>?
         //Which conferences took place in 2015?

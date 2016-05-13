@@ -135,6 +135,12 @@ public class LexicalEntry {
     public SemArg getSemArg(SynArg syn) {
         return argumentMapping.get(syn);
     }
+    
+    @Override 
+    public String toString() {
+    
+        return particle + " + " + canonicalForm + " + " + marker + " / " + pos + " (" + frame + ") = " + reference;
+    }
 
     @Override
     public int hashCode() {
