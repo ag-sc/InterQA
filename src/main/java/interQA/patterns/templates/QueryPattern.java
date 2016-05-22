@@ -71,8 +71,8 @@ public abstract class QueryPattern {
             if (currentElement < elements.size()-1) {                
                 
                 List<String> options = elements.get(currentElement+1).getOptions();
-                
-                if (options.isEmpty() && elements.get(currentElement+1).getClass().toString().equals("StringElement")) {
+                if (options.isEmpty()&& elements.get(currentElement+1).getClass().getSimpleName().toString().equals("StringElement") ) {
+                    
                     currentElement += 1;
                     return getNext();
                 } 

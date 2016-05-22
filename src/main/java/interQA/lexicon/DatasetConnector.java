@@ -65,7 +65,6 @@ public class DatasetConnector {
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
         List<String> collected_IRI = new ArrayList<>();
         String query_first ="SELECT DISTINCT "+var_uri+"{ "+query+ "}";
- 
         QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query_first);
         ResultSet results = ex.execSelect();
         while (results.hasNext()) {
@@ -76,7 +75,6 @@ public class DatasetConnector {
               String form_IRI ="";
               if (uri != null ) {
 		            	String form = uri.toString();
-		  				
 		  				
 	  						
 	  						
@@ -93,7 +91,11 @@ public class DatasetConnector {
 				  				else if(form.matches("http://.*")){
 				  					collected_IRI.add(form);
 				  					}
+                                                                else if(form.matches("https://.*")){
+				  					collected_IRI.add(form);
+				  					}
 				  				else{
+                                                                    
 				  					form = form.substring(0,form.indexOf("@"));
 				  					labels.add(form);
 				  					form_IRI="\""+form+"\"@"+lang;	
@@ -129,11 +131,9 @@ public class DatasetConnector {
         	query = "SELECT DISTINCT "+var_uri+" ?l { "+query
         			+label(var_uri,"?l")
         			+"filter langMatches( lang(?l), \""+lang+"\") }";
-        	
       	    instances.putAll(getInstanceLabel(query,var_uri,"?l"));;
       	    
         }
-        
         return instances;
     }
    

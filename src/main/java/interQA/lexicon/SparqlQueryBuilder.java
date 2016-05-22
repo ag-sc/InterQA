@@ -338,13 +338,13 @@ public class SparqlQueryBuilder {
                 boolean flag){
 		
             
-            return "SELECT DISTINCT "+countFlag(flag,"x")+" WHERE {"
+            return "SELECT "+countFlag(flag,"x")+" WHERE {"
                                    + " " + inst_entry.getReference() + " <" + property_entry.getReference() + "> ?x . }";
 	}
 
 	private String queryForOBJOFPROPinCasePropertyAndInstance(LexicalEntry property_entry,LexicalEntry inst_entry,
                         boolean flag){
-		return "SELECT DISTINCT "+countFlag(flag,"x")+" WHERE {"
+		return "SELECT  "+countFlag(flag,"x")+" WHERE {"
                 + " ?x <" + property_entry.getReference() + "> " + inst_entry.getReference() + " . }";
 	}
 	

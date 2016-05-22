@@ -170,6 +170,7 @@ public class interQACLI {
         }while(interMode == 0);
         
         do {
+            
             System.out.println("Current sentence: " + sbWholeSentenceExternal.toString());
             
             queries = qm.buildSPARQLqueries();
@@ -180,12 +181,8 @@ public class interQACLI {
                      System.out.println(query);
                 } 
             }
-            
-            opts = qm.getUIoptions();
-            
-            
-            
-              
+           
+              opts = qm.getUIoptions();
             
             int index = 1;
             System.out.println("Choose one option (or 'q' to quit, 'd' to delete the last selection):");
@@ -195,8 +192,7 @@ public class interQACLI {
             int num = 0;
              while (true) {
                 if (interMode == 1) { //Interaction by means of numbers
-                    System.out.println("Choose one option (or 'q' to quit, 'd' to delete the last selection):");
-                    try{
+                      try{
                         if (scanner.hasNextInt()) {
                             num = scanner.nextInt(); //If you press 1+Enter, the Enter (a \n character) keeps in the scanner
                             scanner.skip(Pattern.compile(".*\\s")); //Skips all that finishes with a \s (whitespace character): [ \t\n\x0B\f\r]
@@ -227,8 +223,7 @@ public class interQACLI {
                     }
                 }
                 if (interMode == 2) { //Interaction by means of strings
-                    System.out.println("Type in one option (or 'q' to quit, 'd' to delete the last selection):");
-                    try{
+                     try{
                         if (scanner.hasNextLine()) { //This is always true
                             String str = scanner.nextLine(); //Removes the trailing \n
                             //scanner.skip(Pattern.compile(".*\\s")); //Skips all that finishes with a \s (whitespace character): [ \t\n\x0B\f\r]
@@ -258,6 +253,7 @@ public class interQACLI {
                         //if () = Integer.parseInt(scanner.nextLine());
                         System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
                     }
+                     
                 }
 
             }
