@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 /**
@@ -182,7 +183,9 @@ public class interQACLI {
                 } 
             }
            
-              opts = qm.getUIoptions();
+             
+            TreeSet<String> optsOrdered = new TreeSet<>(qm.getUIoptions());
+            opts = new ArrayList<>(optsOrdered);
             
             int index = 1;
             System.out.println("Choose one option (or 'q' to quit, 'd' to delete the last selection):");
