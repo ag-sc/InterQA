@@ -21,23 +21,23 @@ public class LexiconTest extends TestCase {
 
     public void test_en() throws Exception {
         
-        lexicon.load("resources/springer_en.ttl");
+        lexicon.load("src/resources/springer_en.ttl");
 
-        HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,vocab.NounPPFrame,true);
+        HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,null,true);
         
-        assertEquals(true,commonNouns.containsKey("start date"));
+        assertEquals(true,commonNouns.containsKey("conference"));
         
-        List<LexicalEntry> entries = commonNouns.get("start date");
+        List<LexicalEntry> entries = commonNouns.get("conference");
         assertEquals(1,entries.size());
-        assertEquals("start date",entries.get(0).getCanonicalForm());
-        assertEquals("start date",entries.get(0).getForm(LexicalEntry.Feature.SINGULAR));
-        assertEquals("start date",entries.get(0).getForm(LexicalEntry.Feature.PLURAL));
+        assertEquals("conference",entries.get(0).getCanonicalForm());
+        assertEquals("conference",entries.get(0).getForm(LexicalEntry.Feature.SINGULAR));
+        assertEquals("conferences",entries.get(0).getForm(LexicalEntry.Feature.PLURAL));
 
     }
     
     public void test_de() throws Exception {
         
-        lexicon.load("resources/springer_de.ttl");
+        lexicon.load("src/resources/springer_de.ttl");
 
         HashMap<String,List<LexicalEntry>> commonNouns = lexicon.getSubindex(LexicalEntry.POS.NOUN,null,true);
         

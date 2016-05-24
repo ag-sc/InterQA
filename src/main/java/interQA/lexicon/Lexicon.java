@@ -513,8 +513,6 @@ public class Lexicon {
                             continue;
                         }
 
-                                                System.out.println(entry.toString()); //
-
                         if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
                         index.get(sg).add(entry); 
                         if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
