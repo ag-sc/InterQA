@@ -33,7 +33,7 @@ public class DatasetConnector {
        this(url,language,Arrays.asList("http://www.w3.org/2000/01/rdf-schema#label"));
     }
         
-    public DatasetConnector(String url,Language language,List<String> props) {
+    public DatasetConnector(String url, Language language, List<String> props) {
         
         endpoint = url;
         lang = language;

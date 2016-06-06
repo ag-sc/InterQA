@@ -7,6 +7,7 @@ import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
 import interQA.patterns.QueryPatternFactory_DE;
 import interQA.patterns.QueryPatternFactory_EN;
+import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,24 +22,54 @@ import java.util.regex.Pattern;
 public class interQACLI {
     
     public enum USECASE  { SPRINGER, DBPEDIA }
-    
-    
+    static String commandsString = "Please, type a number (or 'q' to quit, 'd' to delete the last selection):";
+
+    /**
+     * This is the main of the class. A return in this method is an automatic exit.
+     * Without any parameter, runs on console using the Springer dataset (hosted in esDBpedia) in English.
+     * @param args
+     */
     public static void  main(String args[]){
-        
-        // SETTINGS
-        
-        USECASE usecase;
-        usecase = USECASE.SPRINGER;
-        Language language;
-        language = Language.EN;
-        
-        
+        if (args.length == 0) {  //No args
+            mainProcess(args, USECASE.SPRINGER, Language.EN);
+        }else{                  //We provide args
+            if (args.length == 2) { //2 params mean in and out file names
+                mainProcess(args, USECASE.SPRINGER, Language.EN);
+            }else{                 //1, 3, 4, 5 params...
+                if (args.length == 4) { //4 params mean in and out file names, USECASE and Lang
+                    USECASE usecase = USECASE.valueOf(args[2]);    //The arg can be String SPRINGER or DBPEDIA
+                    Language lang = Language.valueOf(args[3]); //The arg can be String EN or DE
+                    mainProcess(args, usecase, lang);
+                }else {                 //1, 3, 5 params mean error.
+                    System.out.println("Wrong number of params.");
+                    System.exit(1);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * This is NOT the main of the class to avoid automatic exit in return.
+     * Uses Springer dataset (hosted in esDBpedia) in English
+     * @param args
+     */
+    public static void  mainProcess(String args[]){
+        mainProcess(args, USECASE.SPRINGER,  Language.EN);
+    }
+
+    /**
+     * Specialization to support other datasets and languages
+     * @param args
+     */
+    public static void  mainProcess(String args[], USECASE usecase, Language language ){
+
         // INIT
         
         Lexicon lexicon = new Lexicon(language);
         DatasetConnector dataset;
-        QueryPatternManager qm = new QueryPatternManager(); 
-        
+        QueryPatternManager qm = new QueryPatternManager();
+
         switch (usecase) {
             
             case SPRINGER: {
@@ -114,12 +145,8 @@ public class interQACLI {
         
         // RUN
 
-        //If we provide arguments, they will be interpreted as file paths
-        if (args.length != 0){
-            if (args.length != 2) { //We allow only two params
-               System.out.println("Only two params are allowed. Both are file paths. The first is the stdin, the second is the stdout.");
-                System.exit(1);
-            }
+        //We only check the first two args. They will be interpreted as file paths.
+        if (args.length != 0){  // Only in this case we change stdin and stdout
             //Follows only if there are two params
             String inFileWithPath =  args[0];  //First argument
             String outFileWithPath = args[1];  //Second argument
@@ -139,11 +166,13 @@ public class interQACLI {
         StringBuffer sbWholeSentenceInternal = new StringBuffer();
         StringBuffer sbWholeSentenceExternal = new StringBuffer();
         String lastSelection = new String("");
+
         
         List<String> opts = null;
         List<String> queries = null;
         //Select interaction mode
         System.out.println("Welcome to interQACLI");
+        System.out.println("You are using dataset " + usecase.name() + " and language " + language.name() + ".");
         int interMode = 0;
         do {
             System.out.println("Choose the interaction way:");
@@ -188,7 +217,7 @@ public class interQACLI {
             opts = new ArrayList<>(optsOrdered);
             
             int index = 1;
-            System.out.println("Choose one option (or 'q' to quit, 'd' to delete the last selection):");
+            System.out.println(commandsString);
             for (String str : opts) {
                 System.out.println(index++ + ": " + str);
             }
@@ -208,7 +237,7 @@ public class interQACLI {
                                 String comm = scanner.nextLine();
                                 if (comm.equals("q") || comm.equals("d")) {
                                     if (comm.equals("q")) {
-                                        System.exit(0);
+                                        return; //System.exit(0) is not valid for testing
                                     }
                                     if (comm.equals("d")) {
                                         num = -1;
@@ -236,7 +265,7 @@ public class interQACLI {
                                 //Check if it is a command
                                 if (str.equals("q") || str.equals("d")) {
                                     if (str.equals("q")) {
-                                        System.exit(0);
+                                        return; //System.exit(0) is not valid for testing. And return in a main() exists.
                                     }
                                     if (str.equals("d")) {
                                         num = -1;
@@ -254,7 +283,7 @@ public class interQACLI {
                         break;
                     } catch (NumberFormatException e) {
                         //if () = Integer.parseInt(scanner.nextLine());
-                        System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
+                        System.out.println(commandsString);
                     }
                      
                 }
@@ -282,5 +311,102 @@ public class interQACLI {
         }while (opts.size() != 0);
 
 
+    }
+
+    public static ArrayList<String> checkSequence(String sequence, String type) throws Exception {
+        interQACLI cli = new interQACLI();
+        String fileNameIn  = "test1.cli";
+        String fileNameOut = "test1.out";
+        PrintWriter writer = new PrintWriter(fileNameIn, "UTF-8"); //Overwrites if exists. Goes to class/
+        switch (type){
+            case "ByNumber": writer.println("1"); //Selection by number
+                             break;
+            case "ByString": writer.print("2\n"); //Selection by string. Warn: On Windows, println produces \r\n; on Linux produces only \n; on Mac produces only \r
+                             break;
+            default:         writer.println("1"); //Selection by number
+                             break;
+        }
+        writer.println(sequence);
+        writer.close();
+        String args[] = {fileNameIn, fileNameOut};
+        cli.mainProcess(args);
+
+        //Read the last lines of the output, looking for a line with "SPARQL queries:\n"
+        ReversedLinesFileReader object = new ReversedLinesFileReader(new File(fileNameOut)); //Apache commons io
+        ArrayList<String> queries = new ArrayList<String>();
+        String query = new String();
+        while (!(query = object.readLine()).equals("SPARQL queries:")) {  //Reads from the end of the file till this line
+            queries.add(query);
+        }
+        return(queries);
+    }
+
+    /**
+     * Simulates the user interaction by selecting numbers. Uses files that are overwritten in each test
+     * @param sequence is the sequence of tokens typed by the user
+     * @throws Exception
+     */
+    public static ArrayList<String> checkSequenceByNumber(String sequence) throws Exception {
+
+        return checkSequence (sequence, "ByNumber");
+
+//        interQACLI cli = new interQACLI();
+//        String fileNameIn  = "test1.cli";
+//        String fileNameOut = "test1.out";
+//        PrintWriter writer = new PrintWriter(fileNameIn, "UTF-8"); //Overwrites if exists. Goes to class/
+//        writer.println("1"); //Selection by number
+//        writer.println(sequence);
+//        writer.close();
+//        String args[] = {fileNameIn, fileNameOut};
+//        cli.mainProcess(args);
+//
+//        //Read the last lines of the output, looking for a line with "SPARQL queries:\n"
+//        ReversedLinesFileReader object = new ReversedLinesFileReader(new File(fileNameOut)); //Apache commons io
+//        ArrayList<String> queries = new ArrayList<String>();
+//        String query = new String();
+//        while (!(query = object.readLine()).equals("SPARQL queries:")) {  //Reads from the end of the file till this line
+//            queries.add(query);
+//        }
+//        return(queries);
+    }
+
+    /**
+     * Simulates the user interaction by typing strings. Uses files that are overwritten in each test
+     * By defaukt uses Springer dataset and English
+     * @param sequence is the sequence of tokens typed by the user
+     * @throws Exception
+     */
+    public static ArrayList<String> checkSequenceByStrings(String sequence) throws Exception {
+        return (checkSequenceByStrings(sequence,USECASE.SPRINGER,  Language.EN));
+    }
+    /**
+     * Simulates the user interaction by typing strings. Uses files that are overwritten in each test
+     * Specialized version for other datasets and languages
+     * @param sequence is the sequence of tokens typed by the user
+     * @throws Exception
+     */
+    public static ArrayList<String> checkSequenceByStrings(String sequence, USECASE usecase, Language language) throws Exception {
+        interQACLI cli = new interQACLI();
+        String fileNameIn  = "test1.cli";
+        String fileNameOut = "test1.out";
+        PrintWriter writer = new PrintWriter(fileNameIn, "UTF-8"); //Overwrites if exists. Goes to class/
+        writer.print("2\n"); //Selection by string. Warn: On Windows, println produces \r\n; on Linux produces only \n; on Mac produces only \r
+        writer.println(sequence);
+        writer.close();
+        String args[] = {fileNameIn, fileNameOut};
+        cli.mainProcess(args, usecase, language);
+
+        //Read the last lines of the output, looking for a line with "SPARQL queries:\n"
+        ReversedLinesFileReader object = new ReversedLinesFileReader(new File(fileNameOut)); //Apache commons io
+        ArrayList<String> queries = new ArrayList<String>();
+        String query = new String();
+        while (!(query = object.readLine()).equals("SPARQL queries:")) {  //Reads from the end of the file till this line
+            queries.add(query);
+        }
+        int lastInvalidLine = queries.indexOf(commandsString); //From here onwards we have to delete
+        List<String> toDelete = queries.subList(0, 1 + lastInvalidLine);
+        toDelete.clear();
+
+        return(queries);
     }
 }
