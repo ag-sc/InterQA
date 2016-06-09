@@ -90,12 +90,18 @@ public class C_P_I_P_I extends QueryPattern{
                     }
 		
                     case 3: {
-			
-                        
+                        setFeatures(3,5,s);
                     	elements.get(4).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
 			break;
                     }
-		
+                    case 4:{
+                        for(String key :elements.get(3).getActiveEntriesKey()){
+                            elements.get(5).getIndex().remove(key);
+                        }
+                        
+                        
+                    }
+                    
                     case 5: {
                         
                     	elements.get(6).addToIndex(dataset.filterBy2PropertiesAndInstanceForInstances(elements.get(3).getActiveEntries(), elements.get(4).getActiveEntries(), 
