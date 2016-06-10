@@ -107,10 +107,8 @@ public abstract class QueryPattern {
 	public void checkHowMany(String s){
             
             // TODO language-dependent list of strings somewhere?
-            if(s.equals("how many")){
+            if (s.equals("how many") || s.equals("wieviel") || s.equals("wieviele")) {
                 count=true;
-            }
-                
-            
+            }            
         }
 }

@@ -30,21 +30,20 @@ public class interQACLI {
      * @param args
      */
     public static void  main(String args[]){
-        if (args.length == 0) {  //No args
+        if (args.length == 0) {  
+            // Default: Springer.EN
             mainProcess(args, USECASE.SPRINGER, Language.EN);
-        }else{                  //We provide args
-            if (args.length == 2) { //2 params mean in and out file names
-                mainProcess(args, USECASE.SPRINGER, Language.EN);
-            }else{                 //1, 3, 4, 5 params...
-                if (args.length == 4) { //4 params mean in and out file names, USECASE and Lang
-                    USECASE usecase = USECASE.valueOf(args[2]);    //The arg can be String SPRINGER or DBPEDIA
-                    Language lang = Language.valueOf(args[3]); //The arg can be String EN or DE
-                    mainProcess(args, usecase, lang);
-                }else {                 //1, 3, 5 params mean error.
-                    System.out.println("Wrong number of params.");
-                    System.exit(1);
-                }
-            }
+        } 
+        else if (args.length == 2) { // 2 args mean use case and language
+            mainProcess(args, USECASE.valueOf(args[0]), Language.valueOf(args[1]));
+        } 
+        else if (args.length == 4) { // 4 args mean use case and language as well as in and out file names
+            USECASE usecase = USECASE.valueOf(args[0]); // The arg can be String SPRINGER or DBPEDIA
+            Language lang = Language.valueOf(args[1]);  // The arg can be String EN or DE
+            mainProcess(args, usecase, lang);
+        } else {
+            System.out.println("Wrong number of params.");
+            System.exit(1);
         }
 
     }
@@ -54,8 +53,8 @@ public class interQACLI {
      * Uses Springer dataset (hosted in esDBpedia) in English
      * @param args
      */
-    public static void  mainProcess(String args[]){
-        mainProcess(args, USECASE.SPRINGER,  Language.EN);
+    public static void mainProcess(String args[]){
+        mainProcess(args, USECASE.SPRINGER, Language.EN);
     }
 
     /**
@@ -138,18 +137,13 @@ public class interQACLI {
                 break;
             }
         }
-      
-        
 
-        
-        
         // RUN
 
-        //We only check the first two args. They will be interpreted as file paths.
-        if (args.length != 0){  // Only in this case we change stdin and stdout
-            //Follows only if there are two params
-            String inFileWithPath =  args[0];  //First argument
-            String outFileWithPath = args[1];  //Second argument
+        // We check the third and fourth arguments; they will be interpreted as file paths.
+        if (args.length >= 4) {  // Only in this case we change stdin and stdout
+            String inFileWithPath  = args[2]; 
+            String outFileWithPath = args[3]; 
             try {
                 //Reassign the standard input to the given file
                 System.setIn(new FileInputStream(new File(inFileWithPath)));

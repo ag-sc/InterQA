@@ -9,6 +9,8 @@ import interQA.lexicon.Lexicon;
 import interQA.main.interQACLI.USECASE;
 import interQA.patterns.springer.SpringerQueryPattern4;
 import interQA.patterns.springer.SpringerQueryPattern5;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -378,14 +380,16 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
     
     private void addGiveMePrefixes(StringElement e) {
 
-        e.add("gib mir");
-        e.add("gib mir alle",Feature.PLURAL);
-        e.add("gib mir die",Feature.PLURAL);
-        e.add("gib mir die",Feature.SINGULAR,Feature.FEMININE);
-        e.add("gib mir das",Feature.SINGULAR,Feature.NEUTER);
-        e.add("gib mir den",Feature.SINGULAR,Feature.MASCULINE);
-        e.add("zeige alle",Feature.PLURAL);
-        e.add("zeig mir");
+        ArrayList<String> verbs = new ArrayList<String>(Arrays.asList("gib","gib mir","zeige","zeig","zeige mir","zeig mir"));
+        
+        for (String v : verbs) {
+            e.add(v);
+            e.add(v + " alle",Feature.PLURAL);
+            e.add(v + " die",Feature.PLURAL);
+            e.add(v + " die",Feature.SINGULAR,Feature.FEMININE);
+            e.add(v + " das",Feature.SINGULAR,Feature.NEUTER);
+            e.add(v + " den",Feature.SINGULAR,Feature.MASCULINE);
+        }
         
         e.add("gibt es",Feature.PLURAL);
     }
