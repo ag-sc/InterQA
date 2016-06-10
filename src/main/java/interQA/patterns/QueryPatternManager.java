@@ -53,7 +53,11 @@ public class QueryPatternManager {
         List<String> queries = new ArrayList<>();
         
         for (QueryPattern pattern : availableQueryPatterns) {
-             queries.addAll(pattern.buildSPARQLqueries());
+          for (String s : pattern.buildSPARQLqueries()) {
+            if (!queries.contains(s)) {
+                queries.add(s);
+            }
+          }
         }
         return queries;
     }

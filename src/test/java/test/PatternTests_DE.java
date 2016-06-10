@@ -28,6 +28,10 @@ public class PatternTests_EN extends TestCase {
                          interQACLI.USECASE.SPRINGER,  LexicalEntry.Language.EN),
                   new ArrayList<String>(
                          Arrays.asList(
+                            "SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }",
+                            "SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }",
+                            "SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }",
+                            "SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }",
                             "SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }"
                          )
                   )
@@ -103,7 +107,7 @@ public class PatternTests_EN extends TestCase {
                         Arrays.asList(
                            "SELECT DISTINCT DISTINCT ?lit1 {"+
                            " ?lit1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
-                           " ?lit1  <http://lod.springer.com/data/ontology/property/confCity>  ?r ."+
+                           "?lit1  <http://lod.springer.com/data/ontology/property/confCity>  ?r ."+
                            " FILTER regex(?r,\"Piran\") ."+
                            " ?lit1  <http://lod.springer.com/data/ontology/property/confYear>  ?d ."+
                            " FILTER regex(?d,\"2009\") . "+
@@ -111,7 +115,7 @@ public class PatternTests_EN extends TestCase {
                            ,
                            "SELECT DISTINCT DISTINCT ?lit1 {"+
                            " ?lit1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
-                           " ?lit1  <http://lod.springer.com/data/ontology/property/confCity>  ?l ."+
+                           "?lit1  <http://lod.springer.com/data/ontology/property/confCity>  ?l ."+
                            " FILTER regex(?l,\"Piran\") ."+
                            " ?lit1  <http://lod.springer.com/data/ontology/property/confYear>  ?e ."+
                            " FILTER regex(?e,\"2009\") . "+
