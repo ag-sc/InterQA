@@ -1,0 +1,232 @@
+
+@prefix lex: <http://example.org/lexicon#> .
+@prefix lemon: <http://lemon-model.net/lemon#> .
+@prefix lexinfo: <http://www.lexinfo.net/ontology/2.0/lexinfo#> .
+
+
+lex:lexicon a lemon:Lexicon ;
+  lemon:language "es";
+  lemon:entry lex:conference ;
+  lemon:entry lex:takePlaceIn ;
+  lemon:entry lex:proceedingsOf ; 
+  lemon:entry lex:startOf ;
+  lemon:entry lex:endOf ; 
+  lemon:entry lex:startDateOf ;
+  lemon:entry lex:endDateOf ; 
+  lemon:entry lex:heldIn ;
+  lemon:entry lex:in .
+
+
+#### conference ####
+
+lex:conference a lemon:LexicalEntry ;
+  lemon:canonicalForm lex:conference_canonicalForm ;
+  lemon:otherForm lex:conference_otherForm ;
+  lexinfo:partOfSpeech lexinfo:commonNoun ;
+  lemon:sense lex:conference_sense .
+
+lex:conference_canonicalForm lemon:writtenRep "conferencia"@es ;
+   lexinfo:number lexinfo:singular .
+lex:conference_otherForm lemon:writtenRep "conferencias"@es ;
+   lexinfo:number lexinfo:plural .
+
+lex:conference_sense lemon:reference <http://lod.springer.com/data/ontology/class/Conference> .
+
+
+#### take place in ####
+
+lex:takePlaceIn a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:takePlaceIn_canonicalForm ;
+  lemon:otherForm lex:takePlaceIn_otherForm1, lex:takePlaceIn_otherForm2 ;
+  lexinfo:partOfSpeech lexinfo:verb ;
+  lemon:synBehavior lex:takePlaceIn_synBehavior ;
+  lemon:sense lex:takePlaceIn_sense1, lex:takePlaceIn_sense2, lex:takePlaceIn_sense3 .
+
+lex:takePlaceIn_canonicalForm lemon:writtenRep "tienen lugar"@es ;
+  lexinfo:tense  lexinfo:present ; 
+  lexinfo:number lexinfo:plural.
+lex:takePlaceIn_otherForm1 lemon:writtenRep "tiene lugar"@es ;
+  lexinfo:tense  lexinfo:present ;
+  lexinfo:number lexinfo:singular .
+lex:takePlaceIn_otherForm2 lemon:writtenRep "tuvo lugar"@es ;
+  lexinfo:tense  lexinfo:past .
+
+lex:takePlaceIn_synBehavior a lexinfo:IntransitivePPFrame ;
+  lexinfo:subject lex:takePlaceIn_subj ;
+  lexinfo:prepositionalObject lex:takePlaceIn_obj .
+
+lex:takePlaceIn_obj lemon:marker lex:in .
+
+lex:takePlaceIn_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confYear> ;
+  lemon:subjOfProp lex:takePlaceIn_subj ;
+  lemon:objOfProp  lex:takePlaceIn_obj  .
+lex:takePlaceIn_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
+  lemon:subjOfProp lex:takePlaceIn_subj ;
+  lemon:objOfProp  lex:takePlaceIn_obj  .
+lex:takePlaceIn_sense3 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
+  lemon:subjOfProp lex:takePlaceIn_subj ;
+  lemon:objOfProp  lex:takePlaceIn_obj  .
+
+
+#### proceedings of ####
+
+lex:proceedingsOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:proceedingsOf_canonicalForm ;
+  lemon:otherForm lex:proceedingsOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:proceedingsOf_synBehavior ;
+  lemon:sense lex:proceedingsOf_sense .
+
+lex:proceedingsOf_canonicalForm lemon:writtenRep "proceeding"@es ;
+  lexinfo:number lexinfo:singular .
+lex:proceedingsOf_otherForm lemon:writtenRep "proceedings"@es ;
+  lexinfo:number lexinfo:plural .
+
+lex:proceedingsOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:proceedingsOf_copArg ;
+  lexinfo:possessiveAdjunct lex:proceedingsOf_posAdj .
+
+lex:proceedingsOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/hasConference> ;
+    lemon:subjOfProp lex:proceedingsOf_copArg ;
+    lemon:objOfProp  lex:proceedingsOf_posAdj .
+
+
+#### start of ####
+
+lex:startOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:startOf_canonicalForm ;
+  lemon:otherForm lex:startOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:startOf_synBehavior ;
+  lemon:sense lex:startOf_sense .
+
+lex:startOf_canonicalForm lemon:writtenRep "comenza"@es ;
+  lexinfo:number lexinfo:singular .
+lex:startOf_otherForm lemon:writtenRep "comienzan"@es ;
+  lexinfo:number lexinfo:plural .
+
+lex:startOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:startOf_copArg ;
+  lexinfo:possessiveAdjunct lex:startOf_posAdj .
+
+lex:startOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/confStartDate> ;
+    lemon:subjOfProp lex:startOf_posAdj ;
+    lemon:objOfProp  lex:startOf_copArg .
+
+
+#### end of ####
+
+lex:endOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:endOf_canonicalForm ;
+  lemon:otherForm lex:endOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:endOf_synBehavior ;
+  lemon:sense lex:endOf_sense .
+
+lex:endOf_canonicalForm lemon:writtenRep "termina"@es ;
+  lexinfo:number lexinfo:singular .
+lex:endOf_otherForm lemon:writtenRep "terminan"@es ;
+  lexinfo:number lexinfo:plural .
+
+lex:endOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:endOf_copArg ;
+  lexinfo:possessiveAdjunct lex:endOf_posAdj .
+
+lex:endOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/confEndDate> ;
+    lemon:subjOfProp lex:endOf_posAdj ;
+    lemon:objOfProp  lex:endOf_copArg .
+
+
+#### start date of ####
+
+lex:startDateOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:startDateOf_canonicalForm ;
+  lemon:otherForm lex:startDateOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:startDateOf_synBehavior ;
+  lemon:sense lex:startDateOf_sense .
+
+lex:startDateOf_canonicalForm lemon:writtenRep "fecha de inicio"@es ;
+  lexinfo:number lexinfo:singular .
+lex:startDateOf_otherForm lemon:writtenRep "fechas de inicio"@es ;
+  lexinfo:number lexinfo:plural .
+
+lex:startDateOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:startDateOf_copArg ;
+  lexinfo:possessiveAdjunct lex:startDateOf_posAdj .
+
+lex:startDateOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/confStartDate> ;
+    lemon:subjOfProp lex:startDateOf_posAdj ;
+    lemon:objOfProp  lex:startDateOf_copArg .
+
+
+#### end date of ####
+
+lex:endDateOf a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:endDateOf_canonicalForm ;
+  lemon:otherForm lex:endDateOf_otherForm ;
+  lexinfo:partOfSpeech lexinfo:noun ;
+  lemon:synBehavior lex:endDateOf_synBehavior ;
+  lemon:sense lex:endDateOf_sense .
+
+lex:endDateOf_canonicalForm lemon:writtenRep "fecha de finalización"@es ;
+  lexinfo:number lexinfo:singular .
+lex:endDateOf_otherForm lemon:writtenRep "fechas de finalización"@es ;
+  lexinfo:number lexinfo:plural .
+
+lex:endDateOf_synBehavior a lexinfo:NounPossessiveFrame ;
+  lexinfo:copulativeArg lex:endDateOf_copArg ;
+  lexinfo:possessiveAdjunct lex:endDateOf_posAdj .
+
+lex:endDateOf_sense lemon:reference <http://lod.springer.com/data/ontology/property/confEndDate> ;
+    lemon:subjOfProp lex:endDateOf_posAdj ;
+    lemon:objOfProp  lex:endDateOf_copArg .
+
+
+#### held in ####
+
+lex:heldIn a lemon:lexicalEntry ;
+  lemon:canonicalForm lex:heldIn_canonicalForm ;
+  lexinfo:partOfSpeech lexinfo:adjective ;
+  lemon:synBehavior lex:heldIn_synBehavior ;
+  lemon:sense lex:heldIn_sense1, lex:heldIn_sense2 .
+
+lex:heldIn_canonicalForm lemon:writtenRep "celebrado"@es .
+
+lex:heldIn_synBehavior a lexinfo:AdjectivePPFrame ;
+  lexinfo:subject lex:heldIn_subj ;
+  lexinfo:prepositionalObject lex:heldIn_prepObj .
+
+lex:heldIn_prepObj lemon:marker lex:in .
+
+lex:heldIn_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
+    lemon:subjOfProp lex:heldIn_subj ;
+    lemon:objOfProp  lex:heldIn_prepObj .
+lex:heldIn_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
+    lemon:subjOfProp lex:heldIn_subj ;
+    lemon:objOfProp  lex:heldIn_prepObj .
+
+
+#### Markers #### 
+
+lex:in a lemon:LexicalEntry ; 
+  lemon:canonicalForm lex:in_form ; 
+  lexinfo:partOfSpeech lexinfo:preposition ;
+  lemon:synBehavior lex:in_synBehavior ; 
+  lemon:sense lex:in_sense1, lex:in_sense2, lex:in_sense3 .
+
+lex:in_form lemon:writtenRep "en"@es .
+
+lex:in_synBehavior a lexinfo:PrepositionalFrame ;
+  lexinfo:attributiveArg lex:in_arg1 ;
+  lexinfo:prepositionalAdjunct lex:in_arg2 .
+
+lex:in_sense1 lemon:reference <http://lod.springer.com/data/ontology/property/confCity> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .
+lex:in_sense2 lemon:reference <http://lod.springer.com/data/ontology/property/confCountry> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .
+lex:in_sense3 lemon:reference <http://lod.springer.com/data/ontology/property/confYear> ;
+  lemon:subjOfProp lex:in_arg1 ;
+  lemon:objOfProp  lex:in_arg2 .
