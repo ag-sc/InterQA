@@ -41,6 +41,17 @@ public abstract class Element {
         
         return active;
     }
+    ///////
+    public List<String> getActiveEntriesKey() {
+        
+        List<String> active = new ArrayList<>();
+        
+        for (String form : index.keySet()) {
+             active.add(form);
+        }
+        
+        return active;
+    }
     
     public List<Feature> getFeatures() {
         return features;

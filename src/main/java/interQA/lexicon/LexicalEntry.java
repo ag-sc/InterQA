@@ -108,6 +108,7 @@ public class LexicalEntry {
     
     public List<Feature> getFeatures(String f) {
         List<Feature> out = features.get(f);
+        if (out == null) out = new ArrayList<Feature>();
         out.addAll(inherentFeatures);
         return out;
     } 
