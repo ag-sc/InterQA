@@ -78,11 +78,11 @@ public class PatternTests_EN extends TestCase {
             assertEquals(
                     checkSequenceByStrings(
                         "what\n"   +
-                        "skier\n"  +   //Option not available!!!!!
+                        "skier\n"  +
                         "race\n"   +
-                        "FIS Alpine World Ski Championships 2013\n" +
-                        "q\n",
-                        interQACLI.USECASE.SPRINGER,  LexicalEntry.Language.EN),
+                        "FIS Alpine World Ski Championships 2013\n" + //9873 results :-S
+                        "q\n",                                        //There is no SPARQL query available!!!
+                        interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                     new ArrayList<String>(
                         Arrays.asList(
                           "SELECT DISTINCT ?a { ?a  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> . ?a  <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . }"
@@ -192,7 +192,8 @@ public class PatternTests_EN extends TestCase {
                           "area\n"        +
                           "of\n"          +
                           "cities\n" +
-                          "q\n"),
+                          "q\n",
+                          interQACLI.USECASE.SPRINGER,  LexicalEntry.Language.EN),
                     new ArrayList<String>(
                             Arrays.asList( //We could have several queries here separated by comma
                                     "SELECT DISTINCT ?a ?p WHERE { ?uri  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/City>. ?uri  <http://dbpedia.org/ontology/area> ?a . ?uri <http://dbpedia.org/ontology/population> ?p . }"

@@ -1,6 +1,7 @@
 package interQA.main;
 
 
+import interQA.patterns.QueryPatternFactory_ES;
 import interQA.patterns.QueryPatternManager;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry.Language;
@@ -84,6 +85,7 @@ public class interQACLI {
                 switch (language) {
                     case EN: lexicon.load("./src/main/java/resources/springer_en.ttl"); break;
                     case DE: lexicon.load("./src/main/java/resources/springer_de.ttl"); break;
+                    case ES: lexicon.load("./src/main/java/resources/springer_es.ttl"); break;
                 }
                 
                 dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,labels);
@@ -100,7 +102,12 @@ public class interQACLI {
                         QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(usecase,lexicon,dataset);
                         qm.addQueryPatterns(qf_de.rollout());
                         break;
-                    } 
+                    }
+                    case ES: {
+                        QueryPatternFactory_ES qf_es = new QueryPatternFactory_ES(usecase,lexicon,dataset);
+                        qm.addQueryPatterns(qf_es.rollout());
+                        break;
+                    }
                 }
 
                 break;
@@ -145,20 +152,22 @@ public class interQACLI {
         
         // RUN
 
-        //We only check the first two args. They will be interpreted as file paths.
+        //We only check the first two args. They will be interpreted as file paths (unless named stdin and stdout)
         if (args.length != 0){  // Only in this case we change stdin and stdout
             //Follows only if there are two params
             String inFileWithPath =  args[0];  //First argument
             String outFileWithPath = args[1];  //Second argument
-            try {
-                //Reassign the standard input to the given file
-                System.setIn(new FileInputStream(new File(inFileWithPath)));
-                //Reassign the standard output to the given file
-                System.setOut(new PrintStream(new FileOutputStream(new File(outFileWithPath))));
-            }catch (FileNotFoundException e){
-                System.out.println("Fatal error. The argument " + inFileWithPath + " is not a valid input file, or " +
-                                                "the argument " + outFileWithPath + " is not a valid output file.");
-                System.exit(1);
+            if (!inFileWithPath.equals("stdin") && !outFileWithPath.equals("stdout")) {
+                try {
+                    //Reassign the standard input to the given file
+                    System.setIn(new FileInputStream(new File(inFileWithPath)));
+                    //Reassign the standard output to the given file
+                    System.setOut(new PrintStream(new FileOutputStream(new File(outFileWithPath))));
+                } catch (FileNotFoundException e) {
+                    System.out.println("Fatal error. The argument " + inFileWithPath + " is not a valid input file, or " +
+                            "the argument " + outFileWithPath + " is not a valid output file.");
+                    System.exit(1);
+                }
             }
         }
         
@@ -271,12 +280,13 @@ public class interQACLI {
                                         num = -1;
                                     }
                                 } else {
-                                    System.out.println("String not available in the options list. Please, type a valid string");
+                                    System.out.println("String '"+ str +"' is not available in the options list. Please, type a valid string");
                                     /**
                                      * WARNING. If the options list has a "d" or "q" element, we will have an ambiguity:
                                      * We do not know if you mean a command or an option.
                                      * By now, we will assume that you mean an option.
                                      */
+                                    System.exit(1);
                                 }
                             }
                         }
