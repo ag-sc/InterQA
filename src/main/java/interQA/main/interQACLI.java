@@ -23,7 +23,7 @@ public class interQACLI {
     
     public enum USECASE  { SPRINGER, DBPEDIA }
     static String commandsString = "Please, type a number (or 'q' to quit, 'd' to delete the last selection):";
-
+            
     /**
      * This is the main of the class. A return in this method is an automatic exit.
      * Without any parameter, runs on console using the Springer dataset (hosted in esDBpedia) in English.

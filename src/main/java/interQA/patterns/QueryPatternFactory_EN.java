@@ -48,12 +48,11 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         StringElement e2_0 = (StringElement) q2.getElement(0);
         addWhichPrefixes(e2_0);
-        e2_0.add("how many");
+        e2_0.add("how many",Feature.PLURAL);
         
         addNouns(q2.getElement(1));
         
         StringElement e2_2 = (StringElement) q2.getElement(2);
-        e2_2.add("is there",Feature.SINGULAR);
         e2_2.add("are there",Feature.PLURAL);
 
         patterns.add(q2);
@@ -185,9 +184,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         StringElement e10_0 = (StringElement) q10.getElement(0);
         addWhichPrefixes(e10_0);
-        e10_0.add("how many");
+        e10_0.add("how many",Feature.PLURAL);
         addNouns(q10.getElement(1));
-        
         
         addVerbs(q10.getElement(3));
         
@@ -202,7 +200,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         
         StringElement e11_0 = (StringElement) q11.getElement(0);
         addWhichPrefixes(e11_0);
-        e11_0.add("how many");
+        e11_0.add("how many",Feature.PLURAL);
         addNouns(q11.getElement(1));
         
         addVerbs(q11.getElement(3));
