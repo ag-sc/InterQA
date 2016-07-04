@@ -50,11 +50,31 @@ public class PatternTests_EN extends TestCase {
                         "q\n"),
                   new HashSet<String>(
                             Arrays.asList(
-                            "SELECT COUNT(DISTINCT ?x) WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }"
+                                "SELECT COUNT(DISTINCT ?x) WHERE {"+
+                                "  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . "+
+                                "}"
                             )
                   )
             );   
         }
+        /*public void test_C_HowManyV2() throws Exception {
+            // Give me all conferences
+            //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
+            assertEquals(
+                    checkSequenceByStrings(   //OK
+                            "how many\n"    +
+                            "conference\n" +
+                            "is there\n"   +
+                            "q\n"),
+                    new HashSet<String>(
+                            Arrays.asList(
+                                    "SELECT COUNT(DISTINCT ?x) WHERE {"+
+                                            "  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . "+
+                                            "}"
+                            )
+                    )
+            );
+        }*/
         public void test_P_I() throws Exception{
           // who was the creator Next Top Model Romania  
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
@@ -67,7 +87,9 @@ public class PatternTests_EN extends TestCase {
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                    new HashSet<String>(
                             Arrays.asList(
-                            "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/Power_Rangers_Zeo> <http://dbpedia.org/ontology/creator> ?x . }"
+                                "SELECT DISTINCT ?x WHERE {"+
+                                " <http://dbpedia.org/resource/Power_Rangers_Zeo> <http://dbpedia.org/ontology/creator> ?x . "+
+                                "}"
                             )
                    )
             ); 
@@ -86,7 +108,10 @@ public class PatternTests_EN extends TestCase {
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                     new HashSet<String>(
                         Arrays.asList(
-                          "SELECT DISTINCT ?a { ?a  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> . ?a  <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . }"
+                          "SELECT DISTINCT ?a {"+
+                          " ?a  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> ."+
+                          " ?a  <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . "+
+                          "}"
                         )
                     )
             );
@@ -141,7 +166,10 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                      new HashSet<String>(
                            Arrays.asList( //We could have several queries here separated by comma
-                             "SELECT DISTINCT ?x WHERE { ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> .?x <http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@EN . }"
+                             "SELECT DISTINCT ?x WHERE {"+
+                             " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
+                             "?x <http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@EN . "+
+                             "}"
                            )
                      )
              );
@@ -158,7 +186,15 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                      new HashSet<String>(
                             Arrays.asList( //We could have several queries here separated by comma
-                              "SELECT DISTINCT ?lit WHERE {?x <http://lod.springer.com/data/ontology/property/confStartDate> ?y.{ ?x  <http://lod.springer.com/data/ontology/property/confAcronym>  ?l1 . } UNION { ?x <http://lod.springer.com/data/ontology/property/confName> ?l1 . } FILTER regex(?l1,\"International Working Conference on Requirements Engineering: Foundation for Software Quality\"). ?x <http://lod.springer.com/data/ontology/property/confYear> ?l2 . FILTER regex(?l2,\"2009\").  }"
+                              "SELECT DISTINCT ?lit WHERE {"+
+                              "?x <http://lod.springer.com/data/ontology/property/confStartDate> ?y."+
+                              "{ ?x  <http://lod.springer.com/data/ontology/property/confAcronym>  ?l1 . } "+
+                              "UNION "+
+                              "{ ?x <http://lod.springer.com/data/ontology/property/confName> ?l1 . } "+
+                              "FILTER regex(?l1,\"International Working Conference on Requirements Engineering: Foundation for Software Quality\"). "+
+                              "?x <http://lod.springer.com/data/ontology/property/confYear> ?l2 . "+
+                              "FILTER regex(?l2,\"2009\").  "+
+                              "}"
                             )
                      )
             );
@@ -177,7 +213,15 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                     new HashSet<String>(
                             Arrays.asList( //We could have several queries here separated by comma
-                              "SELECT DISTINCT ?lit1 ?lit2  { ?x  <http://lod.springer.com/data/ontology/property/confStartDate> ?lit1.?x <http://lod.springer.com/data/ontology/property/confEndDate> ?lit1.?x <http://lod.springer.com/data/ontology/property/confYear> ?l1 . FILTER regex(?l1,\"2015\"). { ?x  <http://lod.springer.com/data/ontology/property/confAcronym>  ?l2 . } UNION { ?x <http://lod.springer.com/data/ontology/property/confName> ?l2 . } FILTER regex(?l2,\"LTEC\"). }"
+                              "SELECT DISTINCT ?lit1 ?lit2  {"+
+                              " ?x  <http://lod.springer.com/data/ontology/property/confStartDate> ?lit1."+
+                              "?x <http://lod.springer.com/data/ontology/property/confEndDate> ?lit1."+
+                              "?x <http://lod.springer.com/data/ontology/property/confYear> ?l1 . FILTER regex(?l1,\"2015\")."+
+                              " { ?x  <http://lod.springer.com/data/ontology/property/confAcronym>  ?l2 . }"+
+                              " UNION"+
+                              " { ?x <http://lod.springer.com/data/ontology/property/confName> ?l2 . }"+
+                              " FILTER regex(?l2,\"LTEC\"). "+
+                              "}"
                             )
                     )
             );
@@ -188,16 +232,21 @@ public class PatternTests_EN extends TestCase {
             assertEquals(
                     checkSequenceByStrings(   //Wrong!
                           "give me the\n" +
-                          "population\n"  +  //Option not available!!!!
-                          "and\n"         +
-                          "area\n"        +
-                          "of\n"          +
-                          "cities\n" +
+                          "population\n"  +  //Option not available! The plural form "populations' produces 17.799 results but'and' is not an option available
+                          "and\n"         +  //now tries this option, but this is not valid either
+                          "area\n"        +  //Same
+                          "of\n"          +  //Same
+                          "cities\n" +       //Same
                           "q\n",
-                          interQACLI.USECASE.SPRINGER,  LexicalEntry.Language.EN),
+                          interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                     new HashSet<String>(
                             Arrays.asList( //We could have several queries here separated by comma
-                                    "SELECT DISTINCT ?a ?p WHERE { ?uri  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/City>. ?uri  <http://dbpedia.org/ontology/area> ?a . ?uri <http://dbpedia.org/ontology/population> ?p . }"
+                                    /*"SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/City> . }"*/
+                                    "SELECT DISTINCT ?a ?p WHERE {"+
+                                    " ?uri  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/City>."+
+                                    " ?uri  <http://dbpedia.org/ontology/area> ?a ."+
+                                    " ?uri <http://dbpedia.org/ontology/population> ?p . "+
+                                    "}"
                             )
                     )
              );
@@ -214,8 +263,13 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                     new HashSet<String>(
                             Arrays.asList( //We could have several queries here separated by comma
-                                    "SELECT DISTINCT ?x WHERE { ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> .?x <http://lod.springer.com/data/ontology/property/confCity> \"Atlanta, GA\"@EN . }",
-                                    "SELECT COUNT(DISTINCT ?x) WHERE { ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> .?x <http://lod.springer.com/data/ontology/property/confCity> \"Atlanta, GA\"@EN . }"
+                                    "SELECT DISTINCT ?x WHERE {"+
+                                    " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
+                                    "?x <http://lod.springer.com/data/ontology/property/confCity> \"Atlanta, GA\"@EN . "+
+                                    "}",
+                                    "SELECT COUNT(DISTINCT ?x) WHERE {"+
+                                    " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
+                                    "?x <http://lod.springer.com/data/ontology/property/confCity> \"Atlanta, GA\"@EN . }"
                             )
                     )
             );

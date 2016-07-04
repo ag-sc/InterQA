@@ -20,8 +20,11 @@ import java.util.regex.Pattern;
 public class interQACLI {
     
     public enum USECASE  { SPRINGER, DBPEDIA }
-    static String commandsString = "Please, type a number (or 'q' to quit, 'd' to delete the last selection):";
-            
+    static String typeNumberOrCommand = "Please, type a number (or 'q' to quit, 'd' to delete the last selection):";
+    static String typeStringOrCommand = "Please, type an option (or 'q' to quit, 'd' to delete the last selection):";
+    static String typeCommand         = "Please, type a command: 'q' to quit, 'd' to delete the last selection";
+    static String trapSentence = "SPARQL queries:";
+
     /**
      * This is the main of the class. A return in this method is an automatic exit.
      * Without any parameter, runs on console using the Springer dataset (hosted in esDBpedia) in English.
@@ -222,7 +225,7 @@ public class interQACLI {
 
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
+                System.out.println(typeNumberOrCommand);
             }
         }while(interMode == 0);
         
@@ -233,7 +236,7 @@ public class interQACLI {
             queries = qm.buildSPARQLqueries();
             
             if(!queries.isEmpty()){
-               System.out.println("SPARQL queries:");
+               System.out.println(trapSentence);
                 for (String query : queries) {
                      System.out.println(query);
                 } 
@@ -242,11 +245,15 @@ public class interQACLI {
              
             TreeSet<String> optsOrdered = new TreeSet<>(qm.getUIoptions());
             opts = new ArrayList<>(optsOrdered);
-            
-            int index = 1;
-            System.out.println(commandsString);
-            for (String str : opts) {
-                System.out.println(index++ + ": " + str);
+
+            if (opts.size() >  0) { //If there are options, show them
+                int index = 1;
+                System.out.println(interMode == 1 ? typeNumberOrCommand : typeStringOrCommand);
+                for (String str : opts) {
+                    System.out.println(index++ + ": " + str);
+                }
+            }else{
+                System.out.println(typeCommand);
             }
             int num = 0;
              while (true) {
@@ -278,7 +285,7 @@ public class interQACLI {
                         break;
                     } catch (NumberFormatException e) {
                         //if () = Integer.parseInt(scanner.nextLine());
-                        System.out.println("Please, type a number (or 'q' to quit, 'd' to delete the last selection)");
+                        System.out.println(typeNumberOrCommand);
                     }
                 }
                 if (interMode == 2) { //Interaction by means of strings
@@ -304,14 +311,15 @@ public class interQACLI {
                                      * We do not know if you mean a command or an option.
                                      * By now, we will assume that you mean an option.
                                      */
-                                    System.exit(1);
+                                    //System.exit(1);
+                                    throw (new NumberFormatException());
                                 }
                             }
                         }
                         break;
                     } catch (NumberFormatException e) {
                         //if () = Integer.parseInt(scanner.nextLine());
-                        System.out.println(commandsString);
+                        System.out.println(typeStringOrCommand);
                     }
                      
                 }
@@ -359,11 +367,11 @@ public class interQACLI {
         String args[] = {fileNameIn, fileNameOut};
         cli.mainProcess(args);
 
-        //Read the last lines of the output, looking for a line with "SPARQL queries:\n"
+        //Read the last lines of the output, looking for a line with trapSentence
         ReversedLinesFileReader object = new ReversedLinesFileReader(new File(fileNameOut)); //Apache commons io
         ArrayList<String> queries = new ArrayList<String>();
         String query = new String();
-        while (!(query = object.readLine()).equals("SPARQL queries:")) {  //Reads from the end of the file till this line
+        while (!(query = object.readLine()).equals(trapSentence)) {  //Reads from the end of the file till this line
             queries.add(query);
         }
         return(queries);
@@ -377,25 +385,6 @@ public class interQACLI {
     public static ArrayList<String> checkSequenceByNumber(String sequence) throws Exception {
 
         return checkSequence (sequence, "ByNumber");
-
-//        interQACLI cli = new interQACLI();
-//        String fileNameIn  = "test1.cli";
-//        String fileNameOut = "test1.out";
-//        PrintWriter writer = new PrintWriter(fileNameIn, "UTF-8"); //Overwrites if exists. Goes to class/
-//        writer.println("1"); //Selection by number
-//        writer.println(sequence);
-//        writer.close();
-//        String args[] = {fileNameIn, fileNameOut};
-//        cli.mainProcess(args);
-//
-//        //Read the last lines of the output, looking for a line with "SPARQL queries:\n"
-//        ReversedLinesFileReader object = new ReversedLinesFileReader(new File(fileNameOut)); //Apache commons io
-//        ArrayList<String> queries = new ArrayList<String>();
-//        String query = new String();
-//        while (!(query = object.readLine()).equals("SPARQL queries:")) {  //Reads from the end of the file till this line
-//            queries.add(query);
-//        }
-//        return(queries);
     }
 
     /**
@@ -439,14 +428,22 @@ public class interQACLI {
         }
         cli.mainProcess(args, usecase, language,qps);
 
-        //Read the last lines of the output, looking for a line with "SPARQL queries:\n"
+        //Read the last lines of the output, looking for a line with the trapSentence
         ReversedLinesFileReader object = new ReversedLinesFileReader(new File(fileNameOut)); //Apache commons io
         ArrayList<String> queries = new ArrayList<String>();
         String query = new String();
-        while (!(query = object.readLine()).equals("SPARQL queries:")) {  //Reads from the end of the file till this line
+        while (!(query = object.readLine()).equals(trapSentence)) {  //Reads from the end of the file till this line
             queries.add(query);
         }
-        int lastInvalidLine = queries.indexOf(commandsString); //From here onwards we have to delete
+        int lastInvalidLine = //From here onwards we have to delete. There are 3 possible terminations
+                              queries.indexOf(typeNumberOrCommand) != -1? //finishes with typeNumberOrCommand?
+                                   queries.indexOf(typeNumberOrCommand)      //yes
+                                  :                                         //no
+                                   queries.indexOf(typeStringOrCommand) != -1?  //finishes with typeStringOrCommand?
+                                       queries.indexOf(typeStringOrCommand)  //yes
+                                      :                                      //no
+                                       queries.indexOf(typeCommand)             //Assume finishes with typeCommand
+                             ;
         List<String> toDelete = queries.subList(0, 1 + lastInvalidLine);
         toDelete.clear();
 
