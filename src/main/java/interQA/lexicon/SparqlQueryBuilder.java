@@ -59,24 +59,28 @@ public class SparqlQueryBuilder {
          //check the type of instance, if it is literal, FILTER property is added to query
          public String typeChecker(LexicalEntry instance){
              
-            char var_name = randomVariable();
+            String var_name = variableGenerator();
             if(instance.getReference().matches("http://.*")){
-                    return " instance.getReference()";
+                    return instance.getReference();
                     }
             else{
-                    return " ?"+var_name+" . FILTER regex(?"+var_name+",\""+instance.getCanonicalForm()+"\") ";	
+                    return " "+var_name+" . FILTER regex(?"+var_name+",\""+instance.getCanonicalForm()+"\") ";	
             }
           
          }
          
-         //random letter creator for multi-line sparql queries
-         private char randomVariable(){
-            
-            Random r = new Random();
-            char c = (char) (r.nextInt(26) + 'a');
-            
-            return c; 
+         int RandVar = 0;
+         //variable generator for multi-line sparql queries
+         private String variableGenerator(){
+             RandVar+= 1;
+             
+             return "?x"+RandVar;
          }
+         
+         private void variableReset(){
+             RandVar=0;
+         }
+         
          
         //depends on the value of flag puts ?x or COUNT(?x) for How many questions 
         private String countFlag(boolean flag,String var){
@@ -296,7 +300,8 @@ public class SparqlQueryBuilder {
 	}
 	
 	private String queryForOBJOFPROPinCaseClassPropertyAndInstanceBeginning(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry inst_entry,boolean flag){
-		return "SELECT DISTINCT "+countFlag(flag,"lit1")+" { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
+            
+            return "SELECT DISTINCT "+countFlag(flag,"lit1")+" { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
 				+ "?lit1  <"+prop_entry.getReference()+"> "+typeChecker(inst_entry)+".";
 	}
 	
@@ -745,7 +750,7 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
 		
 		
 		
-		
+		variableReset();
 		return queries;
 		
 	}
@@ -835,7 +840,7 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
 		
 		
 		
-		
+		variableReset();
 		return queries;
 		
 	}

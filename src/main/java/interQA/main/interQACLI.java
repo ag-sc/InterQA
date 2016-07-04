@@ -1,6 +1,7 @@
 package interQA.main;
 
 
+import interQA.patterns.QueryPatternFactory_ES;
 import interQA.patterns.QueryPatternManager;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry.Language;
@@ -10,10 +11,7 @@ import interQA.patterns.QueryPatternFactory_EN;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -30,20 +28,31 @@ public class interQACLI {
      * @param args
      */
     public static void  main(String args[]){
-        if (args.length == 0) {  
-            // Default: Springer.EN
+        if (args.length == 0) {  //No args
             mainProcess(args, USECASE.SPRINGER, Language.EN);
-        } 
-        else if (args.length == 2) { // 2 args mean use case and language
-            mainProcess(args, USECASE.valueOf(args[0]), Language.valueOf(args[1]));
-        } 
-        else if (args.length == 4) { // 4 args mean use case and language as well as in and out file names
-            USECASE usecase = USECASE.valueOf(args[0]); // The arg can be String SPRINGER or DBPEDIA
-            Language lang = Language.valueOf(args[1]);  // The arg can be String EN or DE
-            mainProcess(args, usecase, lang);
-        } else {
-            System.out.println("Wrong number of params.");
-            System.exit(1);
+        }else{                  //We provide args
+            if (args.length == 2) { //2 params mean in and out file names
+                mainProcess(args, USECASE.SPRINGER, Language.EN);
+            }else{                 //1, 3, 4, 5 params...
+                if (args.length == 4) { //4 params mean in and out file names, USECASE and Lang
+                    USECASE usecase = USECASE.valueOf(args[2]);    //The arg can be String SPRINGER or DBPEDIA
+                    Language lang = Language.valueOf(args[3]); //The arg can be String EN or DE
+                    mainProcess(args, usecase, lang);
+                }else {
+                    if (args.length > 4) { //more than 4 params mean in and out file names, USECASE, Lang and a serie of query-pattern names
+                        USECASE usecase = USECASE.valueOf(args[2]);    //The arg can be String SPRINGER or DBPEDIA
+                        Language lang = Language.valueOf(args[3]); //The arg can be String EN or DE
+                        ArrayList<String> qpNames= new ArrayList<>();
+                        for (int i =4; i < args.length; i++){
+                            qpNames.add(args[i]);
+                        }
+                        mainProcess(args, usecase, lang, qpNames);
+                    }else {     //Only 1 and 3 params mean error.
+                        System.out.println("Wrong number of params.");
+                        System.exit(1);
+                    }
+                }
+            }
         }
 
     }
@@ -53,76 +62,91 @@ public class interQACLI {
      * Uses Springer dataset (hosted in esDBpedia) in English
      * @param args
      */
-    public static void mainProcess(String args[]){
-        mainProcess(args, USECASE.SPRINGER, Language.EN);
+    public static void  mainProcess(String args[]){
+        mainProcess(args, USECASE.SPRINGER,  Language.EN);
     }
+
 
     /**
      * Specialization to support other datasets and languages
      * @param args
      */
-    public static void  mainProcess(String args[], USECASE usecase, Language language ){
+    public static void  mainProcess(String args[], USECASE usecase, Language language ) {
+        mainProcess(args, usecase, language, null );
+    }
+
+    /**
+     * Specialization to support other datasets and languages; and specific queryPatterns specified by "its name".
+     * If qpNames is null, it will consider all the query patterns available.
+     * @param args
+     */
+    public static void  mainProcess(String args[], USECASE usecase, Language language, ArrayList<String> qpNames ){
 
         // INIT
-        
         Lexicon lexicon = new Lexicon(language);
         DatasetConnector dataset;
         QueryPatternManager qm = new QueryPatternManager();
 
         switch (usecase) {
-            
+
             case SPRINGER: {
-                
+
                 List<String> labels = new ArrayList<>();
                 labels.add("http://www.w3.org/2000/01/rdf-schema#label");
                 labels.add("http://lod.springer.com/data/ontology/property/confName");
                 labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
 
-                // Load lexicon  
+                // Load lexicon
 
                 switch (language) {
                     case EN: lexicon.load("./src/main/java/resources/springer_en.ttl"); break;
                     case DE: lexicon.load("./src/main/java/resources/springer_de.ttl"); break;
+                    case ES: lexicon.load("./src/main/java/resources/springer_es.ttl"); break;
                 }
-                
+
                 dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,labels);
-                
+
                 // Load query patterns
-        
+
                 switch (language) {
-                    case EN: { 
+                    case EN: {
                         QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
-                        qm.addQueryPatterns(qf_en.rollout());
+                        qm.addQueryPatterns(qpNames == null? qf_en.rollout(): qf_en.rollout(qpNames)); //Support for query patterns "by name"
                         break;
                     }
                     case DE: {
                         QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(usecase,lexicon,dataset);
                         qm.addQueryPatterns(qf_de.rollout());
                         break;
-                    } 
+                    }
+                    case ES: {
+                        QueryPatternFactory_ES qf_es = new QueryPatternFactory_ES(usecase,lexicon,dataset);
+                        qm.addQueryPatterns(qf_es.rollout());
+                        break;
+                    }
                 }
 
                 break;
             }
-            
-            case DBPEDIA: { 
-                
+
+            case DBPEDIA: {
+
                 List<String> labels = new ArrayList<>();
                 labels.add("http://www.w3.org/2000/01/rdf-schema#label");
 
-                // Load lexicon  
+                // Load lexicon
 
                 switch (language) {
                     case EN: lexicon.load("./src/main/java/resources/dbpedia_en.rdf"); break;
                     case DE: lexicon.load("./src/main/java/resources/dbpedia_de.rdf"); break;
                 }
-                
+
                 dataset = new DatasetConnector("http://dbpedia.org/sparql",language,labels);
-                
+
                 // Load query patterns
-        
+
                 switch (language) {
-                    case EN: { 
+                    case EN: {
                         QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
                         qm.addQueryPatterns(qf_en.rollout());
                         break;
@@ -133,26 +157,33 @@ public class interQACLI {
                         break;
                     }
                 }
-                                
+
                 break;
             }
         }
 
+
+
+
+
         // RUN
 
-        // We check the third and fourth arguments; they will be interpreted as file paths.
-        if (args.length >= 4) {  // Only in this case we change stdin and stdout
-            String inFileWithPath  = args[2]; 
-            String outFileWithPath = args[3]; 
-            try {
-                //Reassign the standard input to the given file
-                System.setIn(new FileInputStream(new File(inFileWithPath)));
-                //Reassign the standard output to the given file
-                System.setOut(new PrintStream(new FileOutputStream(new File(outFileWithPath))));
-            }catch (FileNotFoundException e){
-                System.out.println("Fatal error. The argument " + inFileWithPath + " is not a valid input file, or " +
-                                                "the argument " + outFileWithPath + " is not a valid output file.");
-                System.exit(1);
+        //We only check the first two args. They will be interpreted as file paths (unless named stdin and stdout)
+        if (args.length != 0){  // Only in this case we change stdin and stdout
+            //Follows only if there are two params
+            String inFileWithPath =  args[0];  //First argument
+            String outFileWithPath = args[1];  //Second argument
+            if (!inFileWithPath.equals("stdin") && !outFileWithPath.equals("stdout")) {
+                try {
+                    //Reassign the standard input to the given file
+                    System.setIn(new FileInputStream(new File(inFileWithPath)));
+                    //Reassign the standard output to the given file
+                    System.setOut(new PrintStream(new FileOutputStream(new File(outFileWithPath))));
+                } catch (FileNotFoundException e) {
+                    System.out.println("Fatal error. The argument " + inFileWithPath + " is not a valid input file, or " +
+                            "the argument " + outFileWithPath + " is not a valid output file.");
+                    System.exit(1);
+                }
             }
         }
         
@@ -167,6 +198,8 @@ public class interQACLI {
         //Select interaction mode
         System.out.println("Welcome to interQACLI");
         System.out.println("You are using dataset " + usecase.name() + " and language " + language.name() + ".");
+        System.out.println("You are using these query patterns: " + (qpNames!= null? qpNames: "the ones defined in the case."));
+
         int interMode = 0;
         do {
             System.out.println("Choose the interaction way:");
@@ -265,12 +298,13 @@ public class interQACLI {
                                         num = -1;
                                     }
                                 } else {
-                                    System.out.println("String not available in the options list. Please, type a valid string");
+                                    System.out.println("String '"+ str +"' is not available in the options list. Please, type a valid string");
                                     /**
                                      * WARNING. If the options list has a "d" or "q" element, we will have an ambiguity:
                                      * We do not know if you mean a command or an option.
                                      * By now, we will assume that you mean an option.
                                      */
+                                    System.exit(1);
                                 }
                             }
                         }
@@ -370,16 +404,27 @@ public class interQACLI {
      * @param sequence is the sequence of tokens typed by the user
      * @throws Exception
      */
-    public static ArrayList<String> checkSequenceByStrings(String sequence) throws Exception {
+    public static Set<String> checkSequenceByStrings(String sequence) throws Exception {
         return (checkSequenceByStrings(sequence,USECASE.SPRINGER,  Language.EN));
     }
+
     /**
      * Simulates the user interaction by typing strings. Uses files that are overwritten in each test
-     * Specialized version for other datasets and languages
+     * Specialized version for other datasets and languages. Uses all the query patterns available.
      * @param sequence is the sequence of tokens typed by the user
      * @throws Exception
      */
-    public static ArrayList<String> checkSequenceByStrings(String sequence, USECASE usecase, Language language) throws Exception {
+    public static Set<String> checkSequenceByStrings(String sequence, USECASE usecase, Language language) throws Exception {
+        return checkSequenceByStrings(sequence, usecase, language, null);
+    }
+
+    /**
+     * Simulates the user interaction by typing strings. Uses files that are overwritten in each test
+     * Specialized version for other datasets and languages. Can specify query patterns "by name".
+     * @param sequence is the sequence of tokens typed by the user
+     * @throws Exception
+     */
+    public static Set<String> checkSequenceByStrings(String sequence, USECASE usecase, Language language, String[] qpNames) throws Exception {
         interQACLI cli = new interQACLI();
         String fileNameIn  = "test1.cli";
         String fileNameOut = "test1.out";
@@ -388,7 +433,11 @@ public class interQACLI {
         writer.println(sequence);
         writer.close();
         String args[] = {fileNameIn, fileNameOut};
-        cli.mainProcess(args, usecase, language);
+        ArrayList<String> qps = null;
+        if (qpNames != null){
+             qps = new  ArrayList<String>(Arrays.asList(qpNames)); //Converts String[] to ArrayList
+        }
+        cli.mainProcess(args, usecase, language,qps);
 
         //Read the last lines of the output, looking for a line with "SPARQL queries:\n"
         ReversedLinesFileReader object = new ReversedLinesFileReader(new File(fileNameOut)); //Apache commons io
@@ -401,6 +450,9 @@ public class interQACLI {
         List<String> toDelete = queries.subList(0, 1 + lastInvalidLine);
         toDelete.clear();
 
-        return(queries);
+        //Converts ArrayList to Set
+        Set<String> queriesSet = new HashSet<String>(queries);
+
+        return(queriesSet);
     }
 }
