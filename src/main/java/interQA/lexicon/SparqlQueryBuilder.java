@@ -741,7 +741,7 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
                                                                 }
                                                         
 						}
-                                                                
+                                         variableReset();                       
 							
 				}
 						
@@ -750,7 +750,7 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
 		
 		
 		
-		variableReset();
+		
 		return queries;
 		
 	}
