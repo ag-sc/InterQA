@@ -120,14 +120,14 @@ public class PatternTests_EN extends TestCase {
         public void test_C_P_I_P_I() throws Exception{
             //show me all conferences that take place Piran in 2009
             assertEquals(
-                    checkSequenceByStrings(     //Wrong
+                    checkSequenceByStrings(     //Wrong variables labeling
                             "show me all\n" +
                             "conferences\n" +
                             "that\n"        +
                             "take place\n"  +
                             "Piran\n"       +
                             "in\n"          +
-                            "2009\n"        +  //here I get an exception (SparqlQueryBuilder.java:55)
+                            "2009\n"        +
                             "q\n"),
                     new HashSet<String>(
                         Arrays.asList(
