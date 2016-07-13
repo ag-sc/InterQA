@@ -32,7 +32,7 @@ public class interQACLI {
      */
     public static void  main(String args[]){
         if (args.length == 0) {  //No args
-            mainProcess(args, USECASE.SPRINGER, Language.EN);
+            mainProcess(args, USECASE.DBPEDIA, Language.EN);
         }else{                  //We provide args
             if (args.length == 2) { //2 params mean in and out file names
                 mainProcess(args, USECASE.SPRINGER, Language.EN);
@@ -73,6 +73,8 @@ public class interQACLI {
     /**
      * Specialization to support other datasets and languages
      * @param args
+     * @param usecase
+     * @param language
      */
     public static void  mainProcess(String args[], USECASE usecase, Language language ) {
         mainProcess(args, usecase, language, null );
@@ -82,6 +84,9 @@ public class interQACLI {
      * Specialization to support other datasets and languages; and specific queryPatterns specified by "its name".
      * If qpNames is null, it will consider all the query patterns available.
      * @param args
+     * @param usecase
+     * @param language
+     * @param qpNames
      */
     public static void  mainProcess(String args[], USECASE usecase, Language language, ArrayList<String> qpNames ){
 

@@ -108,9 +108,9 @@ public class PatternTests_EN extends TestCase {
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                     new HashSet<String>(
                         Arrays.asList(
-                          "SELECT DISTINCT ?a {"+
-                          " ?a  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> ."+
-                          " ?a  <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . "+
+                          "SELECT DISTINCT ?x {"+
+                          " ?x  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> ."+
+                          " ?x  <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . "+
                           "}"
                         )
                     )
@@ -131,21 +131,12 @@ public class PatternTests_EN extends TestCase {
                             "q\n"),
                     new HashSet<String>(
                         Arrays.asList(
-                           "SELECT DISTINCT DISTINCT ?lit1 {"+
-                           " ?lit1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
-                           "?lit1  <http://lod.springer.com/data/ontology/property/confCity>  ?r ."+
-                           " FILTER regex(?r,\"Piran\") ."+
-                           " ?lit1  <http://lod.springer.com/data/ontology/property/confYear>  ?d ."+
-                           " FILTER regex(?d,\"2009\") . "+
-                           "}"
-                           ,
-                           "SELECT DISTINCT DISTINCT ?lit1 {"+
-                           " ?lit1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
-                           "?lit1  <http://lod.springer.com/data/ontology/property/confCity>  ?l ."+
-                           " FILTER regex(?l,\"Piran\") ."+
-                           " ?lit1  <http://lod.springer.com/data/ontology/property/confYear>  ?e ."+
-                           " FILTER regex(?e,\"2009\") . "+
-                           "}"
+                           "SELECT  DISTINCT ?lit1 { ?lit1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> "
+                                   + "<http://lod.springer.com/data/ontology/class/Conference> .?lit1  "
+                                   + "<http://lod.springer.com/data/ontology/property/confCity>  ?x1 . "
+                                   + "FILTER regex(?x1,\"Piran\") . "
+                                   + "?lit1  <http://lod.springer.com/data/ontology/property/confYear>  ?x3 . "
+                                   + "FILTER regex(?x3,\"2009\") . }"
                         )
                     )
             );
