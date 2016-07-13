@@ -60,6 +60,7 @@ public class SparqlQueryBuilder {
          public String typeChecker(LexicalEntry instance){
              
             String var_name = variableGenerator();
+            
             if(instance.getReference().matches("http://.*")){
                     return instance.getReference();
                     }
@@ -295,13 +296,13 @@ public class SparqlQueryBuilder {
 	
 	private String queryForSUBJOFPROPinCaseClassPropertyAndInstanceBeginning(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry inst_entry,boolean flag){
 		
-            return "SELECT DISTINCT "+countFlag(flag,"lit1")+"  { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
+            return "SELECT "+countFlag(flag,"lit1")+"  { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
 				+ ""+inst_entry.getReference()+"  <"+prop_entry.getReference()+"> ?lit1.";
 	}
 	
 	private String queryForOBJOFPROPinCaseClassPropertyAndInstanceBeginning(LexicalEntry class_entry,LexicalEntry prop_entry,LexicalEntry inst_entry,boolean flag){
             
-            return "SELECT DISTINCT "+countFlag(flag,"lit1")+" { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
+            return "SELECT  "+countFlag(flag,"lit1")+" { ?lit1 <"+vocab.rdfType+"> <"+class_entry.getReference()+"> ."
 				+ "?lit1  <"+prop_entry.getReference()+"> "+typeChecker(inst_entry)+".";
 	}
 	
@@ -472,7 +473,8 @@ PropertyElement property_elements,LexicalEntry.SynArg syn,boolean flag){
 					for(LexicalEntry inst_entry : instance_elements.getActiveEntries()){
 						query = queryForSUBJOFPROPinCaseClassAndIndividualAndProperty(noun_entry,nounprop_entry,inst_entry,flag);
                                             check_query = askQueryForSUBJOFPROPinCaseClassAndIndividualAndProperty(noun_entry,nounprop_entry,inst_entry,flag);
-					if(SPARQLQueryValidator(check_query)) queries.add(query);
+                                            
+                                            if(SPARQLQueryValidator(check_query)) queries.add(query);
 					}
 					
 					break;
@@ -799,6 +801,7 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
                                                            query = query.replace(query_mid, "");
                                                            check_query = check_query.replace(query_mid, "");
 							}
+                                                        variableReset();
 						}
 						
 					case OBJOFPROP:
@@ -831,8 +834,9 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
                                                          query= query.replace(query_mid, "");
                                                          check_query = check_query.replace(query_mid, "");     
 							}
+                                                        variableReset();
 						}
-				
+                                            
 				}
 						
 					}
@@ -840,7 +844,7 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
 		
 		
 		
-		variableReset();
+		
 		return queries;
 		
 	}
