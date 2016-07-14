@@ -32,7 +32,7 @@ public class interQACLI {
      */
     public static void  main(String args[]){
         if (args.length == 0) {  //No args
-            mainProcess(args, USECASE.DBPEDIA, Language.EN);
+            mainProcess(args, USECASE.SPRINGER, Language.EN);
         }else{                  //We provide args
             if (args.length == 2) { //2 params mean in and out file names
                 mainProcess(args, USECASE.SPRINGER, Language.EN);

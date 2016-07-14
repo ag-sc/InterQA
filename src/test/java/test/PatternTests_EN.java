@@ -223,7 +223,7 @@ public class PatternTests_EN extends TestCase {
             assertEquals(
                     checkSequenceByStrings(   //Wrong!
                           "give me the\n" +
-                          "population\n"  +  //Option not available! The plural form "populations' produces 17.799 results but'and' is not an option available
+                          "population\n"  +  //Option not available! The plural form "populations' produces 17.799 results but 'and' is not an option available (may be is not in the lexicon?)
                           "and\n"         +  //now tries this option, but this is not valid either
                           "area\n"        +  //Same
                           "of\n"          +  //Same
