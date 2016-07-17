@@ -17,13 +17,14 @@ import java.util.Set;
 public class SparqlQueryBuilder {
 
 	Vocabulary vocab = new Vocabulary();
-	String endpoint = "http://es.dbpedia.org/sparql";
+	String endpoint ;
 	
 	List<String> LabelProperties; 
 	List<String> DateProperties;
 	
-        public SparqlQueryBuilder() {
-               
+        public SparqlQueryBuilder(String endpoint) {
+            
+            this.endpoint = endpoint;
             LabelProperties = new ArrayList<>();
             LabelProperties.add("http://lod.springer.com/data/ontology/property/confAcronym");
             LabelProperties.add("http://lod.springer.com/data/ontology/property/confName");
@@ -247,7 +248,7 @@ public class SparqlQueryBuilder {
 	//query for gYear Literal and Name Literal of Conference and Property
 	private String DomainqueryForincasegYearNameandProperty(LexicalEntry gYear_entry,LexicalEntry name_entry,LexicalEntry prop_entry){
                         
-		return "SELECT DISTINCT ?lit WHERE "
+		return "SELECT DISTINCT ?y WHERE "
 				+ "{?x <"+prop_entry.getReference()+"> ?y."
 				+label("?x","?l1",LabelProperties)+" FILTER regex(?l1,\""+name_entry.getCanonicalForm()+"\"). "
 				+label("?x","?l2",DateProperties)+" FILTER regex(?l2,\""+gYear_entry.getCanonicalForm()+"\"). "
@@ -714,6 +715,7 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
                                                         query = query.replace(query_mid,"");
                                                         check_query = check_query.replace(query_mid,"");
                                                         }
+                                                        variableReset(); 
                                                 }
 						
 					case OBJOFPROP:
@@ -741,9 +743,8 @@ PropertyElement property_element2,LexicalEntry.SynArg syn1,LexicalEntry.SynArg s
                                                         query = query.replace(query_mid,"");
                                                         check_query = check_query.replace(query_mid,"");
                                                                 }
-                                                        
+                                                   variableReset();      
 						}
-                                         variableReset();                       
 							
 				}
 						

@@ -6,6 +6,7 @@ import interQA.patterns.QueryPatternManager;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
+import interQA.lexicon.SparqlQueryBuilder;
 import interQA.patterns.QueryPatternFactory_DE;
 import interQA.patterns.QueryPatternFactory_EN;
 import org.apache.commons.io.input.ReversedLinesFileReader;
@@ -24,7 +25,7 @@ public class interQACLI {
     static String typeStringOrCommand = "Please, type an option (or 'q' to quit, 'd' to delete the last selection):";
     static String typeCommand         = "Please, type a command: 'q' to quit, 'd' to delete the last selection";
     static String trapSentence = "SPARQL queries:";
-
+    
     /**
      * This is the main of the class. A return in this method is an automatic exit.
      * Without any parameter, runs on console using the Springer dataset (hosted in esDBpedia) in English.
@@ -32,7 +33,7 @@ public class interQACLI {
      */
     public static void  main(String args[]){
         if (args.length == 0) {  //No args
-            mainProcess(args, USECASE.DBPEDIA, Language.EN);
+            mainProcess(args, USECASE.SPRINGER, Language.EN);
         }else{                  //We provide args
             if (args.length == 2) { //2 params mean in and out file names
                 mainProcess(args, USECASE.SPRINGER, Language.EN);
@@ -93,6 +94,7 @@ public class interQACLI {
         // INIT
         Lexicon lexicon = new Lexicon(language);
         DatasetConnector dataset;
+        SparqlQueryBuilder sqb;
         QueryPatternManager qm = new QueryPatternManager();
 
         switch (usecase) {
@@ -111,7 +113,8 @@ public class interQACLI {
                     case DE: lexicon.load("./src/main/java/resources/springer_de.ttl"); break;
                     case ES: lexicon.load("./src/main/java/resources/springer_es.ttl"); break;
                 }
-
+                 
+                sqb = new SparqlQueryBuilder("http://es.dbpedia.org/sparql");
                 dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,labels);
 
                 // Load query patterns
@@ -148,7 +151,8 @@ public class interQACLI {
                     case EN: lexicon.load("./src/main/java/resources/dbpedia_en.rdf"); break;
                     case DE: lexicon.load("./src/main/java/resources/dbpedia_de.rdf"); break;
                 }
-
+                                
+                sqb= new SparqlQueryBuilder("http://dbpedia.org/sparql");
                 dataset = new DatasetConnector("http://dbpedia.org/sparql",language,labels);
 
                 // Load query patterns
