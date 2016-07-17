@@ -33,6 +33,7 @@ public class C_P_P extends QueryPattern{
 		
 		this.lexicon = lexicon;
 		this.dataset = instances;
+                sqb.setEndpoint(dataset.getEndpoint());
 		init();
 	}
 	

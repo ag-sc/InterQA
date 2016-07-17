@@ -30,13 +30,13 @@ public class P_P_I extends QueryPattern{
     //SELECT ?x ?y WHERE {?a rdf:type <Class>. ?a <propert1> ?x. ?a <property2> ?y. }
 	
 	
-	DatasetConnector instances;
+	
 	
 	public P_P_I(Lexicon lexicon,DatasetConnector instances){
 				            
             this.lexicon = lexicon;
-            this.instances = instances; 
-            
+            this.dataset = instances; 
+            sqb.setEndpoint(dataset.getEndpoint());
             init();
         }
         
@@ -76,13 +76,13 @@ public class P_P_I extends QueryPattern{
 		                
 		            for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
 		            	                     
-		                new_element2index.putAll(instances.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+		                new_element2index.putAll(dataset.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
 		            }
 		            elements.get(3).setIndex(new_element2index);
 			}break;
                     case 4:{
 				
-				   elements.get(5).addToIndex(instances.filterBy2PropertiesForInstances(elements.get(1).getActiveEntries(),
+				   elements.get(5).addToIndex(dataset.filterBy2PropertiesForInstances(elements.get(1).getActiveEntries(),
 						   elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT,LexicalEntry.SynArg.OBJECT));       
 		            
 				

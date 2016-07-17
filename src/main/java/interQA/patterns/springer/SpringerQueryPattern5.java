@@ -30,7 +30,7 @@ public class SpringerQueryPattern5 extends QueryPattern{
 		
 		this.lexicon = lexicon;
 		this.dataset = instances;
-		
+		sqb.setEndpoint(dataset.getEndpoint());
 		
 		init();
 	}

@@ -60,6 +60,9 @@ public class DatasetConnector {
         return out;
     }
     
+    public String getEndpoint(){
+        return endpoint;
+    }
 
     
     public Map<String,List<LexicalEntry>> getInstanceIndex(String query, String var_uri) {

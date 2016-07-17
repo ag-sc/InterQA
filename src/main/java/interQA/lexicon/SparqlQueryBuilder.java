@@ -22,9 +22,7 @@ public class SparqlQueryBuilder {
 	List<String> LabelProperties; 
 	List<String> DateProperties;
 	
-        public SparqlQueryBuilder(String endpoint) {
-            
-            this.endpoint = endpoint;
+        public SparqlQueryBuilder() {
             LabelProperties = new ArrayList<>();
             LabelProperties.add("http://lod.springer.com/data/ontology/property/confAcronym");
             LabelProperties.add("http://lod.springer.com/data/ontology/property/confName");
@@ -33,7 +31,10 @@ public class SparqlQueryBuilder {
             DateProperties.add("http://lod.springer.com/data/ontology/property/confYear");
         }
         
-	
+	public void setEndpoint(String link){
+            endpoint = link;
+                    
+        }
 	 private String label(String var1, String var2,List<String> Labelprops) {
 	        
 	        String out; 
@@ -411,8 +412,10 @@ public class SparqlQueryBuilder {
 	public Set<String> BuildQueryForClassInstances(List<LexicalEntry> class_entries,boolean flag){
 		
 		Set<String> queries = new HashSet<>();
+                
 		for(LexicalEntry class_entry: class_entries){
 		    queries.add(queryForClassInstances(class_entry,flag));
+                    System.out.println(queryForClassInstances(class_entry,flag));
                 }
                 
 		return queries;

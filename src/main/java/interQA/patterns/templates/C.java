@@ -19,13 +19,13 @@ public class C extends QueryPattern {
 		
             this.lexicon = lexicon;
             this.dataset = dataset;
-	
+            sqb.setEndpoint(dataset.getEndpoint());
             init();	
 	}
 	
 	@Override
 	public void init(){
-		
+            
             StringElement element0 = new StringElement ();
             elements.add(element0);
 		

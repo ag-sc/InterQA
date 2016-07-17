@@ -34,7 +34,7 @@ public class SpringerQueryPattern3 extends QueryPattern{
 		
 		this.lexicon = lexicon;
 		this.dataset = instances;
-		
+		sqb.setEndpoint(dataset.getEndpoint());
 		
 		init();
 	}

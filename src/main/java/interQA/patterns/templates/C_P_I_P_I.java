@@ -42,7 +42,7 @@ public class C_P_I_P_I extends QueryPattern{
     
     @Override
 	public void init(){
-            
+            sqb.setEndpoint(dataset.getEndpoint());
 	StringElement element0 = new StringElement();
         elements.add(element0);
 

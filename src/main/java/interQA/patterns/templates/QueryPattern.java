@@ -16,7 +16,7 @@ import java.util.Set;
 public abstract class QueryPattern {
 
         public Vocabulary vocab = new Vocabulary();
-        public SparqlQueryBuilder sqb ;
+        public SparqlQueryBuilder sqb = new SparqlQueryBuilder();
         
         public boolean count = false;        
         
