@@ -120,14 +120,14 @@ public class PatternTests_EN extends TestCase {
         public void test_C_P_I_P_I() throws Exception{
             //show me all conferences that take place Piran in 2009
             assertEquals(
-                    checkSequenceByStrings(     //Wrong
+                    checkSequenceByStrings(     //Wrong variables labeling
                             "show me all\n" +
                             "conferences\n" +
                             "that\n"        +
                             "take place\n"  +
                             "Piran\n"       +
                             "in\n"          +
-                            "2009\n"        +  //here I get an exception (SparqlQueryBuilder.java:55)
+                            "2009\n"        +
                             "q\n"),
                     new HashSet<String>(
                         Arrays.asList(
@@ -223,7 +223,7 @@ public class PatternTests_EN extends TestCase {
             assertEquals(
                     checkSequenceByStrings(   //Wrong!
                           "give me the\n" +
-                          "population\n"  +  //Option not available! The plural form "populations' produces 17.799 results but'and' is not an option available
+                          "population\n"  +  //Option not available! The plural form "populations' produces 17.799 results but 'and' is not an option available (may be is not in the lexicon?)
                           "and\n"         +  //now tries this option, but this is not valid either
                           "area\n"        +  //Same
                           "of\n"          +  //Same

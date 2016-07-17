@@ -21,7 +21,8 @@ import org.apache.jena.rdf.model.RDFNode;
  */
 
 public class DatasetConnector {
-    
+
+    static Map<String, QueryExecution> cache = new HashMap<>();
     
     String endpoint;
     Vocabulary vocab = new Vocabulary();
@@ -66,7 +67,7 @@ public class DatasetConnector {
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
         List<String> collected_IRI = new ArrayList<>();
         String query_first ="SELECT DISTINCT "+var_uri+"{ "+query+ "}";
-        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query_first);
+        QueryExecution ex = executeWithCache(endpoint,query_first);
         ResultSet results = ex.execSelect();
         while (results.hasNext()) {
         	
@@ -141,7 +142,7 @@ public class DatasetConnector {
     public Map<String,List<LexicalEntry>> getInstanceLabel(String query,String var_uri,String var_label){
     	Map<String,List<LexicalEntry>> instances = new HashMap<>();
 
-        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
+        QueryExecution ex = executeWithCache(endpoint,query);
         ResultSet results = ex.execSelect();
         while (results.hasNext()) {
 
@@ -181,7 +182,7 @@ public class DatasetConnector {
         
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
 
-        QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
+        QueryExecution ex = executeWithCache(endpoint,query);
         ResultSet results = ex.execSelect();
         while (results.hasNext()) {
 
@@ -409,7 +410,7 @@ public class DatasetConnector {
                              continue;
                     }                  
                    
-                    QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint,query);
+                    QueryExecution ex = executeWithCache(endpoint,query);
                     boolean satisfiesCondition = ex.execAsk();
         
                     if (satisfiesCondition) filtered_entries.add(entry);
@@ -451,7 +452,7 @@ public class DatasetConnector {
     			
     			}
                         
-    				QueryExecution ex = QueryExecutionFactory.sparqlService(endpoint, query.replace("\u00a0"," "));
+    				QueryExecution ex = executeWithCache(endpoint, query.replace("\u00a0"," "));
     				boolean satisfiesCondition = ex.execAsk();
     				
     				if(satisfiesCondition&&entry.getReference()!=uri) filtered_entries.add(entry);    				
@@ -692,5 +693,17 @@ public class DatasetConnector {
 		
 	}
 
+    private static QueryExecution executeWithCache(String endpoint, String sparqlQuery) {
+        QueryExecution ex = null;
+        //We use the static object cache
+        if (cache.containsKey(sparqlQuery)){ //the sparqlQuery is in the cache
+            ex = cache.get(sparqlQuery);         //get the results from the cache
+        }else{                               //the sparqlQuery is NOT in the cache
+            ex =                                 //Make the query to the endpoint
+                 QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
+            cache.put(sparqlQuery, ex);         //And store the information in the cache
+        }
+        return ex;
+    }
  
 }

@@ -66,7 +66,7 @@ public class SparqlQueryBuilder {
                     return instance.getReference();
                     }
             else{
-                    return " "+var_name+" . FILTER regex("+var_name+",\""+instance.getCanonicalForm()+"\") ";	
+                    return " "+var_name+" . FILTER regex("+var_name+",\""+instance.getCanonicalForm()+"\") ";
             }
           
          }
