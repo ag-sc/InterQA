@@ -177,7 +177,7 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                      new HashSet<String>(
                             Arrays.asList( //We could have several queries here separated by comma
-                              "SELECT DISTINCT ?lit WHERE {"+
+                              "SELECT DISTINCT ?y WHERE {"+
                               "?x <http://lod.springer.com/data/ontology/property/confStartDate> ?y."+
                               "{ ?x  <http://lod.springer.com/data/ontology/property/confAcronym>  ?l1 . } "+
                               "UNION "+
