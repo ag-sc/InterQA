@@ -104,7 +104,7 @@ public class PatternTests_EN extends TestCase {
                         "skier\n"  +
                         "race\n"   +
                         "FIS Alpine World Ski Championships 2013\n" + //9873 results :-S
-                        "q\n",                                        //Exception in C_P_I_P_I.update(C_P_I_P_I.java:107)!!
+                        "q\n",                                        //Exception in interQA.lexicon.DatasetConnector.filterBy2PropertiesAndInstanceForInstances(DatasetConnector.java:671)!!
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                     new HashSet<String>(
                         Arrays.asList(
@@ -169,7 +169,7 @@ public class PatternTests_EN extends TestCase {
         public void test_SpringerPattern4() throws Exception{
             //give me the start dates International Working Conference on Requirements Engineering: Foundation for Software Quality 2009
             assertEquals(
-                     checkSequenceByStrings(   //OK
+                     checkSequenceByStrings(   //Exception at interQA.lexicon.SparqlQueryBuilder.BuildQueryForPropertyAndgYearAndNameLiteral(SparqlQueryBuilder.java:883)
                           "give me the\n" +
                           "start dates\n" +
                           "International Working Conference on Requirements Engineering: Foundation for Software Quality\n" +
