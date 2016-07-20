@@ -74,7 +74,7 @@ public class SpringerQueryPattern4 extends QueryPattern{
 		
 		Set<String> SPARQLQueries = new HashSet<>();
 
-		SparqlQueryBuilder sqb = new SparqlQueryBuilder();
+		
 		
 		PropertyElement prop_element = (PropertyElement) elements.get(1);
 		InstanceElement name_literal = (InstanceElement) elements.get(2);
