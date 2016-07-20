@@ -169,7 +169,7 @@ public class PatternTests_EN extends TestCase {
         public void test_SpringerPattern4() throws Exception{
             //give me the start dates International Working Conference on Requirements Engineering: Foundation for Software Quality 2009
             assertEquals(
-                     checkSequenceByStrings(   //Exception at interQA.lexicon.SparqlQueryBuilder.BuildQueryForPropertyAndgYearAndNameLiteral(SparqlQueryBuilder.java:883)
+                     checkSequenceByStrings(   //OK
                           "give me the\n" +
                           "start dates\n" +
                           "International Working Conference on Requirements Engineering: Foundation for Software Quality\n" +
