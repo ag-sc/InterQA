@@ -20,7 +20,7 @@ public class JenaExecutorCacheAsk implements java.io.Serializable{
     static private String fileName = "cacheAsk.ser";
 
     public Boolean executeWithCache(String endpoint, String sparqlQuery) {
-        Boolean res = null;
+        Boolean satisfiesCondition = null;
         ArrayList<String> list = null;
 
         if (isFirstTime){
@@ -47,11 +47,11 @@ public class JenaExecutorCacheAsk implements java.io.Serializable{
 
         //We use the cache
         if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
-            res = cache.get(sparqlQuery);         //get the results from the cache
+            satisfiesCondition = cache.get(sparqlQuery);         //get the results from the cache
         } else {                               //the sparqlQuery is NOT in the cache
             QueryExecution ex =                      //Make the query to the endpoint
                     QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
-            boolean satisfiesCondition = ex.execAsk();
+            satisfiesCondition = ex.execAsk();
             cache.put(sparqlQuery, satisfiesCondition);         //And store the information in the cache
             //Save the cache to disk
             try {
@@ -66,15 +66,15 @@ public class JenaExecutorCacheAsk implements java.io.Serializable{
             }
         }
 
-        return res;
+        return satisfiesCondition;
     }
 
     static public void main (String[] args) {
         JenaExecutorCacheAsk cacheAsk = new JenaExecutorCacheAsk();
-        boolean satisfiesCondition1 = cacheAsk.executeWithCache("http://es.dbpedia.org/",
+        boolean satisfiesCondition1 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
                                                             "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
                                                            );
-        boolean satisfiesCondition2 = cacheAsk.executeWithCache("http://es.dbpedia.org/",
+        boolean satisfiesCondition2 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
                 "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
         );
 
