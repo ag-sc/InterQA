@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 
+import interQA.main.JenaExecutorCacheSelect;
+import interQA.main.JenaExecutorCacheAsk;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
@@ -24,8 +26,8 @@ import org.apache.jena.rdf.model.RDFNode;
 
 public class DatasetConnector {
 
-    static Map<String, QueryExecution> cache = null;
-    static Boolean isFirstTime = true;
+    JenaExecutorCacheAsk    cacheAsk = new JenaExecutorCacheAsk();
+    JenaExecutorCacheSelect cacheSel = new JenaExecutorCacheSelect();
 
     String endpoint;
     Vocabulary vocab = new Vocabulary();
@@ -43,6 +45,10 @@ public class DatasetConnector {
         endpoint = url;
         lang = language;
         labelProperties = props;
+    }
+
+    public void cacheUsageReport(){
+
     }
 
     private String label(String var1, String var2) {
@@ -73,8 +79,8 @@ public class DatasetConnector {
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
         List<String> collected_IRI = new ArrayList<>();
         String query_first ="SELECT DISTINCT "+var_uri+"{ "+query+ "}";
-        QueryExecution ex = executeWithCache(endpoint,query_first);
-        ResultSet results = ex.execSelect();
+        ResultSet results = cacheSel.executeWithCache(endpoint,query_first);
+
         while (results.hasNext()) {
 
         	  List<String> labels= new ArrayList<>();
@@ -148,8 +154,8 @@ public class DatasetConnector {
     public Map<String,List<LexicalEntry>> getInstanceLabel(String query,String var_uri,String var_label){
     	Map<String,List<LexicalEntry>> instances = new HashMap<>();
 
-        QueryExecution ex = executeWithCache(endpoint,query);
-        ResultSet results = ex.execSelect();
+        ResultSet results = cacheSel.executeWithCache(endpoint,query);
+
         while (results.hasNext()) {
 
               QuerySolution result = results.nextSolution();
@@ -188,8 +194,8 @@ public class DatasetConnector {
 
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
 
-        QueryExecution ex = executeWithCache(endpoint,query);
-        ResultSet results = ex.execSelect();
+        ResultSet results = cacheSel.executeWithCache(endpoint,query);
+
         while (results.hasNext()) {
 
               QuerySolution result = results.nextSolution();
@@ -416,9 +422,7 @@ public class DatasetConnector {
                              continue;
                     }
 
-                    QueryExecution ex = executeWithCache(endpoint,query);
-                    boolean satisfiesCondition = ex.execAsk();
-
+                    boolean satisfiesCondition = cacheAsk.executeWithCache(endpoint,query);
                     if (satisfiesCondition) filtered_entries.add(entry);
                }
 
@@ -458,8 +462,8 @@ public class DatasetConnector {
 
     			}
 
-    				QueryExecution ex = executeWithCache(endpoint, query.replace("\u00a0"," "));
-    				boolean satisfiesCondition = ex.execAsk();
+                boolean satisfiesCondition = cacheAsk.executeWithCache(endpoint, query.replace("\u00a0"," "));
+
 
     				if(satisfiesCondition&&entry.getReference()!=uri) filtered_entries.add(entry);
     		}
@@ -699,54 +703,54 @@ public class DatasetConnector {
 
 	}
 
-    private static QueryExecution executeWithCache(String endpoint, String sparqlQuery) {
-        QueryExecution ex = null;
-        String fileName = "cache.ser";
-
-        if (isFirstTime){
-            //Checks if there is a cache serialization in the file system
-            File f = new File(fileName);
-            if (f.isFile() && f.canRead()) { // If there is a cache file...
-                try {
-                    FileInputStream fis = new FileInputStream(fileName);
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    cache = (Map<String, QueryExecution>) ois.readObject();
-                    isFirstTime = false;
-                } catch (FileNotFoundException fnfe) {
-                    fnfe.printStackTrace();
-                } catch (IOException ioe){
-                    ioe.printStackTrace();
-                } catch (ClassNotFoundException cnfe){
-                    cnfe.printStackTrace();
-                }
-            }else{  //There is no cache file
-                //We use the static object cache
-                cache = new HashMap<>();
-                isFirstTime = false;
-            }
-        }
-
-        //We use the cache
-        if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
-            ex = cache.get(sparqlQuery);         //get the results from the cache
-        } else {                               //the sparqlQuery is NOT in the cache
-            ex =                                 //Make the query to the endpoint
-                    QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
-            cache.put(sparqlQuery, ex);         //And store the information in the cache
-            //Save the cache to disk
-//            try {
-//                FileOutputStream fos = new FileOutputStream(fileName);
-//                ObjectOutputStream oos = new ObjectOutputStream(fos);
-//                oos.writeObject(cache);
-//                oos.close();
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }catch (IOException e) {
-//                e.printStackTrace();
+//    private static QueryExecution executeWithCache(String endpoint, String sparqlQuery) {
+//        QueryExecution ex = null;
+//        String fileName = "cache.ser";
+//
+//        if (isFirstTime){
+//            //Checks if there is a cache serialization in the file system
+//            File f = new File(fileName);
+//            if (f.isFile() && f.canRead()) { // If there is a cache file...
+//                try {
+//                    FileInputStream fis = new FileInputStream(fileName);
+//                    ObjectInputStream ois = new ObjectInputStream(fis);
+//                    cache = (Map<String, QueryExecution>) ois.readObject();
+//                    isFirstTime = false;
+//                } catch (FileNotFoundException fnfe) {
+//                    fnfe.printStackTrace();
+//                } catch (IOException ioe){
+//                    ioe.printStackTrace();
+//                } catch (ClassNotFoundException cnfe){
+//                    cnfe.printStackTrace();
+//                }
+//            }else{  //There is no cache file
+//                //We use the static object cache
+//                cache = new HashMap<>();
+//                isFirstTime = false;
 //            }
-        }
-
-        return ex;
-    }
+//        }
+//
+//        //We use the cache
+//        if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
+//            ex = cache.get(sparqlQuery);         //get the results from the cache
+//        } else {                               //the sparqlQuery is NOT in the cache
+//            ex =                                 //Make the query to the endpoint
+//                    QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
+//            cache.put(sparqlQuery, ex);         //And store the information in the cache
+//            //Save the cache to disk
+////            try {
+////                FileOutputStream fos = new FileOutputStream(fileName);
+////                ObjectOutputStream oos = new ObjectOutputStream(fos);
+////                oos.writeObject(cache);
+////                oos.close();
+////            } catch (FileNotFoundException e) {
+////                e.printStackTrace();
+////            }catch (IOException e) {
+////                e.printStackTrace();
+////            }
+//        }
+//
+//        return ex;
+//    }
 
 }

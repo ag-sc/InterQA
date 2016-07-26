@@ -99,18 +99,18 @@ public class PatternTests_EN extends TestCase {
             // SELECT DISTINCT ?x {?x <rdf:Type> <Class:Noun>. ?x <Property:Verb> <Instance> }
             // what skier race FIS Alpine World Ski Championships 2013 ?
             assertEquals(
-                    checkSequenceByStrings(   //Wrong!
+                    checkSequenceByStrings(   //78 asks and 2 selects
                         "what\n"   +
                         "skier\n"  +
                         "race\n"   +
                         "FIS Alpine World Ski Championships 2013\n" + //9873 results :-S
-                        "q\n",                                        //Exception in interQA.lexicon.DatasetConnector.filterBy2PropertiesAndInstanceForInstances(DatasetConnector.java:671)!!
+                        "q\n",
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                     new HashSet<String>(
                         Arrays.asList(
-                          "SELECT DISTINCT ?x {"+
-                          " ?x  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> ."+
-                          " ?x  <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . "+
+                          "SELECT DISTINCT ?x WHERE {"+
+                          " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/Skier> ."+
+                          "?x <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . "+
                           "}"
                         )
                     )
@@ -120,7 +120,7 @@ public class PatternTests_EN extends TestCase {
         public void test_C_P_I_P_I() throws Exception{
             //show me all conferences that take place Piran in 2009
             assertEquals(
-                    checkSequenceByStrings(     //Wrong variables labeling
+                    checkSequenceByStrings(     //OK
                             "show me all\n" +
                             "conferences\n" +
                             "that\n"        +
@@ -149,7 +149,7 @@ public class PatternTests_EN extends TestCase {
         //Which conferences took place in 2015?
         //Which actors died in 1999?
             assertEquals(
-                     checkSequenceByStrings(   //OK
+                     checkSequenceByStrings(   //Wrong
                           "which\n"       +
                           "conferences\n" +
                           "took place\n"  +
@@ -169,7 +169,7 @@ public class PatternTests_EN extends TestCase {
         public void test_SpringerPattern4() throws Exception{
             //give me the start dates International Working Conference on Requirements Engineering: Foundation for Software Quality 2009
             assertEquals(
-                     checkSequenceByStrings(   //OK
+                     checkSequenceByStrings(   //Wrong! No option after the name of the conference
                           "give me the\n" +
                           "start dates\n" +
                           "International Working Conference on Requirements Engineering: Foundation for Software Quality\n" +
@@ -254,10 +254,6 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                     new HashSet<String>(
                             Arrays.asList( //We could have several queries here separated by comma
-                                    "SELECT DISTINCT ?x WHERE {"+
-                                    " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
-                                    "?x <http://lod.springer.com/data/ontology/property/confCity> \"Atlanta, GA\"@EN . "+
-                                    "}",
                                     "SELECT COUNT(DISTINCT ?x) WHERE {"+
                                     " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
                                     "?x <http://lod.springer.com/data/ontology/property/confCity> \"Atlanta, GA\"@EN . }"

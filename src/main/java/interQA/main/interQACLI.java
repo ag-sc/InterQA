@@ -6,7 +6,6 @@ import interQA.patterns.QueryPatternManager;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
-import interQA.lexicon.SparqlQueryBuilder;
 import interQA.patterns.QueryPatternFactory_DE;
 import interQA.patterns.QueryPatternFactory_EN;
 import org.apache.commons.io.input.ReversedLinesFileReader;

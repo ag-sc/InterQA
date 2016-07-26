@@ -13,15 +13,13 @@ import java.util.Map;
 /**
  * Created by Mariano on 21/07/2016.
  */
-public class JenaExecutorCacheSelect implements Serializable{
-    static private Map<String, QueryExecution> cache = null;
-    static HashMap<String, ArrayList<String>> map = new HashMap<>();
+public class JenaExecutorCacheSelect{
+    static private Map<String, ResultSet> cache = null;
     static private Boolean isFirstTime = true;
-    static private String fileName = "cacheAsk.ser";
+    static private String fileName = "cacheSelect.ser";
 
-    public QueryExecution executeWithCache(String endpoint, String sparqlQuery) {
-        QueryExecution ex = null;
-        ArrayList<String> list = null;
+    public ResultSet executeWithCache(String endpoint, String sparqlQuery) {
+        ResultSet res = null;
 
         if (isFirstTime){
             //Checks if there is a cache serialization in the file system
@@ -30,8 +28,7 @@ public class JenaExecutorCacheSelect implements Serializable{
                 try {
                     FileInputStream fis = new FileInputStream(fileName);
                     ObjectInputStream ois = new ObjectInputStream(fis);
-                    cache = (Map<String, QueryExecution>) ois.readObject();
-                    isFirstTime = true;
+                    cache = (Map<String, ResultSet>) ois.readObject();
                 } catch (FileNotFoundException fnfe) {
                     fnfe.printStackTrace();
                 } catch (IOException ioe){ //i
@@ -43,71 +40,42 @@ public class JenaExecutorCacheSelect implements Serializable{
                 //We use the static object cache
                 cache = new HashMap<>();
             }
+            isFirstTime = false;
         }
 
         //We use the cache
         if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
-            ex = cache.get(sparqlQuery);         //get the results from the cache
+            res = cache.get(sparqlQuery);         //get the results from the cache
         } else {                               //the sparqlQuery is NOT in the cache
-            ex =                                 //Make the query to the endpoint
-                    QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
+            QueryExecution ex =
+                  QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
 
-            //Check the initial word in the SPARQL query
-            if (sparqlQuery.startsWith("ASK")){
-                boolean satisfiesCondition = ex.execAsk();
-                String boolText = String.valueOf(satisfiesCondition);
-                if (map.containsKey(sparqlQuery)){
-                    list = map.get(sparqlQuery);
-                    if (!list.contains(boolText)){
-                        list.add(boolText);
-                    }
-                }else {
-                    list = new ArrayList<String>();
-                    list.add(boolText);
-                    map.put(sparqlQuery, list);
-                }
-            }
-            /*if (sparqlQuery.startsWith("SELECT")){
-                ResultSet results = ex.execSelect();
-                while(results.hasNext()) {
-                    QuerySolution result = results.nextSolution();
-                    result.
-                    if (map.containsKey(sparqlQuery)) {
-                        list = map.get(sparqlQuery);
-                        if (!list.contains(boolText)) {
-                            list.add(boolText);
-                        }
-                    } else {
-
-                        list = new ArrayList<String>();
-                        list.add(boolText);
-                        map.put(sparqlQuery, list);
-                    }
-                }
-            }*/
-
-
-            cache.put(sparqlQuery, ex);         //And store the information in the cache
+            res =  ex.execSelect();               //Make the query to the endpoint
+            cache.put(sparqlQuery, res);         //And store the information in the cache
+            System.out.println("New element stored in CacheSelect (in memory). Now it has " + cache.size() + " elements.");
             //Save the cache to disk
-            try {
-                FileOutputStream fos = new FileOutputStream(fileName);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(cache);
-                oos.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                FileOutputStream fos = new FileOutputStream(fileName);
+//                ObjectOutputStream oos = new ObjectOutputStream(fos);
+//                oos.writeObject(cache);
+//                oos.close();
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }catch (IOException e) { //java.io.NotSerializableException: org.apache.jena.sparql.engine.ResultSetCheckCondition
+//                e.printStackTrace();
+//            }
         }
 
-        return ex;
+        return res;
     }
 
     static public void main (String[] args) {
-//        JenaExecutorCacheSelect cacheAsk = new JenaExecutorCacheSelect();
-//        boolean satisfiesCondition = cacheAsk.executeWithCache("http://es.dbpedia.org/",
-//                                                            "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
-//                                                           );
+        JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
+        ResultSet res1 = cacheSelect.executeWithCache("http://es.dbpedia.org/sparql",
+                                                      "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
+                                                           );
+        ResultSet res2 = cacheSelect.executeWithCache("http://es.dbpedia.org/sparql",
+                                                      "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
+        );
     }
 }
