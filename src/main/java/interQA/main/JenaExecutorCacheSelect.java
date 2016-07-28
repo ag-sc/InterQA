@@ -68,7 +68,9 @@ public class JenaExecutorCacheSelect{
 
         return res;
     }
-
+    public String cacheUsageReport(){
+        return (cache == null? "SelectCache not initialized": cache.size() + " Select queries used.");
+    }
     static public void main (String[] args) {
         JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
         ResultSet res1 = cacheSelect.executeWithCache("http://es.dbpedia.org/sparql",

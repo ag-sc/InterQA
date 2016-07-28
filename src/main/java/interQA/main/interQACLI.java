@@ -92,7 +92,7 @@ public class interQACLI {
 
         // INIT
         Lexicon lexicon = new Lexicon(language);
-        DatasetConnector dataset;
+        DatasetConnector dataset = null;
         QueryPatternManager qm = new QueryPatternManager();
 
         switch (usecase) {
@@ -349,6 +349,8 @@ public class interQACLI {
             }
             List<String> avlPats = qm.userSentence(sbWholeSentenceInternal.toString());
             System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
+            System.out.print("Cache report: ");
+            dataset.cacheUsageReport(System.out);
         }while (opts.size() != 0);
 
 

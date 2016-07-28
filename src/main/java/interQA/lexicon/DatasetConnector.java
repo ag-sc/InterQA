@@ -47,8 +47,8 @@ public class DatasetConnector {
         labelProperties = props;
     }
 
-    public void cacheUsageReport(){
-
+    public void cacheUsageReport(PrintStream ps){
+           ps.println(cacheAsk.cacheUsageReport() + " " + cacheSel.cacheUsageReport());
     }
 
     private String label(String var1, String var2) {

@@ -69,7 +69,9 @@ public class JenaExecutorCacheAsk{
 
         return satisfiesCondition;
     }
-
+    public String cacheUsageReport(){
+        return (cache == null? "AskCache not initialized": cache.size() + " ask queries used.");
+    }
     static public void main (String[] args) {
         JenaExecutorCacheAsk cacheAsk = new JenaExecutorCacheAsk();
         boolean satisfiesCondition1 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
