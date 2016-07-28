@@ -51,18 +51,36 @@ public class P_C extends QueryPattern{
 		
                 switch (currentElement) {
                 
-                    case 0: {checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
-                }break;
-                    case 2: ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break;
-                    case 3: setFeatures(3,4,s); break;
-
+                    case 0: {
+                        
+                        checkHowMany(s);
+                        ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+                        break;
+                    }
+                        
                     case 1: {
                         
                         setFeatures(1,2,s);
 					
                         elements.get(4).addToIndex(dataset.filterByPropertyForInstances(elements.get(1).getActiveEntries(),LexicalEntry.SynArg.OBJECT)); 
+                        
+                        for (String m : elements.get(1).getMarkers()) {
+                            ((StringElement) elements.get(2)).add(m);
+                        }
                         break;
                     }
+                    
+                    case 2: { 
+                        
+                        ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
+                        break;
+                    } 
+                    
+                    case 3: {
+                        
+                        setFeatures(3,4,s);
+                        break;
+                    } 
 		}
             }
 

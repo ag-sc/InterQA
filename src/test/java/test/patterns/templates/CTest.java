@@ -6,8 +6,6 @@ import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import interQA.main.interQACLI;
-import interQA.patterns.QueryPatternFactory_EN;
 import interQA.patterns.QueryPatternManager;
 import interQA.patterns.templates.C;
 import interQA.patterns.templates.QueryPattern;
@@ -15,7 +13,8 @@ import junit.framework.TestCase;
 
 import java.util.*;
 
-import static interQA.patterns.QueryPatternFactory_EN.addGiveMePrefixes;
+import static interQA.patterns.QueryPatternFactory_EN.addDefGiveMePrefixes;
+import static interQA.patterns.QueryPatternFactory_EN.addIndefGiveMePrefixes;
 
 
 /**
@@ -42,7 +41,8 @@ public class CTest extends TestCase {
 //        // Give me all conferences.
         QueryPattern q1 = new C(lexicon,dataset);
 
-        addGiveMePrefixes((StringElement) q1.getElement(0));
+        addDefGiveMePrefixes((StringElement) q1.getElement(0));
+        addIndefGiveMePrefixes((StringElement) q1.getElement(0));
 
         //AddNoun equivalent
         Element e =  q1.getElement(1);

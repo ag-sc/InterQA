@@ -41,7 +41,7 @@ public abstract class Element {
         
         return active;
     }
-    ///////
+
     public List<String> getActiveEntriesKey() {
         
         List<String> active = new ArrayList<>();
@@ -51,6 +51,21 @@ public abstract class Element {
         }
         
         return active;
+    }
+    
+    public List<String> getMarkers() {
+        
+        List<String> markers = new ArrayList<>(); 
+        
+        for (String k : index.keySet()) {
+            for (LexicalEntry entry : index.get(k)) {
+                if (entry.getMarker() != null) {
+                     markers.add(entry.getMarker());
+                }
+            }
+        }
+        
+        return markers;
     }
     
     public List<Feature> getFeatures() {

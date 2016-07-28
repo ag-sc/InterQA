@@ -53,15 +53,21 @@ public class SpringerQueryPattern3 extends QueryPattern{
 
                 PropertyElement element3 = new PropertyElement();
                 elements.add(element3);
+                
+                StringElement element4 = new StringElement();
+                elements.add(element4);
 
-		InstanceElement element4 = new InstanceElement();
-		elements.add(element4);
-		
-		PropertyElement element5 = new PropertyElement();
+		InstanceElement element5 = new InstanceElement();
 		elements.add(element5);
+                
+                StringElement element6 = new StringElement();
+                elements.add(element6);
+		
+		PropertyElement element7 = new PropertyElement();
+		elements.add(element7);
 
-		InstanceElement element6 = new InstanceElement();
-		elements.add(element6);
+		InstanceElement element8 = new InstanceElement();
+		elements.add(element8);
 	}
 	
 	@Override
@@ -89,14 +95,18 @@ public class SpringerQueryPattern3 extends QueryPattern{
 		
                     case 3: {
 			
-                    	elements.get(4).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                    	elements.get(7).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                        
+                        for (String m : elements.get(3).getMarkers()) {
+                            ((StringElement) elements.get(4)).add(m);
+                        }
 			break;
                     }
 		
-                    case 5: {
+                    case 7: {
 
-                    	elements.get(6).addToIndex(dataset.filterBy2PropertiesAndInstanceForInstances(elements.get(3).getActiveEntries(), elements.get(4).getActiveEntries(), 
-                    			elements.get(5).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                    	elements.get(6).addToIndex(dataset.filterBy2PropertiesAndInstanceForInstances(elements.get(3).getActiveEntries(), elements.get(7).getActiveEntries(), 
+                    			elements.get(7).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
 			break;
                     }
 		}
@@ -106,23 +116,21 @@ public class SpringerQueryPattern3 extends QueryPattern{
 	public Set<String> buildSPARQLqueries(){
 				
 		
-		ClassElement    c     = (ClassElement)    elements.get(1);
-		PropertyElement p1     = (PropertyElement) elements.get(3);
-        InstanceElement  ind1  = (InstanceElement)  elements.get(4);
-        PropertyElement p2    = (PropertyElement) elements.get(5);
-        InstanceElement  ind2 = (InstanceElement)  elements.get(6);
+		ClassElement    c  = (ClassElement)    elements.get(1);
+		PropertyElement p1 = (PropertyElement) elements.get(3);
+                InstanceElement i1 = (InstanceElement) elements.get(5);
+                PropertyElement p2 = (PropertyElement) elements.get(7);
+                InstanceElement i2 = (InstanceElement) elements.get(8);
 		
                 switch (currentElement) {
                     
-                	case 2 : return sqb.BuildQueryForClassInstances(elements.get(3).getActiveEntries(),count);
+                	case 2: return sqb.BuildQueryForClassInstances(elements.get(3).getActiveEntries(),count);
                     
-                	case 4 : return sqb.BuildQueryForClassAndProperty(c, p1, LexicalEntry.SynArg.SUBJECT,count);  
+                	case 3: return sqb.BuildQueryForClassAndProperty(c,p1,LexicalEntry.SynArg.SUBJECT,count);  
                     
+                        case 7: return sqb.BuildQueryForClassAnd2PropertyAndIndividual(c,p1,i1,LexicalEntry.SynArg.OBJECT,p2, LexicalEntry.SynArg.OBJECT,count);
                     
-                    case 6: return sqb.BuildQueryForClassAnd2PropertyAndIndividual(c, p1, ind1, LexicalEntry.SynArg.OBJECT,p2, LexicalEntry.SynArg.OBJECT,count);
-                    
-                  	case 7: return sqb.BuildQueryForClassAnd2PropertyAnd2Individual(c,p1,ind1,LexicalEntry.SynArg.OBJECT,p2,ind2
-                  			,LexicalEntry.SynArg.OBJECT,count);
+                  	case 8: return sqb.BuildQueryForClassAnd2PropertyAnd2Individual(c,p1,i1,LexicalEntry.SynArg.OBJECT,p2,i2,LexicalEntry.SynArg.OBJECT,count);
                         
                     default: return new HashSet<>();
                 }

@@ -7,6 +7,8 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -32,7 +34,9 @@ public class P_I extends QueryPattern {
         
         @Override
         public void init() {  
+            
             sqb.setEndpoint(dataset.getEndpoint());
+            
             StringElement element0 = new StringElement(); 
             elements.add(element0);
             
@@ -54,13 +58,23 @@ public class P_I extends QueryPattern {
             
             switch (currentElement) {
                 
-                case 0: {checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); break;}
+                case 0: {
+                    
+                    checkHowMany(s);
+                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
+                    break;
+                }
+                
                 //case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s); break; // TODO
                 //case 2: ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break; // TODO
             
                 case 1: {
 
                     elements.get(3).addToIndex(dataset.filterByPropertyForInstances(elements.get(1).getActiveEntries(), LexicalEntry.SynArg.OBJECT));  
+                    
+                    for (String m : elements.get(1).getMarkers()) {
+                        ((StringElement) elements.get(2)).add(m);
+                    }
                     break;
                 }
             }

@@ -1,6 +1,5 @@
 package test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -29,7 +28,7 @@ public class PatternTests_EN extends TestCase {
                          interQACLI.USECASE.SPRINGER,  LexicalEntry.Language.EN,
                          new String[]{"qpC1", "qpC2"}
                   ),
-                  new HashSet<String>(
+                  new HashSet<>(
                          Arrays.asList(
                             "SELECT DISTINCT ?x WHERE {"+
                             "  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . "+
@@ -48,7 +47,7 @@ public class PatternTests_EN extends TestCase {
                         "conferences\n" +
                         "are there\n"   +
                         "q\n"),
-                  new HashSet<String>(
+                  new HashSet<>(
                             Arrays.asList(
                                 "SELECT COUNT(DISTINCT ?x) WHERE {"+
                                 "  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . "+
@@ -80,12 +79,13 @@ public class PatternTests_EN extends TestCase {
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
             assertEquals(
                    checkSequenceByStrings(     //OK
-                        "who was the\n"   +
-                        "creator\n"       +
+                        "who was the\n" +
+                        "creator\n" +
+                        "of\n" +
                         "Power Rangers Zeo\n" +
                         "q\n",
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
-                   new HashSet<String>(
+                   new HashSet<>(
                             Arrays.asList(
                                 "SELECT DISTINCT ?x WHERE {"+
                                 " <http://dbpedia.org/resource/Power_Rangers_Zeo> <http://dbpedia.org/ontology/creator> ?x . "+
@@ -99,18 +99,19 @@ public class PatternTests_EN extends TestCase {
             // SELECT DISTINCT ?x {?x <rdf:Type> <Class:Noun>. ?x <Property:Verb> <Instance> }
             // what skier race FIS Alpine World Ski Championships 2013 ?
             assertEquals(
-                    checkSequenceByStrings(   //Wrong!
-                        "what\n"   +
-                        "skier\n"  +
-                        "race\n"   +
-                        "FIS Alpine World Ski Championships 2013\n" + //9873 results :-S
-                        "q\n",                                        //Exception in interQA.lexicon.DatasetConnector.filterBy2PropertiesAndInstanceForInstances(DatasetConnector.java:671)!!
+                    checkSequenceByStrings( // no query is built
+                        "what\n"    +
+                        "skiers\n"  +
+                        "race\n"    +
+                        "for\n"     +
+                        "FK Alfa\n" + 
+                        "q\n", 
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
-                    new HashSet<String>(
+                    new HashSet<>(
                         Arrays.asList(
-                          "SELECT DISTINCT ?x {"+
-                          " ?x  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> ."+
-                          " ?x  <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . "+
+                          "SELECT DISTINCT ?x WHERE {"+
+                          " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> . "+
+                          " ?x <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FK_Alfa> . "+
                           "}"
                         )
                     )
@@ -120,16 +121,17 @@ public class PatternTests_EN extends TestCase {
         public void test_C_P_I_P_I() throws Exception{
             //show me all conferences that take place Piran in 2009
             assertEquals(
-                    checkSequenceByStrings(     //Wrong variables labeling
+                    checkSequenceByStrings(
                             "show me all\n" +
                             "conferences\n" +
                             "that\n"        +
-                            "take place\n"  +
-                            "Piran\n"       +
+                            "took place\n"  +
                             "in\n"          +
+                            "Piran\n"       +
+                            "in\n"          + // not in lexicon?!
                             "2009\n"        +
                             "q\n"),
-                    new HashSet<String>(
+                    new HashSet<>(
                         Arrays.asList(
                            "SELECT  DISTINCT ?lit1 { ?lit1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> "
                                    + "<http://lod.springer.com/data/ontology/class/Conference> .?lit1  "
@@ -153,9 +155,10 @@ public class PatternTests_EN extends TestCase {
                           "which\n"       +
                           "conferences\n" +
                           "took place\n"  +
+                          "in\n"          +
                           "Berlin\n"      +
                           "q\n"),
-                     new HashSet<String>(
+                     new HashSet<>(
                            Arrays.asList( //We could have several queries here separated by comma
                              "SELECT DISTINCT ?x WHERE {"+
                              " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+
@@ -172,10 +175,11 @@ public class PatternTests_EN extends TestCase {
                      checkSequenceByStrings(   //OK
                           "give me the\n" +
                           "start dates\n" +
+                          "of\n"          +
                           "International Working Conference on Requirements Engineering: Foundation for Software Quality\n" +
                           "2009\n" +
                           "q\n"),
-                     new HashSet<String>(
+                     new HashSet<>(
                             Arrays.asList( //We could have several queries here separated by comma
                               "SELECT DISTINCT ?y WHERE {"+
                               "?x <http://lod.springer.com/data/ontology/property/confStartDate> ?y."+
@@ -199,10 +203,11 @@ public class PatternTests_EN extends TestCase {
                           "start dates\n" +
                           "and\n"         +
                           "end dates\n"   +
+                          "of\n"          +
                           "LTEC\n"        +
                           "2015\n" +
                           "q\n"),
-                    new HashSet<String>(
+                    new HashSet<>(
                             Arrays.asList( //We could have several queries here separated by comma
                               "SELECT DISTINCT ?lit1 ?lit2  {"+
                               " ?x  <http://lod.springer.com/data/ontology/property/confStartDate> ?lit1."+
@@ -218,25 +223,47 @@ public class PatternTests_EN extends TestCase {
             );
         }
         
-        
-        public void test_P_P_C() throws Exception {
+        public void test_P_P_I() throws Exception {
             assertEquals(
-                    checkSequenceByStrings(   //Wrong!
-                          "give me the\n" +
-                          "population\n"  +  //Option not available! The plural form "populations' produces 17.799 results but 'and' is not an option available (may be is not in the lexicon?)
-                          "and\n"         +  //now tries this option, but this is not valid either
-                          "area\n"        +  //Same
-                          "of\n"          +  //Same
-                          "cities\n" +       //Same
+                    checkSequenceByStrings(  
+                          "what is the\n" +
+                          "area\n" +  
+                          "and\n" +  
+                          "population\n" +
+                          "of\n" +
+                          "Aarhus\n" +       
                           "q\n",
-                          interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
-                    new HashSet<String>(
+                          interQACLI.USECASE.DBPEDIA,LexicalEntry.Language.EN),
+                    new HashSet<>(
                             Arrays.asList( //We could have several queries here separated by comma
                                     /*"SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/City> . }"*/
                                     "SELECT DISTINCT ?a ?p WHERE {"+
-                                    " ?uri  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/City>."+
-                                    " ?uri  <http://dbpedia.org/ontology/area> ?a ."+
-                                    " ?uri <http://dbpedia.org/ontology/population> ?p . "+
+                                    " <http://dbpedia.org/resource/Aarhus> <http://dbpedia.org/ontology/areaTotal> ?a ."+
+                                    " <http://dbpedia.org/resource/Aarhus> <http://dbpedia.org/ontology/populationTotal> ?p . "+
+                                    "}"
+                            )
+                    )
+             );
+        }
+        
+        public void test_P_P_C() throws Exception {
+            assertEquals(
+                    checkSequenceByStrings(   
+                          "give me the\n" +
+                          "population\n" +  
+                          "and\n" +  
+                          "area" +
+                          "of\n" +  
+                          "cities\n" +       
+                          "q\n",
+                          interQACLI.USECASE.DBPEDIA,LexicalEntry.Language.EN),
+                    new HashSet<>(
+                            Arrays.asList( //We could have several queries here separated by comma
+                                    /*"SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/City> . }"*/
+                                    "SELECT DISTINCT ?a ?p WHERE {"+
+                                    " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/City> . "+
+                                    " ?x <http://dbpedia.org/ontology/populationTotal> ?p . "+
+                                    " ?x <http://dbpedia.org/ontology/areaTotal> ?a ."+
                                     "}"
                             )
                     )
@@ -250,9 +277,10 @@ public class PatternTests_EN extends TestCase {
                           "how many\n"    +
                           "conferences\n" +
                           "took place\n"  +
+                          "in\n"          +
                           "Atlanta, GA\n" +
                           "q\n"),
-                    new HashSet<String>(
+                    new HashSet<>(
                             Arrays.asList( //We could have several queries here separated by comma
                                     "SELECT DISTINCT ?x WHERE {"+
                                     " ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> ."+

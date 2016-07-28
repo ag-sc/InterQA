@@ -1,6 +1,5 @@
 package interQA.patterns.templates;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,37 +61,49 @@ public class C_P_I extends QueryPattern{
             switch (currentElement) {
                 
                 case 0: { 
+                
                     checkHowMany(s);
                     ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
                     break;
                 } 
-                case 2:((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break; 
-                case 4: ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s); break;
-                //case 5: setFeatures(5,6,s); break;
-                                
+                
                 case 1: {
+                
                     setFeatures(1,2,s);
                     
                     Map<String,List<LexicalEntry>> old_element3index = elements.get(3).getIndex();
                     Map<String,List<LexicalEntry>> new_element3index = new HashMap<>();
     		
                     for (LexicalEntry entry : elements.get(1).getActiveEntries()) {
-                        
     			new_element3index.putAll(dataset.filterByClassForProperty(old_element3index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
-    			
                     }
                     elements.get(3).addToIndex(new_element3index);
-                    
-                    
                     break;
                 }
-
+                
+                case 2: { 
+                    
+                    ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
+                    break;
+                }  
+                    
                 case 3: {
                     
-	
                     elements.get(5).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
+                    
+                    for (String m : elements.get(3).getMarkers()) {
+                        ((StringElement) elements.get(4)).add(m);
+                    }
                     break;
                 }
+                    
+                case 4: {
+                    
+                    ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s);
+                    break;
+                }
+                
+                //case 5: setFeatures(5,6,s); break;
             }
 	}
 	

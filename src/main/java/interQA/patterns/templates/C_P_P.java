@@ -52,11 +52,8 @@ public class C_P_P extends QueryPattern{
 		StringElement element3 = new StringElement();
 		elements.add(element3);
 		
-		StringElement element4 = new StringElement();
-		elements.add(element4);
-		
-		PropertyElement element5 = new PropertyElement();
-		elements.add(element5);	
+		PropertyElement element4 = new PropertyElement();
+		elements.add(element4);	
 		
 	}
 	
@@ -111,9 +108,9 @@ public class C_P_P extends QueryPattern{
 	@Override
 	public Set<String> buildSPARQLqueries(){
 				
-		ClassElement c = (ClassElement) elements.get(1);
+		ClassElement    c  = (ClassElement) elements.get(1);
 		PropertyElement p1 = (PropertyElement) elements.get(2);
-		PropertyElement p2 = (PropertyElement) elements.get(5);
+		PropertyElement p2 = (PropertyElement) elements.get(4);
 		
                 
                 switch(currentElement){
@@ -123,7 +120,7 @@ public class C_P_P extends QueryPattern{
                         return sqb.BuildQueryForClassAndProperty(c, p2, LexicalEntry.SynArg.OBJECT, count);
                     }
                     
-                    case 5:{
+                    case 4:{
                         return sqb.BuildQueryForClassAnd2Properties(c, p2, p2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
 
                     }

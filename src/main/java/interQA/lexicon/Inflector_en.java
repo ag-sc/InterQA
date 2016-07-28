@@ -78,6 +78,11 @@ public class Inflector_en implements Inflector {
     @Override
     public String getPast(String verb, int person) {
      
+        if (verb.equals("go"))    return "went";
+        if (verb.equals("do"))    return "did";
+        if (verb.equals("run"))   return "ran";
+        if (verb.equals("stand")) return "stood";
+        
         if (verb.length() < 2) return verb;
         
         String v = verb.toLowerCase();
@@ -94,7 +99,8 @@ public class Inflector_en implements Inflector {
         if (!Arrays.asList(vowels).contains(lastChar) 
          &&  Arrays.asList(vowels).contains(secondLastChar)
          && !(v.length() > 2 && Arrays.asList(vowels).contains(v.charAt(v.length()-3)+""))) {
-         return verb + lastChar + "ed";
+            if (lastChar.equals("y") || lastChar.equals("w")) return verb + "ed";
+            else return verb + lastChar + "ed";
         }
         if (lastChar.equals("y") && !Arrays.asList(vowels).contains(secondLastChar)) {
             return verb.substring(0,verb.length()-1) + "ied";

@@ -41,9 +41,17 @@ public class C extends QueryPattern {
             
             switch (currentElement) {
                 
-                case 0: {checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
-                }break;
-                case 1: setFeatures(1,2,s); break;
+                case 0: {
+                    
+                    checkHowMany(s);
+                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+                    break;
+                }
+                case 1: {
+                    
+                    setFeatures(1,2,s);
+                    break;
+                } 
             }
         }
 

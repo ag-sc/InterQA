@@ -5,14 +5,12 @@
  */
 package interQA.patterns.templates;
 
-import interQA.elements.ClassElement;
 import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -66,41 +64,45 @@ public class P_P_I extends QueryPattern{
 		@Override
 		public void update(String s) {
 		
+                    switch(currentElement) {
                     
-                    switch(currentElement){
-                        
-                    
-                    case 2 :{
-				Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
-		           Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
-		                
-		            for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
-		            	                     
-		                new_element2index.putAll(dataset.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
-		            }
-		            elements.get(3).setIndex(new_element2index);
-			}break;
-                    case 4:{
-				
-				   elements.get(5).addToIndex(dataset.filterBy2PropertiesForInstances(elements.get(1).getActiveEntries(),
-						   elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT,LexicalEntry.SynArg.OBJECT));       
-		            
-				
-			}break;
+                        case 2: {
+
+                            Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
+                            Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+
+                            for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
+                                 new_element2index.putAll(dataset.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+                            }
+                            elements.get(3).setIndex(new_element2index);
+                            break;
+                        }
+                        case 3: {
+
+                            for (String m : elements.get(3).getMarkers()) {
+                                ((StringElement) elements.get(4)).add(m);
+                            }
+                            break;
+                        }
+                        case 4: {
+
+                            elements.get(5).addToIndex(dataset.filterBy2PropertiesForInstances(elements.get(1).getActiveEntries(),
+                            elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT,LexicalEntry.SynArg.OBJECT));       
+                            break;
+                        }
                     }
-		
 		}
 		
 		@Override
 		public Set<String> buildSPARQLqueries(){
 			
-			PropertyElement p = (PropertyElement) elements.get(1);
+			PropertyElement p1 = (PropertyElement) elements.get(1);
 			PropertyElement p2 = (PropertyElement) elements.get(3);
-			InstanceElement i = (InstanceElement) elements.get(5);
+			InstanceElement i  = (InstanceElement) elements.get(5);
 			
                         switch(currentElement){
                             case 5: {
-                            return sqb.BuildQueryForInstanceAnd2Properties(i, p, p2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
+                            return sqb.BuildQueryForInstanceAnd2Properties(i, p1, p2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
                         }
                         }
                         return new HashSet<>();

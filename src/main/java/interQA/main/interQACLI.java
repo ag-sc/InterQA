@@ -455,7 +455,7 @@ public class interQACLI {
 
         //Converts ArrayList to Set
         Set<String> queriesSet = new HashSet<String>(queries);
-
+        
         return(queriesSet);
     }
 }
