@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by Mariano on 21/07/2016.
  */
-public class JenaExecutorCacheAsk implements java.io.Serializable{
+public class JenaExecutorCacheAsk{
     static private Map<String, Boolean> cache = null;
 
     static private Boolean isFirstTime = true;
@@ -31,7 +31,7 @@ public class JenaExecutorCacheAsk implements java.io.Serializable{
                     FileInputStream fis = new FileInputStream(fileName);
                     ObjectInputStream ois = new ObjectInputStream(fis);
                     cache = (Map<String, Boolean>) ois.readObject();
-                    isFirstTime = true;
+                    System.out.println("Loaded cache file " + fileName + " with " + cache.size() + " elements.");
                 } catch (FileNotFoundException fnfe) {
                     fnfe.printStackTrace();
                 } catch (IOException ioe){ //i
@@ -43,6 +43,7 @@ public class JenaExecutorCacheAsk implements java.io.Serializable{
                 //We use the static object cache
                 cache = new HashMap<>();
             }
+            isFirstTime = false;
         }
 
         //We use the cache
@@ -68,7 +69,9 @@ public class JenaExecutorCacheAsk implements java.io.Serializable{
 
         return satisfiesCondition;
     }
-
+    public String cacheUsageReport(){
+        return (cache == null? "AskCache not initialized": cache.size() + " ask queries used.");
+    }
     static public void main (String[] args) {
         JenaExecutorCacheAsk cacheAsk = new JenaExecutorCacheAsk();
         boolean satisfiesCondition1 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
