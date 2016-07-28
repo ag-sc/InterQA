@@ -64,16 +64,14 @@ public class C_P_P extends QueryPattern{
             
                 switch(currentElement){
                     
-                    case 0:{checkHowMany(s);((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
-                } break;
-                    
-                    case 2 : setFeatures(2,3,s);break;
-                    
-                    case 3 : ((StringElement) elements.get(3)).transferFeatures(elements.get(4),s);break;
-                    
-                    
-                    
-                    case 1:{
+                    case 0: {
+                        
+                        checkHowMany(s);
+                        ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+                        break;
+                    } 
+                 
+                    case 1: {
                         
                         setFeatures(1,2,s);
                         Map<String,List<LexicalEntry>> old_elementindex = elements.get(2).getIndex();
@@ -83,24 +81,32 @@ public class C_P_P extends QueryPattern{
 				new_elementindex.putAll(dataset.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
 			}
 			elements.get(2).setIndex(new_elementindex);
-                    }break;
+                        
+                        break;
+                    }
+                        
+                    case 3: { 
+                     
+                        ((StringElement) elements.get(3)).transferFeatures(elements.get(4),s);
+                        break;
+                    }
                     
-                    case 4 :{
+                    case 4: {
                         
                         setFeatures(4,5,s);
+                        
                         Map<String,List<LexicalEntry>> old_elementindex = elements.get(5).getIndex();
 			Map<String,List<LexicalEntry>> new_elementindex = new HashMap<>();
 			
-			for(LexicalEntry entry : elements.get(1).getActiveEntries()){
-				
-				new_elementindex.putAll(dataset.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
+			for (LexicalEntry entry : elements.get(1).getActiveEntries()) {
+			     new_elementindex.putAll(dataset.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
 			}
 			
-			//to ensure second suggestion(property) is different from previous property suggestion
-			if(!new_elementindex.equals(elements.get(2).getActiveEntries())) elements.get(5).setIndex(new_elementindex); 
+			// to ensure second suggestion(property) is different from previous property suggestion
+			if (!new_elementindex.equals(elements.get(2).getActiveEntries())) elements.get(5).setIndex(new_elementindex); 
 		
-                        
-                    }break;
+                        break;
+                    }
                 }
                 
 	}

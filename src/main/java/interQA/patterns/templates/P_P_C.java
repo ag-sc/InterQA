@@ -65,8 +65,24 @@ public class P_P_C extends QueryPattern{
 		
                     
                     switch (currentElement) {
+                        
+                        case 0: {
+                    
+                            checkHowMany(s);
+                            ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
+                            ((StringElement) elements.get(0)).transferFeatures(elements.get(3),s); 
+                            break;
+                        }
+                        
+                        case 1: {
+                            
+                            setFeatures(1,2,s);
+                            break;
+                        }
                     
                         case 2: {
+                            
+                            ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); 
 
                             Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
                             Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
@@ -79,6 +95,8 @@ public class P_P_C extends QueryPattern{
                         }
 
                         case 3: {
+                            
+                            setFeatures(3,4,s);
 
                             for (String m : elements.get(3).getMarkers()) {
                                 ((StringElement) elements.get(4)).add(m);
@@ -87,8 +105,14 @@ public class P_P_C extends QueryPattern{
                             elements.get(5).addToIndex(dataset.filterBy2PropertiesForClasses(elements.get(1).getActiveEntries(),
                                                                                              elements.get(3).getActiveEntries(), 
                                                                                              LexicalEntry.SynArg.OBJECT,
-                                                                                             LexicalEntry.SynArg.OBJECT));       
-
+                                                                                             LexicalEntry.SynArg.OBJECT));    
+                        
+                            break;
+                        }
+                        
+                        case 4: {
+                            
+                            ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s); 
                             break;
                         }
                     }

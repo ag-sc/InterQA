@@ -89,6 +89,8 @@ public class C_P_I extends QueryPattern{
                     
                 case 3: {
                     
+                    setFeatures(3,4,s);
+                    
                     elements.get(5).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
                     
                     for (String m : elements.get(3).getMarkers()) {
@@ -103,7 +105,11 @@ public class C_P_I extends QueryPattern{
                     break;
                 }
                 
-                //case 5: setFeatures(5,6,s); break;
+                case 5: { 
+                    
+                    setFeatures(5,6,s);
+                    break;
+                } 
             }
 	}
 	

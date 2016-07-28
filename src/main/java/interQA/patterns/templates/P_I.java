@@ -64,11 +64,10 @@ public class P_I extends QueryPattern {
                     ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
                     break;
                 }
-                
-                //case 1: ((StringElement) elements.get(1)).transferFeatures(elements.get(2),s); break; // TODO
-                //case 2: ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); break; // TODO
             
                 case 1: {
+                    
+                    setFeatures(1,2,s);
 
                     elements.get(3).addToIndex(dataset.filterByPropertyForInstances(elements.get(1).getActiveEntries(), LexicalEntry.SynArg.OBJECT));  
                     
@@ -77,6 +76,18 @@ public class P_I extends QueryPattern {
                     }
                     break;
                 }
+                
+                case 2: { 
+                        
+                    ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
+                    break;
+                } 
+                    
+                case 3: {
+                        
+                    setFeatures(3,4,s);
+                    break;
+                } 
             }
         }        
         

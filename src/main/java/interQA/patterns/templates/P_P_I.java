@@ -25,7 +25,7 @@ public class P_P_I extends QueryPattern{
 	
 
 
-    //SELECT ?x ?y WHERE {?a rdf:type <Class>. ?a <propert1> ?x. ?a <property2> ?y. }
+    //SELECT ?x ?y WHERE { <instance> <property1> ?x . <instance> <property2> ?y. }
 	
 	
 	
@@ -65,9 +65,19 @@ public class P_P_I extends QueryPattern{
 		public void update(String s) {
 		
                     switch(currentElement) {
+                        
+                        case 0: {
+                    
+                            checkHowMany(s);
+                            ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
+                            ((StringElement) elements.get(0)).transferFeatures(elements.get(3),s); 
+                            break;
+                        }
                     
                         case 2: {
 
+                            ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); 
+                            
                             Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
                             Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
 
@@ -77,6 +87,7 @@ public class P_P_I extends QueryPattern{
                             elements.get(3).setIndex(new_element2index);
                             break;
                         }
+                        
                         case 3: {
 
                             for (String m : elements.get(3).getMarkers()) {
@@ -84,10 +95,13 @@ public class P_P_I extends QueryPattern{
                             }
                             break;
                         }
+                        
                         case 4: {
 
                             elements.get(5).addToIndex(dataset.filterBy2PropertiesForInstances(elements.get(1).getActiveEntries(),
-                            elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT,LexicalEntry.SynArg.OBJECT));       
+                                                                                               elements.get(3).getActiveEntries(), 
+                                                                                               LexicalEntry.SynArg.OBJECT,
+                                                                                               LexicalEntry.SynArg.OBJECT));       
                             break;
                         }
                     }

@@ -89,11 +89,13 @@ public class C_P_I_P_I extends QueryPattern{
                 
                     case 1: {
                         
-                        setFeatures(1,3,s);
+                        setFeatures(1,2,s);
                         break;
                     } 
                             
                     case 2: {
+                        
+                        ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
 			
 			Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
                         Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
@@ -109,7 +111,8 @@ public class C_P_I_P_I extends QueryPattern{
 		
                     case 3: {
                         
-                        //setFeatures(3,5,s);
+                        setFeatures(3,4,s);
+                        
                     	elements.get(5).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
                         
                         for (String m : elements.get(3).getMarkers()) {
@@ -118,7 +121,15 @@ public class C_P_I_P_I extends QueryPattern{
 			break;
                     }
                     
+                    case 4: {
+                        
+                        ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s);
+                        break;
+                    }
+                    
                     case 5: {
+                        
+                        setFeatures(5,6,s);
                         
                         for(String key :elements.get(3).getActiveEntriesKey()){
                             elements.get(5).getIndex().remove(key);
@@ -126,7 +137,15 @@ public class C_P_I_P_I extends QueryPattern{
                         break;
                     }
                     
+                    case 6: {
+                        
+                        ((StringElement) elements.get(6)).transferFeatures(elements.get(7),s);
+                        break;
+                    }
+                    
                     case 7: {
+                        
+                        setFeatures(7,8,s);
                         
                     	elements.get(9).addToIndex(dataset.filterBy2PropertiesAndInstanceForInstances(elements.get(3).getActiveEntries(), 
                                                                                                       elements.get(5).getActiveEntries(), 
@@ -137,6 +156,12 @@ public class C_P_I_P_I extends QueryPattern{
                             ((StringElement) elements.get(8)).add(m);
                         }
 			break;
+                    }
+                    
+                    case 8: {
+                        
+                        ((StringElement) elements.get(8)).transferFeatures(elements.get(9),s);
+                        break;
                     }
 		}
 	}
