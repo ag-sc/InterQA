@@ -12,7 +12,6 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,10 +23,7 @@ import java.util.Set;
 public class P_P_I extends QueryPattern{
 	
 
-
-    //SELECT ?x ?y WHERE { <instance> <property1> ?x . <instance> <property2> ?y. }
-	
-	
+        // SELECT ?x ?y WHERE { <instance> <property1> ?x . <instance> <property2> ?y. }
 	
 	
 	public P_P_I(Lexicon lexicon,DatasetConnector instances){
@@ -59,6 +55,8 @@ public class P_P_I extends QueryPattern{
             InstanceElement element5 = new InstanceElement();
             elements.add(element5);
 		
+            StringElement element6 = new StringElement();
+            elements.add(element6);
 	}
         
 		@Override
@@ -74,17 +72,21 @@ public class P_P_I extends QueryPattern{
                             break;
                         }
                     
-                        case 2: {
-
-                            ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); 
-                            
-                            Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
-                            Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
+                        case 1: {
+                           
+                            Map<String,List<LexicalEntry>> old_index = elements.get(3).getIndex();
+                            Map<String,List<LexicalEntry>> new_index = new HashMap<>();
 
                             for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
-                                 new_element2index.putAll(dataset.filterByPropertyForProperty(old_element2index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
+                                 new_index.putAll(dataset.filterByPropertyForProperty(old_index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
                             }
-                            elements.get(3).setIndex(new_element2index);
+                            elements.get(3).setIndex(new_index);
+                            break;
+                        }
+                        
+                        case 2: {
+                            
+                            ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); 
                             break;
                         }
                         
@@ -93,11 +95,7 @@ public class P_P_I extends QueryPattern{
                             for (String m : elements.get(3).getMarkers()) {
                                 ((StringElement) elements.get(4)).add(m);
                             }
-                            break;
-                        }
-                        
-                        case 4: {
-
+                            
                             elements.get(5).addToIndex(dataset.filterBy2PropertiesForInstances(elements.get(1).getActiveEntries(),
                                                                                                elements.get(3).getActiveEntries(), 
                                                                                                LexicalEntry.SynArg.OBJECT,
@@ -109,17 +107,51 @@ public class P_P_I extends QueryPattern{
 		
 		@Override
 		public Set<String> buildSPARQLqueries(){
-			
-			PropertyElement p1 = (PropertyElement) elements.get(1);
-			PropertyElement p2 = (PropertyElement) elements.get(3);
-			InstanceElement i  = (InstanceElement) elements.get(5);
-			
-                        switch(currentElement){
-                            case 5: {
-                            return sqb.BuildQueryForInstanceAnd2Properties(i, p1, p2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
+            
+                    // SELECT DISTINCT ?x ?y WHERE 
+                    // {
+                    //   <I> <P1> ?x .
+                    //   <I> <P2> ?y . 
+                    // }
+
+                    String mainVar1 = "x";
+                    String mainVar2 = "y";
+
+                    PropertyElement p1 = (PropertyElement) elements.get(1);
+                    PropertyElement p2 = (PropertyElement) elements.get(3);
+                    InstanceElement i  = (InstanceElement) elements.get(5);
+
+                    switch (currentElement) {
+
+                        case 0: {
+
+                            builder.reset();
+
+                            builder.addProjVar(mainVar1);
+                            builder.addProjVar(mainVar2);
+                            break;
+                        } 
+
+                        case 1: { // + ?I <P1> ?x .
+                            
+                            builder.addTriple("I",p1.getActiveEntries(),mainVar1);
+                            break;
                         }
+                        
+                        case 3: { // + ?I <P2> ?y .
+
+                            builder.addTriple("I",p2.getActiveEntries(),mainVar2);
+                            break;
                         }
-                        return new HashSet<>();
+
+                        case 5: { // ?I -> <I>
+
+                            builder.instantiate("I",i.getActiveEntries());
+                            break;
+                        }
+                    }
+
+                    return builder.returnQueries();
                 
 		}
 		

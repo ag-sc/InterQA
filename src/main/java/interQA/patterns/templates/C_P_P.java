@@ -12,7 +12,6 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,16 +44,21 @@ public class C_P_P extends QueryPattern{
 		
 		ClassElement element1 = new ClassElement();
 		elements.add(element1);
-		
-		PropertyElement element2 = new PropertyElement();
+                
+                StringElement element2 = new StringElement();
 		elements.add(element2);
 		
-		StringElement element3 = new StringElement();
+		PropertyElement element3 = new PropertyElement();
 		elements.add(element3);
 		
-		PropertyElement element4 = new PropertyElement();
-		elements.add(element4);	
+		StringElement element4 = new StringElement();
+		elements.add(element4);
 		
+		PropertyElement element5 = new PropertyElement();
+		elements.add(element5);	
+		
+                StringElement element6 = new StringElement();
+		elements.add(element6);
 	}
 	
 	
@@ -74,37 +78,36 @@ public class C_P_P extends QueryPattern{
                     case 1: {
                         
                         setFeatures(1,2,s);
-                        Map<String,List<LexicalEntry>> old_elementindex = elements.get(2).getIndex();
-			Map<String,List<LexicalEntry>> new_elementindex  = new HashMap<>();
+                        
+                        Map<String,List<LexicalEntry>> old_index = elements.get(3).getIndex();
+			Map<String,List<LexicalEntry>> new_index  = new HashMap<>();
 			
 			for(LexicalEntry entry : elements.get(1).getActiveEntries()){
-				new_elementindex.putAll(dataset.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
+				new_index.putAll(dataset.filterByClassForProperty(old_index,LexicalEntry.SynArg.OBJECT,entry.getReference()));
 			}
-			elements.get(2).setIndex(new_elementindex);
+			elements.get(3).setIndex(new_index);
                         
                         break;
                     }
                         
-                    case 3: { 
+                    case 2: { 
                      
-                        ((StringElement) elements.get(3)).transferFeatures(elements.get(4),s);
+                        ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
                         break;
                     }
                     
-                    case 4: {
+                    case 3: {
                         
-                        setFeatures(4,5,s);
+                        setFeatures(3,4,s);
                         
-                        Map<String,List<LexicalEntry>> old_elementindex = elements.get(5).getIndex();
-			Map<String,List<LexicalEntry>> new_elementindex = new HashMap<>();
+                        Map<String,List<LexicalEntry>> old_index = elements.get(5).getIndex();
+			Map<String,List<LexicalEntry>> new_index = new HashMap<>();
 			
-			for (LexicalEntry entry : elements.get(1).getActiveEntries()) {
-			     new_elementindex.putAll(dataset.filterByClassForProperty(old_elementindex,LexicalEntry.SynArg.OBJECT,entry.getReference()));
+			for (LexicalEntry entry : elements.get(3).getActiveEntries()) {
+			     new_index.putAll(dataset.filterByClassForProperty(old_index,LexicalEntry.SynArg.OBJECT,entry.getReference()));
 			}
-			
-			// to ensure second suggestion(property) is different from previous property suggestion
-			if (!new_elementindex.equals(elements.get(2).getActiveEntries())) elements.get(5).setIndex(new_elementindex); 
-		
+                        elements.get(5).setIndex(new_index);
+					
                         break;
                     }
                 }
@@ -114,25 +117,51 @@ public class C_P_P extends QueryPattern{
 	@Override
 	public Set<String> buildSPARQLqueries(){
 				
-		ClassElement    c  = (ClassElement) elements.get(1);
-		PropertyElement p1 = (PropertyElement) elements.get(2);
-		PropertyElement p2 = (PropertyElement) elements.get(4);
-		
-                
-                switch(currentElement){
+            // SELECT DISTINCT ?x WHERE 
+            // {
+            //   ?x rdf:type <C> .
+            //   ?x <P1> ?y .
+            //   ?x <P2> ?z . 
+            // }
+            		
+            String mainVar = "x";
+            
+            ClassElement    c  = (ClassElement)    elements.get(1);
+            PropertyElement p1 = (PropertyElement) elements.get(2);
+            PropertyElement p2 = (PropertyElement) elements.get(4);
+		           
+            switch (currentElement) {
                     
+                case 0: {
                     
-                    case 2:{
-                        return sqb.BuildQueryForClassAndProperty(c, p2, LexicalEntry.SynArg.OBJECT, count);
-                    }
+                    builder.reset();
                     
-                    case 4:{
-                        return sqb.BuildQueryForClassAnd2Properties(c, p2, p2, LexicalEntry.SynArg.OBJECT, LexicalEntry.SynArg.OBJECT);
+                    if (count) builder.addCountVar(mainVar); 
+                    else       builder.addProjVar(mainVar);
+                    break;
+                } 
 
-                    }
+                case 1: { // + ?x rdf:type <C> .
+                    
+                    builder.addTypeTriple(mainVar,c.getActiveEntries());
+                    break;
                 }
-                
-                return new HashSet<>();
+                    
+                case 3: { // + ?x <P1> ?y .
+                    
+                    builder.addTriple(mainVar,p1.getActiveEntries(),"y");
+                    break;
+                }
+                    
+                case 5: { // + ?x <P2> ?z .
+                    
+                    builder.addTriple(mainVar,p2.getActiveEntries(),"z");
+                    break;
+                }
+                        
+            }
+            
+            return builder.returnQueries();                
 	}
 	
 }

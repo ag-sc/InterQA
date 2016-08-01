@@ -35,6 +35,6 @@ public class Vocabulary {
     public String getFreshVariable() {
 
         i++;
-        return "?v"+i;
+        return "v"+i;
     }
 }

@@ -15,7 +15,7 @@ import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import java.util.HashSet;
+import interQA.patterns.query.QueryBuilder;
 import java.util.Set;
 
 
@@ -73,6 +73,9 @@ public class C_P_I_P_I extends QueryPattern{
             
             InstanceElement element9 = new InstanceElement();
             elements.add(element9);
+            
+            StringElement element10 = new StringElement();
+            elements.add(element10);
 	}
 	
 	@Override
@@ -131,6 +134,8 @@ public class C_P_I_P_I extends QueryPattern{
                         
                         setFeatures(5,6,s);
                         
+                        // filter for entries in 7 ?!
+                        
                         for(String key :elements.get(3).getActiveEntriesKey()){
                             elements.get(5).getIndex().remove(key);
                         }
@@ -167,28 +172,64 @@ public class C_P_I_P_I extends QueryPattern{
 	}
         
 	@Override
-	public Set<String> buildSPARQLqueries(){
-				
-		
-		ClassElement    c  = (ClassElement)    elements.get(1);
-		PropertyElement p1 = (PropertyElement) elements.get(3);
-                InstanceElement i1 = (InstanceElement) elements.get(5);
-                PropertyElement p2 = (PropertyElement) elements.get(7);
-                InstanceElement i2 = (InstanceElement) elements.get(9);
-		
-                switch (currentElement) {
+	public Set<String> buildSPARQLqueries() {
+            
+            // SELECT DISTINCT ?x WHERE 
+            // {
+            //   ?x rdf:type <C> .
+            //   ?x <P1> <I1> .
+            //   ?x <P2> <I2> . 
+            // }
+            		
+            String mainVar = "x";
+            
+            ClassElement    c  = (ClassElement)    elements.get(1);
+            PropertyElement p1 = (PropertyElement) elements.get(3);
+            InstanceElement i1 = (InstanceElement) elements.get(5);
+            PropertyElement p2 = (PropertyElement) elements.get(7);
+            InstanceElement i2 = (InstanceElement) elements.get(9);
+		            
+            switch (currentElement) {
                     
-                	case 1 : return sqb.BuildQueryForClassInstances(elements.get(1).getActiveEntries(),flag);
+                case 0: {
                     
-                	case 3 : return sqb.BuildQueryForClassAndProperty(c,p1,LexicalEntry.SynArg.SUBJECT,flag);  
+                    builder.reset();
                     
-                        case 5 : return sqb.BuildQueryForClassAndIndividualAndProperty(c,i1,p1,LexicalEntry.SynArg.SUBJECT,flag);
+                    if (count) builder.addCountVar(mainVar); 
+                    else       builder.addProjVar(mainVar);
+                    break;
+                } 
+                
+                case 1: { // + ?x rdf:type <C> .
                     
-                        case 7: return sqb.BuildQueryForClassAnd2PropertyAndIndividual(c,p1,i1,LexicalEntry.SynArg.OBJECT,p2,LexicalEntry.SynArg.OBJECT,flag);
-                    
-                  	case 9: return sqb.BuildQueryForClassAnd2PropertyAnd2Individual(c,p1,i1,LexicalEntry.SynArg.OBJECT,p2,i2,LexicalEntry.SynArg.OBJECT,flag);
-                        
-                    default: return new HashSet<>();
+                    builder.addTypeTriple(mainVar,c.getActiveEntries());
+                    break;
                 }
+                    
+                case 3: { // + ?x <P1> ?I1 .
+                    
+                    builder.addTriple(mainVar,p1.getActiveEntries(),"I1");
+                    break;
+                }
+                    
+                case 5: { // ?I1 -> <I1>
+                    
+                    builder.instantiate("I1",i1.getActiveEntries());
+                }
+                    
+                case 7: { // + ?x <P2> ?I2 .
+                    
+                    builder.addTriple(mainVar,p2.getActiveEntries(),"I2");
+                    break;
+                }
+                    
+                case 9: { // ?I2 -> <I2>
+                    
+                    builder.instantiate("I2",i2.getActiveEntries());
+                }
+                        
+            }
+            
+            return builder.returnQueries();
 	}
 }

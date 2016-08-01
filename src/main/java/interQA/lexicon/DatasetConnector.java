@@ -170,7 +170,7 @@ public class DatasetConnector {
 
                       LexicalEntry entry = new LexicalEntry();
                       entry.setCanonicalForm(form);
-                      entry.setReference("<"+uri.toString()+">");
+                      entry.setReference(uri.toString());
 
                       if (!instances.containsKey(form)) {
                            instances.put(form,new ArrayList<>());
@@ -191,7 +191,7 @@ public class DatasetConnector {
     }
 
     public Map<String,List<LexicalEntry>> getInstanceIndex(String query, String var_uri, String var_label) {
-
+       
         Map<String,List<LexicalEntry>> instances = new HashMap<>();
 
         ResultSet results = cacheSel.executeWithCache(endpoint,query);
@@ -205,7 +205,7 @@ public class DatasetConnector {
 
               if (uri != null && label != null) {
 
-            	  	String form = label.toString();
+                    String form = label.toString();
             	    String form_IRI = "";
             	  	if(form.matches(".*http://www.w3.org/2001/XMLSchema#gYear")){
     					form =	form.substring(form.indexOf('"') + 1, form.indexOf("-"));
@@ -222,7 +222,7 @@ public class DatasetConnector {
     				}
     				else{
     					form = label.asLiteral().getValue().toString().replaceAll(" \\(.*?\\)", "");
-    					form_IRI = uri.toString();
+    					form_IRI = "<"+uri.toString()+">";
     				}
 
 
@@ -235,8 +235,6 @@ public class DatasetConnector {
                      }
 
                       instances.get(form).add(entry);
-
-
             	  }
 
 

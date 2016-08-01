@@ -7,22 +7,32 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 
 import interQA.elements.ClassElement;
+import interQA.elements.Element;
 import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 
 public class SparqlQueryBuilder {
 
-	Vocabulary vocab = new Vocabulary();
-	String endpoint ;
+    
+	Vocabulary vocab;
+        
+	String endpoint;
 	
+        String sortal_predicate;
+        
 	List<String> LabelProperties; 
 	List<String> DateProperties;
+        
 	
         public SparqlQueryBuilder() {
+            
+            vocab = new Vocabulary();
+            
+            sortal_predicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+            
             LabelProperties = new ArrayList<>();
             LabelProperties.add("http://lod.springer.com/data/ontology/property/confAcronym");
             LabelProperties.add("http://lod.springer.com/data/ontology/property/confName");
@@ -31,10 +41,27 @@ public class SparqlQueryBuilder {
             DateProperties.add("http://lod.springer.com/data/ontology/property/confYear");
         }
         
-	public void setEndpoint(String link){
+	public void setEndpoint(String link) {
+            
             endpoint = link;
-                    
         }
+        
+        /* Instantiating query templates  */
+        
+        public String instantiateURI(String query, String placeholder, String uri) {
+            
+            return query.replace(placeholder,uri);
+        }
+        
+        public String instantiateSortal(String query) {
+            
+            return instantiateURI(query,"TYPE",sortal_predicate);
+        }
+        
+        
+        /* OTHER STUFF (TODO: clean) */
+        
+        
 	 private String label(String var1, String var2,List<String> Labelprops) {
 	        
 	        String out; 

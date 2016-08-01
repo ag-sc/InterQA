@@ -12,14 +12,14 @@ import java.util.*;
 *
 * @author mince
 */
-public class P_C extends QueryPattern{
+public class C_P extends QueryPattern{
 
     
         /*
         SELECT ?y WHERE { ?x rdf:type <Class>. ?x <Property> ?y. }
         */ 
 
-            public P_C(Lexicon lexicon,DatasetConnector dataset){
+            public C_P(Lexicon lexicon,DatasetConnector dataset){
                 
                 this.lexicon = lexicon;
                 this.dataset = dataset; 
@@ -87,17 +87,39 @@ public class P_C extends QueryPattern{
             @Override
             public Set<String> buildSPARQLqueries(){
 								
-		PropertyElement p = (PropertyElement) elements.get(1);
-		ClassElement    c = (ClassElement)    elements.get(4);
-			
+                // SELECT DISTINCT ?x WHERE 
+                // {
+                //   ?x rdf:type <C> .
+                //   ?x <P> ?y .
+                // }
+
+                String mainVar = "x";
+
+                ClassElement    c = (ClassElement)    elements.get(1);
+                PropertyElement p = (PropertyElement) elements.get(3);
+
+                builder.reset();
+
                 switch (currentElement) {
-                
-                    case 1: queries = sqb.BuildQueryForProperty(p);
-                    
-                    case 3: queries = sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.OBJECT,count);                        
+
+                    case 1: { // + ?x rdf:type <C> .
+
+                        if (count) builder.addCountVar(mainVar); 
+                        else       builder.addProjVar(mainVar);
+
+                        builder.addTypeTriple(mainVar,c.getActiveEntries());
+                        break;
+                    }
+
+                    case 3: { // + ?x <P> ?y .
+
+                        builder.addTriple(mainVar,p.getActiveEntries(),"y");
+                        break;
+                    }
+
                 }
-                
-                return queries;
+
+                return builder.returnQueries();        
             }
 			
 }

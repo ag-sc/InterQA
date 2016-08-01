@@ -6,9 +6,6 @@ import interQA.elements.PropertyElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -94,16 +91,40 @@ public class P_I extends QueryPattern {
         @Override
 	public Set<String> buildSPARQLqueries() {
                         
+            // SELECT DISTINCT ?x WHERE 
+            // {
+            //   ?x <P> <I> .
+            // }
+            		
+            String mainVar = "x";
+            
             PropertyElement p = (PropertyElement) elements.get(1);
             InstanceElement i = (InstanceElement) elements.get(3);
-                 
+		
             switch (currentElement) {
-                
-                case 2: queries = sqb.BuildQueryForProperty(p); break;
-                
-                case 3: queries = sqb.BuildQueryForPropertyAndInstance(p,i,count); break;          
+                    
+                case 0: {
+                    
+                    builder.reset();
+                    
+                    if (count) builder.addCountVar(mainVar); 
+                    else       builder.addProjVar(mainVar);
+                    break;
+                } 
+
+                case 1: { // + ?x <P> ?I .
+
+                    builder.addTriple(mainVar,p.getActiveEntries(),"I");
+                    break;
+                }
+                    
+                case 3: { // ?I -> <I>
+                    
+                    builder.instantiate("I",i.getActiveEntries());
+                    break;
+                }
             }
             
-            return queries;
+            return builder.returnQueries();
 	}
 }

@@ -58,12 +58,33 @@ public class C extends QueryPattern {
         @Override
         public Set<String> buildSPARQLqueries() {
 
-            ClassElement c = (ClassElement) elements.get(1);
-            switch (currentElement) {
-                
-                case 1: queries = sqb.BuildQueryForClassInstances(c.getActiveEntries(),count);
-            }
+            // SELECT DISTINCT ?x WHERE 
+            // {
+            //   ?x rdf:type <C> .
+            // }
+            		
+            String mainVar = "x";
             
-            return queries;
+            ClassElement c = (ClassElement) elements.get(1);
+                        
+            switch (currentElement) {
+                    
+                case 0: {
+                    
+                    builder.reset();
+                    
+                    if (count) builder.addCountVar(mainVar); 
+                    else       builder.addProjVar(mainVar);
+                    break;
+                } 
+                
+                case 1: { // + ?x rdf:type <C> .
+                    
+                    builder.addTypeTriple(mainVar,c.getActiveEntries());
+                    break;
+                }
+            }
+                        
+            return builder.returnQueries();
         }	
 }

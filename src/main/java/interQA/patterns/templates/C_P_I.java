@@ -117,20 +117,48 @@ public class C_P_I extends QueryPattern{
 	@Override
 	public Set<String> buildSPARQLqueries() {
 			
-            ClassElement    c = (ClassElement)    elements.get(1);
+            // SELECT DISTINCT ?x WHERE 
+            // {
+            //   ?x rdf:type <C> .
+            //   ?x <P> <I> .
+            // }
+            		
+            String mainVar = "x";
+            
+            ClassElement    c  = (ClassElement)   elements.get(1);
             PropertyElement p = (PropertyElement) elements.get(3);
             InstanceElement i = (InstanceElement) elements.get(5);
-            
+		            
             switch (currentElement) {
+                   
+                case 0: {
+                    
+                    builder.reset();
+                    
+                    if (count) builder.addCountVar(mainVar); 
+                    else       builder.addProjVar(mainVar);
+                    break;
+                }
                 
-            	case 1:return sqb.BuildQueryForClassInstances(c.getActiveEntries(),count);
-                
-                case 3:return sqb.BuildQueryForClassAndProperty(c,p,LexicalEntry.SynArg.SUBJECT,count);
-                
-                case 5:return sqb.BuildQueryForClassAndIndividualAndProperty(c,i,p,LexicalEntry.SynArg.OBJECT,count);
-                
+                case 1: { // + ?x rdf:type <C> .
+                    
+                    builder.addTypeTriple(mainVar,c.getActiveEntries());
+                    break;
+                }
+                    
+                case 3: { // + ?x <P> ?I .
+                    
+                    builder.addTriple(mainVar,p.getActiveEntries(),"I");
+                    break;
+                }
+                    
+                case 5: { // ?I -> <I>
+                    
+                    builder.instantiate("I",i.getActiveEntries());
+                    break;
+                }
             }
             
-            return queries;
+            return builder.returnQueries();
 	}
 }
