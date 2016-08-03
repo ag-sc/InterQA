@@ -19,7 +19,7 @@ public class C extends QueryPattern {
 		
             this.lexicon = lexicon;
             this.dataset = dataset;
-            sqb.setEndpoint(dataset.getEndpoint());
+            
             init();	
 	}
 	

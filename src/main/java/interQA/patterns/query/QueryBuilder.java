@@ -29,6 +29,11 @@ public class QueryBuilder {
         vocab   = new Vocabulary();
     }
     
+    public Set<IncrementalQuery> getQueries() {
+        
+        return queries;
+    }
+    
     public void addProjVar(String var) {
         
         for (IncrementalQuery q : queries) {

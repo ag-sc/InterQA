@@ -13,6 +13,7 @@ import interQA.main.JenaExecutorCacheSelect;
 import interQA.main.JenaExecutorCacheAsk;
 import interQA.patterns.query.IncrementalQuery;
 import interQA.patterns.query.QueryBuilder;
+import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
@@ -73,9 +74,12 @@ public class DatasetConnector {
     
     public void fillInstances(Element element, QueryBuilder builder, String var) {
                 
-           for (String query : builder.returnQueries(false)) {
+        for (IncrementalQuery iq : builder.getQueries()) {
+               
+              Query query = iq.assemble(false);
+              query.setQueryResultStar(true);
                            
-              ResultSet results = cacheSel.executeWithCache(endpoint,query);
+              ResultSet results = cacheSel.executeWithCache(endpoint,query.toString());
             
               while (results.hasNext()) {
                 
@@ -133,17 +137,17 @@ public class DatasetConnector {
         return labels;
     }
     
-    private String label(String var1, String var2) {
+    private String label(String uri, String var) {
 
         String out;
 
         if (labelProperties.size() == 1) {
-            out = var1 + " <" + labelProperties.get(0) + "> " + var2 + " .";
+            out = "<"+uri+">" + " <" + labelProperties.get(0) + "> " + var + " .";
         }
         else if (labelProperties.size() > 1) {
-            out = "{ " + var1 + " <" + labelProperties.get(0) + "> " + var2 + " . }";
+            out = "{ <"+uri+"> <" + labelProperties.get(0) + "> " + var + " . }";
             for (String prop : labelProperties.subList(1,labelProperties.size())) {
-                 out += " UNION { " + var1 + " <" + prop + "> " + var2 + " . }";
+                 out += " UNION { <"+uri+"> <" + prop + "> " + var + " . }";
             }
         }
         else out = "" ;

@@ -25,7 +25,7 @@ public class P_P_C extends QueryPattern{
 				            
             this.lexicon = lexicon;
             this.dataset = instances; 
-            sqb.setEndpoint(dataset.getEndpoint());
+
             init();
         }
         

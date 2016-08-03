@@ -5,7 +5,6 @@ import interQA.elements.Element;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import interQA.lexicon.SparqlQueryBuilder;
 import interQA.patterns.query.QueryBuilder;
 
 import java.util.ArrayList;
@@ -16,23 +15,21 @@ import java.util.Set;
 
 public abstract class QueryPattern {
 
-        public Vocabulary vocab = new Vocabulary();
-        
-        public QueryBuilder builder = new QueryBuilder();
-        
-        public SparqlQueryBuilder sqb = new SparqlQueryBuilder();
-        
-        public boolean count = false;        
-        
         public Lexicon lexicon;
         public DatasetConnector dataset;
         
-	public List<Element> elements = new ArrayList<>();
+        public Vocabulary vocab = new Vocabulary();
         
+        public QueryBuilder builder = new QueryBuilder();
+                
+        public Set<String> queries = new HashSet<>();
+
+        
+        public boolean count = false;        
+        
+	public List<Element> elements = new ArrayList<>();
 	public int currentElement = -1;   
         
-        public Set<String> queries = new HashSet<>();
-    
         
         public void init() {
         }

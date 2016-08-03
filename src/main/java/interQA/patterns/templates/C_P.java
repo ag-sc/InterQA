@@ -6,7 +6,7 @@ import interQA.elements.StringElement;
 import interQA.elements.PropertyElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.Lexicon;
-import java.util.*;
+
 /**
 *
 * @author mince, cunger
@@ -24,7 +24,7 @@ public class C_P extends QueryPattern{
                 
                 this.lexicon = lexicon;
                 this.dataset = dataset; 
-                sqb.setEndpoint(dataset.getEndpoint());
+
                 init();
             }
 

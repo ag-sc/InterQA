@@ -5,7 +5,6 @@ import interQA.elements.StringElement;
 import interQA.elements.PropertyElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.Lexicon;
-import java.util.Set;
 
 /**
  *
@@ -30,9 +29,7 @@ public class P_I extends QueryPattern {
         
         @Override
         public void init() {  
-            
-            sqb.setEndpoint(dataset.getEndpoint());
-            
+                        
             StringElement element0 = new StringElement(); 
             elements.add(element0);
             
