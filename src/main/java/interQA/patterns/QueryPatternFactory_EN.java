@@ -7,7 +7,6 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.main.interQACLI.USECASE;
-import interQA.patterns.springer.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -278,64 +277,64 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 //        }
           
         
-        // USE-CASE SPECIFIC PATTERNS
-
-        switch (usecase) {
-        
-            case SPRINGER: {
-                
-        //        //Give me the proceedings of ISWC 2015.
-                if (plist.contains("qpSpringer1")) {
-                    QueryPattern qp = new SpringerQueryPattern4(lexicon, instances);
-
-                    StringElement e15_0 = (StringElement) qp.getElement(0);
-                    addDefGiveMePrefixes(e15_0);
-
-                    addRelationalNouns(qp.getElement(1));
-
-                    patterns.add(qp);
-                }
-
-//                   proceedings of ISWC 2015
-               if (plist.contains("qpSpringer2")) {
-                   QueryPattern qp = new SpringerQueryPattern4(lexicon, instances);
-
-                   addRelationalNouns(qp.getElement(1));
-
-                   patterns.add(qp);
-               }
-
-//                conferences in Spain/2015
-                if (plist.contains("qpSpringerC_P_I")) {
-                    QueryPattern qp = new C_P_I(lexicon, instances);
-
-                    addNouns(qp.getElement(1));
-
-                    addPrepositions(qp.getElement(3));
-
-                    patterns.add(qp);
-                }
-
-//                Give me the start and end date of ISWC 2015.
-                if (plist.contains("qpSpringer3")) {
-                    QueryPattern qp = new SpringerQueryPattern5(lexicon, instances);
-
-                    StringElement e16_0 = (StringElement) qp.getElement(0);
-                    addDefGiveMePrefixes(e16_0);
-
-                    addRelationalNouns(qp.getElement(1));
-
-                    StringElement e16_2 = (StringElement) qp.getElement(2);
-                    e16_2.add("and");
-
-                    addRelationalNouns(qp.getElement(3));
-
-                    patterns.add(qp);
-                }
-                
-                break;
-            }
-        } //End switch(usecase)
+//        // USE-CASE SPECIFIC PATTERNS
+//
+//        switch (usecase) {
+//        
+//            case SPRINGER: {
+//                
+//        //        //Give me the proceedings of ISWC 2015.
+//                if (plist.contains("qpSpringer1")) {
+//                    QueryPattern qp = new SpringerQueryPattern4(lexicon, instances);
+//
+//                    StringElement e15_0 = (StringElement) qp.getElement(0);
+//                    addDefGiveMePrefixes(e15_0);
+//
+//                    addRelationalNouns(qp.getElement(1));
+//
+//                    patterns.add(qp);
+//                }
+//
+////                   proceedings of ISWC 2015
+//               if (plist.contains("qpSpringer2")) {
+//                   QueryPattern qp = new SpringerQueryPattern4(lexicon, instances);
+//
+//                   addRelationalNouns(qp.getElement(1));
+//
+//                   patterns.add(qp);
+//               }
+//
+////                conferences in Spain/2015
+//                if (plist.contains("qpSpringerC_P_I")) {
+//                    QueryPattern qp = new C_P_I(lexicon, instances);
+//
+//                    addNouns(qp.getElement(1));
+//
+//                    addPrepositions(qp.getElement(3));
+//
+//                    patterns.add(qp);
+//                }
+//
+////                Give me the start and end date of ISWC 2015.
+//                if (plist.contains("qpSpringer3")) {
+//                    QueryPattern qp = new SpringerQueryPattern5(lexicon, instances);
+//
+//                    StringElement e16_0 = (StringElement) qp.getElement(0);
+//                    addDefGiveMePrefixes(e16_0);
+//
+//                    addRelationalNouns(qp.getElement(1));
+//
+//                    StringElement e16_2 = (StringElement) qp.getElement(2);
+//                    e16_2.add("and");
+//
+//                    addRelationalNouns(qp.getElement(3));
+//
+//                    patterns.add(qp);
+//                }
+//                
+//                break;
+//            }
+//        } //End switch(usecase)
         
         
         // Done. (Yay!)

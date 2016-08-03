@@ -7,8 +7,6 @@ import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import interQA.main.interQACLI.USECASE;
-import interQA.patterns.springer.SpringerQueryPattern4;
-import interQA.patterns.springer.SpringerQueryPattern5;
 import interQA.patterns.templates.*;
 
 import java.util.HashSet;
@@ -289,59 +287,59 @@ public class QueryPatternFactory_ES implements QueryPatternFactory {
         
           
         
-        // USE-CASE SPECIFIC PATTERNS
-
-        switch (usecase) {
-        
-            case SPRINGER: {
-                
-        //        //Give me the proceedings of ISWC 2015.
-                QueryPattern q15 = new SpringerQueryPattern4(lexicon,instances);
-
-                StringElement e15_0 = (StringElement) q15.getElement(0);
-                addGiveMePrefixes(e15_0);
-
-                addRelationalNouns(q15.getElement(1));
-
-                patterns.add(q15);
-
-
-//                   proceedings of ISWC 2015
-
-               QueryPattern q17 = new SpringerQueryPattern4(lexicon,instances);
-
-               addRelationalNouns(q17.getElement(1));
-
-               patterns.add(q17);
-
-//                conferences in Spain/2015
-
-                QueryPattern q18 = new C_P_I(lexicon,instances);
-
-                addNouns(q18.getElement(1));
-
-                addPrepositionalVerbs(q18.getElement(3));
-
-                patterns.add(q18);
-
-//                Give me the start and end date of ISWC 2015.
-                QueryPattern q16 = new SpringerQueryPattern5(lexicon,instances);
-
-                StringElement e16_0 = (StringElement) q16.getElement(0);
-                addGiveMePrefixes(e16_0);
-
-                addRelationalNouns(q16.getElement(1));
-
-                StringElement e16_2 = (StringElement) q16.getElement(2);
-                e16_2.add("y");
-
-                addRelationalNouns(q16.getElement(3));
-
-                patterns.add(q16);
-                
-                break;
-            }
-        }
+//        // USE-CASE SPECIFIC PATTERNS
+//
+//        switch (usecase) {
+//        
+//            case SPRINGER: {
+//                
+//        //        //Give me the proceedings of ISWC 2015.
+//                QueryPattern q15 = new SpringerQueryPattern4(lexicon,instances);
+//
+//                StringElement e15_0 = (StringElement) q15.getElement(0);
+//                addGiveMePrefixes(e15_0);
+//
+//                addRelationalNouns(q15.getElement(1));
+//
+//                patterns.add(q15);
+//
+//
+////                   proceedings of ISWC 2015
+//
+//               QueryPattern q17 = new SpringerQueryPattern4(lexicon,instances);
+//
+//               addRelationalNouns(q17.getElement(1));
+//
+//               patterns.add(q17);
+//
+////                conferences in Spain/2015
+//
+//                QueryPattern q18 = new C_P_I(lexicon,instances);
+//
+//                addNouns(q18.getElement(1));
+//
+//                addPrepositionalVerbs(q18.getElement(3));
+//
+//                patterns.add(q18);
+//
+////                Give me the start and end date of ISWC 2015.
+//                QueryPattern q16 = new SpringerQueryPattern5(lexicon,instances);
+//
+//                StringElement e16_0 = (StringElement) q16.getElement(0);
+//                addGiveMePrefixes(e16_0);
+//
+//                addRelationalNouns(q16.getElement(1));
+//
+//                StringElement e16_2 = (StringElement) q16.getElement(2);
+//                e16_2.add("y");
+//
+//                addRelationalNouns(q16.getElement(3));
+//
+//                patterns.add(q16);
+//                
+//                break;
+//            }
+//        }
         
         
         // Done. (Yay!)
