@@ -148,7 +148,7 @@ public class QueryBuilder {
         String q;
         for (IncrementalQuery query : queries) { 
              q = query.assemble().toString();
-             q = q.replaceAll("\\n"," ").replaceAll("\\s+"," ");
+             q = q.replaceAll("\\n"," ").replaceAll("\\s+"," ").trim();
              out.add(q);
         }
         
