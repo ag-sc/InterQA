@@ -5,8 +5,10 @@ import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public abstract class Element {
@@ -76,9 +78,36 @@ public abstract class Element {
         this.index = index;
     }
     
+    public void addToIndex(String form, LexicalEntry entry) {
+        
+        if (!index.containsKey(form)) {
+             index.put(form,new ArrayList<>());
+        }
+        index.get(form).add(entry);
+    }
+    
     public void addToIndex(Map<String,List<LexicalEntry>> map) {        
+        
         this.index.putAll(map); 
         // TODO need to make sure values are merged when keys overlap?
+    }
+    
+    public void removeFromIndex(LexicalEntry entry) {
+        
+        Set<String> keys = new HashSet<>();
+        
+        for (String k : index.keySet()) {
+            if (index.get(k).contains(entry)) {
+                keys.add(k);
+            }
+        }
+        
+        for (String k : keys) {
+            index.get(k).remove(entry);
+            if (index.get(k).isEmpty()) {
+                index.remove(k);
+            }
+        }
     }
     
     public void addFeature(Feature f) {

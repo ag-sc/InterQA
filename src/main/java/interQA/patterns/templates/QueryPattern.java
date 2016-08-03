@@ -87,7 +87,7 @@ public abstract class QueryPattern {
             }
 	}
         
-        // update(int i) and buildSPARQLqueries() is where the pattern-specific magic happens
+        // update(int i) is where all the pattern-specific magic happens
         
         public void update(String parsed) {
             // Needs to be overwritten by all concrete query patterns.
@@ -103,9 +103,8 @@ public abstract class QueryPattern {
         }
 
 	public Set<String> buildSPARQLqueries() {
-            // Needs to be overwritten by all concrete query patterns.
             
-            return queries;
+            return builder.returnQueries(true);
         }
 
 	public void checkHowMany(String s){

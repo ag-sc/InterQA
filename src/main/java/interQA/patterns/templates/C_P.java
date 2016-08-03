@@ -5,19 +5,20 @@ import interQA.elements.ClassElement;
 import interQA.elements.StringElement;
 import interQA.elements.PropertyElement;
 import interQA.lexicon.DatasetConnector;
-import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import java.util.*;
 /**
 *
-* @author mince
+* @author mince, cunger
 */
 public class C_P extends QueryPattern{
 
-    
-        /*
-        SELECT ?y WHERE { ?x rdf:type <Class>. ?x <Property> ?y. }
-        */ 
+								
+            // SELECT DISTINCT ?x WHERE 
+            // {
+            //   ?x rdf:type <C> .
+            //   ?x <P> ?y .
+            // }
 
             public C_P(Lexicon lexicon,DatasetConnector dataset){
                 
@@ -49,9 +50,26 @@ public class C_P extends QueryPattern{
             @Override
             public void update(String s) {
 		
+                ClassElement    c = (ClassElement)    elements.get(1);
+                PropertyElement p = (PropertyElement) elements.get(3);
+                
                 switch (currentElement) {
                 
                     case 0: {
+                        
+                        // Create query template
+                        
+                        builder.reset();
+                        
+                        String mainVar = "x";
+
+                        builder.addUninstantiatedTypeTriple(mainVar,"C");
+                        builder.addUninstantiatedTriple(mainVar,"P","y");
+
+                        if (count) builder.addCountVar(mainVar); 
+                        else       builder.addProjVar(mainVar);
+                        
+                        // Propagate features
                         
                         checkHowMany(s);
                         ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
@@ -61,12 +79,12 @@ public class C_P extends QueryPattern{
                     case 1: {
                         
                         setFeatures(1,2,s);
-					
-                        elements.get(4).addToIndex(dataset.filterByPropertyForInstances(elements.get(1).getActiveEntries(),LexicalEntry.SynArg.OBJECT)); 
-                        
                         for (String m : elements.get(1).getMarkers()) {
                             ((StringElement) elements.get(2)).add(m);
                         }
+                        
+                        builder.instantiate("P",p.getActiveEntries());
+                        dataset.filter(elements.get(3),builder,"C");
                         break;
                     }
                     
@@ -79,47 +97,11 @@ public class C_P extends QueryPattern{
                     case 3: {
                         
                         setFeatures(3,4,s);
+                        
+                        builder.instantiate("C",c.getActiveEntries());
                         break;
                     } 
 		}
-            }
-
-            @Override
-            public Set<String> buildSPARQLqueries(){
-								
-                // SELECT DISTINCT ?x WHERE 
-                // {
-                //   ?x rdf:type <C> .
-                //   ?x <P> ?y .
-                // }
-
-                String mainVar = "x";
-
-                ClassElement    c = (ClassElement)    elements.get(1);
-                PropertyElement p = (PropertyElement) elements.get(3);
-
-                builder.reset();
-
-                switch (currentElement) {
-
-                    case 1: { // + ?x rdf:type <C> .
-
-                        if (count) builder.addCountVar(mainVar); 
-                        else       builder.addProjVar(mainVar);
-
-                        builder.addTypeTriple(mainVar,c.getActiveEntries());
-                        break;
-                    }
-
-                    case 3: { // + ?x <P> ?y .
-
-                        builder.addTriple(mainVar,p.getActiveEntries(),"y");
-                        break;
-                    }
-
-                }
-
-                return builder.returnQueries();        
             }
 			
 }

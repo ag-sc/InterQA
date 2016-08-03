@@ -13,23 +13,26 @@ import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
-import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import interQA.patterns.query.QueryBuilder;
-import java.util.Set;
 
 
 /**
  *
- * @author mirtik
+ * @author mirtik, cunger
  */
 public class C_P_I_P_I extends QueryPattern{
     
     
-        //SELECT DISTINCT ?uri { ?uri rdf:type <Class> . ?uri <Property> <Literal> . ?uri <Property> <Literal> . }
-
+    // SELECT DISTINCT ?x WHERE 
+    // {
+    //   ?x rdf:type <C> .
+    //   ?x <P1> <I1> .
+    //   ?x <P2> <I2> . 
+    // }
+    
     
     boolean flag = false;
+    
     
     public C_P_I_P_I(Lexicon lexicon,DatasetConnector dataset){
         	
@@ -79,157 +82,117 @@ public class C_P_I_P_I extends QueryPattern{
 	}
 	
 	@Override
-	public void update(String s){
-		
-                switch (currentElement) {
-                    
-                    case 0: {
-                        
-                        checkHowMany(s);
-                        ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
-                        break;
-                    }
-                
-                    case 1: {
-                        
-                        setFeatures(1,2,s);
-                        break;
-                    } 
-                            
-                    case 2: {
-                        
-                        ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
-			
-			Map<String,List<LexicalEntry>> old_element2index = elements.get(3).getIndex();
-                        Map<String,List<LexicalEntry>> new_element2index = new HashMap<>();
-    		
-                        for(LexicalEntry entry : elements.get(1).getActiveEntries()){
-    			
-                            new_element2index.putAll(dataset.filterByClassForProperty(old_element2index, LexicalEntry.SynArg.SUBJECT, entry.getReference()));
-                        }
-			
-                        elements.get(3).addToIndex(new_element2index);
-			break;
-                    }
-		
-                    case 3: {
-                        
-                        setFeatures(3,4,s);
-                        
-                    	elements.get(5).addToIndex(dataset.filterByPropertyForInstances(elements.get(3).getActiveEntries(), LexicalEntry.SynArg.OBJECT));
-                        
-                        for (String m : elements.get(3).getMarkers()) {
-                            ((StringElement) elements.get(4)).add(m);
-                        }
-			break;
-                    }
-                    
-                    case 4: {
-                        
-                        ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s);
-                        break;
-                    }
-                    
-                    case 5: {
-                        
-                        setFeatures(5,6,s);
-                        
-                        // filter for entries in 7 ?!
-                        
-                        for(String key :elements.get(3).getActiveEntriesKey()){
-                            elements.get(5).getIndex().remove(key);
-                        }
-                        break;
-                    }
-                    
-                    case 6: {
-                        
-                        ((StringElement) elements.get(6)).transferFeatures(elements.get(7),s);
-                        break;
-                    }
-                    
-                    case 7: {
-                        
-                        setFeatures(7,8,s);
-                        
-                    	elements.get(9).addToIndex(dataset.filterBy2PropertiesAndInstanceForInstances(elements.get(3).getActiveEntries(), 
-                                                                                                      elements.get(5).getActiveEntries(), 
-                    	                                                                              elements.get(7).getActiveEntries(), 
-                                                                                                      LexicalEntry.SynArg.OBJECT));
-                        
-                        for (String m : elements.get(7).getMarkers()) {
-                            ((StringElement) elements.get(8)).add(m);
-                        }
-			break;
-                    }
-                    
-                    case 8: {
-                        
-                        ((StringElement) elements.get(8)).transferFeatures(elements.get(9),s);
-                        break;
-                    }
-		}
-	}
-        
-	@Override
-	public Set<String> buildSPARQLqueries() {
-            
-            // SELECT DISTINCT ?x WHERE 
-            // {
-            //   ?x rdf:type <C> .
-            //   ?x <P1> <I1> .
-            //   ?x <P2> <I2> . 
-            // }
-            		
-            String mainVar = "x";
+	public void update(String s) {
             
             ClassElement    c  = (ClassElement)    elements.get(1);
             PropertyElement p1 = (PropertyElement) elements.get(3);
             InstanceElement i1 = (InstanceElement) elements.get(5);
             PropertyElement p2 = (PropertyElement) elements.get(7);
             InstanceElement i2 = (InstanceElement) elements.get(9);
-		            
+		
             switch (currentElement) {
                     
                 case 0: {
-                    
+                        
+                    // Create query template 
+                        
                     builder.reset();
+                
+                    String mainVar = "x";
+                    
+                    builder.addUninstantiatedTypeTriple(mainVar,"C");
+                    builder.addUninstantiatedTriple(mainVar,"P1","I1");
+                    builder.addUninstantiatedTriple(mainVar,"P2","I2");
                     
                     if (count) builder.addCountVar(mainVar); 
                     else       builder.addProjVar(mainVar);
+                        
+                    // Propagate features 
+                    
+                    checkHowMany(s);
+                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+                    
+                    break;
+                }
+                
+                case 1: {
+                        
+                    setFeatures(1,2,s);
+                        
+                    builder.instantiate("C",c.getActiveEntries());
+                    dataset.filter(elements.get(3),builder,"P1");
+                    
                     break;
                 } 
-                
-                case 1: { // + ?x rdf:type <C> .
+                            
+                case 2: {
+                        
+                    ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
+                    break;
+                }
+		
+                case 3: {
+                        
+                    setFeatures(3,4,s);
+                    for (String m : elements.get(3).getMarkers()) {
+                        ((StringElement) elements.get(4)).add(m);
+                    }
+                        
+                    builder.instantiate("P1",p1.getActiveEntries());
+                    dataset.fillInstances(elements.get(5),builder,"I1");
                     
-                    builder.addTypeTriple(mainVar,c.getActiveEntries());
                     break;
                 }
                     
-                case 3: { // + ?x <P1> ?I1 .
-                    
-                    builder.addTriple(mainVar,p1.getActiveEntries(),"I1");
+                case 4: {
+                        
+                    ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s);
                     break;
                 }
                     
-                case 5: { // ?I1 -> <I1>
-                    
+                case 5: {
+                        
+                    setFeatures(5,6,s);
+                    for (String key :elements.get(3).getActiveEntriesKey()){
+                         elements.get(5).getIndex().remove(key);
+                    }
+                        
                     builder.instantiate("I1",i1.getActiveEntries());
-                }
+                    dataset.filter(elements.get(7),builder,"P2");
                     
-                case 7: { // + ?x <P2> ?I2 .
-                    
-                    builder.addTriple(mainVar,p2.getActiveEntries(),"I2");
                     break;
                 }
                     
-                case 9: { // ?I2 -> <I2>
+                case 6: {
+                        
+                    ((StringElement) elements.get(6)).transferFeatures(elements.get(7),s);
+                    break;
+                }
                     
+                case 7: {
+                        
+                    setFeatures(7,8,s);
+                    for (String m : elements.get(7).getMarkers()) {
+                       ((StringElement) elements.get(8)).add(m);
+                    }
+                        
+                    builder.instantiate("P2",p2.getActiveEntries());
+                    dataset.fillInstances(elements.get(9),builder,"I2");
+		
+                    break;
+                }
+                    
+                case 8: {
+                        
+                    ((StringElement) elements.get(8)).transferFeatures(elements.get(9),s);
+                    break;
+                }
+                    
+                case 9: {
+                        
                     builder.instantiate("I2",i2.getActiveEntries());
                 }
-                        
             }
-            
-            return builder.returnQueries();
 	}
+
 }

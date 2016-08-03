@@ -43,8 +43,20 @@ public class IncrementalQuery {
         triples.remove(t);
     }
 
+    public Query assembleAsAsk(boolean asFinal) {
+    
+        Query q  = assemble(asFinal);
+        if  ( q != null) q.setQueryAskType();
+        
+        return q;
+    }
     
     public Query assemble() {
+        
+        return assemble(false);
+    }
+    
+    public Query assemble(boolean asFinal) {
         
         query = QueryFactory.make();
         
@@ -52,8 +64,17 @@ public class IncrementalQuery {
         
         ElementGroup body = new ElementGroup();
         
-        for (Triple t : triples) body.addTriplePattern(t);
-        
+        for (Triple t : triples) {
+            
+            if (!asFinal ||
+                !(  t.getSubject().isVariable()
+                 && t.getPredicate().isVariable()
+                 && t.getObject().isVariable())) {
+            
+                body.addTriplePattern(t);
+             }
+        }
+                
         query.setQueryPattern(body);
         
         // Projection variables 

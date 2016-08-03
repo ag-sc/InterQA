@@ -4,18 +4,18 @@ import interQA.elements.ClassElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.Lexicon;
-import java.util.Set;
 
 
 public class C extends QueryPattern {
  
     
-    /*
-    SELECT ?x WHERE { ?x a <Class> . } 
-    */
+    // SELECT DISTINCT ?x WHERE 
+    // {
+    //   ?x rdf:type <C> .
+    // }
     
     
-    public C(Lexicon lexicon,DatasetConnector dataset){
+    public C(Lexicon lexicon,DatasetConnector dataset) {
 		
             this.lexicon = lexicon;
             this.dataset = dataset;
@@ -38,53 +38,40 @@ public class C extends QueryPattern {
 
         @Override
         public void update(String s) {
-            
+ 
+            ClassElement c = (ClassElement) elements.get(1);
+
             switch (currentElement) {
                 
                 case 0: {
                     
+                    // Create query template 
+                    
+                    builder.reset();
+                    
+                    String mainVar = "x";
+                                    
+                    builder.addUninstantiatedTypeTriple(mainVar,"C");
+                    
+                    if (count) builder.addCountVar(mainVar); 
+                    else       builder.addProjVar(mainVar);
+                    
+                    // Propagate features 
+                    
                     checkHowMany(s);
                     ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+                    
                     break;
                 }
+                
                 case 1: {
                     
                     setFeatures(1,2,s);
+                    
+                    builder.instantiate("C",c.getActiveEntries());
                     break;
                 } 
             }
         }
 
-        @Override
-        public Set<String> buildSPARQLqueries() {
-
-            // SELECT DISTINCT ?x WHERE 
-            // {
-            //   ?x rdf:type <C> .
-            // }
-            		
-            String mainVar = "x";
-            
-            ClassElement c = (ClassElement) elements.get(1);
-                        
-            switch (currentElement) {
-                    
-                case 0: {
-                    
-                    builder.reset();
-                    
-                    if (count) builder.addCountVar(mainVar); 
-                    else       builder.addProjVar(mainVar);
-                    break;
-                } 
-                
-                case 1: { // + ?x rdf:type <C> .
-                    
-                    builder.addTypeTriple(mainVar,c.getActiveEntries());
-                    break;
-                }
-            }
-                        
-            return builder.returnQueries();
-        }	
 }

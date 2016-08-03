@@ -22,11 +22,12 @@ public class LexicalEntry {
     String canonicalForm;  
     String particle;
     String marker;
-    
-    String reference; 
     String frame;
     
-    POS    pos;
+    String  reference; 
+    boolean literal;
+    
+    POS pos;
 
     List<Feature> inherentFeatures;
     
@@ -42,8 +43,9 @@ public class LexicalEntry {
         features = new HashMap<>();
         inherentFeatures = new ArrayList<>();
         argumentMapping = new HashMap<>();
+        
+        literal = false; // default
     }
-    
     
     public void setCanonicalForm(String form) {
         canonicalForm = form;
@@ -67,6 +69,10 @@ public class LexicalEntry {
     
     public void setPOS(POS pos) {
         this.pos = pos;
+    }
+    
+    public void setAsLiteral() {
+        this.literal = true;
     }
     
     public void addForm(Feature f, String form) {
@@ -108,7 +114,7 @@ public class LexicalEntry {
     
     public List<Feature> getFeatures(String f) {
         List<Feature> out = features.get(f);
-        if (out == null) out = new ArrayList<Feature>();
+        if (out == null) out = new ArrayList<>();
         out.addAll(inherentFeatures);
         return out;
     } 
@@ -136,7 +142,7 @@ public class LexicalEntry {
     public SemArg getSemArg(SynArg syn) {
         return argumentMapping.get(syn);
     }
-    
+       
     @Override 
     public String toString() {
     

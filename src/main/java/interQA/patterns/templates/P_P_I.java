@@ -9,22 +9,22 @@ import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
-import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
  *
- * @author mirtik
+ * @author mirtik, cunger
  */
 public class P_P_I extends QueryPattern{
 	
 
-        // SELECT ?x ?y WHERE { <instance> <property1> ?x . <instance> <property2> ?y. }
-	
+        // SELECT DISTINCT ?x ?y WHERE 
+        // {
+        //   <I> <P1> ?x .
+        //   <I> <P2> ?y . 
+        // }
+    
 	
 	public P_P_I(Lexicon lexicon,DatasetConnector instances){
 				            
@@ -59,105 +59,71 @@ public class P_P_I extends QueryPattern{
             elements.add(element6);
 	}
         
-		@Override
-		public void update(String s) {
-		
-                    switch(currentElement) {
-                        
-                        case 0: {
+	@Override
+	public void update(String s) {
+	
+            PropertyElement p1 = (PropertyElement) elements.get(1);
+            PropertyElement p2 = (PropertyElement) elements.get(3);
+            InstanceElement i  = (InstanceElement) elements.get(5);
                     
-                            checkHowMany(s);
-                            ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
-                            ((StringElement) elements.get(0)).transferFeatures(elements.get(3),s); 
-                            break;
-                        }
+            switch (currentElement) {
+                        
+                case 0: {
                     
-                        case 1: {
-                           
-                            Map<String,List<LexicalEntry>> old_index = elements.get(3).getIndex();
-                            Map<String,List<LexicalEntry>> new_index = new HashMap<>();
-
-                            for (LexicalEntry entry1 : elements.get(1).getActiveEntries()) {
-                                 new_index.putAll(dataset.filterByPropertyForProperty(old_index,LexicalEntry.SynArg.SUBJECT,entry1.getReference()));   
-                            }
-                            elements.get(3).setIndex(new_index);
-                            break;
-                        }
-                        
-                        case 2: {
+                    // Create query template 
+                    
+                    builder.reset();
                             
-                            ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); 
-                            break;
-                        }
-                        
-                        case 3: {
-
-                            for (String m : elements.get(3).getMarkers()) {
-                                ((StringElement) elements.get(4)).add(m);
-                            }
-                            
-                            elements.get(5).addToIndex(dataset.filterBy2PropertiesForInstances(elements.get(1).getActiveEntries(),
-                                                                                               elements.get(3).getActiveEntries(), 
-                                                                                               LexicalEntry.SynArg.OBJECT,
-                                                                                               LexicalEntry.SynArg.OBJECT));       
-                            break;
-                        }
-                    }
-		}
-		
-		@Override
-		public Set<String> buildSPARQLqueries(){
-            
-                    // SELECT DISTINCT ?x ?y WHERE 
-                    // {
-                    //   <I> <P1> ?x .
-                    //   <I> <P2> ?y . 
-                    // }
-
                     String mainVar1 = "x";
                     String mainVar2 = "y";
-
-                    PropertyElement p1 = (PropertyElement) elements.get(1);
-                    PropertyElement p2 = (PropertyElement) elements.get(3);
-                    InstanceElement i  = (InstanceElement) elements.get(5);
-
-                    switch (currentElement) {
-
-                        case 0: {
-
-                            builder.reset();
-
-                            builder.addProjVar(mainVar1);
-                            builder.addProjVar(mainVar2);
-                            break;
-                        } 
-
-                        case 1: { // + ?I <P1> ?x .
                             
-                            builder.addTriple("I",p1.getActiveEntries(),mainVar1);
-                            break;
-                        }
+                    builder.addUninstantiatedTriple("I","P1",mainVar1);
+                    builder.addUninstantiatedTriple("I","P2",mainVar2);
+
+                    builder.addProjVar(mainVar1);
+                    builder.addProjVar(mainVar2);
+                    
+                    // Propagate features
+                    
+                    checkHowMany(s);
+                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
+                    ((StringElement) elements.get(0)).transferFeatures(elements.get(3),s); 
+                    
+                    break;
+                }
+                    
+                case 1: {
+                           
+                    builder.instantiate("P1",p1.getActiveEntries());
+                    dataset.filter(elements.get(3),builder,"P2");
+                    
+                    break;
+                }
                         
-                        case 3: { // + ?I <P2> ?y .
+                case 2: {
+                            
+                    ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); 
+                    break;
+                }
+                        
+                case 3: {
 
-                            builder.addTriple("I",p2.getActiveEntries(),mainVar2);
-                            break;
-                        }
-
-                        case 5: { // ?I -> <I>
-
-                            builder.instantiate("I",i.getActiveEntries());
-                            break;
-                        }
+                    for (String m : elements.get(3).getMarkers()) {
+                       ((StringElement) elements.get(4)).add(m);
                     }
-
-                    return builder.returnQueries();
+                            
+                    builder.instantiate("P2",p2.getActiveEntries());
+                    dataset.fillInstances(elements.get(5),builder,"I");
+                    break;
+                }
                 
-		}
-		
-		
-	
-	
+                case 5: {
+                    
+                    builder.instantiate("I",i.getActiveEntries());
+                    break;
+                }
+            }
+        }
 
 }
 

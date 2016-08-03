@@ -21,6 +21,7 @@ public class Vocabulary {
     public String AdjectivePPFrame = lexinfo + "AdjectivePPFrame";
     public String PrepositionalFrame = lexinfo + "PrepositionalFrame";
     
+    public String sortal_predicate = rdfType;
     
     int i;
     
