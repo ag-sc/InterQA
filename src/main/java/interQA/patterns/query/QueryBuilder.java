@@ -145,8 +145,11 @@ public class QueryBuilder {
         
         Set<String> out = new HashSet<>();
         
-        for (IncrementalQuery q : queries) { 
-             out.add(q.assemble().toString());
+        String q;
+        for (IncrementalQuery query : queries) { 
+             q = query.assemble().toString();
+             q = q.replaceAll("\\n"," ").replaceAll("\\s+"," ");
+             out.add(q);
         }
         
         return out;
