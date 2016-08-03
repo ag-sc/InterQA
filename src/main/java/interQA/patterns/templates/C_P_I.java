@@ -74,12 +74,12 @@ public class C_P_I extends QueryPattern{
                     builder.addUninstantiatedTypeTriple(mainVar,"C");
                     builder.addUninstantiatedTriple(mainVar,"P","I");
                     
+                    checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
                     else       builder.addProjVar(mainVar);
                 
                     // Propagate features
                     
-                    checkHowMany(s);
                     ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
                     
                     break;

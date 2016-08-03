@@ -16,18 +16,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-
-
 public class SpringerQueryPattern3 extends QueryPattern{
 	
     
-	/*
-        SELECT DISTINCT ?uri { ?uri rdf:type <Class> . ?uri <Property> <Literal> . ?uri <Property> <Literal> . }
-     
-        Show me all <Class:Noun> that <Property:Verb> <Literal> <Property:Preposition> <Literal> .
-	
-	  	
-        */
+        // SELECT DISTINCT ?x 
+        // WHERE {
+        //   ?x rdf:type <C> . 
+        //   ?x <P> <I1> . 
+        //   ?x <P> <I2> .
+        // }
+
 
 	
 	public SpringerQueryPattern3(Lexicon lexicon,DatasetConnector instances){

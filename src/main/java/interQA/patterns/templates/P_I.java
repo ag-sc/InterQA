@@ -66,13 +66,13 @@ public class P_I extends QueryPattern {
                     String mainVar = "x";
                     
                     builder.addUninstantiatedTriple(mainVar,"P","I");
-                   
+                    
+                    checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
                     else       builder.addProjVar(mainVar);
                     
                     // Propagate features
                     
-                    checkHowMany(s);
                     ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
                     break;
                 }

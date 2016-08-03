@@ -78,12 +78,12 @@ public class P_P_C extends QueryPattern{
                     builder.addUninstantiatedTriple(iVar,"P1",mainVar1);
                     builder.addUninstantiatedTriple(iVar,"P2",mainVar2);
                     
+                    checkHowMany(s); // TODO not used in this pattern
                     builder.addProjVar(mainVar1);
                     builder.addProjVar(mainVar2);
                     
                     // Propagate features
                     
-                    checkHowMany(s);
                     ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
                     ((StringElement) elements.get(0)).transferFeatures(elements.get(3),s); 
                     
