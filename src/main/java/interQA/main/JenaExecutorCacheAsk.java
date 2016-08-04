@@ -5,39 +5,30 @@ import org.apache.jena.query.QueryExecutionFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Mariano on 21/07/2016.
  */
-public class JenaExecutorCacheAsk{
-    static private Map<String, Boolean> cache = null;
+public class JenaExecutorCacheAsk {
 
-    static private Boolean isFirstTime = true;
-    static private String fileName = "cacheAsk.ser";
+    private Map<String, CacheAskQueryInfo> cache = null;
+
+    private Boolean isFirstTime = true;
+    static private final String fileName = "cacheAsk.ser";
 
     public Boolean executeWithCache(String endpoint, String sparqlQuery) {
-        Boolean satisfiesCondition = null;
-        ArrayList<String> list = null;
+        CacheAskQueryInfo qi = null;
+        Boolean satisfiesCondition;
 
-        if (isFirstTime){
+        if (isFirstTime) {
             //Checks if there is a cache serialization in the file system
             File f = new File(fileName);
             if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
-                try {
-                    FileInputStream fis = new FileInputStream(fileName);
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    cache = (Map<String, Boolean>) ois.readObject();
-                    System.out.println("Loaded cache file " + fileName + " with " + cache.size() + " elements.");
-                } catch (FileNotFoundException fnfe) {
-                    fnfe.printStackTrace();
-                } catch (IOException ioe){ //i
-                    ioe.printStackTrace();
-                } catch (ClassNotFoundException cnfe){
-                    cnfe.printStackTrace();
-                }
-            }else{  //There is no cache file
+                readCacheFromDisk();
+            } else {  //There is no cache file
                 //We use the static object cache
                 cache = new HashMap<>();
             }
@@ -46,13 +37,48 @@ public class JenaExecutorCacheAsk{
 
         //We use the cache
         if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
-            satisfiesCondition = cache.get(sparqlQuery);         //get the results from the cache
+            qi = cache.get(sparqlQuery);         //get the results from the cache
+            qi.increaseTimesUsed(); //Only increases when recovered from cache
+            qi.updateTimeStamp();
+            satisfiesCondition = qi.getRes();
         } else {                               //the sparqlQuery is NOT in the cache
             QueryExecution ex =                      //Make the query to the endpoint
                     QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
             satisfiesCondition = ex.execAsk();
-            cache.put(sparqlQuery, satisfiesCondition);         //And store the information in the cache
-            //Save the cache to disk
+            qi = new CacheAskQueryInfo(satisfiesCondition);
+            cache.put(sparqlQuery, qi);         //And store the information in the cache
+            //saveCacheToDisk(); Now its saved by a method invocation
+        }
+
+        return satisfiesCondition;
+    }
+
+    private void readCacheFromDisk() {
+
+        try {
+            FileInputStream fis = new FileInputStream(fileName);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            cache = (Map<String, CacheAskQueryInfo>) ois.readObject();
+            System.out.println("Loaded cache file " + fileName + " with " + cache.size() + " elements.");
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+        } catch (IOException ioe) { //i
+            ioe.printStackTrace();
+        } catch (ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Saves only if there is some data
+     */
+    public void saveCacheToDisk() {
+        //Save the cache to disk
+        if (cache == null) {
+            return;
+        }
+        if (cache.size() > 0) {
             try {
                 FileOutputStream fos = new FileOutputStream(fileName);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -60,24 +86,105 @@ public class JenaExecutorCacheAsk{
                 oos.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            }catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
 
-        return satisfiesCondition;
+    public String cacheUsageReport() {
+        return (cache == null ? "AskCache not initialized" : cache.size() + " ask queries used");
     }
-    public String cacheUsageReport(){
-        return (cache == null? "AskCache not initialized": cache.size() + " ask queries used.");
+
+    public void dump(PrintStream ps) {
+        ps.println("   CacheAsk dump:");
+        ps.println("   --------------");
+        ps.print("   Number of elements: ");
+        if (cache == null) {
+            ps.println("0");
+        } else {
+            ps.println(cache.size());
+            cache.forEach((k, v) -> {  //lambda expression --> requires java 1.8
+                        //Traditional way: Arrays.toString(cache.entrySet().toArray())
+                        ps.println("   query = " + k);
+                        ps.println("    \\--> res = " + v.getRes());
+                        ps.println("    |--> #used = " + v.getTimesUsed());
+                        ps.println("    |--> timeStamp: Oldest = " + new Date(v.getOldestTimeStamp()) + ". Newest = " + new Date(v.getNewestTimeStamp()));
+                    }
+            );
+
+        }
     }
-    static public void main (String[] args) {
-        JenaExecutorCacheAsk cacheAsk = new JenaExecutorCacheAsk();
+
+    static public void dumpCacheinDisk() {
+        Map<String, CacheAskQueryInfo> tempCache = null;
+        interQA.main.JenaExecutorCacheAsk jeca = new interQA.main.JenaExecutorCacheAsk();
+        File f = new File(fileName);
+        if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
+            jeca.readCacheFromDisk();
+            jeca.dump(System.out);
+        } else {
+            System.out.println(fileName + "is not available.");
+        }
+    }
+
+    static public void main(String[] args) {
+        interQA.main.JenaExecutorCacheAsk cacheAsk = new interQA.main.JenaExecutorCacheAsk();
+        cacheAsk.dump(System.out);
         boolean satisfiesCondition1 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
-                                                            "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
-                                                           );
+                "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
+        );
+        cacheAsk.dump(System.out);
         boolean satisfiesCondition2 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
                 "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
         );
+        cacheAsk.dump(System.out);
+        cacheAsk.saveCacheToDisk();
+        cacheAsk.dumpCacheinDisk();
+
 
     }
 }
+
+    /**
+     * This class can not be inner: the serialization of inner classes does not work :-S
+     */
+    class CacheAskQueryInfo implements Serializable {
+        private Boolean res;
+        private int timesUsed;
+        private long oldestTimeStamp;
+        private long newestTimeStamp;
+
+        public CacheAskQueryInfo(Boolean res) {
+            this.res = res;
+            timesUsed = 0;
+            oldestTimeStamp = System.currentTimeMillis();
+            newestTimeStamp = oldestTimeStamp;
+        }
+
+        public Boolean getRes() {
+            return res;
+        }
+
+        public int getTimesUsed() {
+            return timesUsed;
+        }
+
+        public long getOldestTimeStamp() {
+            return oldestTimeStamp;
+        }
+
+        public long getNewestTimeStamp() {
+            return newestTimeStamp;
+        }
+
+        public void increaseTimesUsed() {
+            timesUsed++;
+        }
+
+        public void updateTimeStamp() {
+            newestTimeStamp = System.currentTimeMillis();
+        }
+
+    }
+

@@ -50,6 +50,14 @@ public class DatasetConnector {
            ps.println(cacheAsk.cacheUsageReport() + " " + cacheSel.cacheUsageReport());
     }
 
+    public void cacheDump(PrintStream ps){
+        cacheAsk.dump(ps);
+        cacheSel.dump(ps);
+    }
+    public void saveCacheToDisk(){
+        cacheAsk.saveCacheToDisk();
+    }
+
     public String getEndpoint(){
         return endpoint;
     }
