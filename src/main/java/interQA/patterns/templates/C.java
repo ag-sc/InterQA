@@ -38,7 +38,7 @@ public class C extends QueryPattern {
 
         @Override
         public void update(String s) {
- 
+             
             ClassElement c = (ClassElement) elements.get(1);
 
             switch (currentElement) {
@@ -56,18 +56,12 @@ public class C extends QueryPattern {
                     checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
                     else       builder.addProjVar(mainVar);
-                    
-                    // Propagate features 
-                    
-                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
-                    
+
                     break;
                 }
                 
                 case 1: {
-                    
-                    setFeatures(1,2,s);
-                    
+                                        
                     builder.instantiate("C",c.getActiveEntries());
                     break;
                 } 

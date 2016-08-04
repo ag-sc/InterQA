@@ -123,17 +123,25 @@ public class LexicalEntry {
     }
     
     public List<Feature> getFeatures(String f) {
+        
         List<Feature> out = features.get(f);
-        if (out == null) out = new ArrayList<>();
+        
+        if (out == null) {
+            out = new ArrayList<>();
+        }
         out.addAll(inherentFeatures);
+        
         return out;
     } 
     
     public HashMap<String,List<Feature>> getFeatures() {
+        
         HashMap<String,List<Feature>> out = features;
+        
         for (String key : out.keySet()) {
              out.get(key).addAll(inherentFeatures);
         }
+        
         return out;
     }
     

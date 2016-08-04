@@ -97,91 +97,54 @@ public class C_P_I_P_I extends QueryPattern{
                     checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
                     else       builder.addProjVar(mainVar);
-                        
-                    // Propagate features 
-                    
-                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
-                    
+
                     break;
                 }
                 
                 case 1: {
-                        
-                    setFeatures(1,2,s);
-                    setFeatures(1,3,s);
-                        
+ 
                     builder.instantiate("C",c.getActiveEntries());
                     dataset.filter(elements.get(3),builder,"P1");
-                    
                     break;
                 } 
-                            
-                case 2: {
-                        
-                    ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
-                    break;
-                }
 		
                 case 3: {
                         
-                    setFeatures(3,4,s);
                     for (String m : elements.get(3).getMarkers()) {
                         ((StringElement) elements.get(4)).add(m);
                     }
                         
                     builder.instantiate("P1",p1.getActiveEntries());
                     dataset.fillInstances(elements.get(5),builder,"I1");
-                    
-                    break;
-                }
-                    
-                case 4: {
-                        
-                    ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s);
                     break;
                 }
                     
                 case 5: {
                         
-                    setFeatures(5,6,s);
                     for (String key :elements.get(3).getActiveEntriesKey()){
                          elements.get(5).getIndex().remove(key);
                     }
                         
                     builder.instantiate("I1",i1.getActiveEntries());
                     dataset.filter(elements.get(7),builder,"P2");
-                    
-                    break;
-                }
-                    
-                case 6: {
-                        
-                    ((StringElement) elements.get(6)).transferFeatures(elements.get(7),s);
                     break;
                 }
                     
                 case 7: {
                         
-                    setFeatures(7,8,s);
                     for (String m : elements.get(7).getMarkers()) {
                        ((StringElement) elements.get(8)).add(m);
                     }
                         
                     builder.instantiate("P2",p2.getActiveEntries());
                     dataset.fillInstances(elements.get(9),builder,"I2");
-		
-                    break;
-                }
-                    
-                case 8: {
-                        
-                    ((StringElement) elements.get(8)).transferFeatures(elements.get(9),s);
                     break;
                 }
                     
                 case 9: {
                         
                     builder.instantiate("I2",i2.getActiveEntries());
+                    break;
                 }
             }
 	}

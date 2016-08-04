@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interQA.patterns.templates;
 
 import interQA.elements.InstanceElement;
@@ -82,12 +77,7 @@ public class P_P_I extends QueryPattern{
                     checkHowMany(s); // TODO not used in this pattern
                     builder.addProjVar(mainVar1);
                     builder.addProjVar(mainVar2);
-                    
-                    // Propagate features
-                    
-                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
-                    ((StringElement) elements.get(0)).transferFeatures(elements.get(3),s); 
-                    
+
                     break;
                 }
                     
@@ -95,13 +85,6 @@ public class P_P_I extends QueryPattern{
                            
                     builder.instantiate("P1",p1.getActiveEntries());
                     dataset.filter(elements.get(3),builder,"P2");
-                    
-                    break;
-                }
-                        
-                case 2: {
-                            
-                    ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); 
                     break;
                 }
                         

@@ -10,7 +10,7 @@ public class PropertyElement extends Element {
 	public PropertyElement() {
             
             this.index = new HashMap<>();
-            this.features = new ArrayList<>();
+            this.agrFeatures = new ArrayList<>();
 	}
 
 }

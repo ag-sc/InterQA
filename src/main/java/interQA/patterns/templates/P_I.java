@@ -67,16 +67,12 @@ public class P_I extends QueryPattern {
                     checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
                     else       builder.addProjVar(mainVar);
-                    
-                    // Propagate features
-                    
-                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
+
                     break;
                 }
             
                 case 1: {
                     
-                    setFeatures(1,2,s);
                     for (String m : elements.get(1).getMarkers()) {
                         ((StringElement) elements.get(2)).add(m);
                     }
@@ -85,17 +81,9 @@ public class P_I extends QueryPattern {
                     dataset.fillInstances(elements.get(3),builder,"I");
                     break;
                 }
-                
-                case 2: { 
-                        
-                    ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
-                    break;
-                } 
                     
                 case 3: {
-                        
-                    setFeatures(3,4,s);
-                    
+                                            
                     builder.instantiate("I",i.getActiveEntries());
                     break;
                 } 

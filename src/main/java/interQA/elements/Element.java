@@ -18,9 +18,12 @@ public abstract class Element {
     // Usually set during initialization (based on lexicon)
     // and then reduced during parsing.
     
-    // Grammatical features such as singular/plural, gender, etc. (needed for morphological agreement)
-    List<Feature> features;
+    // Grammatical features (number, gender, etc.)  needed for morphological agreement
+    List<Feature> agrFeatures;
         
+    public boolean isStringElement() {
+        return false;
+    }
     
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
         this.index = lexicon.getSubindex(pos,frame,true);
@@ -70,8 +73,9 @@ public abstract class Element {
         return markers;
     }
     
-    public List<Feature> getFeatures() {
-        return features;
+    public List<Feature> getAgrFeatures() {
+        
+        return agrFeatures;
     }
     
     public void setIndex(Map<String,List<LexicalEntry>> index) {
@@ -110,8 +114,9 @@ public abstract class Element {
         }
     }
     
-    public void addFeature(Feature f) {
-        this.features.add(f);
+    public void addAgrFeature(Feature f) {
+        
+        this.agrFeatures.add(f);
     }
     
     public String parse(String string) {
@@ -144,12 +149,12 @@ public abstract class Element {
             
         List<String> options = new ArrayList<>();
                 
-        if (features.isEmpty()) options.addAll(index.keySet());
+        if (agrFeatures.isEmpty()) options.addAll(index.keySet());
         else {
             for (String key : index.keySet()) {
                 boolean include = true;
                 for (LexicalEntry entry : index.get(key)) {
-                    if (!compatible(entry.getFeatures(key),features)) {
+                    if (!compatible(entry.getFeatures(key),agrFeatures)) {
                         include = false;
                         break;
                     }

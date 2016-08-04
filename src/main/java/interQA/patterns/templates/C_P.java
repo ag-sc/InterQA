@@ -49,7 +49,7 @@ public class C_P extends QueryPattern{
 	        
             @Override
             public void update(String s) {
-		
+		    
                 ClassElement    c = (ClassElement)    elements.get(1);
                 PropertyElement p = (PropertyElement) elements.get(3);
                 
@@ -69,16 +69,12 @@ public class C_P extends QueryPattern{
                         checkHowMany(s);
                         if (count) builder.addCountVar(mainVar); 
                         else       builder.addProjVar(mainVar);
-                        
-                        // Propagate features
-                        
-                        ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s);
+
                         break;
                     }
                         
                     case 1: {
                         
-                        setFeatures(1,2,s);
                         for (String m : elements.get(1).getMarkers()) {
                             ((StringElement) elements.get(2)).add(m);
                         }
@@ -88,16 +84,8 @@ public class C_P extends QueryPattern{
                         break;
                     }
                     
-                    case 2: { 
-                        
-                        ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s);
-                        break;
-                    } 
-                    
                     case 3: {
-                        
-                        setFeatures(3,4,s);
-                        
+                                                
                         builder.instantiate("C",c.getActiveEntries());
                         break;
                     } 
