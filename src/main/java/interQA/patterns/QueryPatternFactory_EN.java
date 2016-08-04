@@ -190,7 +190,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             addVerbs(qp.getElement(3));
 
-            addPrepositions(qp.getElement(5));
+            addPrepositions(qp.getElement(7));
 
             patterns.add(qp);
         }
@@ -205,7 +205,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             addVerbs(qp.getElement(3));
 
-            addPrepositions(qp.getElement(6));
+            addPrepositions(qp.getElement(7));
 
             patterns.add(qp);
         }
@@ -367,8 +367,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         e.addEntries(lexicon, LexicalEntry.POS.VERB, vocab.IntransitivePPFrame, withMarker);
     }
     
-    private void addPrepositions(Element e){
-        e.addEntries(lexicon,LexicalEntry.POS.PREPOSITION,vocab.PrepositionalFrame);
+    private void addPrepositions(Element e) {
+        e.addEntries(lexicon,LexicalEntry.POS.PREPOSITION, vocab.PrepositionalFrame, false);
     }
     
     static public void addDefGiveMePrefixes(StringElement e) {

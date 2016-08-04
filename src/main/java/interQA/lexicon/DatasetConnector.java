@@ -7,7 +7,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import interQA.main.JenaExecutorCacheSelect;
 import interQA.main.JenaExecutorCacheAsk;
@@ -86,24 +85,26 @@ public class DatasetConnector {
                
               Query query = iq.assemble(false);
               query.setQueryResultStar(true);
+              String querystring = query.toString();
                            
-              ResultSet results = cacheSel.executeWithCache(endpoint,query.toString());
+              ResultSet results = cacheSel.executeWithCache(endpoint,querystring);
             
               while (results.hasNext()) {
                 
                 QuerySolution result = results.nextSolution();
                 RDFNode       node   = result.get(var);
-                                
+                                                
                 if (node != null) {
                     
                     LexicalEntry entry = new LexicalEntry();
-                    String form = "";
 
-                    if (node.isResource()) {
+                    if (node.isURIResource()) {
                         
-                        entry.setReference(node.toString());
+                        String uri = node.asResource().getURI();
                         
-                        List<String> labels = getLabels(node.asResource().getURI());
+                        entry.setReference(uri);
+                        
+                        List<String> labels = getLabels(uri);
                         if (!labels.isEmpty()) {
                             entry.setCanonicalForm(labels.get(0));
                         }
@@ -113,10 +114,10 @@ public class DatasetConnector {
                     }
                     else if (node.isLiteral()) {
                         
-                        entry.setReference(node.asLiteral().toString());
+                        entry.setLiteralNode(node);
                         entry.setAsLiteral();
                         entry.setCanonicalForm(node.asLiteral().getString());
-                        element.addToIndex(form,entry);
+                        element.addToIndex(node.asLiteral().getLexicalForm(),entry);
                     }
                 }
             }
@@ -129,19 +130,23 @@ public class DatasetConnector {
         
         String query = "SELECT DISTINCT ?l { " 
                      +  label(uri,"?l")
-                     + "filter langMatches(lang(?l),\""+lang+"\")"
                      + "}";
         
         ResultSet results = cacheSel.executeWithCache(endpoint,query);
-
+        
         while (results.hasNext()) {
 
             QuerySolution result = results.nextSolution();
             RDFNode       node   = result.get("l");
             
-            labels.add(node.asLiteral().getString());
+            if (node.isLiteral() &&
+               (node.asLiteral().getLanguage() == null ||
+                node.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
+            
+                labels.add(node.asLiteral().getString());
+            }
         }
-        
+                
         return labels;
     }
     

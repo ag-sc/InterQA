@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import org.apache.jena.rdf.model.RDFNode;
 
 /**
  *
@@ -26,6 +27,7 @@ public class LexicalEntry {
     
     String  reference; 
     boolean literal;
+    RDFNode literalNode;
     
     POS pos;
 
@@ -73,6 +75,14 @@ public class LexicalEntry {
     
     public void setAsLiteral() {
         this.literal = true;
+    }
+    
+    public void setLiteralNode(RDFNode n) {
+        literalNode = n;
+    }
+    
+    public boolean isLiteral() {
+        return this.literal;
     }
     
     public void addForm(Feature f, String form) {
@@ -129,6 +139,10 @@ public class LexicalEntry {
     
     public String getReference() {
         return reference;
+    }
+    
+    public RDFNode getLiteralNode() {
+        return literalNode;
     }
     
     public String getFrame() {
