@@ -1,11 +1,11 @@
 package interQA.main;
 
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.*;
+import org.apache.jena.riot.ResultSetMgr;
+import org.apache.jena.sparql.resultset.ResultsFormat;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,12 @@ import java.util.Map;
  * Created by Mariano on 21/07/2016.
  */
 public class JenaExecutorCacheSelect{
-    private Map<String, ResultSet> cache = null;
+    private Map<String, String> cache = null;
     private Boolean isFirstTime = true;
     static private final String fileName = "cacheSelect.ser";
 
     public ResultSet executeWithCache(String endpoint, String sparqlQuery) {
+        String resSer = null;
         ResultSet res = null;
 
         if (isFirstTime){
@@ -28,7 +29,7 @@ public class JenaExecutorCacheSelect{
                 try {
                     FileInputStream fis = new FileInputStream(fileName);
                     ObjectInputStream ois = new ObjectInputStream(fis);
-                    cache = (Map<String, ResultSet>) ois.readObject();
+                    cache = (Map<String, String>) ois.readObject();
                 } catch (FileNotFoundException fnfe) {
                     fnfe.printStackTrace();
                 } catch (IOException ioe){ //i
@@ -45,28 +46,44 @@ public class JenaExecutorCacheSelect{
 
         //We use the cache
         if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
-            res = cache.get(sparqlQuery);         //get the results from the cache
+            resSer = cache.get(sparqlQuery);         //get the results from the cache
+            InputStream stream = new ByteArrayInputStream(resSer.getBytes(StandardCharsets.UTF_8)); //How heavy it it?
+            res = ResultSetFactory.load(stream, ResultsFormat.FMT_RS_XML);
         } else {                               //the sparqlQuery is NOT in the cache
             QueryExecution ex =
                   QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
 
             res =  ex.execSelect();               //Make the query to the endpoint
-            cache.put(sparqlQuery, res);         //And store the information in the cache
+            resSer = ResultSetFormatter.asXMLString(res);
+            cache.put(sparqlQuery, resSer);         //And store the information in the cache
             System.out.println("New element stored in CacheSelect (in memory). Now it has " + cache.size() + " elements.");
             //Save the cache to disk
-//            try {
-//                FileOutputStream fos = new FileOutputStream(fileName);
-//                ObjectOutputStream oos = new ObjectOutputStream(fos);
-//                oos.writeObject(cache);
-//                oos.close();
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }catch (IOException e) { //java.io.NotSerializableException: org.apache.jena.sparql.engine.ResultSetCheckCondition
-//                e.printStackTrace();
-//            }
+            //saveCacheToDisk(); Now it is a method
         }
 
         return res;
+    }
+
+    /**
+     * Saves only if there is some data
+     */
+    public void saveCacheToDisk() {
+        //Save the cache to disk
+        if (cache == null) {
+            return;
+        }
+        if (cache.size() > 0) {
+            try {
+                FileOutputStream fos = new FileOutputStream(fileName);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(cache);
+                oos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }catch (IOException e) { //java.io.NotSerializableException: org.apache.jena.sparql.engine.ResultSetCheckCondition
+                e.printStackTrace();
+            }
+        }
     }
     public String cacheUsageReport(){
         return (cache == null? "SelectCache not initialized": cache.size() + " Select queries used.");
@@ -82,8 +99,7 @@ public class JenaExecutorCacheSelect{
             cache.forEach((k, v) -> {  //lambda expression --> requires java 1.8
                         //Traditional way: Arrays.toString(cache.entrySet().toArray())
                         ps.println("   query = " + k);
-                        ps.println("    \\--> num. rows = " + v.getRowNumber());
-                        ps.println("    \\--> var. names = " + v.getResultVars());
+                        ps.println("    \\--> ResultSet XML serialization = " + v);
                     }
             );
         }
@@ -96,5 +112,7 @@ public class JenaExecutorCacheSelect{
         ResultSet res2 = cacheSelect.executeWithCache("http://es.dbpedia.org/sparql",
                                                       "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
         );
+        cacheSelect.dump(System.out);
+        cacheSelect.saveCacheToDisk();
     }
 }

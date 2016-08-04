@@ -55,6 +55,7 @@ public class DatasetConnector {
     }
     public void saveCacheToDisk(){
         cacheAsk.saveCacheToDisk();
+        cacheSel.saveCacheToDisk();
     }
 
     public String getEndpoint(){
@@ -87,7 +88,7 @@ public class DatasetConnector {
               query.setQueryResultStar(true);
               String querystring = query.toString();
                            
-              ResultSet results = cacheSel.executeWithCache(endpoint,querystring);
+              ResultSet results = cacheSel.executeWithCache(endpoint,querystring+"LIMIT 20");
             
               while (results.hasNext()) {
                 

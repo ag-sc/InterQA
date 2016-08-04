@@ -117,7 +117,7 @@ public class PatternTests_EN extends TestCase {
                             "that\n"        +
                             "took place\n"  +
                             "in\n"          +
-                            "Piran\n"       +
+                            "Spain\n"       +
                             "in\n"          + 
                             "2009\n"        +
                             "q\n"),
@@ -270,9 +270,19 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                     new HashSet<>(
                             Arrays.asList( //We could have several queries here separated by comma
-                                    "SELECT (COUNT(?x) AS ?x_count) WHERE {"+
-                                    " ?x a <http://lod.springer.com/data/ontology/class/Conference> ."+
-                                    " ?x <http://lod.springer.com/data/ontology/property/confCity> \"Atlanta, GA\"@EN . }"
+                                    "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE {" +
+                                    " ?x a <http://lod.springer.com/data/ontology/class/Conference>" +
+                                    " ; <http://lod.springer.com/data/ontology/property/confYear> \"Atlanta, GA\"@en"+
+                                    " }",
+                                    "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE {"+
+                                    " ?x <http://lod.springer.com/data/ontology/property/confCountry> \"Atlanta, GA\"@en"+
+                                    " ; a <http://lod.springer.com/data/ontology/class/Conference>" +
+                                    " }",
+                                    "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE {" +
+                                    " ?x a <http://lod.springer.com/data/ontology/class/Conference>"+
+                                    " ; <http://lod.springer.com/data/ontology/property/confCity> \"Atlanta, GA\"@en"+
+                                    " }"
+
                             )
                     )
             );

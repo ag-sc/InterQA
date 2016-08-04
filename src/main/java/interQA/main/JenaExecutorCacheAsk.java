@@ -130,7 +130,7 @@ public class JenaExecutorCacheAsk {
 
     static public void main(String[] args) {
         interQA.main.JenaExecutorCacheAsk cacheAsk = new interQA.main.JenaExecutorCacheAsk();
-        cacheAsk.dump(System.out);
+
         boolean satisfiesCondition1 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
                 "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
         );
