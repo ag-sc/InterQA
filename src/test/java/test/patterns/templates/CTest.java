@@ -61,7 +61,7 @@ public class CTest extends TestCase {
                 new ArrayList<String>(
                         Arrays.asList(
                                 "SELECT DISTINCT ?x WHERE {"+
-                                "  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . "+
+                                " ?x a <http://lod.springer.com/data/ontology/class/Conference> "+
                                 "}"
                         )
                 ));

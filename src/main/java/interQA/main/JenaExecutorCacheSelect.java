@@ -14,9 +14,9 @@ import java.util.Map;
  * Created by Mariano on 21/07/2016.
  */
 public class JenaExecutorCacheSelect{
-    static private Map<String, ResultSet> cache = null;
-    static private Boolean isFirstTime = true;
-    static private String fileName = "cacheSelect.ser";
+    private Map<String, ResultSet> cache = null;
+    private Boolean isFirstTime = true;
+    static private final String fileName = "cacheSelect.ser";
 
     public ResultSet executeWithCache(String endpoint, String sparqlQuery) {
         ResultSet res = null;
@@ -70,6 +70,23 @@ public class JenaExecutorCacheSelect{
     }
     public String cacheUsageReport(){
         return (cache == null? "SelectCache not initialized": cache.size() + " Select queries used.");
+    }
+    public void dump(PrintStream ps){
+        ps.println("   CacheSelect dump:");
+        ps.println("   -----------------");
+        ps.print  ("   Number of elements: ");
+        if (cache == null){
+            ps.println("0");
+        }else {
+            ps.println(cache.size());
+            cache.forEach((k, v) -> {  //lambda expression --> requires java 1.8
+                        //Traditional way: Arrays.toString(cache.entrySet().toArray())
+                        ps.println("   query = " + k);
+                        ps.println("    \\--> num. rows = " + v.getRowNumber());
+                        ps.println("    \\--> var. names = " + v.getResultVars());
+                    }
+            );
+        }
     }
     static public void main (String[] args) {
         JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();

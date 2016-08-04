@@ -239,12 +239,13 @@ public class interQACLI {
             System.out.println("Current sentence: " + sbWholeSentenceExternal.toString());
             
             queries = qm.buildSPARQLqueries();
-            
+            System.out.println(trapSentence);
             if(!queries.isEmpty()){
-               System.out.println(trapSentence);
                 for (String query : queries) {
                      System.out.println(query);
                 } 
+            }else{  //This should never happen
+
             }
            
              
@@ -351,6 +352,8 @@ public class interQACLI {
             System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
             System.out.print("Cache report: ");
             dataset.cacheUsageReport(System.out);
+            dataset.cacheDump(System.out);
+            dataset.saveCacheToDisk();
         }while (opts.size() != 0);
 
 
