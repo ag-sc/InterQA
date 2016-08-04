@@ -97,12 +97,12 @@ public class PatternTests_EN extends TestCase {
                         "skiers\n"  +
                         "race\n"    +
                         "for\n"     +
-                        "FK Alfa\n" + 
+                        "2006 Winter Olympics\n" +
                         "q\n", 
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                     new HashSet<>(
                         Arrays.asList(
-                          "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FK_Alfa> }"
+                          "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/2006_Winter_Olympics> }"
                         )
                     )
             );
