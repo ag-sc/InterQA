@@ -40,15 +40,14 @@ public abstract class QueryPattern {
         public void init() {
         }
         
-            
-        public Element getElement(int i) {
-            
-            return elements.get(i);
-        }
         
-        public void addAgreementDependency(int from, int to) {
-            
-            agreement.put(from,to);
+        /* MAIN FUNCTIONALITY */ 
+        
+        
+        // update(int i) is where all the pattern-specific magic happens
+        
+        public void update(String parsed) {
+            // Needs to be overwritten by all concrete query patterns.
         }
         
 
@@ -99,10 +98,23 @@ public abstract class QueryPattern {
             }
 	}
         
-        // update(int i) is where all the pattern-specific magic happens
+	public Set<String> buildSPARQLqueries() {
+            
+            return builder.returnQueries(true);
+        }
         
-        public void update(String parsed) {
-            // Needs to be overwritten by all concrete query patterns.
+        
+        /* AUXILIARY STUFF  */
+        
+        
+        public Element getElement(int i) {
+            
+            return elements.get(i);
+        }
+        
+        public void addAgreementDependency(int from, int to) {
+            
+            agreement.put(from,to);
         }
         
         public void transferFeatures(String parsed) {
@@ -130,11 +142,6 @@ public abstract class QueryPattern {
                      }
                 }
             }
-        }
-
-	public Set<String> buildSPARQLqueries() {
-            
-            return builder.returnQueries(true);
         }
 
 	public void checkHowMany(String s){

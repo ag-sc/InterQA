@@ -13,6 +13,7 @@ import java.util.Set;
 
 public abstract class Element {
 
+    
     // Active entries
     Map<String,List<LexicalEntry>> index; 
     // Usually set during initialization (based on lexicon)
@@ -20,6 +21,7 @@ public abstract class Element {
     
     // Grammatical features (number, gender, etc.)  needed for morphological agreement
     List<Feature> agrFeatures;
+        
         
     public boolean isStringElement() {
         return false;

@@ -1,4 +1,8 @@
 *.class
 *.ser
+*.cli
 *.out
-target/*
+.DS_Store
+.metadata
+.idea
+target
