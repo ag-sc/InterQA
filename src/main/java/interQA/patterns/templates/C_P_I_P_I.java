@@ -108,6 +108,7 @@ public class C_P_I_P_I extends QueryPattern{
                 case 1: {
                         
                     setFeatures(1,2,s);
+                    setFeatures(1,3,s);
                         
                     builder.instantiate("C",c.getActiveEntries());
                     dataset.filter(elements.get(3),builder,"P1");

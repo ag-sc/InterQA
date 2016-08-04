@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Node_Literal;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.impl.LiteralLabel;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.Var;
@@ -96,7 +98,11 @@ public class QueryBuilder {
                  }
                  if (t.getObject().matches(Var.alloc(var))) {
                      del.add(t);
-                     add.add(new Triple(t.getSubject(),t.getPredicate(),toResource(entry.getReference())));
+                     if (entry.isLiteral()) {
+                         add.add(new Triple(t.getSubject(),t.getPredicate(),entry.getLiteralNode().asNode()));
+                     } else {
+                        add.add(new Triple(t.getSubject(),t.getPredicate(),toResource(entry.getReference())));
+                     }
                  }
             }
             
