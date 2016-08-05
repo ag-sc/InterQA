@@ -1,7 +1,9 @@
 package interQA.main;
 
+import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.query.*;
 import org.apache.jena.riot.ResultSetMgr;
+import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 import org.apache.jena.sparql.resultset.ResultsFormat;
 
 import java.io.*;
@@ -42,8 +44,14 @@ public class JenaExecutorCacheSelect{
         } else {                               //the sparqlQuery is NOT in the cache
             QueryExecution ex =
                   QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
-
-            res =  ex.execSelect();               //Make the query to the endpoint
+            try {
+                res = ex.execSelect();               //Make the query to the endpoint
+            }
+            catch(QueryExceptionHTTP eqe) { //E.g. the query requires too much to solve (HttpException: 500)
+                System.out.println("Error making the SPARQL :" + eqe.getResponseMessage());
+                eqe.printStackTrace();
+                throw(eqe);
+            }
             resSer = ResultSetFormatter.asXMLString(res);
             cache.put(sparqlQuery, resSer);         //And store the information in the cache
             System.out.println("New element stored in CacheSelect (in memory). Now it has " + cache.size() + " elements.");
@@ -109,7 +117,8 @@ public class JenaExecutorCacheSelect{
             boolean sizeIslowerThanLimit = true;
             for (Map.Entry<String, String> entry : cache.entrySet()){
                 ps.println("   query (" + counter++ + "/" + size + ")= " + entry.getKey());
-                ps.println("    \\--> ResultSet XML serialization = " + entry.getValue());
+                String hugeString = entry.getValue().toString();
+                ps.println("    \\--> ResultSet XML serialization = " + upToNthLines(hugeString, 10));
                 if (counter > limit){
                     sizeIslowerThanLimit = false;
                     break;
@@ -155,8 +164,17 @@ public class JenaExecutorCacheSelect{
             System.out.println(otherFileName + "is not available.");
         }
     }
+    private static String upToNthLines(String s, int nlines){
+        StringBuffer whole = new StringBuffer();
+        new BufferedReader(new StringReader(s))
+                .lines().limit(nlines).forEach(
+                                        (line) -> whole.append(line)
+                                       );
+        return whole.toString();
+    }
 
-    static public void main1 (String[] args) {
+
+    static public void main (String[] args) {
         JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
         ResultSet res1 = cacheSelect.executeWithCache("http://es.dbpedia.org/sparql",
                                                       "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
@@ -167,7 +185,7 @@ public class JenaExecutorCacheSelect{
         cacheSelect.dump(System.out);
         cacheSelect.saveCacheToDisk();
     }
-    static public void main (String[] args) {
+    static public void main1 (String[] args) {
         dumpCacheinDisk("cacheSelect.20160804.v2.ser");
     }
 
