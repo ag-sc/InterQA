@@ -5,19 +5,28 @@ import interQA.lexicon.LexicalEntry.Feature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 
 public class StringElement extends Element {
 
+    
 	List<String> elements;
+        
         HashMap<String,List<Feature>> featureMap;
 
+        
         public StringElement() {
             
-            elements   = new ArrayList<>();
-            features   = new ArrayList<>();
-            featureMap = new HashMap<>();
+            elements    = new ArrayList<>();
+            agrFeatures = new ArrayList<>();
+            featureMap  = new HashMap<>();
+        }
+        
+        @Override
+        public boolean isStringElement() {
+            return true;
         }
 
 	public void add(String token) {
@@ -42,18 +51,13 @@ public class StringElement extends Element {
             registerFeature(token,f3);
         }
         
+        public Map<String,List<Feature>> getFeatureMap() {
+            return featureMap;
+        }
+        
         private void registerFeature(String token, Feature f) {
             if (!featureMap.containsKey(token)) featureMap.put(token,new ArrayList<>());
             featureMap.get(token).add(f);
-        }
-        
-        public void transferFeatures(Element e,String s) {
-
-            if (featureMap.containsKey(s)) {
-                for (LexicalEntry.Feature f : featureMap.get(s)) {
-                     e.addFeature(f);
-                }
-            }
         }
 
         @Override
@@ -84,12 +88,12 @@ public class StringElement extends Element {
             
             List<String> options = new ArrayList<>();
             
-            if (features.isEmpty()) { 
+            if (agrFeatures.isEmpty()) { 
                 options.addAll(elements);
             }
             else {
                 for (String e : elements) {
-                     if (!featureMap.containsKey(e) || compatible(featureMap.get(e),features)) {
+                     if (!featureMap.containsKey(e) || compatible(featureMap.get(e),agrFeatures)) {
                          options.add(e);
                      } 
                 }

@@ -69,6 +69,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             addIndefGiveMePrefixes((StringElement) qpC1.getElement(0));
             addNouns(qpC1.getElement(1));
 
+            qpC1.addAgreementDependency(0,1);
+            
             patterns.add(qpC1);
         }
 
@@ -85,6 +87,9 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             StringElement e2_2 = (StringElement) qpC2.getElement(2);
             e2_2.add("are there", Feature.PLURAL);
 
+            qpC2.addAgreementDependency(0,1);
+            qpC2.addAgreementDependency(1,2);
+            
             patterns.add(qpC2);
         }
         
@@ -101,6 +106,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             addRelationalNouns(qpP_I1.getElement(1));
 
+            qpP_I1.addAgreementDependency(0,1);
+            
             patterns.add(qpP_I1);
         }
         
@@ -115,6 +122,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             addVerbs(qpP_I2.getElement(3));
 
+            qpP_I2.addAgreementDependency(0,1);
+
             patterns.add(qpP_I2);
         }
       
@@ -126,8 +135,10 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             addWhichPrefixes(e5_0);
 
             addNouns(qpC_P_I1.getElement(1));
-
             addVerbs(qpC_P_I1.getElement(3));
+
+            qpC_P_I1.addAgreementDependency(0,1);
+            qpC_P_I1.addAgreementDependency(1,2);
 
             patterns.add(qpC_P_I1);
         }
@@ -148,6 +159,9 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             e6_2.add("who");
 
             addVerbs(qpC_P_I2.getElement(3));
+
+            qpC_P_I2.addAgreementDependency(0,1);
+            qpC_P_I2.addAgreementDependency(1,3);
 
             patterns.add(qpC_P_I2);
         }
@@ -171,6 +185,10 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             addRelationalNouns(qpC_P_I3.getElement(3));
 
+            qpC_P_I3.addAgreementDependency(0,1);
+            qpC_P_I3.addAgreementDependency(1,2);
+            qpC_P_I3.addAgreementDependency(2,3);
+
             patterns.add(qpC_P_I3);
         }
         
@@ -189,8 +207,10 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             e8_2.add("that");
 
             addVerbs(qp.getElement(3));
-
             addPrepositions(qp.getElement(7));
+
+            qp.addAgreementDependency(0,1);
+            qp.addAgreementDependency(1,3);
 
             patterns.add(qp);
         }
@@ -202,11 +222,12 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             addWhichPrefixes(q9_0);         
 
             addNouns(qp.getElement(1));
-
             addVerbs(qp.getElement(3));
-
             addPrepositions(qp.getElement(7));
 
+            qp.addAgreementDependency(0,1);
+            qp.addAgreementDependency(1,3);
+            
             patterns.add(qp);
         }
       
@@ -226,6 +247,9 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             addRelationalNouns(qp.getElement(3));
 
+            qp.addAgreementDependency(0,1);
+            qp.addAgreementDependency(0,3);
+            
             patterns.add(qp);
         }
         
@@ -244,8 +268,10 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             e17_2.add("and");
 
             addRelationalNouns(qp.getElement(3));
-
             addNouns(qp.getElement(5));
+
+            qp.addAgreementDependency(0,1);
+            qp.addAgreementDependency(0,3);
             
             patterns.add(qp);
         } 

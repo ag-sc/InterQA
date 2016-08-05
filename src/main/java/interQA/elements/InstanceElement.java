@@ -12,7 +12,7 @@ public class InstanceElement extends Element {
         // Starts with an empty index,
         // which is filled with possible instances during parsing.
         this.index = new HashMap<>();
-        this.features = new ArrayList<>();
+        this.agrFeatures = new ArrayList<>();
     }
 
 }

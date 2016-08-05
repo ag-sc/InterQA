@@ -26,17 +26,7 @@ public class JenaExecutorCacheSelect{
             //Checks if there is a cache serialization in the file system
             File f = new File(fileName);
             if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
-                try {
-                    FileInputStream fis = new FileInputStream(fileName);
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    cache = (Map<String, String>) ois.readObject();
-                } catch (FileNotFoundException fnfe) {
-                    fnfe.printStackTrace();
-                } catch (IOException ioe){ //i
-                    ioe.printStackTrace();
-                } catch (ClassNotFoundException cnfe){
-                    cnfe.printStackTrace();
-                }
+                readCacheFromDisk();
             }else{  //There is no cache file
                 //We use the static object cache
                 cache = new HashMap<>();
@@ -47,7 +37,7 @@ public class JenaExecutorCacheSelect{
         //We use the cache
         if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
             resSer = cache.get(sparqlQuery);         //get the results from the cache
-            InputStream stream = new ByteArrayInputStream(resSer.getBytes(StandardCharsets.UTF_8)); //How heavy it it?
+            InputStream stream = new ByteArrayInputStream(resSer.getBytes(StandardCharsets.UTF_8)); //How heavy is it?
             res = ResultSetFactory.load(stream, ResultsFormat.FMT_RS_XML);
         } else {                               //the sparqlQuery is NOT in the cache
             QueryExecution ex =
@@ -63,7 +53,24 @@ public class JenaExecutorCacheSelect{
 
         return res;
     }
+    private void readCacheFromDisk() {
+        readCacheFromDisk(fileName);
+    }
+    private void readCacheFromDisk(String otherFileName) {
 
+        try {
+            FileInputStream fis = new FileInputStream(otherFileName);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            cache = (Map<String, String>) ois.readObject();
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+        } catch (IOException ioe){ //i
+            ioe.printStackTrace();
+        } catch (ClassNotFoundException cnfe){
+            cnfe.printStackTrace();
+        }
+
+    }
     /**
      * Saves only if there is some data
      */
@@ -95,16 +102,61 @@ public class JenaExecutorCacheSelect{
         if (cache == null){
             ps.println("0");
         }else {
-            ps.println(cache.size());
-            cache.forEach((k, v) -> {  //lambda expression --> requires java 1.8
-                        //Traditional way: Arrays.toString(cache.entrySet().toArray())
-                        ps.println("   query = " + k);
-                        ps.println("    \\--> ResultSet XML serialization = " + v);
-                    }
-            );
+            int size = cache.size();
+            ps.println(size);
+            int counter = 0;
+            int limit = 10;
+            boolean sizeIslowerThanLimit = true;
+            for (Map.Entry<String, String> entry : cache.entrySet()){
+                ps.println("   query (" + counter++ + "/" + size + ")= " + entry.getKey());
+                ps.println("    \\--> ResultSet XML serialization = " + entry.getValue());
+                if (counter > limit){
+                    sizeIslowerThanLimit = false;
+                    break;
+                }
+            }
+            if (sizeIslowerThanLimit == false){
+                ps.println("... and many more.");
+            }
+//            cache.forEach((k, v) -> {  //lambda expression --> requires java 1.8
+//                        //Traditional way: Arrays.toString(cache.entrySet().toArray())
+//                        ps.println("   query = " + k);
+//                        ps.println("    \\--> ResultSet XML serialization = " + v);
+//                    }
+//            );
         }
     }
-    static public void main (String[] args) {
+    /**
+     * Reads the DEFAULT cache fileName and dumps information in System.out
+     */
+    static public void dumpCacheinDisk() {
+        dumpCacheinDisk(fileName);
+    }
+
+    /**
+     * Reads the specified cache fileName and dumps information in System.out
+     * @param otherFileName The name of the file to analyze
+     */
+    static public void dumpCacheinDisk(String otherFileName) {
+        JenaExecutorCacheSelect jecs = new JenaExecutorCacheSelect();
+        File f = new File(otherFileName);
+        if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
+            long start = System.currentTimeMillis();
+            jecs.readCacheFromDisk(otherFileName);
+            long lapse = System.currentTimeMillis() - start;
+            //jecs.dump(System.out);
+            System.out.println("Usage report for cache file "+ otherFileName + ": ");
+            System.out.println("  Time (milisecs) required to load the cache file: "+ lapse);
+            long sizebytes  = f.length();
+            System.out.println("  File size: " + sizebytes + " bytes (~" + sizebytes/1024/1024 + "MB.)");
+            System.out.println("  " + jecs.cacheUsageReport());
+            jecs.dump(System.out);
+        } else {
+            System.out.println(otherFileName + "is not available.");
+        }
+    }
+
+    static public void main1 (String[] args) {
         JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
         ResultSet res1 = cacheSelect.executeWithCache("http://es.dbpedia.org/sparql",
                                                       "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
@@ -115,4 +167,9 @@ public class JenaExecutorCacheSelect{
         cacheSelect.dump(System.out);
         cacheSelect.saveCacheToDisk();
     }
+    static public void main (String[] args) {
+        dumpCacheinDisk("cacheSelect.20160804.v2.ser");
+    }
+
+
 }

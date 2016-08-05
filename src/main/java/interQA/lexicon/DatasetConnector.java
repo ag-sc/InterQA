@@ -55,7 +55,6 @@ public class DatasetConnector {
     }
     public void saveCacheToDisk(){
         cacheAsk.saveCacheToDisk();
-        cacheSel.saveCacheToDisk();
     }
 
     public String getEndpoint(){
@@ -70,7 +69,8 @@ public class DatasetConnector {
             boolean keep = false;
             
             for (IncrementalQuery query : builder.instantiate(var,entry)) {
-                if (cacheAsk.executeWithCache(endpoint,query.assembleAsAsk(false).toString())) {
+                Query q = query.assembleAsAsk(false);
+                if (cacheAsk.executeWithCache(endpoint,query.prettyPrint(q))) {
                     keep = true;
                     break;
                 }
@@ -86,9 +86,8 @@ public class DatasetConnector {
                
               Query query = iq.assemble(false);
               query.setQueryResultStar(true);
-              String querystring = query.toString();
                            
-              ResultSet results = cacheSel.executeWithCache(endpoint,querystring+"LIMIT 20");
+              ResultSet results = cacheSel.executeWithCache(endpoint,iq.prettyPrint(query));
             
               while (results.hasNext()) {
                 

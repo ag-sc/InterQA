@@ -65,15 +65,17 @@ public class IncrementalQuery {
         ElementGroup body = new ElementGroup();
         
         for (Triple t : triples) {
-            
+                        
             if (!asFinal ||
-                !(  t.getSubject().isVariable()
-                 && t.getPredicate().isVariable()
-                 && t.getObject().isVariable())) {
+                !(   t.getSubject().isVariable()
+                 && (t.getPredicate().isVariable() || t.getPredicate().toString().equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
+                 &&  t.getObject().isVariable())) {
             
                 body.addTriplePattern(t);
              }
         }
+        
+        if (body.isEmpty()) return null;
                 
         query.setQueryPattern(body);
         
@@ -98,6 +100,11 @@ public class IncrementalQuery {
         }
         
         return query;
+    }
+    
+    public String prettyPrint(Query q) {
+        
+        return q.toString().replaceAll("\\n"," ").replaceAll("\\s+"," ").trim();
     }
     
     

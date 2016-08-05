@@ -82,70 +82,30 @@ public class P_P_C extends QueryPattern{
                     builder.addProjVar(mainVar1);
                     builder.addProjVar(mainVar2);
                     
-                    // Propagate features
-                    
-                    ((StringElement) elements.get(0)).transferFeatures(elements.get(1),s); 
-                    ((StringElement) elements.get(0)).transferFeatures(elements.get(3),s); 
-                    
                     break;
                 }
                         
                 case 1: {
                     
-                    // Propagate features
-                    
-                    setFeatures(1,2,s);
-                    
-                    // Instantiate query
-                    
                     builder.instantiate("P1",p1.getActiveEntries());
-                    
-                    // Filter options 
-                    
                     dataset.filter(elements.get(3),builder,"P2");
-                    
-                    break;
-                }
-                    
-                case 2: {
-                            
-                    // Propagate features
-                    
-                    ((StringElement) elements.get(2)).transferFeatures(elements.get(3),s); 
-                    
                     break;
                 }
 
                 case 3: {
-                            
-                    // Propagate features
-                    
-                    setFeatures(3,4,s);
+
                     for (String m : elements.get(3).getMarkers()) {
                        ((StringElement) elements.get(4)).add(m);
                     }
                     
-                    // Instantiate query
-                    
                     builder.instantiate("P2",p2.getActiveEntries());
-                    
-                    // Filter options
-                    
                     dataset.filter(elements.get(5),builder,"C");
-                    
                     break;
                 }
                         
-                case 4: {
-                            
-                    // Propagate features
-                    
-                    ((StringElement) elements.get(4)).transferFeatures(elements.get(5),s); 
-                    
-                    // Instantiate query
-                    
+                case 5: {
+
                     builder.instantiate("C",c.getActiveEntries());
-                    
                     break;
                 }
             }

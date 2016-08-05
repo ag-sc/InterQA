@@ -135,7 +135,7 @@ public class QueryBuilder {
             
              Query q  = query.assemble(asFinal); 
              if  ( q != null) { 
-                 out.add(q.toString().replaceAll("\\n"," ").replaceAll("\\s+"," ").trim());
+                 out.add(query.prettyPrint(q));
              }
         }
         
