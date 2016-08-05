@@ -51,24 +51,7 @@ public class PatternTests_EN extends TestCase {
                   )
             );   
         }
-        /*public void test_C_HowManyV2() throws Exception {
-            // Give me all conferences
-            //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
-            assertEquals(
-                    checkSequenceByStrings(   //OK
-                            "how many\n"    +
-                            "conference\n" +
-                            "is there\n"   +
-                            "q\n"),
-                    new HashSet<String>(
-                            Arrays.asList(
-                                    "SELECT COUNT(DISTINCT ?x) WHERE {"+
-                                            "  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . "+
-                                            "}"
-                            )
-                    )
-            );
-        }*/
+
         public void test_P_I() throws Exception{
           // who was the creator Next Top Model Romania  
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
@@ -146,10 +129,11 @@ public class PatternTests_EN extends TestCase {
                           "Berlin\n"      +
                           "q\n"),
                      new HashSet<>(
-                           Arrays.asList( //We could have several queries here separated by comma
-                             "SELECT DISTINCT ?x WHERE { "
-                           + "?x a <http://lod.springer.com/data/ontology/class/Conference> ; "
-                                + "<http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@en }"
+                           Arrays.asList( 
+                             "SELECT DISTINCT ?x WHERE {"+
+                             " ?x a <http://lod.springer.com/data/ontology/class/Conference> ;"+
+                             " <http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@en "+
+                             "}"
                            )
                      )
              );
