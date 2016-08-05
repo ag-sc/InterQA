@@ -19,7 +19,7 @@ public class C_P_I extends QueryPattern{
         // }
         
     
-	public C_P_I(Lexicon lexicon,DatasetConnector dataset){
+	public C_P_I(Lexicon lexicon,DatasetConnector dataset) {
 		
             this.lexicon = lexicon;
             this.dataset = dataset;
@@ -28,8 +28,8 @@ public class C_P_I extends QueryPattern{
 	}
         
 
-	@Override
-	public void init(){
+        @Override
+	public void init() {
             
             StringElement element0 = new StringElement();
             elements.add(element0);

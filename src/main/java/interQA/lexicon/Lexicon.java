@@ -70,11 +70,13 @@ public class Lexicon {
                    for (LexicalEntry entry : entries) {
                         if ( entry.getPOS().equals(pos)
                         && ((entry.getFrame() == null && frame == null) 
-                         || (entry.getFrame() != null && frame != null && entry.getFrame().equals(frame)))) {
+                         || (entry.getFrame() != null && frame != null && 
+                             entry.getFrame().equals(frame)))) {
                             
-                            String keyform = key;
                             String marker  = entry.getMarker();
-                            if (withMarker && marker != null) keyform += entry.getMarker();
+                            if (withMarker && marker != null) {
+                                key += entry.getMarker();
+                            }
                             
                             if (!subindex.containsKey(key)) {
                                  subindex.put(key,new ArrayList<>());
@@ -327,10 +329,7 @@ public class Lexicon {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
                             entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
-                        else {
-                            continue;
-                        }
-                        
+                                                
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
