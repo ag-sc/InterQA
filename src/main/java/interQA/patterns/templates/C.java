@@ -51,7 +51,7 @@ public class C extends QueryPattern {
                     
                     String mainVar = "x";
                                     
-                    builder.addUninstantiatedTypeTriple(mainVar,"C");
+                    builder.addUninstantiatedTypeTriple(mainVar,builder.placeholder("C"));
                     
                     checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 

@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.Var;
 
@@ -17,16 +18,27 @@ import org.apache.jena.sparql.core.Var;
  */
 public class QueryBuilder {
     
-      
-    Set<IncrementalQuery> queries;
-    
     Vocabulary vocab;    
+    Set<String> placeholders;
+    Set<IncrementalQuery> queries;
     
     
     public QueryBuilder() {
         
+        vocab = new Vocabulary();
+        placeholders = new HashSet<>();
         queries = new HashSet<>();
-        vocab   = new Vocabulary();
+    }
+    
+    public String placeholder(String var) {
+        
+        placeholders.add(var);
+        return var;
+    }
+    
+    public boolean isorwillbeURI(Node node) {
+        
+        return (node.isURI() || (node.isVariable() && placeholders.contains(node.getName())));
     }
     
     public Set<IncrementalQuery> getQueries() {
@@ -102,7 +114,7 @@ public class QueryBuilder {
                  if (t.getPredicate().matches(Var.alloc(var))) {
                      del.add(t);
                      LexicalEntry.SemArg sem = entry.getSemArg(LexicalEntry.SynArg.SUBJECT);
-                     if (sem != null && sem == LexicalEntry.SemArg.OBJOFPROP) {
+                     if (sem != null && sem == LexicalEntry.SemArg.OBJOFPROP && isorwillbeURI(t.getObject())) {
                          add.add(new Triple(t.getObject(),toResource(entry.getReference()),t.getSubject()));
                      } else {
                          add.add(new Triple(t.getSubject(),toResource(entry.getReference()),t.getObject()));

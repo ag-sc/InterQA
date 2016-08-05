@@ -132,8 +132,15 @@ public class DatasetConnector {
                         
                         entry.setLiteralNode(instance);
                         entry.setAsLiteral();
-                        entry.setCanonicalForm(instance.asLiteral().getString());
-                        element.addToIndex(instance.asLiteral().getLexicalForm(),entry);
+                        
+                        String form;
+                        if (instance.asLiteral().getDatatype().getURI().equals("http://www.w3.org/2001/XMLSchema#gYear")) {
+                            form = instance.asLiteral().getLexicalForm().substring(0,4);
+                        } else {
+                            form = instance.asLiteral().getLexicalForm();
+                        }
+                        entry.setCanonicalForm(form);
+                        element.addToIndex(form,entry);
                     }
                     
                     if (!element.isStringElement()) {

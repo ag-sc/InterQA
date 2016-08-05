@@ -5,7 +5,10 @@ import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
+import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -90,9 +93,9 @@ public class C_P_I_P_I extends QueryPattern{
                 
                     String mainVar = "x";
                     
-                    builder.addUninstantiatedTypeTriple(mainVar,"C");
-                    builder.addUninstantiatedTriple(mainVar,"P1","I1");
-                    builder.addUninstantiatedTriple(mainVar,"P2","I2");
+                    builder.addUninstantiatedTypeTriple(mainVar,builder.placeholder("C"));
+                    builder.addUninstantiatedTriple(mainVar,builder.placeholder("P1"),builder.placeholder("I1"));
+                    builder.addUninstantiatedTriple(mainVar,builder.placeholder("P2"),builder.placeholder("I2"));
                     
                     checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
@@ -127,6 +130,15 @@ public class C_P_I_P_I extends QueryPattern{
                         
                     builder.instantiate("I1",i1);
                     dataset.filter(elements.get(7),builder,"P2");
+                    
+                    // avoid P2=P1
+                    Set<LexicalEntry> del = new HashSet<>();
+                    for (LexicalEntry entry : elements.get(7).getActiveEntries()) {
+                         if (elements.get(3).getActiveEntries().contains(entry)) {
+                             del.add(entry);
+                         }
+                    }
+                    elements.get(7).getActiveEntries().removeAll(del);
                     break;
                 }
                     

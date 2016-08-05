@@ -77,17 +77,11 @@ public class IncrementalQuery {
         ElementGroup newbody = new ElementGroup();
                 
         for (Triple t : triples) {
-                        
-            if (!asFinal ||
-                !(   t.getSubject().isVariable()
-                 && (t.getPredicate().isVariable() || t.getPredicate().toString().equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
-                 &&  t.getObject().isVariable())) {
-            
-                newbody.addTriplePattern(t);
-             }
+            newbody.addTriplePattern(t);
         }
-        
-        if (!body.isEmpty()) newbody.getElements().addAll(body.getElements());
+        if (!body.isEmpty()) {
+            newbody.getElements().addAll(body.getElements());
+        }
         
         if (newbody.isEmpty()) return null;
         

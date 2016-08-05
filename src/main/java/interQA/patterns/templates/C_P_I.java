@@ -70,8 +70,8 @@ public class C_P_I extends QueryPattern{
                     
                     String mainVar = "x";
                     
-                    builder.addUninstantiatedTypeTriple(mainVar,"C");
-                    builder.addUninstantiatedTriple(mainVar,"P","I");
+                    builder.addUninstantiatedTypeTriple(mainVar,builder.placeholder("C"));
+                    builder.addUninstantiatedTriple(mainVar,builder.placeholder("P"),builder.placeholder("I"));
                     
                     checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
