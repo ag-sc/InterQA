@@ -72,7 +72,9 @@ public class IncrementalQuery {
         
         query = QueryFactory.make();
         
-        // Add all triples to query body 
+        // Add all triples to query body
+        
+        ElementGroup newbody = new ElementGroup();
                 
         for (Triple t : triples) {
                         
@@ -81,13 +83,15 @@ public class IncrementalQuery {
                  && (t.getPredicate().isVariable() || t.getPredicate().toString().equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
                  &&  t.getObject().isVariable())) {
             
-                body.addTriplePattern(t);
+                newbody.addTriplePattern(t);
              }
         }
         
-        if (body.isEmpty()) return null;
-                
-        query.setQueryPattern(body);
+        if (!body.isEmpty()) newbody.getElements().addAll(body.getElements());
+        
+        if (newbody.isEmpty()) return null;
+        
+        query.setQueryPattern(newbody);
         
         // Add projection variables 
         

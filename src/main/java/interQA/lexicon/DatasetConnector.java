@@ -144,14 +144,12 @@ public class DatasetConnector {
         }        
     }
     
-    private ElementGroup label(String i_var, String label_var) {
-
-        ElementGroup group = new ElementGroup();
+    private ElementOptional label(String i_var, String label_var) {
         
         if (labelProperties.size() == 1) {
             ElementGroup u = new ElementGroup();
             u.addTriplePattern(new Triple(toVar(i_var),toResource(labelProperties.get(0)),toVar(label_var)));
-            group.addElement(new ElementOptional(u));
+            return new ElementOptional(u);
         }
         else {
             ElementUnion union = new ElementUnion();
@@ -160,10 +158,8 @@ public class DatasetConnector {
                  u.addTriplePattern(new Triple(toVar(i_var),toResource(p),toVar(label_var)));
                  union.addElement(u);
             }
-            group.addElement(new ElementOptional(union));
+            return new ElementOptional(union);
         }
-        
-        return group;
     }
 
     
