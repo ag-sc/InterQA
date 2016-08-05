@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.jena.graph.Triple;
 
 
 public abstract class Element {
@@ -21,12 +22,15 @@ public abstract class Element {
     
     // Grammatical features (number, gender, etc.)  needed for morphological agreement
     List<Feature> agrFeatures;
-        
+
+    // Context to keep track of which instantiation can fill which query
+    Map<LexicalEntry,List<Triple>> context;
+
         
     public boolean isStringElement() {
         return false;
     }
-    
+
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
         this.index = lexicon.getSubindex(pos,frame,true);
     }
@@ -34,6 +38,10 @@ public abstract class Element {
         this.index = lexicon.getSubindex(pos,frame,withMarker);
     }
 
+    public Map<LexicalEntry,List<Triple>> getContext() {
+        return context;
+    }
+    
     public Map<String,List<LexicalEntry>> getIndex() {        
         return index;
     }  

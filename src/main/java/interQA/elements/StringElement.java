@@ -1,6 +1,5 @@
 package interQA.elements;
 
-import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import java.util.ArrayList;
 import java.util.HashMap;

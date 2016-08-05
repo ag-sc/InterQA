@@ -62,7 +62,7 @@ public class C extends QueryPattern {
                 
                 case 1: {
                                         
-                    builder.instantiate("C",c.getActiveEntries());
+                    builder.instantiate("C",c);
                     break;
                 } 
             }

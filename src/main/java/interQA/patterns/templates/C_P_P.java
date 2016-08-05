@@ -85,21 +85,21 @@ public class C_P_P extends QueryPattern{
                  
                 case 1: {
                                             
-                    builder.instantiate("C",c.getActiveEntries());
+                    builder.instantiate("C",c);
                     dataset.filter(elements.get(3),builder,"P1");
                     break;
                 }
                     
                 case 3: {
                                                 
-                    builder.instantiate("P1",p1.getActiveEntries());
+                    builder.instantiate("P1",p1);
                     dataset.filter(elements.get(5),builder,"P2");
                     break;
                 }
                 
                 case 5: {
                     
-                    builder.instantiate("P2",p2.getActiveEntries());
+                    builder.instantiate("P2",p2);
                     break;
                 }
             }

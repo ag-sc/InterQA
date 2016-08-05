@@ -7,10 +7,12 @@ import java.util.HashMap;
 public class PropertyElement extends Element {
 
 	
-	public PropertyElement() {
+    public PropertyElement() {
             
-            this.index = new HashMap<>();
-            this.agrFeatures = new ArrayList<>();
-	}
+        this.index = new HashMap<>();
+        
+        this.agrFeatures = new ArrayList<>();
+        this.context     = new HashMap<>();
+    }
 
 }

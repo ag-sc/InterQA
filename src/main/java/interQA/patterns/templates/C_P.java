@@ -79,14 +79,14 @@ public class C_P extends QueryPattern{
                             ((StringElement) elements.get(2)).add(m);
                         }
                         
-                        builder.instantiate("P",p.getActiveEntries());
+                        builder.instantiate("P",p);
                         dataset.filter(elements.get(3),builder,"C");
                         break;
                     }
                     
                     case 3: {
                                                 
-                        builder.instantiate("C",c.getActiveEntries());
+                        builder.instantiate("C",c);
                         break;
                     } 
 		}

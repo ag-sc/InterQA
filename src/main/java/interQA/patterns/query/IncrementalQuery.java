@@ -33,6 +33,11 @@ public class IncrementalQuery {
     }
     
     
+    public List<Triple> getTriples() {
+        
+        return triples;
+    }
+    
     public void addTriple(Triple t) {
         
         triples.add(t);
