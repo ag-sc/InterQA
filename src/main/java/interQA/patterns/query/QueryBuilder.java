@@ -65,7 +65,7 @@ public class QueryBuilder {
         addTriple(new Triple(Var.alloc(s_var),toResource(vocab.sortal_predicate),Var.alloc(o_var)));
     }
     
-    public Set<IncrementalQuery> instantiate(String var, Element element) {
+    public void instantiate(String var, Element element) {
     
         Set<IncrementalQuery> copies = new HashSet<>();
         
@@ -83,7 +83,7 @@ public class QueryBuilder {
             copies.add(copy);
         }}
          
-        return copies;
+        queries = copies;
     }
     
     public IncrementalQuery instantiate(String var, LexicalEntry entry, IncrementalQuery query) {

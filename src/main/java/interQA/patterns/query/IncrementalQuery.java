@@ -23,6 +23,7 @@ public class IncrementalQuery {
     List<String> countvars;
     
     List<Triple> triples;
+    ElementGroup body;
     
     
     public IncrementalQuery() {
@@ -30,8 +31,14 @@ public class IncrementalQuery {
         projvars  = new ArrayList<>();
         countvars = new ArrayList<>();
         triples   = new ArrayList<>();
+        body      = new ElementGroup();
     }
     
+    
+    public ElementGroup getBody() {
+        
+        return body;
+    }
     
     public List<Triple> getTriples() {
         
@@ -65,10 +72,8 @@ public class IncrementalQuery {
         
         query = QueryFactory.make();
         
-        // Query body (from triples)
-        
-        ElementGroup body = new ElementGroup();
-        
+        // Add all triples to query body 
+                
         for (Triple t : triples) {
                         
             if (!asFinal ||
@@ -84,7 +89,7 @@ public class IncrementalQuery {
                 
         query.setQueryPattern(body);
         
-        // Projection variables 
+        // Add projection variables 
         
         for (String v : projvars) {
             query.getProject().add(Var.alloc(v));
@@ -94,7 +99,7 @@ public class IncrementalQuery {
             query.getProject().add(Var.alloc(v+"_count"),query.allocAggregate(new AggCountVar(new ExprVar(Var.alloc(v)))));
         }
         
-        // Query type
+        // Set query type
         
         if (query.getProjectVars().isEmpty()) {
             query.setQueryAskType();
@@ -115,6 +120,9 @@ public class IncrementalQuery {
     
     @Override
     public IncrementalQuery clone() {
+        
+        // TODO Note that this ignores the body. 
+        // Currently this is fine because it is only used for adding the label stuff.
         
         IncrementalQuery copy = new IncrementalQuery();
         

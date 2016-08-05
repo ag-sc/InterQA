@@ -1,22 +1,29 @@
 package interQA.lexicon;
 
 import interQA.elements.Element;
-import interQA.elements.InstanceElement;
 import interQA.lexicon.LexicalEntry.Language;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import interQA.main.JenaExecutorCacheSelect;
 import interQA.main.JenaExecutorCacheAsk;
 import interQA.patterns.query.IncrementalQuery;
 import interQA.patterns.query.QueryBuilder;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.jena.graph.Node;
+
+import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.sparql.core.Var;
+import org.apache.jena.sparql.syntax.ElementGroup;
+import org.apache.jena.sparql.syntax.ElementOptional;
+import org.apache.jena.sparql.syntax.ElementUnion;
 
 /**
  *
@@ -82,44 +89,50 @@ public class DatasetConnector {
         }
     }
     
-    public void fillInstances(Element element, QueryBuilder builder, String var) {
+    public void fillInstances(Element element, QueryBuilder builder, String i_var) {
                 
+        String label_var = "l";
+        
         for (IncrementalQuery iq : builder.getQueries()) {
-               
-              Query query = iq.assemble(false);
+              
+              IncrementalQuery copy = iq.clone();
+              copy.getBody().addElement(label(i_var,label_var));
+              Query query = copy.assemble(false);
               query.setQueryResultStar(true);
-                           
-              ResultSet results = cacheSel.executeWithCache(endpoint,iq.prettyPrint(query));
+              String querystring = copy.prettyPrint(query);
+              
+              System.out.println(querystring);
+              
+              ResultSet results = cacheSel.executeWithCache(endpoint,querystring);
             
               while (results.hasNext()) {
-                
-                QuerySolution result = results.nextSolution();
-                RDFNode       node   = result.get(var);
+                                  
+                QuerySolution result   = results.nextSolution();
+                RDFNode       instance = result.get(i_var);
+                RDFNode       label    = result.get(label_var);
                                                 
-                if (node != null) {
+                if (instance != null) {
                     
                     LexicalEntry entry = new LexicalEntry();
 
-                    if (node.isURIResource()) {
+                    if (instance.isURIResource()) {
+                                                
+                        entry.setReference(instance.asResource().getURI());
                         
-                        String uri = node.asResource().getURI();
-                        
-                        entry.setReference(uri);
-                        
-                        List<String> labels = getLabels(uri);
-                        if (!labels.isEmpty()) {
-                            entry.setCanonicalForm(labels.get(0));
-                        }
-                        for (String label : labels) {
-                            element.addToIndex(label,entry);
+                        if (label != null && label.isLiteral() &&
+                           (label.asLiteral().getLanguage() == null ||
+                            label.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
+                                                        
+                            entry.setCanonicalForm(label.asLiteral().getString());
+                            element.addToIndex(label.asLiteral().getString(),entry);
                         }
                     }
-                    else if (node.isLiteral()) {
+                    else if (instance.isLiteral()) {
                         
-                        entry.setLiteralNode(node);
+                        entry.setLiteralNode(instance);
                         entry.setAsLiteral();
-                        entry.setCanonicalForm(node.asLiteral().getString());
-                        element.addToIndex(node.asLiteral().getLexicalForm(),entry);
+                        entry.setCanonicalForm(instance.asLiteral().getString());
+                        element.addToIndex(instance.asLiteral().getLexicalForm(),entry);
                     }
                     
                     if (!element.isStringElement()) {
@@ -129,49 +142,35 @@ public class DatasetConnector {
             }
         }        
     }
+    
+    private ElementGroup label(String i_var, String label_var) {
 
-    private List<String> getLabels(String uri) {
+        ElementGroup group = new ElementGroup();
         
-        List<String> labels = new ArrayList<>();
-        
-        String query = "SELECT DISTINCT ?l { " 
-                     +  label(uri,"?l")
-                     + "}";
-        
-        ResultSet results = cacheSel.executeWithCache(endpoint,query);
-        
-        while (results.hasNext()) {
-
-            QuerySolution result = results.nextSolution();
-            RDFNode       node   = result.get("l");
-            
-            if (node.isLiteral() &&
-               (node.asLiteral().getLanguage() == null ||
-                node.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
-            
-                labels.add(node.asLiteral().getString());
-            }
+        if (labelProperties.size() == 1) {
+            group.addTriplePattern(new Triple(toVar(i_var),toResource(labelProperties.get(0)),toVar(label_var)));
         }
-                
-        return labels;
+        else {
+            ElementUnion union = new ElementUnion();
+            for (String p : labelProperties) { 
+                 ElementGroup u = new ElementGroup(); 
+                 u.addTriplePattern(new Triple(toVar(i_var),toResource(p),toVar(label_var)));
+                 union.addElement(u);
+            }
+            group.addElement(new ElementOptional(union));
+        }
+        
+        return group;
+    }
+
+    
+    // AUX for nodes
+    
+    public Var toVar(String v) {
+        return Var.alloc(v);
     }
     
-    private String label(String uri, String var) {
-
-        String out;
-
-        if (labelProperties.size() == 1) {
-            out = "<"+uri+">" + " <" + labelProperties.get(0) + "> " + var + " .";
-        }
-        else if (labelProperties.size() > 1) {
-            out = "{ <"+uri+"> <" + labelProperties.get(0) + "> " + var + " . }";
-            for (String prop : labelProperties.subList(1,labelProperties.size())) {
-                 out += " UNION { <"+uri+"> <" + prop + "> " + var + " . }";
-            }
-        }
-        else out = "" ;
-
-        return out;
+    public Node toResource(String uri) {
+        return ResourceFactory.createResource(uri).asNode();
     }
-
 }
