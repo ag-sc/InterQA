@@ -149,7 +149,9 @@ public class DatasetConnector {
         ElementGroup group = new ElementGroup();
         
         if (labelProperties.size() == 1) {
-            group.addTriplePattern(new Triple(toVar(i_var),toResource(labelProperties.get(0)),toVar(label_var)));
+            ElementGroup u = new ElementGroup();
+            u.addTriplePattern(new Triple(toVar(i_var),toResource(labelProperties.get(0)),toVar(label_var)));
+            group.addElement(new ElementOptional(u));
         }
         else {
             ElementUnion union = new ElementUnion();
