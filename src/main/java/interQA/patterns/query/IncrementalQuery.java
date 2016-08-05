@@ -1,7 +1,7 @@
 package interQA.patterns.query;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -19,19 +19,24 @@ public class IncrementalQuery {
     
     Query query;
     
-    Set<String> projvars;
-    Set<String> countvars;
+    List<String> projvars;
+    List<String> countvars;
     
-    Set<Triple> triples;
+    List<Triple> triples;
     
     
     public IncrementalQuery() {
                 
-        projvars  = new HashSet<>();
-        countvars = new HashSet<>();
-        triples   = new HashSet<>();
+        projvars  = new ArrayList<>();
+        countvars = new ArrayList<>();
+        triples   = new ArrayList<>();
     }
     
+    
+    public List<Triple> getTriples() {
+        
+        return triples;
+    }
     
     public void addTriple(Triple t) {
         

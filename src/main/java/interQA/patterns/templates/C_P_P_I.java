@@ -93,7 +93,7 @@ public class C_P_P_I extends QueryPattern{
                 
                 case 1: {
                                                 
-                    builder.instantiate("C",c.getActiveEntries());
+                    builder.instantiate("C",c);
                     dataset.filter(elements.get(3),builder,"P1");
                     break;
                 } 
@@ -104,7 +104,7 @@ public class C_P_P_I extends QueryPattern{
                         ((StringElement) elements.get(4)).add(m);
                     }
                         
-                    builder.instantiate("P1",p1.getActiveEntries());
+                    builder.instantiate("P1",p1);
                     dataset.fillInstances(elements.get(5),builder,"I");
                     break;
                 }
@@ -115,14 +115,14 @@ public class C_P_P_I extends QueryPattern{
                        ((StringElement) elements.get(8)).add(m);
                     }
                         
-                    builder.instantiate("P2",p2.getActiveEntries());
+                    builder.instantiate("P2",p2);
                     dataset.fillInstances(elements.get(9),builder,"I");
                     break;
                 }
                     
                 case 9: {
                         
-                    builder.instantiate("I",i.getActiveEntries());
+                    builder.instantiate("I",i);
                     break;
                 }
             }

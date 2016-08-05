@@ -1,7 +1,8 @@
-/nbproject/private/
-/build/
-/dist/
-.DS_Store
 *.class
-target/
-/bin/
+*.ser
+*.cli
+*.out
+.DS_Store
+.metadata
+.idea
+target

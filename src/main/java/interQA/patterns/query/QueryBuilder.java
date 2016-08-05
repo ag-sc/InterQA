@@ -1,14 +1,12 @@
 package interQA.patterns.query;
 
+import interQA.elements.Element;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Vocabulary;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.apache.jena.graph.Node;
-import org.apache.jena.graph.Node_Literal;
 import org.apache.jena.graph.Triple;
-import org.apache.jena.graph.impl.LiteralLabel;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.Var;
@@ -67,21 +65,35 @@ public class QueryBuilder {
         addTriple(new Triple(Var.alloc(s_var),toResource(vocab.sortal_predicate),Var.alloc(o_var)));
     }
     
-    public Set<IncrementalQuery> instantiate(String var, LexicalEntry entry) {
+    public Set<IncrementalQuery> instantiate(String var, Element element) {
     
         Set<IncrementalQuery> copies = new HashSet<>();
-
-        Set<Triple> del;
-        Set<Triple> add;
         
+        for (LexicalEntry entry : element.getActiveEntries()) {
         for (IncrementalQuery q : queries) {
             
-            IncrementalQuery copy = q.clone();
+            if (!element.isStringElement() && 
+                 element.getContext().containsKey(entry) &&
+                !element.getContext().get(entry).equals(q.getTriples())) {
+                 continue;
+            }
             
-            del = new HashSet<>();
-            add = new HashSet<>();
+            IncrementalQuery copy = instantiate(var,entry,q);
             
-            for (Triple t : q.triples) {
+            copies.add(copy);
+        }}
+         
+        return copies;
+    }
+    
+    public IncrementalQuery instantiate(String var, LexicalEntry entry, IncrementalQuery query) {
+        
+            IncrementalQuery copy = query.clone();
+            
+            Set<Triple> del = new HashSet<>();
+            Set<Triple> add = new HashSet<>();
+            
+            for (Triple t : query.triples) {
                 
                  if (t.getSubject().matches(Var.alloc(var))) {
                      del.add(t);
@@ -109,21 +121,7 @@ public class QueryBuilder {
             for (Triple t : del) copy.removeTriple(t);
             for (Triple t : add) copy.addTriple(t);
             
-            copies.add(copy);
-        }
-         
-        return copies;
-    }
-    
-    public void instantiate(String var, List<LexicalEntry> entries) {
-
-        Set<IncrementalQuery> copies = new HashSet<>();
-        
-        for (LexicalEntry entry : entries) {
-            copies.addAll(instantiate(var,entry));
-        }
-        
-        queries = copies;
+            return copy;
     }
         
         

@@ -19,7 +19,7 @@ public class C_P_I extends QueryPattern{
         // }
         
     
-	public C_P_I(Lexicon lexicon,DatasetConnector dataset){
+	public C_P_I(Lexicon lexicon,DatasetConnector dataset) {
 		
             this.lexicon = lexicon;
             this.dataset = dataset;
@@ -28,8 +28,8 @@ public class C_P_I extends QueryPattern{
 	}
         
 
-	@Override
-	public void init(){
+        @Override
+	public void init() {
             
             StringElement element0 = new StringElement();
             elements.add(element0);
@@ -82,7 +82,7 @@ public class C_P_I extends QueryPattern{
                 
                 case 1: {
                                     
-                    builder.instantiate("C",c.getActiveEntries());
+                    builder.instantiate("C",c);
                     dataset.filter(elements.get(3),builder,"P");
                     break;
                 }
@@ -93,14 +93,14 @@ public class C_P_I extends QueryPattern{
                         ((StringElement) elements.get(4)).add(m);
                     }
                     
-                    builder.instantiate("P",p.getActiveEntries());
+                    builder.instantiate("P",p);
                     dataset.fillInstances(elements.get(5),builder,"I");
                     break;
                 }
                 
                 case 5: { 
                                         
-                    builder.instantiate("I",i.getActiveEntries());
+                    builder.instantiate("I",i);
                     break;
                 } 
             }

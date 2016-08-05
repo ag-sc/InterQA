@@ -168,7 +168,7 @@ public class LexicalEntry {
     @Override 
     public String toString() {
     
-        return particle + " + " + canonicalForm + " + " + marker + " / " + pos + " (" + frame + ") = " + reference;
+        return particle + " + " + canonicalForm + " + " + marker + " / " + pos + " (" + frame + ") = " + reference + " ... " + forms;
     }
 
     @Override

@@ -11,7 +11,6 @@ import interQA.patterns.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,36 +18,37 @@ import java.util.Set;
 
 public abstract class QueryPattern {
 
+        // static fiels 
+        // (are filled once by the QueryPatternManager and then don't change)
+    
         public Lexicon lexicon;
         public DatasetConnector dataset;
         
         public Vocabulary vocab = new Vocabulary();
         
         public QueryBuilder builder = new QueryBuilder();
+        public Map<Integer,Integer> agreement = new HashMap<>();
                 
-        public Set<String> queries = new HashSet<>();
-        
+        public List<Element> elements = new ArrayList<>();
         
         public boolean count = false;        
-        
-	public List<Element> elements = new ArrayList<>();
-	public int currentElement = -1;   
-        
-        public Map<Integer,Integer> agreement = new HashMap<>();
+
+        // dynamic fields 
+
+        public int currentElement = -1; 
 
         
         public void init() {
+        // Should be filled by each specific QueryPattern.
         }
         
-            
-        public Element getElement(int i) {
-            
-            return elements.get(i);
-        }
         
-        public void addAgreementDependency(int from, int to) {
-            
-            agreement.put(from,to);
+        /* MAIN FUNCTIONALITY */ 
+        
+                
+        public void update(String parsed) {
+            // Needs to be overwritten by all concrete query patterns.
+            // This is where all the pattern-specific magic happens.
         }
         
 
@@ -59,10 +59,8 @@ public abstract class QueryPattern {
 	
         public boolean parses(String input) {
 
-            init();
-            
             currentElement = -1;
-            
+                        
             int i = 0;
             while (!input.isEmpty() && elements.size() > i) {
                    
@@ -99,18 +97,31 @@ public abstract class QueryPattern {
             }
 	}
         
-        // update(int i) is where all the pattern-specific magic happens
+	public Set<String> buildSPARQLqueries() {
+            
+            return builder.returnQueries(true);
+        }
         
-        public void update(String parsed) {
-            // Needs to be overwritten by all concrete query patterns.
+        
+        /* AUXILIARY STUFF  */
+        
+        
+        public Element getElement(int i) {
+            
+            return elements.get(i);
+        }
+        
+        public void addAgreementDependency(int from, int to) {
+            
+            agreement.put(from,to);
         }
         
         public void transferFeatures(String parsed) {
             
-            for (int from : agreement.keySet()) {
+            if (agreement.containsKey(currentElement)) {
             
-                Element e_from = elements.get(from);
-                Element e_to   = elements.get(agreement.get(from));
+                Element e_from = elements.get(currentElement);
+                Element e_to   = elements.get(agreement.get(currentElement));
 
                 Map<String,List<Feature>> feats = new HashMap<>();
 
@@ -123,18 +134,13 @@ public abstract class QueryPattern {
                 }
 
                 for (String k : feats.keySet()) {
-                     if (parsed.matches("(\\s|^)"+k+"\\s|$")) {
-                         for (Feature f : feats.get(k)) {
-                              e_to.addAgrFeature(f);
-                         }
-                     }
+                    if (parsed.matches(".*(\\s|^)"+k+"(\\s|$).*")) {
+                        for (Feature f : feats.get(k)) {
+                             e_to.addAgrFeature(f);
+                        }
+                    }
                 }
             }
-        }
-
-	public Set<String> buildSPARQLqueries() {
-            
-            return builder.returnQueries(true);
         }
 
 	public void checkHowMany(String s){

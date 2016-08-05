@@ -1,6 +1,7 @@
 package interQA.lexicon;
 
 import interQA.elements.Element;
+import interQA.elements.InstanceElement;
 import interQA.lexicon.LexicalEntry.Language;
 
 import java.io.*;
@@ -68,12 +69,13 @@ public class DatasetConnector {
             
             boolean keep = false;
             
-            for (IncrementalQuery query : builder.instantiate(var,entry)) {
-                Query q = query.assembleAsAsk(false);
-                if (cacheAsk.executeWithCache(endpoint,query.prettyPrint(q))) {
-                    keep = true;
-                    break;
-                }
+            for (IncrementalQuery query : builder.getQueries()) {
+                 IncrementalQuery instantiated = builder.instantiate(var,entry,query);
+                 Query q = instantiated.assembleAsAsk(false);
+                 if (cacheAsk.executeWithCache(endpoint,query.prettyPrint(q))) {
+                     keep = true;
+                     break;
+                 }
             }
             
             if (!keep) element.removeFromIndex(entry);
@@ -118,6 +120,10 @@ public class DatasetConnector {
                         entry.setAsLiteral();
                         entry.setCanonicalForm(node.asLiteral().getString());
                         element.addToIndex(node.asLiteral().getLexicalForm(),entry);
+                    }
+                    
+                    if (!element.isStringElement()) {
+                         element.getContext().put(entry,iq.getTriples());
                     }
                 }
             }

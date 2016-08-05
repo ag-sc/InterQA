@@ -139,6 +139,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             qpC_P_I1.addAgreementDependency(0,1);
             qpC_P_I1.addAgreementDependency(1,2);
+            qpC_P_I1.addAgreementDependency(1,3);
 
             patterns.add(qpC_P_I1);
         }
@@ -161,6 +162,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             addVerbs(qpC_P_I2.getElement(3));
 
             qpC_P_I2.addAgreementDependency(0,1);
+            qpC_P_I2.addAgreementDependency(1,2);
             qpC_P_I2.addAgreementDependency(1,3);
 
             patterns.add(qpC_P_I2);
@@ -210,6 +212,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             addPrepositions(qp.getElement(7));
 
             qp.addAgreementDependency(0,1);
+            qp.addAgreementDependency(1,2);
             qp.addAgreementDependency(1,3);
 
             patterns.add(qp);
@@ -226,6 +229,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             addPrepositions(qp.getElement(7));
 
             qp.addAgreementDependency(0,1);
+            qp.addAgreementDependency(1,2);
             qp.addAgreementDependency(1,3);
             
             patterns.add(qp);
