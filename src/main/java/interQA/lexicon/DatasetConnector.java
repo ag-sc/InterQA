@@ -62,8 +62,11 @@ public class DatasetConnector {
         cacheSel.dump(ps);
     }
     public void saveCacheToDisk(){
-        cacheAsk.saveCacheToDisk();
-        cacheSel.saveCacheToDisk();
+        cacheAsk.saveCacheToDisk(endpoint);
+        cacheSel.saveCacheToDisk(endpoint);
+    }
+    public void interactiveExplorer(){
+        cacheSel.interactiveExplorer();
     }
 
     public String getEndpoint(){

@@ -21,7 +21,7 @@ public class PatternTests_EN extends TestCase {
           // Give me all wrestlers
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
             assertEquals(
-                 checkSequenceByStrings(
+                 checkSequenceByStrings(    //Shows, besides the good one, several generic SPARQl queries
                         "give me all\n" +
                         "wrestlers\n" +
                         "q\n",
@@ -56,7 +56,7 @@ public class PatternTests_EN extends TestCase {
           // who was the creator Next Top Model Romania  
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
             assertEquals(
-                   checkSequenceByStrings(     //OK
+                   checkSequenceByStrings(     //We have more than 10.000 creators, and the one for this seems to be further
                         "who was the\n" +
                         "creator\n" +
                         "of\n" +
@@ -94,7 +94,7 @@ public class PatternTests_EN extends TestCase {
         public void test_C_P_I_P_I() throws Exception{
             //show me all conferences that take place Piran in 2009
             assertEquals(
-                    checkSequenceByStrings(
+                    checkSequenceByStrings(     //Shows, besides the good one, several generic SPARQl queries
                             "show me all\n" +
                             "conferences\n" +
                             "that\n"        +
@@ -130,10 +130,15 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                      new HashSet<>(
                            Arrays.asList( 
-                             "SELECT DISTINCT ?x WHERE {"+
-                             " ?x a <http://lod.springer.com/data/ontology/class/Conference> ;"+
-                             " <http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@en "+
-                             "}"
+                               "SELECT DISTINCT ?x WHERE {"+
+                                   " ?x a <http://lod.springer.com/data/ontology/class/Conference> ;"+
+                                   " <http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@en "+
+                                   "}",
+                               "SELECT DISTINCT ?x WHERE {" +
+                                   " ?x ?P2 ?I2" +
+                                   " ; a <http://lod.springer.com/data/ontology/class/Conference>" +
+                                   " ; <http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@en "+
+                                   "}"
                            )
                      )
              );

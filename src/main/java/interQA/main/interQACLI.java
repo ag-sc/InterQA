@@ -20,9 +20,9 @@ import java.util.regex.Pattern;
 public class interQACLI {
     
     public enum USECASE  { SPRINGER, DBPEDIA }
-    static String typeNumberOrCommand = "Please, type a number (or 'q' to quit, 'd' to delete the last selection):";
-    static String typeStringOrCommand = "Please, type an option (or 'q' to quit, 'd' to delete the last selection):";
-    static String typeCommand         = "Please, type a command: 'q' to quit, 'd' to delete the last selection";
+    static String typeNumberOrCommand = "Please, type a number (or 'q' to quit, 'd' to delete the last selection, 'c' to explore the cache):";
+    static String typeStringOrCommand = "Please, type an option (or 'q' to quit, 'd' to delete the last selection, 'c' to explore the cache):";
+    static String typeCommand         = "Please, type a command: ('q' to quit, 'd' to delete the last selection, 'c' to explore the cache)";
     static String trapSentence = "SPARQL queries:";
     
     /**
@@ -275,12 +275,15 @@ public class interQACLI {
                         } else {
                             if (scanner.hasNextLine()) {
                                 String comm = scanner.nextLine();
-                                if (comm.equals("q") || comm.equals("d")) {
+                                if (comm.equals("q") || comm.equals("d") || comm.equals("c")) {
                                     if (comm.equals("q")) {
                                         return; //System.exit(0) is not valid for testing
                                     }
                                     if (comm.equals("d")) {
                                         num = -1;
+                                    }
+                                    if (comm.equals("c")) {
+                                        num = -2;
                                     }
                                 } else {
                                     System.out.println("Invalid command");
@@ -303,12 +306,15 @@ public class interQACLI {
                                 num = 1 + opts.indexOf(str);
                             }else{
                                 //Check if it is a command
-                                if (str.equals("q") || str.equals("d")) {
+                                if (str.equals("q") || str.equals("d") || str.equals("c")) {
                                     if (str.equals("q")) {
                                         return; //System.exit(0) is not valid for testing. And return in a main() exists.
                                     }
                                     if (str.equals("d")) {
                                         num = -1;
+                                    }
+                                    if (str.equals("c")) {
+                                        num = -2;
                                     }
                                 } else {
                                     System.out.println("String '"+ str +"' is not available in the options list. Please, type a valid string");
@@ -343,16 +349,23 @@ public class interQACLI {
                         .toString();
                 sbWholeSentenceExternal.delete(0, sbWholeSentenceExternal.length()); //Empties the buffer
                 sbWholeSentenceExternal.append(renewedExternalSentence);
-            }else {  //The user selected one option from the options list
-                lastSelection = opts.get(num - 1);
-                sbWholeSentenceInternal.append(lastSelection);
-                sbWholeSentenceExternal.append(" " + lastSelection);
+            }else {
+                if (num == -2 ) { //The user selected to show the cache
+                    System.out.print("Cache report: ");
+                    dataset.cacheUsageReport(System.out);
+                    dataset.cacheDump(System.out);
+                    dataset.interactiveExplorer();
+                }else {
+                    //The user selected one option from the options list
+                    lastSelection = opts.get(num - 1);
+                    sbWholeSentenceInternal.append(lastSelection);
+                    sbWholeSentenceExternal.append(" " + lastSelection);
+                }
             }
+
             List<String> avlPats = qm.userSentence(sbWholeSentenceInternal.toString());
             System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
-            System.out.print("Cache report: ");
-            dataset.cacheUsageReport(System.out);
-            dataset.cacheDump(System.out);
+            //Save the cache to disk after every selected option
             dataset.saveCacheToDisk();
         }while (opts.size() != 0);
 

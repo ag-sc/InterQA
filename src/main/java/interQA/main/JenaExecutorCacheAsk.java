@@ -17,7 +17,7 @@ public class JenaExecutorCacheAsk {
     private Map<String, CacheAskQueryInfo> cache = null;
 
     private Boolean isFirstTime = true;
-    static private final String fileName = "cacheAsk.ser";
+    static private final String fileNameTail = "cacheAsk.ser";
 
     public Boolean executeWithCache(String endpoint, String sparqlQuery) {
         CacheAskQueryInfo qi = null;
@@ -25,9 +25,9 @@ public class JenaExecutorCacheAsk {
 
         if (isFirstTime) {
             //Checks if there is a cache serialization in the file system
-            File f = new File(fileName);
+            File f = new File(getCacheFileName(endpoint));
             if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
-                readCacheFromDisk();
+                readCacheFromDisk(endpoint);
             } else {  //There is no cache file
                 //We use the static object cache
                 cache = new HashMap<>();
@@ -53,9 +53,10 @@ public class JenaExecutorCacheAsk {
         return satisfiesCondition;
     }
 
-    private void readCacheFromDisk() {
+    private void readCacheFromDisk(String endpoint) {
 
         try {
+            String fileName = getCacheFileName(endpoint);
             FileInputStream fis = new FileInputStream(fileName);
             ObjectInputStream ois = new ObjectInputStream(fis);
             cache = (Map<String, CacheAskQueryInfo>) ois.readObject();
@@ -69,18 +70,23 @@ public class JenaExecutorCacheAsk {
         }
 
     }
+    private static String getCacheFileName(String endpoint){
+        String epPart = endpoint.substring("http://".length(),
+                                           endpoint.length() - "/sparql".length()); //Error prone (https or /sparql/)
+        return (epPart + "." + fileNameTail);
+    }
 
     /**
      * Saves only if there is some data
      */
-    public void saveCacheToDisk() {
+    public void saveCacheToDisk(String endpoint) {
         //Save the cache to disk
         if (cache == null) {
             return;
         }
         if (cache.size() > 0) {
             try {
-                FileOutputStream fos = new FileOutputStream(fileName);
+                FileOutputStream fos = new FileOutputStream(getCacheFileName(endpoint));
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(cache);
                 oos.close();
@@ -116,12 +122,13 @@ public class JenaExecutorCacheAsk {
         }
     }
 
-    static public void dumpCacheinDisk() {
+    static public void dumpCacheinDisk(String endpoint) {
         Map<String, CacheAskQueryInfo> tempCache = null;
-        interQA.main.JenaExecutorCacheAsk jeca = new interQA.main.JenaExecutorCacheAsk();
+        JenaExecutorCacheAsk jeca = new JenaExecutorCacheAsk();
+        String fileName = getCacheFileName(endpoint);
         File f = new File(fileName);
         if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
-            jeca.readCacheFromDisk();
+            jeca.readCacheFromDisk(endpoint);
             jeca.dump(System.out);
         } else {
             System.out.println(fileName + "is not available.");
@@ -129,18 +136,18 @@ public class JenaExecutorCacheAsk {
     }
 
     static public void main(String[] args) {
-        interQA.main.JenaExecutorCacheAsk cacheAsk = new interQA.main.JenaExecutorCacheAsk();
-
-        boolean satisfiesCondition1 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
+        JenaExecutorCacheAsk cacheAsk = new JenaExecutorCacheAsk();
+        String ep = "http://es.dbpedia.org/sparql";
+        boolean satisfiesCondition1 = cacheAsk.executeWithCache(ep,
                 "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
         );
         cacheAsk.dump(System.out);
-        boolean satisfiesCondition2 = cacheAsk.executeWithCache("http://es.dbpedia.org/sparql",
+        boolean satisfiesCondition2 = cacheAsk.executeWithCache(ep,
                 "ASK WHERE { { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> <http://lod.springer.com/data/ontology/class/Conference> . } UNION { <http://lod.springer.com/data/ontology/property/confStartDate> <http://www.w3.org/2000/01/rdf-schema#range> ?range .  <http://lod.springer.com/data/ontology/class/Conference> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?range . } }"
         );
         cacheAsk.dump(System.out);
-        cacheAsk.saveCacheToDisk();
-        cacheAsk.dumpCacheinDisk();
+        cacheAsk.saveCacheToDisk(ep);
+        cacheAsk.dumpCacheinDisk(ep);
 
 
     }
