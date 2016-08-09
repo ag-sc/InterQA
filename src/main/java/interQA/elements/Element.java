@@ -132,6 +132,10 @@ public abstract class Element {
     public String parse(String string) {
         // Consumes prefix of input string and
 	// keeps only the longest match in index.
+        
+        if (this.isStringElement() && this.index.isEmpty()) {
+            return string;
+        }
                 
         String longestMatch = "";
         String input = string.toLowerCase();

@@ -82,7 +82,7 @@ public class DatasetConnector {
             
             for (IncrementalQuery query : builder.getQueries()) {
                  IncrementalQuery instantiated = builder.instantiate(var,entry,query);
-                 Query q = instantiated.assembleAsAsk(false);
+                 Query q = instantiated.assembleAsAsk();
                  if (cacheAsk.executeWithCache(endpoint,query.prettyPrint(q))) {
                      keep = true;
                      break;
@@ -101,7 +101,7 @@ public class DatasetConnector {
               
               IncrementalQuery copy = iq.clone();
               copy.getBody().addElement(label(i_var,label_var));
-              Query query = copy.assemble(false);
+              Query query = copy.assemble();
               query.setQueryResultStar(true);
               String querystring = copy.prettyPrint(query);
               

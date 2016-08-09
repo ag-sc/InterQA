@@ -54,7 +54,7 @@ public class CTest extends TestCase {
 
     public void testGiveMeAllconferences() throws Exception {
 
-        List<String> avlPats = qm.userSentence("give me allconferences");  //I do not care about the available patterns
+        List<String> avlPats = qm.getRemainingActivePatterns("give me allconferences");  //I do not care about the available patterns
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(res,
@@ -68,7 +68,7 @@ public class CTest extends TestCase {
     }
     public void testGiveMeTheStartDates() throws Exception {
 
-        List<String> avlPats = qm.userSentence("show me thestart dates");  //I do not care about the available patterns
+        List<String> avlPats = qm.getRemainingActivePatterns("show me thestart dates");  //I do not care about the available patterns
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(res,

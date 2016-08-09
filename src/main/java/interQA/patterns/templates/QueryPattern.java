@@ -57,18 +57,20 @@ public abstract class QueryPattern {
 	 * @return whether the input string matches the query pattern
 	 */
 	
-        public boolean parses(String input) {
+        public boolean parse(String input) {
 
             currentElement = -1;
                         
             int i = 0;
-            while (!input.isEmpty() && elements.size() > i) {
+            while (!input.isEmpty()) {
+                
+                    if (i >= elements.size()) return false;
                    
                     String rest = elements.get(i).parse(input);
                     if (rest == null) { return false; }
-                                       
+                                                           
                     currentElement = i;
-                    String parsed = input.replace(rest,"");
+                    String parsed  = input.replace(rest,"");
                     
                     update(parsed);
                     transferFeatures(parsed);
@@ -85,8 +87,8 @@ public abstract class QueryPattern {
             if (currentElement < elements.size()-1) {                
                 
                 List<String> options = elements.get(currentElement+1).getOptions();
-                if (options.isEmpty() && elements.get(currentElement+1).getClass().getSimpleName().equals("StringElement") ) {
-                    
+                // skip empty string elements
+                if (options.isEmpty() && elements.get(currentElement+1).isStringElement()) {
                     currentElement += 1;
                     return getNext();
                 } 
@@ -97,9 +99,9 @@ public abstract class QueryPattern {
             }
 	}
         
-	public Set<String> buildSPARQLqueries() {
+	public Set<String> buildSPARQLqueries(boolean asFinal) {
             
-            return builder.returnQueries(true);
+            return builder.returnQueries(asFinal);
         }
         
         

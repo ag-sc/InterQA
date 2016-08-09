@@ -36,7 +36,7 @@ public class ServletInterQA extends HttpServlet {
         //log("The page encoding is "+ request.getCharacterEncoding());
         String command = request.getParameter("command"); ///ServletInterQA?command=whatever
         List<String> options = qm.getUIoptions();
-        if (options == null){
+        if (options.isEmpty()){
             out.write("No options");
             return;
         }
@@ -52,7 +52,7 @@ public class ServletInterQA extends HttpServlet {
                 String encoded = request.getParameter("selection"); //The value was sent as URLable
                 //log("decoded as ISO-8859-1): " + URLDecoder.decode(encoded, "ISO-8859-1"));
                 String text = new String(encoded.getBytes("iso-8859-1"), "UTF-8"); //Valid only for Tomcat default conf?
-                List<String> availableQPNames = qm.userSentence(text);
+                List<String> availableQPNames = qm.getRemainingActivePatterns(text);
                 //log("selected command with text: " + text + " and with availableQPNames: " + availableQPNames);
                 out.write(gson.toJson(availableQPNames));
                 break;

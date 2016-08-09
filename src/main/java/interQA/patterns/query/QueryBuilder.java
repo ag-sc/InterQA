@@ -8,7 +8,6 @@ import java.util.Set;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
-import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.Var;
 
@@ -143,8 +142,11 @@ public class QueryBuilder {
         
         for (IncrementalQuery query : queries) { 
             
-             Query q  = query.assemble(asFinal); 
-             if  ( q != null) { 
+             Query q;
+             if (asFinal) q = query.assembleWithout(placeholders);
+             else         q = query.assemble();
+             
+             if (q != null) { 
                  out.add(query.prettyPrint(q));
              }
         }

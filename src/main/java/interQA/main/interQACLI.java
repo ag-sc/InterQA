@@ -240,14 +240,9 @@ public class interQACLI {
             
             queries = qm.buildSPARQLqueries();
             System.out.println(trapSentence);
-            if(!queries.isEmpty()){
-                for (String query : queries) {
-                     System.out.println(query);
-                } 
-            }else{  //This should never happen
-
-            }
-           
+            for (String query : queries) {
+                 System.out.println(query);
+            } 
              
             TreeSet<String> optsOrdered = new TreeSet<>(qm.getUIoptions());
             opts = new ArrayList<>(optsOrdered);
@@ -363,7 +358,7 @@ public class interQACLI {
                 }
             }
 
-            List<String> avlPats = qm.userSentence(sbWholeSentenceInternal.toString());
+            List<String> avlPats = qm.getRemainingActivePatterns(sbWholeSentenceInternal.toString());
             System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
             //Save the cache to disk after every selected option
             dataset.saveCacheToDisk();

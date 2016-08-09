@@ -1,7 +1,9 @@
 package interQA.patterns.query;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -55,9 +57,9 @@ public class IncrementalQuery {
         triples.remove(t);
     }
 
-    public Query assembleAsAsk(boolean asFinal) {
+    public Query assembleAsAsk() {
     
-        Query q  = assemble(asFinal);
+        Query q  = assemble();
         if  ( q != null) q.setQueryAskType();
         
         return q;
@@ -65,19 +67,29 @@ public class IncrementalQuery {
     
     public Query assemble() {
         
-        return assemble(false);
+        return assembleWithout(new HashSet<>());
     }
     
-    public Query assemble(boolean asFinal) {
+    public Query assembleWithout(Set<String> placeholders) {
         
         query = QueryFactory.make();
         
-        // Add all triples to query body
+        // Add all triples to query body, except those that contain placeholders
         
         ElementGroup newbody = new ElementGroup();
-                
+        Set<String> occuringVars = new HashSet<>();
+        
         for (Triple t : triples) {
+            
+            if (t.getSubject().isVariable()   && placeholders.contains(t.getSubject().getName()))   continue; 
+            if (t.getPredicate().isVariable() && placeholders.contains(t.getPredicate().getName())) continue; 
+            if (t.getObject().isVariable()    && placeholders.contains(t.getObject().getName()))    continue; 
+
             newbody.addTriplePattern(t);
+                
+            if (t.getSubject().isVariable())   occuringVars.add(t.getSubject().getName());
+            if (t.getPredicate().isVariable()) occuringVars.add(t.getPredicate().getName());
+            if (t.getObject().isVariable())    occuringVars.add(t.getObject().getName());
         }
         if (!body.isEmpty()) {
             newbody.getElements().addAll(body.getElements());
@@ -90,11 +102,15 @@ public class IncrementalQuery {
         // Add projection variables 
         
         for (String v : projvars) {
-            query.getProject().add(Var.alloc(v));
+            if (occuringVars.contains(v)) {
+                query.getProject().add(Var.alloc(v));
+            }
         }
         
         for (String v : countvars) {
-            query.getProject().add(Var.alloc(v+"_count"),query.allocAggregate(new AggCountVar(new ExprVar(Var.alloc(v)))));
+            if (occuringVars.contains(v)) {
+                query.getProject().add(Var.alloc(v+"_count"),query.allocAggregate(new AggCountVar(new ExprVar(Var.alloc(v)))));
+            }
         }
         
         // Set query type

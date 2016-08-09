@@ -11,8 +11,7 @@ import java.util.Set;
  */
 public class QueryPatternManager {
     
-    List<QueryPattern> availableQueryPatterns = new ArrayList<>();
-    List<QueryPattern> allQueryPatterns = new ArrayList<>();
+    Set<QueryPattern> activeQueryPatterns = new HashSet<>();
     
     StringBuffer parsedText = new StringBuffer();
 
@@ -27,8 +26,7 @@ public class QueryPatternManager {
      * @param patterns
      */
     public void addQueryPatterns(Set<QueryPattern> patterns){
-        availableQueryPatterns.addAll(patterns);
-        allQueryPatterns.addAll(patterns);
+        activeQueryPatterns.addAll(patterns);
     }
 
     /**
@@ -39,23 +37,21 @@ public class QueryPatternManager {
     public List<String> getUIoptions(){
         
         List<String> allOpts = new ArrayList<>();
-        for (QueryPattern pat : availableQueryPatterns){
-             allOpts.addAll(pat.getNext());
+        for (QueryPattern pattern : activeQueryPatterns) {
+             allOpts.addAll(pattern.getNext());
         }
-        return new ArrayList<>(new HashSet<>(allOpts)); //Removes duplicates
+        return new ArrayList<>(new HashSet<>(allOpts)); // removes duplicates
     }
-    
-    
     
     
     public List<String> buildSPARQLqueries() {
         
         List<String> queries = new ArrayList<>();
         
-        for (QueryPattern pattern : availableQueryPatterns) {
-          for (String s : pattern.buildSPARQLqueries()) {
+        for (QueryPattern pattern : activeQueryPatterns) {
+          for (String s : pattern.buildSPARQLqueries(true)) {
             if (!queries.contains(s)) {
-                queries.add(s);
+                 queries.add(s);
             }
           }
         }
@@ -68,29 +64,32 @@ public class QueryPatternManager {
      * @param str
      * @return the names of available query patterns
      */
-    public List<String> userSentence(String str){
-        
+    public List<String> getRemainingActivePatterns(String str) {
+
+        // Remove the non-active query patterns from the list
+
         List<QueryPattern> toRemove = new ArrayList<>();
-        for(QueryPattern pat: allQueryPatterns){
-           
-            if (pat.parses(str) == false){ //does not parse str
-                toRemove.add(pat); //Add it to the toRemove list
+        for (QueryPattern pattern : activeQueryPatterns) {
+            if (!pattern.parse(str)) { 
+                 toRemove.add(pattern); 
             }
         }
-        //Removes the non active QApatterns from the list
-        ArrayList<QueryPattern> temp = new ArrayList<QueryPattern>(allQueryPatterns);
-        temp.removeAll(toRemove);
-        availableQueryPatterns = new ArrayList<QueryPattern>(temp);
+        activeQueryPatterns.removeAll(toRemove);
 
+        // Return the names of the remaining ones
+        
         return getQAPatternNames();
     }
 
-    private List<String> getQAPatternNames(){
+    private List<String> getQAPatternNames() {
+        
         List<String> names = new ArrayList<>();
-        for (QueryPattern pat : availableQueryPatterns){
-            String name = pat.getClass().getSimpleName();
+        
+        for (QueryPattern pattern : activeQueryPatterns){
+            String name = pattern.getClass().getSimpleName();
             names.add(name);
         }
+        
         return names;
     }
 }
