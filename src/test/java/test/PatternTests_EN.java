@@ -231,21 +231,17 @@ public class PatternTests_EN extends TestCase {
                     new HashSet<>(
                             Arrays.asList(
                                     "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/areaTotal> }",
-                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/area> }",
-                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/areaMetro> }",
-                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
                                     "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
                                     "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/areaUrban> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
                                     "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
                                     "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }"
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }"
                             )
                     )
              );
