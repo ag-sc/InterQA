@@ -60,12 +60,12 @@ public class PatternTests_EN extends TestCase {
                         "who was the\n" +      //But this depends on the EP (does not returns always the same data subset)
                         "creator\n" +
                         "of\n" +
-                        "Power Rangers Turbo\n" +
+                        "Zorro\n" +
                         "q\n",
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                    new HashSet<>(
                             Arrays.asList(
-                                "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/Power_Rangers_Turbo> <http://dbpedia.org/ontology/creator> ?x }"
+                                "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/Zorro> <http://dbpedia.org/ontology/creator> ?x }"
                             )
                    )
             ); 

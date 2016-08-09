@@ -1,5 +1,6 @@
 package interQA.patterns.query;
 
+import interQA.lexicon.Vocabulary;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -57,34 +58,36 @@ public class IncrementalQuery {
         triples.remove(t);
     }
 
-    public Query assembleAsAsk() {
+    public Query assembleAsAsk(Vocabulary vocab, boolean onlyInstantiatedTriples) {
     
-        Query q  = assemble();
-        if  ( q != null) q.setQueryAskType();
+        Query q = assemble(vocab,onlyInstantiatedTriples);
+        
+        if (q != null) q.setQueryAskType();
         
         return q;
     }
     
-    public Query assemble() {
-        
-        return assembleWithout(new HashSet<>());
-    }
-    
-    public Query assembleWithout(Set<String> placeholders) {
+    public Query assemble(Vocabulary vocab, boolean onlyInstantiatedTriples) {
         
         query = QueryFactory.make();
         
-        // Add all triples to query body, except those that contain placeholders
+        // Add all triples to query body
         
         ElementGroup newbody = new ElementGroup();
         Set<String> occuringVars = new HashSet<>();
         
         for (Triple t : triples) {
             
-            if (t.getSubject().isVariable()   && placeholders.contains(t.getSubject().getName()))   continue; 
-            if (t.getPredicate().isVariable() && placeholders.contains(t.getPredicate().getName())) continue; 
-            if (t.getObject().isVariable()    && placeholders.contains(t.getObject().getName()))    continue; 
-
+            // skip t if it consists of only variables (modulo rdf:type)
+            if ( onlyInstantiatedTriples
+             &&  t.getSubject().isVariable()
+             &&  t.getObject().isVariable()
+             && (t.getPredicate().isVariable() || 
+                  (t.getPredicate().isURI()) &&
+                   t.getPredicate().getURI().equals(vocab.sortal_predicate)) ) {
+                continue;
+            }
+            
             newbody.addTriplePattern(t);
                 
             if (t.getSubject().isVariable())   occuringVars.add(t.getSubject().getName());

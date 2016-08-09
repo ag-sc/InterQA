@@ -136,15 +136,13 @@ public class QueryBuilder {
     }
         
         
-    public Set<String> returnQueries(boolean asFinal) {
+    public Set<String> returnQueries(boolean onlyInstantiatedTriples) {
         
         Set<String> out = new HashSet<>();
         
         for (IncrementalQuery query : queries) { 
             
-             Query q;
-             if (asFinal) q = query.assembleWithout(placeholders);
-             else         q = query.assemble();
+             Query q = query.assemble(vocab,onlyInstantiatedTriples);
              
              if (q != null) { 
                  out.add(query.prettyPrint(q));

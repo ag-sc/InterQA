@@ -8,9 +8,7 @@ import interQA.patterns.query.IncrementalQuery;
 import interQA.patterns.query.QueryBuilder;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.jena.graph.Node;
 
@@ -82,7 +80,7 @@ public class DatasetConnector {
             
             for (IncrementalQuery query : builder.getQueries()) {
                  IncrementalQuery instantiated = builder.instantiate(var,entry,query);
-                 Query q = instantiated.assembleAsAsk();
+                 Query q = instantiated.assembleAsAsk(vocab,false);
                  if (cacheAsk.executeWithCache(endpoint,query.prettyPrint(q))) {
                      keep = true;
                      break;
@@ -101,7 +99,7 @@ public class DatasetConnector {
               
               IncrementalQuery copy = iq.clone();
               copy.getBody().addElement(label(i_var,label_var));
-              Query query = copy.assemble();
+              Query query = copy.assemble(vocab,false);
               query.setQueryResultStar(true);
               String querystring = copy.prettyPrint(query);
               

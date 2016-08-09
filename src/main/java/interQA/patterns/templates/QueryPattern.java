@@ -11,6 +11,7 @@ import interQA.patterns.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,7 @@ public abstract class QueryPattern {
         public Vocabulary vocab = new Vocabulary();
         
         public QueryBuilder builder = new QueryBuilder();
-        public Map<Integer,Integer> agreement = new HashMap<>();
+        public Map<Integer,Set<Integer>> agreement = new HashMap<>();
                 
         public List<Element> elements = new ArrayList<>();
         
@@ -91,7 +92,7 @@ public abstract class QueryPattern {
                 if (options.isEmpty() && elements.get(currentElement+1).isStringElement()) {
                     currentElement += 1;
                     return getNext();
-                } 
+                }                 
                 else return options;
      
             } else {
@@ -115,30 +116,37 @@ public abstract class QueryPattern {
         
         public void addAgreementDependency(int from, int to) {
             
-            agreement.put(from,to);
+            if (!agreement.containsKey(from)) {
+                 agreement.put(from,new HashSet<>());
+            }
+            agreement.get(from).add(to);
         }
         
         public void transferFeatures(String parsed) {
-            
+                        
             if (agreement.containsKey(currentElement)) {
             
                 Element e_from = elements.get(currentElement);
-                Element e_to   = elements.get(agreement.get(currentElement));
+                
+                for (int i : agreement.get(currentElement)) {
+                    
+                    Element e_to   = elements.get(i);
 
-                Map<String,List<Feature>> feats = new HashMap<>();
+                    Map<String,List<Feature>> feats = new HashMap<>();
 
-                if (e_from.isStringElement()) {
-                    feats.putAll(((StringElement) e_from).getFeatureMap());
-                } else {
-                    for (LexicalEntry entry : e_from.getActiveEntries()) {  
-                         feats.putAll(entry.getFeatures());
+                    if (e_from.isStringElement()) {
+                        feats.putAll(((StringElement) e_from).getFeatureMap());
+                    } else {
+                        for (LexicalEntry entry : e_from.getActiveEntries()) {  
+                             feats.putAll(entry.getFeatures());
+                        }
                     }
-                }
 
-                for (String k : feats.keySet()) {
-                    if (parsed.matches(".*(\\s|^)"+k+"(\\s|$).*")) {
-                        for (Feature f : feats.get(k)) {
-                             e_to.addAgrFeature(f);
+                    for (String k : feats.keySet()) {
+                        if (parsed.matches(".*(\\s|^)"+k+"(\\s|$).*")) {
+                            for (Feature f : feats.get(k)) {
+                                 e_to.addAgrFeature(f);
+                            }
                         }
                     }
                 }
