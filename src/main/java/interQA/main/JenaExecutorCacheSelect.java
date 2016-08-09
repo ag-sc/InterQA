@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * Created by Mariano on 21/07/2016.
  */
 public class JenaExecutorCacheSelect{
-    private Map<String, ResultSetRewindable> cache = null;
+    private TreeMap<String, ResultSetRewindable> cache = null;
     private Boolean isFirstTime = true;
     static private final String fileNameTail = "cacheSelect.ser";
     static private ResultsFormat format = ResultsFormat.FMT_RS_TSV;//FMT_RS_XML;//
@@ -30,7 +30,7 @@ public class JenaExecutorCacheSelect{
                 readCacheFromDisk(endpoint);
             }else{  //There is no cache file
                 //We use the static object cache
-                cache = new HashMap<>();
+                cache = new TreeMap<>();
             }
             isFirstTime = false;
         }
@@ -166,6 +166,26 @@ public class JenaExecutorCacheSelect{
         } //while wannaPlayAgain
 
     }
+    static public void interactiveExplorerForCacheinDiskSpecificFile(String otherFileName) {
+        JenaExecutorCacheSelect jecs = new JenaExecutorCacheSelect();
+        File f = new File(otherFileName);
+        if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
+            long start = System.currentTimeMillis();
+            jecs.readCacheFromDiskSpecificFile(otherFileName);
+            long lapse = System.currentTimeMillis() - start;
+
+            System.out.println("Usage report for cache file "+ otherFileName + ": ");
+            System.out.println("  Time (milisecs) required to load the cache file: "+ lapse);
+            long sizebytes  = f.length();
+            System.out.println("  File size: " + sizebytes + " bytes (~" + sizebytes/1024/1024 + "MB.)");
+            System.out.println("  " + jecs.cacheUsageReport());
+            jecs.interactiveExplorer();
+        } else {
+            System.out.println(otherFileName + " is not available.");
+        }
+    }
+
+
 
     private static String getCacheFileName(String endpoint){
         String epPart = endpoint.substring("http://".length(),
@@ -174,18 +194,18 @@ public class JenaExecutorCacheSelect{
     }
 
     private void readCacheFromDisk(String endpoint) {
-        readCacheFromDisk(endpoint, getCacheFileName(endpoint));
+        readCacheFromDiskSpecificFile(getCacheFileName(endpoint));
     }
 
-    private void readCacheFromDisk(String endpoint, String otherFileName) {
+    private void readCacheFromDiskSpecificFile(String fileName) {
         try {
-            FileInputStream fis = new FileInputStream(otherFileName);
+            FileInputStream fis = new FileInputStream(fileName);
             ObjectInputStream ois = new ObjectInputStream(fis);
             Map<String, String> mapSer = (Map<String, String>) ois.readObject();
             //In memory we have a cache with ResultSets. For a while
             // (if we know how to clear the serialized version) we have both
             // (the serialized and the ResultSet) in memory.
-            cache = new HashMap<>();
+            cache = new TreeMap<>();
             for (Map.Entry<String, String> entrySer : mapSer.entrySet()){
                 String sparqlQuery = entrySer.getKey();
                 String entryResSer = entrySer.getValue();
@@ -193,7 +213,7 @@ public class JenaExecutorCacheSelect{
                 ResultSet res = ResultSetFactory.load(stream, format);
                 cache.put(sparqlQuery, ResultSetFactory.copyResults(res)); //Stores a ResultSetRewindable
             }
-            mapSer = null; //This should remove the object from memory
+            mapSer = null; //This should remove the object from memory (at least available for the GC)
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
         } catch (IOException ioe){ //i
@@ -221,6 +241,7 @@ public class JenaExecutorCacheSelect{
                 for (Map.Entry<String, ResultSetRewindable> entry : cache.entrySet()){
                     String    sparqlQuery   = entry.getKey();
                     ResultSetRewindable res = entry.getValue();
+                    res.reset(); //If the iterator is finished will not be written
                     OutputStream os = null;
                     try {
                         os = new ByteArrayOutputStream();
@@ -277,19 +298,19 @@ public class JenaExecutorCacheSelect{
      * Reads the DEFAULT cache fileName and dumps information in System.out
      */
     static public void dumpCacheinDisk(String endpoint) {
-        dumpCacheinDisk(endpoint, getCacheFileName(endpoint));
+        dumpCacheinDiskSpecificFile(getCacheFileName(endpoint));
     }
 
     /**
      * Reads the specified cache fileName and dumps information in System.out
      * @param otherFileName The name of the file to analyze
      */
-    static public void dumpCacheinDisk(String endpoint, String otherFileName) {
+    static public void dumpCacheinDiskSpecificFile(String otherFileName) {
         JenaExecutorCacheSelect jecs = new JenaExecutorCacheSelect();
         File f = new File(otherFileName);
         if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
             long start = System.currentTimeMillis();
-            jecs.readCacheFromDisk(endpoint, otherFileName);
+            jecs.readCacheFromDiskSpecificFile(otherFileName);
             long lapse = System.currentTimeMillis() - start;
             //jecs.dump(System.out);
             System.out.println("Usage report for cache file "+ otherFileName + ": ");
@@ -333,8 +354,7 @@ public class JenaExecutorCacheSelect{
         cacheSelect.saveCacheToDisk(ep);
     }
     static public void main1 (String[] args) {
-        String ep =    "http://es.dbpedia.org/sparql";
-        dumpCacheinDisk(ep, "cacheSelect.20160804.v2.ser");
+        dumpCacheinDiskSpecificFile("cacheSelect.20160804.v2.ser");
     }
     static public void main2 (String[] args) {
         String ep =    "http://es.dbpedia.org/sparql";
@@ -344,10 +364,21 @@ public class JenaExecutorCacheSelect{
         JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
         String ep =    "http://es.dbpedia.org/sparql";
         ResultSet res1 = cacheSelect.executeWithCache(ep,
-                "SELECT DISTINCT * WHERE { ?x a <http://lod.springer.com/data/ontology/class/Conference> ; <http://lod.springer.com/data/ontology/property/confCity> ?I OPTIONAL { { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } UNION { ?I <http://lod.springer.com/data/ontology/property/confName> ?l } UNION { ?I <http://lod.springer.com/data/ontology/property/confAcronym> ?l }} }"
+                "SELECT DISTINCT * WHERE { ?x ?P2 ?I2 ; a <http://lod.springer.com/data/ontology/class/Conference> ; <http://lod.springer.com/data/ontology/property/confCity> ?I1 OPTIONAL { { ?I1 <http://www.w3.org/2000/01/rdf-schema#label> ?l } UNION { ?I1 <http://lod.springer.com/data/ontology/property/confName> ?l } UNION { ?I1 <http://lod.springer.com/data/ontology/property/confAcronym> ?l }} }"
         );
+
         cacheSelect.interactiveExplorer();
+        cacheSelect.saveCacheToDisk(ep);
+        String fileName =    "es.dbpedia.org.cacheSelect.ser";
+        interactiveExplorerForCacheinDiskSpecificFile(fileName);
+
     }
+
+    static public void main3 (String[] args) {
+        String fileName =    "dbpedia.org.cacheSelect.ser";
+        interactiveExplorerForCacheinDiskSpecificFile(fileName);
+    }
+
 
 
 }

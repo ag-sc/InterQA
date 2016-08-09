@@ -57,15 +57,15 @@ public class PatternTests_EN extends TestCase {
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
             assertEquals(
                    checkSequenceByStrings(     //We have more than 10.000 creators, and the one for this seems to be further
-                        "who was the\n" +
+                        "who was the\n" +      //But this depends on the EP (does not returns always the same data subset)
                         "creator\n" +
                         "of\n" +
-                        "Power Rangers Zeo\n" +
+                        "Power Rangers Turbo\n" +
                         "q\n",
                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
                    new HashSet<>(
                             Arrays.asList(
-                                "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/Power_Rangers_Zeo> <http://dbpedia.org/ontology/creator> ?x }"
+                                "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/Power_Rangers_Turbo> <http://dbpedia.org/ontology/creator> ?x }"
                             )
                    )
             ); 
@@ -151,7 +151,7 @@ public class PatternTests_EN extends TestCase {
                           "give me the\n" +
                           "start dates\n" +
                           "of\n"          +
-                          "International Working Conference on Requirements Engineering: Foundation for Software Quality\n" +
+                          "International Semantic Web Conference\n" +
                           "2009\n" +
                           "q\n"),
                      new HashSet<>(
@@ -161,7 +161,7 @@ public class PatternTests_EN extends TestCase {
                               "{ ?x  <http://lod.springer.com/data/ontology/property/confAcronym>  ?l1 . } "+
                               "UNION "+
                               "{ ?x <http://lod.springer.com/data/ontology/property/confName> ?l1 . } "+
-                              "FILTER regex(?l1,\"International Working Conference on Requirements Engineering: Foundation for Software Quality\"). "+
+                              "FILTER regex(?l1,\"International Semantic Web Conference\"). "+
                               "?x <http://lod.springer.com/data/ontology/property/confYear> ?l2 . "+
                               "FILTER regex(?l2,\"2009\").  "+
                               "}"
@@ -179,7 +179,7 @@ public class PatternTests_EN extends TestCase {
                           "and\n"         +
                           "end dates\n"   +
                           "of\n"          +
-                          "LTEC\n"        +
+                          "LTEC\n"        +     //Available options: conference or conferences, not individuals
                           "2015\n" +
                           "q\n"),
                     new HashSet<>(
@@ -206,7 +206,7 @@ public class PatternTests_EN extends TestCase {
                           "and\n" +  
                           "population\n" +
                           "of\n" +
-                          "Aarhus\n" +       
+                          "Aarhus\n" +       //The list of options does not have individuals only things like town, location, etc...
                           "q\n",
                           interQACLI.USECASE.DBPEDIA,LexicalEntry.Language.EN),
                     new HashSet<>(
@@ -223,25 +223,29 @@ public class PatternTests_EN extends TestCase {
                           "give me the\n" +
                           "area\n" +  
                           "and\n" +  
-                          "population" +
+                          "population\n" +
                           "of\n" +  
                           "cities\n" +       
                           "q\n",
                           interQACLI.USECASE.DBPEDIA,LexicalEntry.Language.EN),
                     new HashSet<>(
-                            Arrays.asList( 
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
-                                "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }"
+                            Arrays.asList(
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/areaTotal> }",
+                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/area> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/areaMetro> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaUrban> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/areaUrban> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaTotal> ?x ; <http://dbpedia.org/ontology/populationMetro> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }",
+                                    "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/area> ?x ; <http://dbpedia.org/ontology/populationTotal> ?y ; a <http://dbpedia.org/ontology/City> }"
                             )
                     )
              );
@@ -259,7 +263,15 @@ public class PatternTests_EN extends TestCase {
                           "q\n"),
                     new HashSet<>(
                             Arrays.asList( //We could have several queries here separated by comma
-                                "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE { ?x a <http://lod.springer.com/data/ontology/class/Conference> ; <http://lod.springer.com/data/ontology/property/confCity> \"Zurich\"@en }"
+                                "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE {"+
+                                " ?x a <http://lod.springer.com/data/ontology/class/Conference>"+
+                                " ; <http://lod.springer.com/data/ontology/property/confCity> \"Zurich\"@en"+
+                                " }",
+                                "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE {"+
+                                " ?x ?P2 ?I2"+
+                                " ; a <http://lod.springer.com/data/ontology/class/Conference>"+
+                                " ; <http://lod.springer.com/data/ontology/property/confCity> \"Zurich\"@en"+
+                                " }"
                             )
                     )
             );
