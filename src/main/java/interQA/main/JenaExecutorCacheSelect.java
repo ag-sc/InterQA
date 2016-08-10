@@ -1,13 +1,16 @@
 package interQA.main;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
+
 import org.apache.jena.query.*;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
+import org.apache.jena.sparql.resultset.ResultSetMem;
 import org.apache.jena.sparql.resultset.ResultsFormat;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -19,6 +22,8 @@ public class JenaExecutorCacheSelect{
     private Boolean isFirstTime = true;
     static private final String fileNameTail = "cacheSelect.ser";
     static private ResultsFormat format = ResultsFormat.FMT_RS_TSV;//FMT_RS_XML;//
+    static final int BLOQSIZE = 10000; //The maximum number of rows in a resultset. For Virtuoso it is 10.000
+    static final int WAIT_MILLIS = 100; //Milliseconds to wait if the server is too busy. After this period tries it again.
 
     public ResultSet executeWithCache(String endpoint, String sparqlQuery) {
         ResultSet res = null;
@@ -39,16 +44,8 @@ public class JenaExecutorCacheSelect{
         if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
             res = cache.get(sparqlQuery);         //get the results from the cache
         } else {                               //the sparqlQuery is NOT in the cache
-            QueryExecution ex =
-                    QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
-            try {
-                res = ex.execSelect();               //Make the query to the endpoint
-            }
-            catch(QueryExceptionHTTP eqe) { //E.g. the query requires too much to solve (HttpException: 500)
-                System.out.println("Error making the SPARQL :" + eqe.getResponseMessage());
-                eqe.printStackTrace();
-                throw(eqe);
-            }
+            res = extractiveExecSelect(endpoint, sparqlQuery, BLOQSIZE, WAIT_MILLIS);
+
             cache.put(sparqlQuery,                        //And store the information in the cache
                     ResultSetFactory.copyResults(res)); //It is CRITICAL to make a copy in-memory or it will be destroyed
             //The cache stores ResultSetRewindable objects
@@ -82,7 +79,7 @@ public class JenaExecutorCacheSelect{
             while (queryNum == 0) {
                 index = 0;
                 for (String q : queries) {
-                    ps.println((index + 1) + ": " + q); //First is 1, not 0.
+                    ps.println((index + 1) + "(with "+ resultsets[index].size() + " elements): " + q); //First is 1, not 0.
                     index++;
                 }
                 ps.println("Choose a query (type its number):");
@@ -138,7 +135,7 @@ public class JenaExecutorCacheSelect{
                 index++;
             }
             if (index == 0){
-              ps.println("There are NO values!! :-(");
+                ps.println("There are NO values!! :-(");
             }
             res.reset(); //Or the ResultSet will look empty
 
@@ -237,23 +234,33 @@ public class JenaExecutorCacheSelect{
                 FileOutputStream fos = new FileOutputStream(getCacheFileName(endpoint));
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 //Writes a serialized version of the ResultSet
+                boolean hasOOMError = false;
                 Map<String, String> mapSer = new HashMap<>();
                 for (Map.Entry<String, ResultSetRewindable> entry : cache.entrySet()){
                     String    sparqlQuery   = entry.getKey();
                     ResultSetRewindable res = entry.getValue();
                     res.reset(); //If the iterator is finished will not be written
-                    OutputStream os = null;
+                    ByteArrayOutputStream bos = null;
                     try {
-                        os = new ByteArrayOutputStream();
-                        ResultSetFormatter.output(os, res, format); //Writes a serialization of ResultSet in os
-                        String serialization = os.toString();
+                        bos = new ByteArrayOutputStream(5 * //Estimation: 5 chars per string
+                                res.size() * res.getResultVars().size());
+                        ResultSetFormatter.output(bos, res, format); //Writes a serialization of ResultSet in os
+                        String serialization = bos.toString();  //Here we have had out of memory :-S
                         mapSer.put(sparqlQuery, serialization);
-                    }finally {
-                        os.close();
+                    } catch (OutOfMemoryError oome) {
+                        //We have not written the conflictive data to the cache, but we can write the cache
+                        hasOOMError = true;
+                    }
+                    finally {
+                        bos.close();  //I think it is not mandatory because it implements Autocloseable
                     }
                 }
-                oos.writeObject(mapSer); //Writes the serialized version
+                oos.writeObject(mapSer); //Writes the serialized version in any case
                 oos.close();
+                if (hasOOMError == true) {   //We have caught a out of memory Error.
+                    //Do not write the file
+                    throw new OutOfMemoryError(); //Continue the OOM process
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }catch (IOException e) { //java.io.NotSerializableException: org.apache.jena.sparql.engine.ResultSetCheckCondition
@@ -360,7 +367,7 @@ public class JenaExecutorCacheSelect{
         String ep =    "http://es.dbpedia.org/sparql";
         dumpCacheinDisk(ep);
     }
-    static public void main (String[] args) {
+    static public void main3 (String[] args) {
         JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
         String ep =    "http://es.dbpedia.org/sparql";
         ResultSet res1 = cacheSelect.executeWithCache(ep,
@@ -374,11 +381,117 @@ public class JenaExecutorCacheSelect{
 
     }
 
-    static public void main3 (String[] args) {
+    static ResultSetRewindable extractiveExecSelect(String ep, String sparqlQuery, int limit, int milis){
+        //PAY ATTENTION. We need ORDER BY in order to get a predictable result by OFFSET blocks
+        //WARNING!!Additionally, there is a limit or 40.000 results for a ORDER BY query. You can cross this limit with
+        //something that Virtuoso people name "subquering". See http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtTipsAndTricksHowToHandleBandwidthLimitExceed
+        //Perhaps this is a virtuoso SPECIFIC solution and perhaps it is NOT generic for other EPs.
+
+        Query qjena = QueryFactory.create(sparqlQuery);
+        String var1 = qjena.getResultVars().get(0); //We get the first result var. We could think about which would be the better
+        String qOrderBy = sparqlQuery + " ORDER BY ?" + var1;
+
+        QueryExecution qe = QueryExecutionFactory.sparqlService(ep, qOrderBy);
+        ResultSet           res   = qe.execSelect();
+        ResultSetRewindable resok = ResultSetFactory.copyResults(res); //res is unusable from now on, use resok
+
+        if (resok.size() == limit){ //We assume that this implies that this is an extractive query
+            ResultSet           resExtra   = null;
+            ResultSetRewindable resExtraok = null;
+            ResultSetMem        resSum     = null;
+
+            System.out.print("Doing an extractive query. This is the query:\n"+ sparqlQuery +"\n.");
+            StringBuilder varsPrefixPart = new StringBuilder();
+            for (String v : qjena.getResultVars()){
+                varsPrefixPart.append("?" + v + " ");
+            }
+            String extractivePrefix = "SELECT " + varsPrefixPart.toString() + "WHERE {" + qOrderBy + "}";
+            int index = 1;
+            boolean gotMaxResults = true;
+            while (gotMaxResults == true){
+                String qExtractive = extractivePrefix + " OFFSET "+ index * limit +" LIMIT " + index * limit;
+                try {
+                    resExtra = QueryExecutionFactory.sparqlService(ep, qExtractive).execSelect();
+                }catch(QueryExceptionHTTP eqe) { //E.g. the query is very frequent OR requires too much to solve (HttpException: 500)
+                    System.out.println("Size = " + resok.size() + ". We are stressing the EP...");
+                    try {
+                        System.out.println("Sleep for " + milis + " millis...");
+                        Thread.sleep(milis);
+                        continue;
+                    }catch (InterruptedException ie){
+                        System.out.println("Can not sleep. This is the end, sorry :-(.");
+                        System.out.flush();
+                        return null;
+                    }
+                }
+                resExtraok = ResultSetFactory.copyResults(resExtra); //resExtra is unusable from now on, use resExtraok
+                resSum = new ResultSetMem(resok, resExtraok);
+                resok = resSum;
+                if (resok.size() == (index + 1) * limit){ //If we get again the maximum number of results
+                    //gotMaxResults keeps true
+                    System.out.print(".");
+                }else{
+                    gotMaxResults = false;
+                    System.out.println("");
+                    break; //leaves the while
+                }
+                index++;
+            }
+        }
+        return resok;
+    }
+
+
+    static public void main4 (String[] args) {
+        String qBase = "SELECT DISTINCT * WHERE { ?I <http://dbpedia.org/ontology/creator> ?x OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }";
+        String ep = "http://dbpedia.org/sparql";
+
+
+        ResultSetRewindable rs = extractiveExecSelect(ep, qBase, 10000, 100);
+        System.out.println("Size = " + rs.size());
+
+    }
+
+    static public void main (String[] args) {
         String fileName =    "dbpedia.org.cacheSelect.ser";
         interactiveExplorerForCacheinDiskSpecificFile(fileName);
     }
 
+    static public void main5 (String[] args){
+        String qBase = "SELECT DISTINCT * WHERE { ?I <http://dbpedia.org/ontology/creator> ?x OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }";
+        String ep = "http://dbpedia.org/sparql";
+        //We need ORDER BY in order to get a predictable result by OFFSET blocks
+        String qOrderBy = qBase + " ORDER BY ?I";
+        Query query1 = QueryFactory.create(qOrderBy);
+        QueryExecution qexec1 = QueryExecutionFactory.sparqlService(ep, query1);
+        ResultSet res1 = qexec1.execSelect();
 
+        String qNext = qOrderBy + " OFFSET 10000 LIMIT 10000";
+        Query query2 = QueryFactory.create(qNext);
+        QueryExecution qexec2 = QueryExecutionFactory.sparqlService(ep, query2);
+        ResultSet res2 = qexec2.execSelect();
+
+        ResultSetMem rs = new ResultSetMem(res1, res2);
+    }
+
+    static public void main6 (String[] args){
+        String qBase = "SELECT DISTINCT * WHERE { ?I <http://dbpedia.org/ontology/creator> ?x OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }";
+        String ep = "http://dbpedia.org/sparql";
+        //We need ORDER BY in order to get a predictable result by OFFSET blocks
+        String qOrderBy = qBase + " ORDER BY ?I";
+        Query query1 = QueryFactory.create(qOrderBy);
+        QueryExecution qexec1 = QueryExecutionFactory.sparqlService(ep, query1);
+        ResultSet res1 = qexec1.execSelect();
+        ResultSetRewindable res1ok = ResultSetFactory.copyResults(res1);
+
+        String qNext = qOrderBy + " OFFSET 10000 LIMIT 10000";
+        Query query2 = QueryFactory.create(qNext);
+        QueryExecution qexec2 = QueryExecutionFactory.sparqlService(ep, query2);
+        ResultSet res2 = qexec2.execSelect();
+        ResultSetRewindable res2ok = ResultSetFactory.copyResults(res2);
+
+        ResultSetMem rs = new ResultSetMem(res1, res2);
+        ResultSetMem rsok = new ResultSetMem(res1ok, res2ok);
+    }
 
 }
