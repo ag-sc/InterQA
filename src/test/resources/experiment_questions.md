@@ -21,4 +21,5 @@ COUNTRIES
 Finde:
 
 * die Hauptstadt von Chile
-*
+* welche Sprachen in der Schweiz gesprochen werden
+* welche Länder den Euro als Währung haben

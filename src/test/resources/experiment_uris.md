@@ -27,25 +27,21 @@ Properties:
 
 capital
 population
+language
+currency
+
 foundingYear
 governmentType
-currency
 foundingDate
 longName
-flag
-leaderTitle
-language / officialLanguage
+leader?
+dissolutionYear
+
 
 Classes:
 
 Country
-Place
-Location
-PopulatedPlace
+City
 Company
-Work
 Currency
-Person
 Language
-Settlement
-Place

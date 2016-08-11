@@ -3,3 +3,124 @@
 @prefix lexinfo: <http://www.lexinfo.net/ontology/2.0/lexinfo#> .
 
 @prefix : <http://github.com/cimiano/lemon.dbpedia/target/movies#> .
+
+
+:lexicon a lemon:Lexicon ;
+  lemon:entry
+              :country,
+              :city,
+              :language,
+
+              :capital_of,
+              :population_of,
+              :currency_of,
+
+              :spoken_in,
+
+              :in .
+
+
+
+
+#### Common nouns ####
+
+:country a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :country_form ;
+    lemon:sense :country_sense .
+:country_form  lemon:writtenRep "country"@en .
+:country_sense lemon:reference <http://dbpedia.org/ontology/Country> .
+
+:city a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :city_form ;
+    lemon:sense :city_sense .
+:city_form  lemon:writtenRep "city"@en .
+:city_sense lemon:reference <http://dbpedia.org/ontology/City> .
+
+:language a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :language_form ;
+    lemon:sense :city_sense .
+:language_form  lemon:writtenRep "language"@en .
+:language_sense lemon:reference <http://dbpedia.org/ontology/Language> .
+
+
+#### RelationalNouns ####
+
+:capital_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :capital_of_form ;
+    lemon:synBehavior   :capital_of_frame ;
+    lemon:sense         :capital_of_sense .
+:capital_of_form lemon:writtenRep "capital"@en .
+:capital_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :capital_of_arg1 ;
+    lexinfo:prepositionalObject :capital_of_arg2 .
+:capital_of_sense lemon:reference <http://dbpedia.org/ontology/capital> ;
+    lemon:subjOfProp :capital_of_arg2 ;
+    lemon:objOfProp  :capital_of_arg1 .
+:capital_of_arg2 lemon:marker :of .
+
+:population_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :population_of_form ;
+    lemon:synBehavior   :population_of_frame ;
+    lemon:sense         :population_of_sense .
+:population_of_form lemon:writtenRep "population"@en .
+:population_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :population_of_arg1 ;
+    lexinfo:prepositionalObject :population_of_arg2 .
+:population_of_sense lemon:reference <http://dbpedia.org/ontology/population> ;
+    lemon:subjOfProp :population_of_arg2 ;
+    lemon:objOfProp  :population_of_arg1 .
+:population_of_arg2 lemon:marker :of .
+
+:currency_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :currency_of_form ;
+    lemon:synBehavior   :currency_of_frame ;
+    lemon:sense         :currency_of_sense .
+:currency_of_form lemon:writtenRep "currency"@en .
+:currency_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :currency_of_arg1 ;
+    lexinfo:prepositionalObject :currency_of_arg2 .
+:currency_of_sense lemon:reference <http://dbpedia.org/ontology/currency> ;
+    lemon:subjOfProp :currency_of_arg2 ;
+    lemon:objOfProp  :currency_of_arg1 .
+:currency_of_arg2 lemon:marker :of .
+
+
+#### Relational adjectives ####
+
+:spoken_in a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:adjective ;
+    lemon:canonicalForm :spoken_in_form ;
+    lemon:synBehavior   :spoken_in_frame ;
+    lemon:sense         :spoken_in_sense .
+:spoken_in_frame a lexinfo:AdjectivePPFrame ;
+    lexinfo:subject             :spoken_in_arg1 ;
+    lexinfo:prepositionalObject :spoken_in_arg2 .
+:spoken_in_sense lemon:reference <http://dbpedia.org/ontology/language> ;
+    lemon:subjOfProp :spoken_in_arg2 ;
+    lemon:objOfProp  :spoken_in_arg1 .
+:spoken_in_arg2 lemon:marker :in .
+
+
+#### Prepositions ####
+
+:in a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:preposition ;
+    lemon:canonicalForm :in_form ;
+    lemon:synBehaviour  :in_frame ;
+    lemon:sense         :in_sense1 , :in_sense2 .
+:in_form lemon:writtenRep "in"@en .
+:in_frame a lexinfo:PrepositionalPhraseFrame ;
+    lexinfo:copulativeSubject :in_arg1 ;
+    lexinfo:complement :in_arg2 .
+:in_sense1 lemon:reference <http://dbpedia.org/ontology/country> ;
+    lemon:subjOfProp :in_arg1 ;
+    lemon:objOfProp  :in_arg2 .
+:in_sense2 lemon:reference <http://dbpedia.org/ontology/location> ;
+    lemon:subjOfProp :in_arg1 ;
+    lemon:objOfProp  :in_arg2 .

@@ -11,7 +11,6 @@
               :movie,
               :actor,
               :person,
-              :country,
 
               :director_of,
               :producer_of,
@@ -69,14 +68,6 @@
     lemon:sense :person_sense .
 :person_form  lemon:writtenRep "person"@en .
 :person_sense lemon:reference <http://dbpedia.org/ontology/Person> .
-
-:country a lemon:LexicalEntry ;
-    lexinfo:partOfSpeech lexinfo:commonNoun ;
-    lemon:canonicalForm :country_form ;
-    lemon:sense :country_sense .
-:country_form  lemon:writtenRep "country"@en .
-:country_sense lemon:reference <http://dbpedia.org/ontology/Country> .
-
 
 
 #### RelationalNouns ####
