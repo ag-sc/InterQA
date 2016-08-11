@@ -1,0 +1,5 @@
+
+@prefix lemon: <http://lemon-model.net/lemon#> .
+@prefix lexinfo: <http://www.lexinfo.net/ontology/2.0/lexinfo#> .
+
+@prefix : <http://github.com/cimiano/lemon.dbpedia/target/movies#> .

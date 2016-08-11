@@ -43,9 +43,11 @@ public class Lexicon {
         public void load(String filePath) {
             
             model.read(filePath);
+        }
+        
+        public void extractEntries() {
                         
             collectCommonNouns();
-            // TODO collect IntransitiveVerbs
             collectTransitiveVerbs();
             collectIntransitivePPVerbs();
             collectNounPPs(); 
@@ -56,6 +58,8 @@ public class Lexicon {
             for (String key : index.keySet()) {
                 index.put(key,removeDuplicates(index.get(key)));
             }
+            
+            System.out.println("Lexicon: " + index.keySet()); 
         }
         
         public HashMap<String,List<LexicalEntry>> getSubindex(LexicalEntry.POS pos, String frame, boolean withMarker) {

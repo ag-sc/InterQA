@@ -93,6 +93,7 @@ public class ServletInterQA extends HttpServlet {
         
         Lexicon lexicon = new Lexicon(Language.EN);
         lexicon.load("resources/springer_en.ttl");
+        lexicon.extractEntries();
         DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,labels);
 
         // Load query patterns

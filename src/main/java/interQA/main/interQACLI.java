@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  */
 public class interQACLI {
     
-    public enum USECASE  { SPRINGER, DBPEDIA }
+    public enum USECASE  { SPRINGER, DBPEDIA, EXPERIMENT }
     static String typeNumberOrCommand = "Please, type a number (or 'q' to quit, 'd' to delete the last selection, 'c' to explore the cache):";
     static String typeStringOrCommand = "Please, type an option (or 'q' to quit, 'd' to delete the last selection, 'c' to explore the cache):";
     static String typeCommand         = "Please, type a command: ('q' to quit, 'd' to delete the last selection, 'c' to explore the cache)";
@@ -111,6 +111,7 @@ public class interQACLI {
                     case DE: lexicon.load("./src/main/java/resources/springer_de.ttl"); break;
                     case ES: lexicon.load("./src/main/java/resources/springer_es.ttl"); break;
                 }
+                lexicon.extractEntries();
                  
                 dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,labels);
 
@@ -148,6 +149,7 @@ public class interQACLI {
                     case EN: lexicon.load("./src/main/java/resources/dbpedia_en.rdf"); break;
                     case DE: lexicon.load("./src/main/java/resources/dbpedia_de.rdf"); break;
                 }
+                lexicon.extractEntries();
                                 
                 dataset = new DatasetConnector("http://dbpedia.org/sparql",language,labels);
 
@@ -165,6 +167,27 @@ public class interQACLI {
                         break;
                     }
                 }
+
+                break;
+            }
+            
+            case EXPERIMENT: {
+
+                List<String> labels = new ArrayList<>();
+                labels.add("http://www.w3.org/2000/01/rdf-schema#label");
+
+                // Load lexicon
+
+                lexicon.load("./src/main/java/resources/dbpedia_movies_en.ttl");
+                lexicon.load("./src/main/java/resources/dbpedia_countries_en.ttl");
+                lexicon.extractEntries();
+                                
+                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,labels);
+
+                // Load query patterns
+
+                QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
+                qm.addQueryPatterns(qf_en.rollout());
 
                 break;
             }
