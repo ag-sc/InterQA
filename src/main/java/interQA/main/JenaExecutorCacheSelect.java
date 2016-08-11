@@ -195,9 +195,11 @@ public class JenaExecutorCacheSelect{
     }
 
     private void readCacheFromDiskSpecificFile(String fileName) {
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
         try {
-            FileInputStream fis = new FileInputStream(fileName);
-            ObjectInputStream ois = new ObjectInputStream(fis);
+            fis = new FileInputStream(fileName);
+            ois = new ObjectInputStream(fis);
             Map<String, String> mapSer = (Map<String, String>) ois.readObject();
             //In memory we have a cache with ResultSets. For a while
             // (if we know how to clear the serialized version) we have both
@@ -217,8 +219,18 @@ public class JenaExecutorCacheSelect{
             ioe.printStackTrace();
         } catch (ClassNotFoundException cnfe){
             cnfe.printStackTrace();
+        } catch (OutOfMemoryError oome){
+            System.out.println("Sorry, not enough memory to read the cache in disk :-(. Stack trace:");
+            oome.printStackTrace();
         } finally {
-            //ois.close();
+            try {
+                ois.close();
+                fis.close();
+            }catch (IOException ioe){
+                System.out.println("Sorry, I can not close the cache file. Stack trace:");
+                ioe.printStackTrace();
+            }
+
         }
     }
     /**
@@ -492,6 +504,11 @@ public class JenaExecutorCacheSelect{
 
         ResultSetMem rs = new ResultSetMem(res1, res2);
         ResultSetMem rsok = new ResultSetMem(res1ok, res2ok);
+    }
+    static public void main7 (String[] args) throws Exception {
+        FileOutputStream fos = new FileOutputStream("test");
+        fos.write("test text".getBytes());
+        fos.close();
     }
 
 }

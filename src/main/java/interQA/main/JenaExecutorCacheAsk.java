@@ -131,11 +131,11 @@ public class JenaExecutorCacheAsk {
             jeca.readCacheFromDisk(endpoint);
             jeca.dump(System.out);
         } else {
-            System.out.println(fileName + "is not available.");
+            System.out.println(fileName + " is not available.");
         }
     }
 
-    static public void main(String[] args) {
+    static public void main2(String[] args) {
         JenaExecutorCacheAsk cacheAsk = new JenaExecutorCacheAsk();
         String ep = "http://es.dbpedia.org/sparql";
         boolean satisfiesCondition1 = cacheAsk.executeWithCache(ep,
@@ -150,6 +150,9 @@ public class JenaExecutorCacheAsk {
         cacheAsk.dumpCacheinDisk(ep);
 
 
+    }
+    static public void main(String[] args) {
+        dumpCacheinDisk("http://dbpedia.org/sparql");
     }
 }
 
