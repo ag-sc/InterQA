@@ -21,7 +21,7 @@ public class PatternTests_EN extends TestCase {
           // Give me all wrestlers
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
             assertEquals(
-                 checkSequenceByStrings(    //Shows, besides the good one, several generic SPARQl queries
+                 checkSequenceByStrings(    //OK. This case does not make any Select query to the EP
                         "give me all\n" +
                         "wrestlers\n" +
                         "q\n",
