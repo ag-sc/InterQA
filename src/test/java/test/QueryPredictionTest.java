@@ -24,9 +24,11 @@ public class QueryPredictionTest extends TestCase {
                  assertEquals(pattern.predictASKqueries(),
                     new HashSet<>(
                     Arrays.asList(
-                        ""
+                        "ASK WHERE { ?x a <http://lod.springer.com/data/ontology/class/Conference> }"
                     ))
                  );
+                 assertEquals(pattern.predictSELECTqueries(),
+                    new HashSet<>());
              }
         }
     }

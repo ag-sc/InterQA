@@ -106,8 +106,7 @@ public class StringElement extends Element {
             
         StringElement clone = new StringElement();
         
-        clone.elements = elements;
-            
+        clone.elements.addAll(elements);
         for (String k : featureMap.keySet()) {
              clone.featureMap.put(k,featureMap.get(k));
         }

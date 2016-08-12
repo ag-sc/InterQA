@@ -27,10 +27,11 @@ public class QueryPatternManager {
      * @param patterns
      */
     public void addQueryPatterns(Set<QueryPattern> patterns) {
-        for (QueryPattern qp :patterns){
-            allQueryPatterns.add(qp.clone()); //The original qp before propagating features
+        for (QueryPattern qp : patterns){
+             QueryPattern clone = qp.clone();
+             allQueryPatterns.add(clone); 
+             activeQueryPatterns.add(clone);
         }
-        activeQueryPatterns.addAll(patterns);
     }
     
     public Set<QueryPattern> getPatterns() {
@@ -78,9 +79,10 @@ public class QueryPatternManager {
         activeQueryPatterns = new HashSet<>();
         
         for (QueryPattern pattern : allQueryPatterns) {
-            if (pattern.parse(str)) {
-                 activeQueryPatterns.add(pattern);
-            }
+             QueryPattern clone = pattern.clone();
+             if (clone.parse(str)) {
+                 activeQueryPatterns.add(clone);
+             }
         }
         
         return getQAPatternNames();
