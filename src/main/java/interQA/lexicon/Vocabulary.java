@@ -12,7 +12,7 @@ public class Vocabulary {
     public String lemon   = "http://lemon-model.net/lemon#";
     public String lexinfo = "http://www.lexinfo.net/ontology/2.0/lexinfo#";
     public String xmls 	  = "http://www.w3.org/2001/XMLSchema#";
-    
+    public String xsd_gYear = "http://www.w3.org/2001/XMLSchema#gYear";
     
     public String TransitiveFrame = lexinfo + "TransitiveFrame";
     public String IntransitivePPFrame = lexinfo + "IntransitivePPFrame";

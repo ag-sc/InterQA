@@ -6,6 +6,7 @@ import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import interQA.main.interQACLI;
 import interQA.patterns.QueryPatternManager;
 import interQA.patterns.templates.C;
 import interQA.patterns.templates.QueryPattern;
@@ -32,10 +33,7 @@ public class CTest extends TestCase {
     public void setUp() throws Exception {
         //Init SPRINGER
         lexicon.load("./src/main/java/resources/springer_en.ttl");
-        labels.add("http://www.w3.org/2000/01/rdf-schema#label");
-        labels.add("http://lod.springer.com/data/ontology/property/confName");
-        labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
-        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang,labels);
+        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang,interQACLI.USECASE.SPRINGER);
 
         Set<QueryPattern> patterns = new HashSet<>();
 //        // Give me all conferences.

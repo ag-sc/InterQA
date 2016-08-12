@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.Var;
 
@@ -124,7 +125,7 @@ public class QueryBuilder {
                      if (entry.isLiteral()) {
                          add.add(new Triple(t.getSubject(),t.getPredicate(),entry.getLiteralNode().asNode()));
                      } else {
-                        add.add(new Triple(t.getSubject(),t.getPredicate(),toResource(entry.getReference())));
+                         add.add(new Triple(t.getSubject(),t.getPredicate(),toResource(entry.getReference())));
                      }
                  }
             }

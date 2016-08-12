@@ -99,11 +99,6 @@ public class interQACLI {
 
             case SPRINGER: {
 
-                List<String> labels = new ArrayList<>();
-                labels.add("http://www.w3.org/2000/01/rdf-schema#label");
-                labels.add("http://lod.springer.com/data/ontology/property/confName");
-                labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
-
                 // Load lexicon
 
                 switch (language) {
@@ -113,7 +108,7 @@ public class interQACLI {
                 }
                 lexicon.extractEntries();
                  
-                dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,labels);
+                dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,usecase);
 
                 // Load query patterns
 
@@ -140,9 +135,6 @@ public class interQACLI {
 
             case DBPEDIA: {
 
-                List<String> labels = new ArrayList<>();
-                labels.add("http://www.w3.org/2000/01/rdf-schema#label");
-
                 // Load lexicon
 
                 switch (language) {
@@ -151,7 +143,7 @@ public class interQACLI {
                 }
                 lexicon.extractEntries();
                                 
-                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,labels);
+                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,usecase);
 
                 // Load query patterns
 
@@ -173,16 +165,13 @@ public class interQACLI {
             
             case EXPERIMENT: {
 
-                List<String> labels = new ArrayList<>();
-                labels.add("http://www.w3.org/2000/01/rdf-schema#label");
-
                 // Load lexicon
 
                 lexicon.load("./src/main/java/resources/dbpedia_movies_en.ttl");
                 lexicon.load("./src/main/java/resources/dbpedia_countries_en.ttl");
                 lexicon.extractEntries();
                                 
-                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,labels);
+                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,usecase);
 
                 // Load query patterns
 

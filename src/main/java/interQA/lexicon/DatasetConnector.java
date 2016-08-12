@@ -4,10 +4,12 @@ import interQA.elements.Element;
 import interQA.lexicon.LexicalEntry.Language;
 import interQA.main.JenaExecutorCacheSelect;
 import interQA.main.JenaExecutorCacheAsk;
+import interQA.main.interQACLI;
 import interQA.patterns.query.IncrementalQuery;
 import interQA.patterns.query.QueryBuilder;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.jena.graph.Node;
@@ -39,16 +41,18 @@ public class DatasetConnector {
     Language lang;
 
 
-    public DatasetConnector(String url, Language language) {
-
-       this(url,language,Arrays.asList("http://www.w3.org/2000/01/rdf-schema#label"));
-    }
-
-    public DatasetConnector(String url, Language language, List<String> props) {
+    public DatasetConnector(String url, Language language, interQACLI.USECASE usecase) {
 
         endpoint = url;
         lang = language;
-        labelProperties = props;
+        
+        switch (usecase) {
+                
+            default: {
+                
+                labelProperties.add("http://www.w3.org/2000/01/rdf-schema#label");
+            }
+        }
     }
 
     public void cacheUsageReport(PrintStream ps){
@@ -92,7 +96,7 @@ public class DatasetConnector {
     }
     
     public void fillInstances(Element element, QueryBuilder builder, String i_var) {
-                
+                        
         String label_var = "l";
         
         for (IncrementalQuery iq : builder.getQueries()) {
@@ -102,9 +106,7 @@ public class DatasetConnector {
               Query query = copy.assemble(vocab,false);
               query.setQueryResultStar(true);
               String querystring = copy.prettyPrint(query);
-              
-              System.out.println(querystring);
-              
+                                          
               ResultSet results = cacheSel.executeWithCache(endpoint,querystring);
             
               while (results.hasNext()) {
@@ -130,12 +132,12 @@ public class DatasetConnector {
                         }
                     }
                     else if (instance.isLiteral()) {
-                        
+                                                                        
                         entry.setLiteralNode(instance);
                         entry.setAsLiteral();
                         
                         String form;
-                        if (instance.asLiteral().getDatatype().getURI().equals("http://www.w3.org/2001/XMLSchema#gYear")) {
+                        if (instance.asLiteral().getDatatypeURI().equals(vocab.xsd_gYear)) {
                             form = instance.asLiteral().getLexicalForm().substring(0,4);
                         } else {
                             form = instance.asLiteral().getLexicalForm();
@@ -149,7 +151,10 @@ public class DatasetConnector {
                     }
                 }
             }
-        }        
+        }  
+        
+        // TODO if SPRINGER, then additonally get confName/Acronym + confYear
+
     }
     
     private ElementOptional label(String i_var, String label_var) {

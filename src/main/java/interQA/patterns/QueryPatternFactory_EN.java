@@ -413,9 +413,6 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         e.add("give me all",Feature.PLURAL);
         e.add("show me all",Feature.PLURAL);
         e.add("list all",Feature.PLURAL);
-        
-        e.add("do you know any",Feature.PLURAL);
-        e.add("are there any",Feature.PLURAL);
     }
     
     private void addWhichPrefixes(StringElement e) {
