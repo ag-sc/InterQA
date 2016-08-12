@@ -82,19 +82,11 @@ public class ServletInterQA extends HttpServlet {
         
         log("Loading started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
 
-        // Init
-
-        List<String> labels = new ArrayList<>();
-        labels.add("http://www.w3.org/2000/01/rdf-schema#label");
-        labels.add("http://lod.springer.com/data/ontology/property/confName");
-        labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
-
-        // Load lexicon
-        
+       // Load lexicon
         Lexicon lexicon = new Lexicon(Language.EN);
         lexicon.load("resources/springer_en.ttl");
         lexicon.extractEntries();
-        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,labels);
+        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,USECASE.SPRINGER);
 
         // Load query patterns
         
