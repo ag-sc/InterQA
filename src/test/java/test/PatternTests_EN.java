@@ -133,11 +133,6 @@ public class PatternTests_EN extends TestCase {
                                "SELECT DISTINCT ?x WHERE {"+
                                    " ?x a <http://lod.springer.com/data/ontology/class/Conference> ;"+
                                    " <http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@en "+
-                                   "}",
-                               "SELECT DISTINCT ?x WHERE {" +
-                                   " ?x ?P2 ?I2" +
-                                   " ; a <http://lod.springer.com/data/ontology/class/Conference>" +
-                                   " ; <http://lod.springer.com/data/ontology/property/confCity> \"Berlin\"@en "+
                                    "}"
                            )
                      )
@@ -261,11 +256,6 @@ public class PatternTests_EN extends TestCase {
                             Arrays.asList( //We could have several queries here separated by comma
                                 "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE {"+
                                 " ?x a <http://lod.springer.com/data/ontology/class/Conference>"+
-                                " ; <http://lod.springer.com/data/ontology/property/confCity> \"Zurich\"@en"+
-                                " }",
-                                "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE {"+
-                                " ?x ?P2 ?I2"+
-                                " ; a <http://lod.springer.com/data/ontology/class/Conference>"+
                                 " ; <http://lod.springer.com/data/ontology/property/confCity> \"Zurich\"@en"+
                                 " }"
                             )
