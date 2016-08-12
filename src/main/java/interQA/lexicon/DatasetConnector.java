@@ -36,7 +36,7 @@ public class DatasetConnector {
     JenaExecutorCacheSelect cacheSel = new JenaExecutorCacheSelect();
 
     String endpoint;
-    Vocabulary vocab = new Vocabulary();
+    Vocabulary vocab;
     List<String> labelProperties;
     Language lang;
 
@@ -44,12 +44,13 @@ public class DatasetConnector {
     public DatasetConnector(String url, Language language, interQACLI.USECASE usecase) {
 
         endpoint = url;
+        vocab = new Vocabulary();
         lang = language;
+        labelProperties = new ArrayList<>();
         
         switch (usecase) {
                 
             default: {
-                
                 labelProperties.add("http://www.w3.org/2000/01/rdf-schema#label");
             }
         }
