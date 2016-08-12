@@ -20,19 +20,17 @@ import java.util.List;
 public class QueryPatternManagerTests_DBPEDIA extends TestCase {
 
     LexicalEntry.Language lang = LexicalEntry.Language.EN;
-    Lexicon lexicon = new Lexicon(lang);
-    List<String> labels = new ArrayList<>();
-    QueryPatternManager qm = new QueryPatternManager();
-    DatasetConnector dataset  = null;
-    interQACLI.USECASE usecase = interQACLI.USECASE.DBPEDIA;
+    Lexicon               lexicon = new Lexicon(lang);
+    QueryPatternManager   qm = new QueryPatternManager();
+    DatasetConnector      dataset  = null;
+    interQACLI.USECASE    usecase = interQACLI.USECASE.DBPEDIA;
 
     //Executed before EACH test
     public void setUp() throws Exception {
         //Init SPRINGER
         lexicon.load("./src/main/java/resources/dbpedia_en.rdf");
-        labels.add("http://www.w3.org/2000/01/rdf-schema#label");
         lexicon.extractEntries();
-        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang,labels);
+        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang,usecase);
 
         // Load query patterns
         QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
