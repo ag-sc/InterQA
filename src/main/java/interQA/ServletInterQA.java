@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
+import interQA.main.interQACLI;
 import interQA.main.interQACLI.USECASE;
 import interQA.patterns.QueryPatternFactory_EN;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class ServletInterQA extends HttpServlet {
                 String encoded = request.getParameter("selection"); //The value was sent as URLable
                 //log("decoded as ISO-8859-1): " + URLDecoder.decode(encoded, "ISO-8859-1"));
                 String text = new String(encoded.getBytes("iso-8859-1"), "UTF-8"); //Valid only for Tomcat default conf?
-                List<String> availableQPNames = qm.getRemainingActivePatterns(text);
+                List<String> availableQPNames = qm.getActivePatternsBasedOnUserInput(text);
                 //log("selected command with text: " + text + " and with availableQPNames: " + availableQPNames);
                 out.write(gson.toJson(availableQPNames));
                 break;
@@ -82,19 +83,12 @@ public class ServletInterQA extends HttpServlet {
         
         log("Loading started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
 
-        // Init
-
-        List<String> labels = new ArrayList<>();
-        labels.add("http://www.w3.org/2000/01/rdf-schema#label");
-        labels.add("http://lod.springer.com/data/ontology/property/confName");
-        labels.add("http://lod.springer.com/data/ontology/property/confAcronym");
-
         // Load lexicon
         
         Lexicon lexicon = new Lexicon(Language.EN);
         lexicon.load("resources/springer_en.ttl");
         lexicon.extractEntries();
-        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,labels);
+        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,interQACLI.USECASE.SPRINGER);
 
         // Load query patterns
         

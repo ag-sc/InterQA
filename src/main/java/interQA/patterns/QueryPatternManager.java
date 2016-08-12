@@ -11,6 +11,7 @@ import java.util.Set;
  */
 public class QueryPatternManager {
     
+    Set<QueryPattern> allQueryPatterns = new HashSet<>();
     Set<QueryPattern> activeQueryPatterns = new HashSet<>();
     
     StringBuffer parsedText = new StringBuffer();
@@ -25,7 +26,9 @@ public class QueryPatternManager {
      * process has started and patterns have been rejected
      * @param patterns
      */
-    public void addQueryPatterns(Set<QueryPattern> patterns){
+    public void addQueryPatterns(Set<QueryPattern> patterns) {
+        
+        allQueryPatterns.addAll(patterns);
         activeQueryPatterns.addAll(patterns);
     }
 
@@ -64,19 +67,15 @@ public class QueryPatternManager {
      * @param str
      * @return the names of available query patterns
      */
-    public List<String> getRemainingActivePatterns(String str) {
+    public List<String> getActivePatternsBasedOnUserInput(String str) {
 
-        // Remove the non-active query patterns from the list
-
-        List<QueryPattern> toRemove = new ArrayList<>();
-        for (QueryPattern pattern : activeQueryPatterns) {
+        activeQueryPatterns = new HashSet<>();
+        
+        for (QueryPattern pattern : allQueryPatterns) {
             if (!pattern.parse(str)) { 
-                 toRemove.add(pattern); 
+                 activeQueryPatterns.add(pattern);
             }
         }
-        activeQueryPatterns.removeAll(toRemove);
-
-        // Return the names of the remaining ones
         
         return getQAPatternNames();
     }
