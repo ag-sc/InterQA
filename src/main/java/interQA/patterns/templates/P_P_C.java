@@ -111,6 +111,17 @@ public class P_P_C extends QueryPattern{
             }
 		
 	}
+        
+        @Override
+        public P_P_C clone() {
+            
+            P_P_C clone = new P_P_C(lexicon,dataset);
+            clone.elements = elements;
+            clone.agreement = agreement;
+            clone.builder = builder.clone();
+            
+            return clone;
+        }
 
 }
 

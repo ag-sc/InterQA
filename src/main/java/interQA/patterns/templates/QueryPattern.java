@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public abstract class QueryPattern {
+public abstract class QueryPattern implements Cloneable {
 
         // static fiels 
         // (are filled once by the QueryPatternManager and then don't change)
@@ -37,7 +37,7 @@ public abstract class QueryPattern {
         // dynamic fields 
 
         public int currentElement = -1; 
-
+        
         
         public void init() {
         // Should be filled by each specific QueryPattern.
@@ -105,6 +105,19 @@ public abstract class QueryPattern {
             return builder.returnQueries(asFinal);
         }
         
+        
+        /* Query prediction for caching (needs to be overwritten by each pattern) */
+        
+        public Set<String> predictASKqueries() {
+            
+            return new HashSet<>();
+        }
+        
+        public Set<String> predictSELECTqueries() {
+            
+            return new HashSet<>();
+        }
+
         
         /* AUXILIARY STUFF  */
         

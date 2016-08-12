@@ -105,5 +105,16 @@ public class C_P_I extends QueryPattern{
                 } 
             }
 	}
+        
+        @Override
+        public C_P_I clone() {
+            
+            C_P_I clone = new C_P_I(lexicon,dataset);
+            clone.elements = elements;
+            clone.agreement = agreement;
+            clone.builder = builder.clone();
+            
+            return clone;
+        }
 
 }

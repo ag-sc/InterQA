@@ -8,7 +8,6 @@ import java.util.Set;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
-import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.Var;
 
@@ -151,6 +150,23 @@ public class QueryBuilder {
         }
         
         return out;
+    }
+    
+    
+    // Cloning 
+    
+    @Override
+    public QueryBuilder clone() {
+        
+        QueryBuilder clone = new QueryBuilder();
+        
+        clone.placeholders = placeholders;
+        
+        for (IncrementalQuery iq : queries) {
+             clone.queries.add(iq.clone());
+        }
+        
+        return clone;
     }
     
     

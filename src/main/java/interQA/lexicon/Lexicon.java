@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -27,17 +28,24 @@ public class Lexicon {
         
 	HashMap<String,List<LexicalEntry>> index;
 	
-        Vocabulary vocab = new Vocabulary();
+        Vocabulary vocab;
         Inflector inflector;
+        
+        Set<LexicalEntry> classEntries;
+        Set<LexicalEntry> propertyEntries;
 	
 	public Lexicon(Language language) {
             
+            vocab = new Vocabulary();
             model = ModelFactory.createDefaultModel();          
             index = new HashMap<>();
             switch (language) {
                case EN: inflector = new Inflector_en(); break;
                default: inflector = new Inflector_en();
             }
+            
+            classEntries = new HashSet<>();
+            propertyEntries = new HashSet<>();
         }
         
         public void load(String filePath) {
@@ -91,6 +99,14 @@ public class Lexicon {
             }
             
             return subindex;
+        }
+        
+        public Set<LexicalEntry> getClassEntries() {
+            return classEntries;
+        }
+        
+        public Set<LexicalEntry> getPropertyEntries() {
+            return propertyEntries;
         }
         
         
@@ -152,6 +168,8 @@ public class Lexicon {
                         index.get(sg).add(entry);
                         if (!index.containsKey(pl)) index.put(pl ,new ArrayList<>());
                         index.get(pl).add(entry);
+                        
+                        classEntries.add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -235,6 +253,8 @@ public class Lexicon {
                         index.get(pres).add(entry);
                         if (!index.containsKey(past)) index.put(past ,new ArrayList<>());
                         index.get(past).add(entry);
+                        
+                        propertyEntries.add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -311,6 +331,8 @@ public class Lexicon {
                         index.get(pres).add(entry);
                         if (!index.containsKey(past)) index.put(past,new ArrayList<>());
                         index.get(past).add(entry);
+                        
+                        propertyEntries.add(entry);
                         
                         if (sol.contains("sg")) {
                             String sg = sol.get("sg").asLiteral().getValue().toString();
@@ -427,7 +449,9 @@ public class Lexicon {
                         if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
                         index.get(sg).add(entry);
                         if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
-                        index.get(pl).add(entry);                        
+                        index.get(pl).add(entry);   
+                        
+                        propertyEntries.add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -518,6 +542,8 @@ public class Lexicon {
                         index.get(sg).add(entry); 
                         if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
                         index.get(pl).add(entry);
+                        
+                        propertyEntries.add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();
@@ -655,6 +681,8 @@ public class Lexicon {
                         
                         if (!index.containsKey(canonicalForm)) index.put(canonicalForm ,new ArrayList<>());
                         index.get(canonicalForm).add(entry);
+                        
+                        propertyEntries.add(entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();

@@ -3,7 +3,11 @@ package interQA.patterns.templates;
 import interQA.elements.ClassElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
+import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import interQA.patterns.query.IncrementalQuery;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class C extends QueryPattern {
@@ -66,6 +70,32 @@ public class C extends QueryPattern {
                     break;
                 } 
             }
+        }
+        
+        @Override
+        public C clone() {
+            
+            C clone = new C(lexicon,dataset);
+            clone.elements = elements;
+            clone.agreement = agreement;
+            clone.builder = builder.clone();
+            
+            return clone;
+        }
+        
+        @Override 
+        public Set<String> predictASKqueries() {
+            
+            Set<String> queries = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getClassEntries()) {
+                 for (IncrementalQuery query : builder.getQueries()) {
+                      IncrementalQuery instq = builder.instantiate("C",entry,query);
+                      queries.add(instq.prettyPrint(instq.assembleAsAsk(vocab,false)));
+                 }
+            }
+            
+            return queries;
         }
 
 }
