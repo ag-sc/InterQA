@@ -1,13 +1,8 @@
 package interQA.main;
 
-
-import interQA.patterns.QueryPatternFactory_ES;
-import interQA.patterns.QueryPatternManager;
-import interQA.lexicon.DatasetConnector;
-import interQA.lexicon.LexicalEntry.Language;
-import interQA.lexicon.Lexicon;
-import interQA.patterns.QueryPatternFactory_DE;
-import interQA.patterns.QueryPatternFactory_EN;
+import interQA.Config;
+import interQA.Config.Language;
+import interQA.Config.USECASE;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.*;
@@ -19,7 +14,6 @@ import java.util.regex.Pattern;
  */
 public class interQACLI {
     
-    public enum USECASE  { SPRINGER, DBPEDIA, EXPERIMENT }
     static String typeNumberOrCommand = "Please, type a number (or 'q' to quit, 'd' to delete the last selection, 'c' to explore the cache):";
     static String typeStringOrCommand = "Please, type an option (or 'q' to quit, 'd' to delete the last selection, 'c' to explore the cache):";
     static String typeCommand         = "Please, type a command: ('q' to quit, 'd' to delete the last selection, 'c' to explore the cache)";
@@ -91,101 +85,10 @@ public class interQACLI {
     public static void  mainProcess(String args[], USECASE usecase, Language language, ArrayList<String> qpNames ){
 
         // INIT
-        Lexicon lexicon = new Lexicon(language);
-        DatasetConnector dataset = null;
-        QueryPatternManager qm = new QueryPatternManager();
 
-        switch (usecase) {
-
-            case SPRINGER: {
-
-                // Load lexicon
-
-                switch (language) {
-                    case EN: lexicon.load("./src/main/java/resources/springer_en.ttl"); break;
-                    case DE: lexicon.load("./src/main/java/resources/springer_de.ttl"); break;
-                    case ES: lexicon.load("./src/main/java/resources/springer_es.ttl"); break;
-                }
-                lexicon.extractEntries();
-                 
-                dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,usecase);
-
-                // Load query patterns
-
-                switch (language) {
-                    case EN: {
-                        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
-                        qm.addQueryPatterns(qpNames == null? qf_en.rollout(): qf_en.rollout(qpNames)); //Support for query patterns "by name"
-                        break;
-                    }
-                    case DE: {
-                        QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(usecase,lexicon,dataset);
-                        qm.addQueryPatterns(qf_de.rollout());
-                        break;
-                    }
-                    case ES: {
-                        QueryPatternFactory_ES qf_es = new QueryPatternFactory_ES(usecase,lexicon,dataset);
-                        qm.addQueryPatterns(qf_es.rollout());
-                        break;
-                    }
-                }
-
-                break;
-            }
-
-            case DBPEDIA: {
-
-                // Load lexicon
-
-                switch (language) {
-                    case EN: lexicon.load("./src/main/java/resources/dbpedia_en.rdf"); break;
-                    case DE: lexicon.load("./src/main/java/resources/dbpedia_de.rdf"); break;
-                }
-                lexicon.extractEntries();
-                                
-                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,usecase);
-
-                // Load query patterns
-
-                switch (language) {
-                    case EN: {
-                        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
-                        qm.addQueryPatterns(qf_en.rollout());
-                        break;
-                    }
-                    case DE: {
-                        QueryPatternFactory_DE qf_de = new QueryPatternFactory_DE(usecase,lexicon,dataset);
-                        qm.addQueryPatterns(qf_de.rollout());
-                        break;
-                    }
-                }
-
-                break;
-            }
-            
-            case EXPERIMENT: {
-
-                // Load lexicon
-
-                lexicon.load("./src/main/java/resources/dbpedia_movies_en.ttl");
-                lexicon.load("./src/main/java/resources/dbpedia_countries_en.ttl");
-                lexicon.extractEntries();
-                                
-                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,usecase);
-
-                // Load query patterns
-
-                QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
-                qm.addQueryPatterns(qf_en.rollout());
-
-                break;
-            }
-        }
-
-
-
-
-
+        Config config = new Config(); 
+        config.init(usecase, language, qpNames);
+        
         // RUN
 
         //We only check the first two args. They will be interpreted as file paths (unless named stdin and stdout)
@@ -250,13 +153,13 @@ public class interQACLI {
             
             System.out.println("Current sentence: \"" + sbWholeSentenceExternal.toString() + "\"");
             
-            queries = qm.buildSPARQLqueries();
+            queries = config.getPatternManager().buildSPARQLqueries();
             System.out.println(trapSentence);
             for (String query : queries) {
                  System.out.println(query);
             } 
              
-            TreeSet<String> optsOrdered = new TreeSet<>(qm.getUIoptions());
+            TreeSet<String> optsOrdered = new TreeSet<>(config.getPatternManager().getUIoptions());
             opts = new ArrayList<>(optsOrdered);
 
             if (opts.size() >  0) { //If there are options, show them
@@ -364,9 +267,9 @@ public class interQACLI {
             }else {
                 if (num == -2 ) { //The user selected to show the cache
                     System.out.print("Cache report: ");
-                    dataset.cacheUsageReport(System.out);
-                    dataset.cacheDump(System.out);
-                    dataset.interactiveExplorer();
+                    config.getDatasetConnector().cacheUsageReport(System.out);
+                    config.getDatasetConnector().cacheDump(System.out);
+                    config.getDatasetConnector().interactiveExplorer();
                 }else {
                     //The user selected one option from the options list
                     lastSelection = opts.get(num - 1);
@@ -379,10 +282,10 @@ public class interQACLI {
                 }
             }
 
-            List<String> avlPats = qm.getActivePatternsBasedOnUserInput(sbWholeSentenceInternal.toString());
+            List<String> avlPats = config.getPatternManager().getActivePatternsBasedOnUserInput(sbWholeSentenceInternal.toString());
             System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
             //Save the cache to disk after every selected option
-            dataset.saveCacheToDisk();
+            config.getDatasetConnector().saveCacheToDisk();
         }while (opts.size() != 0);
 
 

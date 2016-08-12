@@ -6,7 +6,7 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
-import interQA.main.interQACLI.USECASE;
+import interQA.Config.USECASE;
 
 import java.util.ArrayList;
 import java.util.HashSet;

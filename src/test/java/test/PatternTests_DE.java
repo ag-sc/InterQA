@@ -3,8 +3,8 @@ package test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import interQA.lexicon.LexicalEntry;
-import interQA.main.interQACLI;
+import interQA.Config.Language;
+import interQA.Config.USECASE;
 import junit.framework.TestCase;
 import static interQA.main.interQACLI.checkSequenceByStrings;
 
@@ -25,7 +25,7 @@ public class PatternTests_DE extends TestCase {
                         "zeig mir alle\n" +
                         "Konferenzen\n" +
                         "q\n",
-                         interQACLI.USECASE.SPRINGER, LexicalEntry.Language.DE),
+                         USECASE.SPRINGER, Language.DE),
                   new ArrayList<String>(
                          Arrays.asList(
                             "SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }"

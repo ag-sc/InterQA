@@ -2,9 +2,9 @@ package test;
 
 
 import interQA.lexicon.LexicalEntry;
-import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
 import interQA.lexicon.Vocabulary;
+import interQA.Config.Language;
 import java.util.HashMap;
 import java.util.List;
 import junit.framework.TestCase;

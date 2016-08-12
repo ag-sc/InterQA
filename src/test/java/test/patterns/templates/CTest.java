@@ -6,7 +6,8 @@ import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import interQA.main.interQACLI;
+import interQA.Config.Language;
+import interQA.Config.USECASE;
 import interQA.patterns.QueryPatternManager;
 import interQA.patterns.templates.C;
 import interQA.patterns.templates.QueryPattern;
@@ -23,7 +24,7 @@ import static interQA.patterns.QueryPatternFactory_EN.addIndefGiveMePrefixes;
  */
 public class CTest extends TestCase {
 
-    LexicalEntry.Language lang = LexicalEntry.Language.EN;
+    Language lang = Language.EN;
     Lexicon lexicon = new Lexicon(lang);
     List<String> labels = new ArrayList<>();
     QueryPatternManager qm = new QueryPatternManager();
@@ -33,7 +34,7 @@ public class CTest extends TestCase {
     public void setUp() throws Exception {
         //Init SPRINGER
         lexicon.load("./src/main/java/resources/springer_en.ttl");
-        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang,interQACLI.USECASE.SPRINGER);
+        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang,USECASE.SPRINGER);
 
         Set<QueryPattern> patterns = new HashSet<>();
 //        // Give me all conferences.

@@ -88,6 +88,17 @@ public class P_I extends QueryPattern {
                     break;
                 } 
             }
-        }        
+        }       
+        
+        @Override
+        public P_I clone() {
+            
+            P_I clone = new P_I(lexicon,dataset);
+            clone.elements = elements;
+            clone.agreement = agreement;
+            clone.builder = builder.clone();
+            
+            return clone;
+        }
 
 }
