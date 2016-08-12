@@ -104,7 +104,10 @@ public abstract class QueryPattern implements Cloneable {
             
             return builder.returnQueries(asFinal);
         }
-        
+
+        public QueryPattern clone(){
+            return null;
+        }
         
         /* Query prediction for caching (needs to be overwritten by each pattern) */
         

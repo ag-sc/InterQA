@@ -1,6 +1,7 @@
 package test.patterns;
 
 
+import interQA.Config;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
@@ -19,11 +20,11 @@ import java.util.List;
  */
 public class QueryPatternManagerTests_DBPEDIA extends TestCase {
 
-    LexicalEntry.Language lang = LexicalEntry.Language.EN;
+    Config.Language lang = Config.Language.EN;
     Lexicon               lexicon = new Lexicon(lang);
     QueryPatternManager   qm = new QueryPatternManager();
     DatasetConnector      dataset  = null;
-    interQACLI.USECASE    usecase = interQACLI.USECASE.DBPEDIA;
+    Config.USECASE    usecase = Config.USECASE.DBPEDIA;
 
     //Executed before EACH test
     public void setUp() throws Exception {
