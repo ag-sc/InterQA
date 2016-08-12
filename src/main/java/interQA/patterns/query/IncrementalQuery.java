@@ -135,20 +135,7 @@ public class IncrementalQuery {
     
     public String prettyPrint(Query q) {
         
-        String s = q.toString().replaceAll("\\n"," ").replaceAll("\\s+"," ").trim();
-        
-        // remove "-01-01" from xsd:gYear
-        Map<String,String> replacements = new HashMap<>();
-        Pattern p = Pattern.compile(".*(\"\\d{4})(-01-01)((\\+\\d{2}:\\d{2})?\"^^<http:\\/\\/www.w3.org\\/2001\\/XMLSchema#gYear>).*");
-        Matcher m = p.matcher(s);
-        while  (m.find()) {
-            replacements.put(m.group(),m.group(1)+m.group(3));
-        }
-        for (String k : replacements.keySet()) {
-             s = s.replaceAll(k,replacements.get(k));
-        }
-                
-        return s;
+        return q.toString().replaceAll("\\n"," ").replaceAll("\\s+"," ").trim();
     }
     
     

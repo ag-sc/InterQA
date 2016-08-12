@@ -379,7 +379,7 @@ public class interQACLI {
                 }
             }
 
-            List<String> avlPats = qm.getRemainingActivePatterns(sbWholeSentenceInternal.toString());
+            List<String> avlPats = qm.getActivePatternsBasedOnUserInput(sbWholeSentenceInternal.toString());
             System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
             //Save the cache to disk after every selected option
             dataset.saveCacheToDisk();

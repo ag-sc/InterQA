@@ -40,9 +40,9 @@ public class QueryPatternManagerTests_DBPEDIA extends TestCase {
     public void testDelete1stdElement() throws Exception {
 
         List<String> queries0 = qm.getUIoptions();
-        List<String> avlPats1 = qm.getRemainingActivePatterns("how many");
+        List<String> avlPats1 = qm.getActivePatternsBasedOnUserInput("how many");
         List<String> queries1 = qm.getUIoptions();
-        List<String> avlPats2 = qm.getRemainingActivePatterns("");
+        List<String> avlPats2 = qm.getActivePatternsBasedOnUserInput("");
         List<String> queries2 = qm.getUIoptions();
 
         assertEquals(new HashSet<>(queries0),
@@ -52,11 +52,11 @@ public class QueryPatternManagerTests_DBPEDIA extends TestCase {
     public void testDelete2ndElement() throws Exception {
 
         List<String> queries0 = qm.getUIoptions();
-        List<String> avlPats1 = qm.getRemainingActivePatterns("how many");
+        List<String> avlPats1 = qm.getActivePatternsBasedOnUserInput("how many");
         List<String> queries1 = qm.getUIoptions();
-        List<String> avlPats2 = qm.getRemainingActivePatterns("how manywrestlers");
+        List<String> avlPats2 = qm.getActivePatternsBasedOnUserInput("how manywrestlers");
         List<String> queries2 = qm.getUIoptions();
-        List<String> avlPats3 = qm.getRemainingActivePatterns("how many");
+        List<String> avlPats3 = qm.getActivePatternsBasedOnUserInput("how many");
         List<String> queries3 = qm.getUIoptions();
 
         assertEquals(new HashSet<>(queries1),

@@ -45,9 +45,9 @@ public class QueryPatternManagerTests_Springer extends TestCase {
     public void testDelete1stdElement() throws Exception {
 
         List<String> options0 = qm.getUIoptions();
-        List<String> avlPats1 = qm.getRemainingActivePatterns("what");
+        List<String> avlPats1 = qm.getActivePatternsBasedOnUserInput("what");
         List<String> options1 = qm.getUIoptions();
-        List<String> avlPats2 = qm.getRemainingActivePatterns("");
+        List<String> avlPats2 = qm.getActivePatternsBasedOnUserInput("");
         List<String> options2 = qm.getUIoptions();
 
         assertEquals(new HashSet<>(options0),
@@ -57,11 +57,11 @@ public class QueryPatternManagerTests_Springer extends TestCase {
     public void testDelete2ndElement() throws Exception {
 
         List<String> options0 = qm.getUIoptions();
-        List<String> avlPats1 = qm.getRemainingActivePatterns("what");
+        List<String> avlPats1 = qm.getActivePatternsBasedOnUserInput("what");
         List<String> options1 = qm.getUIoptions();
-        List<String> avlPats2 = qm.getRemainingActivePatterns("whatconferences");
+        List<String> avlPats2 = qm.getActivePatternsBasedOnUserInput("whatconferences");
         List<String> options2 = qm.getUIoptions();
-        List<String> avlPats3 = qm.getRemainingActivePatterns("what");
+        List<String> avlPats3 = qm.getActivePatternsBasedOnUserInput("what");
         List<String> options3 = qm.getUIoptions();
 
         assertEquals(new HashSet<>(options1),
