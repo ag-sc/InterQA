@@ -6,8 +6,9 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
-import interQA.main.interQACLI.USECASE;
+import interQA.Config.USECASE;
 import interQA.patterns.templates.*;
+import java.util.ArrayList;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -411,6 +412,11 @@ public class QueryPatternFactory_ES implements QueryPatternFactory {
         e.add("¿cuáles son",Feature.PLURAL,Feature.PRESENT);  //what are the
         e.add("¿qué fue el",Feature.SINGULAR,Feature.PAST);  //what was the
         e.add("¿cuáles furon los",Feature.PLURAL,Feature.PAST);   //what were the
+    }
+
+    @Override
+    public Set<QueryPattern> rollout(ArrayList<String> patternNames) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

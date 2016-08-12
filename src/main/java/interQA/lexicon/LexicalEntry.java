@@ -12,9 +12,6 @@ import org.apache.jena.rdf.model.RDFNode;
  */
 public class LexicalEntry {
     
-    
-    public enum Language { EN, DE, ES };
-
     public enum SemArg  { SUBJOFPROP, OBJOFPROP };
     public enum SynArg  { SUBJECT, OBJECT };
     public enum POS     { NOUN, VERB, ADJECTIVE, PREPOSITION };

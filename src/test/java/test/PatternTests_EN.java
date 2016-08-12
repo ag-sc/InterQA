@@ -3,8 +3,8 @@ package test;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import interQA.lexicon.LexicalEntry;
-import interQA.main.interQACLI;
+import interQA.Config.Language;
+import interQA.Config.USECASE;
 import junit.framework.TestCase;
 import static interQA.main.interQACLI.checkSequenceByStrings;
 
@@ -25,7 +25,7 @@ public class PatternTests_EN extends TestCase {
                         "give me all\n" +
                         "wrestlers\n" +
                         "q\n",
-                        interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
+                        USECASE.DBPEDIA,  Language.EN),
                   new HashSet<>(
                          Arrays.asList(
                             "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/Wrestler> }"
@@ -43,7 +43,7 @@ public class PatternTests_EN extends TestCase {
                         "wrestlers\n" +
                         "are there\n"   +
                         "q\n",
-                         interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
+                         USECASE.DBPEDIA,  Language.EN),
                   new HashSet<>(
                             Arrays.asList(
                                 "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE { ?x a <http://dbpedia.org/ontology/Wrestler> }"
@@ -62,7 +62,7 @@ public class PatternTests_EN extends TestCase {
                         "of\n" +
                         "Zorro\n" +
                         "q\n",
-                        interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
+                        USECASE.DBPEDIA,  Language.EN),
                    new HashSet<>(
                             Arrays.asList(
                                 "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/Zorro> <http://dbpedia.org/ontology/creator> ?x }"
@@ -82,7 +82,7 @@ public class PatternTests_EN extends TestCase {
                         "for\n"     +
                         "2006 Winter Olympics\n" +
                         "q\n", 
-                        interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
+                        USECASE.DBPEDIA, Language.EN),
                     new HashSet<>(
                         Arrays.asList(
                           "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/2006_Winter_Olympics> }"
@@ -203,7 +203,7 @@ public class PatternTests_EN extends TestCase {
                           "of\n" +
                           "Aarhus\n" +       //The list of options does not have individuals only things like town, location, etc...
                           "q\n",
-                          interQACLI.USECASE.DBPEDIA,LexicalEntry.Language.EN),
+                          USECASE.DBPEDIA, Language.EN),
                     new HashSet<>(
                             Arrays.asList(  
                               "SELECT DISTINCT ?x ?y WHERE { <http://dbpedia.org/resource/Aarhus> <http://dbpedia.org/ontology/populationUrban> ?y ; <http://dbpedia.org/ontology/areaUrban> ?x }"
@@ -222,7 +222,7 @@ public class PatternTests_EN extends TestCase {
                           "of\n" +  
                           "cities\n" +       
                           "q\n",
-                          interQACLI.USECASE.DBPEDIA,LexicalEntry.Language.EN),
+                          USECASE.DBPEDIA, Language.EN),
                     new HashSet<>(
                             Arrays.asList(
                                     "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",

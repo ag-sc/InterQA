@@ -4,16 +4,14 @@ package interQA;
 import interQA.patterns.QueryPatternManager;
 import com.google.gson.Gson;
 import interQA.lexicon.DatasetConnector;
-import interQA.lexicon.LexicalEntry.Language;
 import interQA.lexicon.Lexicon;
-import interQA.main.interQACLI;
-import interQA.main.interQACLI.USECASE;
+import interQA.Config.Language;
+import interQA.Config.USECASE;
 import interQA.patterns.QueryPatternFactory_EN;
 import java.io.IOException;
 
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -88,7 +86,7 @@ public class ServletInterQA extends HttpServlet {
         Lexicon lexicon = new Lexicon(Language.EN);
         lexicon.load("resources/springer_en.ttl");
         lexicon.extractEntries();
-        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,interQACLI.USECASE.SPRINGER);
+        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,USECASE.SPRINGER);
 
         // Load query patterns
         

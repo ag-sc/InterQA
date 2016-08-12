@@ -1,6 +1,6 @@
 package interQA.lexicon;
 
-import interQA.lexicon.LexicalEntry.Language;
+import interQA.Config.Language;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

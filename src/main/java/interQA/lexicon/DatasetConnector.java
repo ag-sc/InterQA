@@ -1,16 +1,15 @@
 package interQA.lexicon;
 
 import interQA.elements.Element;
-import interQA.lexicon.LexicalEntry.Language;
+import interQA.Config.Language;
+import interQA.Config.USECASE;
 import interQA.main.JenaExecutorCacheSelect;
 import interQA.main.JenaExecutorCacheAsk;
-import interQA.main.interQACLI;
 import interQA.patterns.query.IncrementalQuery;
 import interQA.patterns.query.QueryBuilder;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.apache.jena.graph.Node;
 
@@ -41,7 +40,7 @@ public class DatasetConnector {
     Language lang;
 
 
-    public DatasetConnector(String url, Language language, interQACLI.USECASE usecase) {
+    public DatasetConnector(String url, Language language, USECASE usecase) {
 
         endpoint = url;
         vocab = new Vocabulary();

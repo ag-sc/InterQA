@@ -6,7 +6,7 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
-import interQA.main.interQACLI.USECASE;
+import interQA.Config.USECASE;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -437,5 +437,10 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
         e.add("die",Feature.FEMININE);
         e.add("der",Feature.MASCULINE);
         e.add("das",Feature.NEUTER);
+    }
+
+    @Override
+    public Set<QueryPattern> rollout(ArrayList<String> patternNames) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

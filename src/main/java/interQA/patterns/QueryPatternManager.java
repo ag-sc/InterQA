@@ -72,8 +72,8 @@ public class QueryPatternManager {
         activeQueryPatterns = new HashSet<>();
         
         for (QueryPattern pattern : allQueryPatterns) {
-            if (!pattern.parse(str)) { 
-                 activeQueryPatterns.add(pattern);
+            if (pattern.parse(str)) { 
+                activeQueryPatterns.add(pattern);
             }
         }
         
@@ -85,8 +85,8 @@ public class QueryPatternManager {
         List<String> names = new ArrayList<>();
         
         for (QueryPattern pattern : activeQueryPatterns){
-            String name = pattern.getClass().getSimpleName();
-            names.add(name);
+             String name = pattern.getClass().getSimpleName();
+             names.add(name);
         }
         
         return names;
