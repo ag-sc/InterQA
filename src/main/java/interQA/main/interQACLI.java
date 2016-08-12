@@ -259,7 +259,7 @@ public class interQACLI {
         
         do {
             
-            System.out.println("Current sentence: " + sbWholeSentenceExternal.toString());
+            System.out.println("Current sentence: \"" + sbWholeSentenceExternal.toString() + "\"");
             
             queries = qm.buildSPARQLqueries();
             System.out.println(trapSentence);
@@ -362,7 +362,12 @@ public class interQACLI {
                 sbWholeSentenceInternal.delete(0, sbWholeSentenceInternal.length()); //Empties the buffer
                 sbWholeSentenceInternal.append(renewedInternalSentence);                     //Adds the renewed sentence
 
-                String renewedExternalSentence = sbWholeSentenceExternal.delete(sbWholeSentenceExternal.length() - lastSelection.length() - 1,
+                String diff = null;
+                if (sbWholeSentenceExternal.length() >= lastSelection.length()){
+                    diff = sbWholeSentenceExternal.toString().substring(0, sbWholeSentenceExternal.length() - lastSelection.length());
+                }
+                String renewedExternalSentence = sbWholeSentenceExternal.delete(sbWholeSentenceExternal.length() -
+                                                                                (lastSelection.length() + (diff.endsWith(" ")? " ".length() : 0)),
                         sbWholeSentenceExternal.length())
                         .toString();
                 sbWholeSentenceExternal.delete(0, sbWholeSentenceExternal.length()); //Empties the buffer
@@ -377,7 +382,11 @@ public class interQACLI {
                     //The user selected one option from the options list
                     lastSelection = opts.get(num - 1);
                     sbWholeSentenceInternal.append(lastSelection);
-                    sbWholeSentenceExternal.append(" " + lastSelection);
+                    if (sbWholeSentenceExternal.length() == 0) { //If it is empty
+                        sbWholeSentenceExternal.append(lastSelection);
+                    }else{                                       //If it is NOT empty
+                        sbWholeSentenceExternal.append(" " + lastSelection);
+                    }
                 }
             }
 

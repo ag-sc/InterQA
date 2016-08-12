@@ -62,6 +62,11 @@ public class JenaExecutorCacheSelect{
         ps.println("Welcome to the cache explorer");
         ps.println("=============================");
         ps.println("SPARQL queries in the cache:");
+        if (cache == null){
+            ps.println("No one. Cache not initialized yet.");
+            return;
+        }
+
         String[] queries    = new String[cache.size()];
         ResultSetRewindable[] resultsets = new ResultSetRewindable[cache.size()];
         int index = 0;
@@ -197,6 +202,7 @@ public class JenaExecutorCacheSelect{
     private void readCacheFromDiskSpecificFile(String fileName) {
         FileInputStream fis = null;
         ObjectInputStream ois = null;
+        System.out.print("Loading Select cache from disk...");
         try {
             fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);
@@ -213,6 +219,7 @@ public class JenaExecutorCacheSelect{
                 cache.put(sparqlQuery, ResultSetFactory.copyResults(res)); //Stores a ResultSetRewindable
             }
             mapSer = null; //This should remove the object from memory (at least available for the GC)
+            System.out.println("done!.");
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
         } catch (IOException ioe){ //i
