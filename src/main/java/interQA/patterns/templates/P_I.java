@@ -1,5 +1,6 @@
 package interQA.patterns.templates;
 
+import interQA.elements.Element;
 import interQA.elements.InstanceElement;
 import interQA.elements.StringElement;
 import interQA.elements.PropertyElement;
@@ -94,7 +95,9 @@ public class P_I extends QueryPattern {
         public P_I clone() {
             
             P_I clone = new P_I(lexicon,dataset);
-            clone.elements = elements;
+            for (Element e : elements) {
+                 clone.elements.add(e.clone());
+            }
             clone.agreement = agreement;
             clone.builder = builder.clone();
             

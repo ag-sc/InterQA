@@ -2,6 +2,7 @@ package interQA.patterns.templates;
 
 
 import interQA.elements.ClassElement;
+import interQA.elements.Element;
 import interQA.elements.InstanceElement;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
@@ -110,7 +111,9 @@ public class C_P_I extends QueryPattern{
         public C_P_I clone() {
             
             C_P_I clone = new C_P_I(lexicon,dataset);
-            clone.elements = elements;
+            for (Element e : elements) {
+                 clone.elements.add(e.clone());
+            }
             clone.agreement = agreement;
             clone.builder = builder.clone();
             

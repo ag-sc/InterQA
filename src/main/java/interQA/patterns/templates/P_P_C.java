@@ -1,6 +1,7 @@
 package interQA.patterns.templates;
 
 import interQA.elements.ClassElement;
+import interQA.elements.Element;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
@@ -116,7 +117,9 @@ public class P_P_C extends QueryPattern{
         public P_P_C clone() {
             
             P_P_C clone = new P_P_C(lexicon,dataset);
-            clone.elements = elements;
+            for (Element e : elements) {
+                 clone.elements.add(e.clone());
+            }
             clone.agreement = agreement;
             clone.builder = builder.clone();
             
