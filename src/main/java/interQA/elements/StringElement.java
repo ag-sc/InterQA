@@ -101,4 +101,17 @@ public class StringElement extends Element {
             return options;
 	}
 
+        @Override
+        public StringElement clone() {
+            
+        StringElement clone = new StringElement();
+        
+        clone.elements = elements;
+            
+        for (String k : featureMap.keySet()) {
+             clone.featureMap.put(k,featureMap.get(k));
+        }
+            
+        return clone;
+    }
 }

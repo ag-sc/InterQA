@@ -20,7 +20,7 @@ public class QueryPatternManager {
     public QueryPatternManager(){
 
     }
-
+        
     /**
      * Intended to add patterns at the beginning of the process. This will not work if patterns are added once the
      * process has started and patterns have been rejected
@@ -30,6 +30,11 @@ public class QueryPatternManager {
         
         allQueryPatterns.addAll(patterns);
         activeQueryPatterns.addAll(patterns);
+    }
+    
+    public Set<QueryPattern> getPatterns() {
+        
+        return allQueryPatterns;
     }
 
     /**

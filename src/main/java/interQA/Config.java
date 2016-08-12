@@ -28,6 +28,11 @@ public class Config {
     DatasetConnector dataset;
     
     
+    public void init(USECASE usecase, Language language) {
+        
+        init(usecase,language,null);
+    }
+    
     public void init(USECASE usecase, Language language, ArrayList<String> patternNames) {
         
         lexicon = new Lexicon(language);

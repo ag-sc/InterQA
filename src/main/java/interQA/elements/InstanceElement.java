@@ -16,5 +16,17 @@ public class InstanceElement extends Element {
         this.agrFeatures = new ArrayList<>();
         this.context     = new HashMap<>();
     }
+    
+    @Override
+    public InstanceElement clone() {
+            
+        InstanceElement clone = new InstanceElement();
+            
+        for (String k : index.keySet()) {
+             clone.index.put(k,index.get(k));
+        }
+            
+        return clone;
+    }
 
 }

@@ -12,7 +12,7 @@ import java.util.Set;
 import org.apache.jena.graph.Triple;
 
 
-public abstract class Element {
+public abstract class Element implements Cloneable {
 
     
     // Active entries
@@ -193,6 +193,11 @@ public abstract class Element {
         if (fs1.contains(Feature.NEUTER)    && (fs2.contains(Feature.MASCULINE) || fs2.contains(Feature.FEMININE))) compatible = false;
         
         return compatible;
+    }
+    
+    @Override
+    public Element clone() {
+        return null;
     }
 
 }
