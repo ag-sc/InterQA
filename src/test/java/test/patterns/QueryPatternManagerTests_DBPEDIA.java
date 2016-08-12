@@ -1,0 +1,69 @@
+package test.patterns;
+
+
+import interQA.Config;
+import interQA.lexicon.DatasetConnector;
+import interQA.lexicon.LexicalEntry;
+import interQA.lexicon.Lexicon;
+import interQA.main.interQACLI;
+import interQA.patterns.QueryPatternFactory_EN;
+import interQA.patterns.QueryPatternManager;
+import junit.framework.TestCase;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+
+/**
+ * @author Mariano Rico
+ */
+public class QueryPatternManagerTests_DBPEDIA extends TestCase {
+
+    Config.Language lang = Config.Language.EN;
+    Lexicon               lexicon = new Lexicon(lang);
+    QueryPatternManager   qm = new QueryPatternManager();
+    DatasetConnector      dataset  = null;
+    Config.USECASE    usecase = Config.USECASE.DBPEDIA;
+
+    //Executed before EACH test
+    public void setUp() throws Exception {
+        //Init SPRINGER
+        lexicon.load("./src/main/java/resources/dbpedia_en.rdf");
+        lexicon.extractEntries();
+        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang,usecase);
+
+        // Load query patterns
+        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
+        qm.addQueryPatterns(qf_en.rollout());
+    }
+
+    public void testDelete1stdElement() throws Exception {
+
+        List<String> queries0 = qm.getUIoptions();
+        List<String> avlPats1 = qm.getActivePatternsBasedOnUserInput("how many");
+        List<String> queries1 = qm.getUIoptions();
+        List<String> avlPats2 = qm.getActivePatternsBasedOnUserInput("");
+        List<String> queries2 = qm.getUIoptions();
+
+        assertEquals(new HashSet<>(queries0),
+                     new HashSet<>(queries2));
+    }
+
+    public void testDelete2ndElement() throws Exception {
+
+        List<String> queries0 = qm.getUIoptions();
+        List<String> avlPats1 = qm.getActivePatternsBasedOnUserInput("how many");
+        List<String> queries1 = qm.getUIoptions();
+        List<String> avlPats2 = qm.getActivePatternsBasedOnUserInput("how manywrestlers");
+        List<String> queries2 = qm.getUIoptions();
+        List<String> avlPats3 = qm.getActivePatternsBasedOnUserInput("how many");
+        List<String> queries3 = qm.getUIoptions();
+
+        assertEquals(new HashSet<>(queries1),
+                     new HashSet<>(queries3));
+        assertEquals(new HashSet<>(avlPats1),
+                     new HashSet<>(avlPats3));
+    }
+
+}
