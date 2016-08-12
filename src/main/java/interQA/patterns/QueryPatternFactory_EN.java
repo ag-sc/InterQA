@@ -120,7 +120,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             e4_0.add("who");
             e4_0.add("what");
 
-            addVerbs(qpP_I2.getElement(3));
+            addVerbs(qpP_I2.getElement(1));
 
             qpP_I2.addAgreementDependency(0,1);
 
