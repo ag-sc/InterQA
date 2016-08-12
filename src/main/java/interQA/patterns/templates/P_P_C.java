@@ -15,9 +15,9 @@ public class P_P_C extends QueryPattern{
     
         // SELECT DISTINCT ?x ?y WHERE 
         // {
-        //   ?i rdf:type <C> .
-        //   ?i <P1> ?x .
-        //   ?i <P2> ?y . 
+        //   ?I rdf:type <C> .
+        //   ?I <P1> ?x .
+        //   ?I <P2> ?y . 
         // }
     
 	
@@ -72,7 +72,7 @@ public class P_P_C extends QueryPattern{
                     
                     String mainVar1 = "x";
                     String mainVar2 = "y";
-                    String iVar     = "i";
+                    String iVar     = "I";
                     
                     builder.addUninstantiatedTypeTriple(iVar,builder.placeholder("C"));
                     builder.addUninstantiatedTriple(iVar,builder.placeholder("P1"),mainVar1);

@@ -120,7 +120,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             e4_0.add("who");
             e4_0.add("what");
 
-            addVerbs(qpP_I2.getElement(3));
+            addVerbs(qpP_I2.getElement(1));
 
             qpP_I2.addAgreementDependency(0,1);
 
@@ -413,9 +413,6 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         e.add("give me all",Feature.PLURAL);
         e.add("show me all",Feature.PLURAL);
         e.add("list all",Feature.PLURAL);
-        
-        e.add("do you know any",Feature.PLURAL);
-        e.add("are there any",Feature.PLURAL);
     }
     
     private void addWhichPrefixes(StringElement e) {
