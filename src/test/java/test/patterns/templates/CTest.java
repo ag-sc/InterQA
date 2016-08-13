@@ -1,6 +1,7 @@
 package test.patterns.templates;
 
 
+import interQA.Config;
 import interQA.elements.Element;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
@@ -24,33 +25,21 @@ import static interQA.patterns.QueryPatternFactory_EN.addIndefGiveMePrefixes;
  */
 public class CTest extends TestCase {
 
-    Language lang = Language.EN;
-    Lexicon lexicon = new Lexicon(lang);
-    List<String> labels = new ArrayList<>();
-    QueryPatternManager qm = new QueryPatternManager();
-    DatasetConnector dataset  = null;
+    QueryPatternManager qm = null;
 
     //Executed before EACH test
     public void setUp() throws Exception {
         //Init SPRINGER
-        lexicon.load("./src/main/java/resources/springer_en.ttl");
-        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang,USECASE.SPRINGER);
+        Config config = new Config();
+        config.init(USECASE.SPRINGER,
+                    Language.EN,
+                    new ArrayList<String>(Arrays.asList("qpC1",  // Give me all mountains.
+                                                         "qpC2") // Which movies are there?
+                                                        )
+                   );
+        qm = config.getPatternManager();
 
-        Set<QueryPattern> patterns = new HashSet<>();
-//        // Give me all conferences.
-        QueryPattern q1 = new C(lexicon,dataset);
-
-        addDefGiveMePrefixes((StringElement) q1.getElement(0));
-        addIndefGiveMePrefixes((StringElement) q1.getElement(0));
-
-        //AddNoun equivalent
-        Element e =  q1.getElement(1);
-        e.addEntries(lexicon, LexicalEntry.POS.NOUN, null);
-
-        patterns.add(q1);
-        qm.addQueryPatterns(patterns);
     }
-
     public void testGiveMeAllconferences() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput("give me allconferences");  //I do not care about the available patterns

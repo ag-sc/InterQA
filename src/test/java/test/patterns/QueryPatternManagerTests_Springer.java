@@ -2,9 +2,7 @@ package test.patterns;
 
 import interQA.Config;
 import interQA.lexicon.DatasetConnector;
-import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
-import interQA.main.interQACLI;
 import interQA.patterns.QueryPatternFactory_EN;
 import interQA.patterns.QueryPatternManager;
 import junit.framework.TestCase;
@@ -18,29 +16,19 @@ import java.util.*;
  */
 public class QueryPatternManagerTests_Springer extends TestCase {
 
-    Config.Language lang = Config.Language.EN;
-    Lexicon lexicon = new Lexicon(lang);
-    QueryPatternManager qm = new QueryPatternManager();
-    DatasetConnector dataset  = null;
-    Config.USECASE usecase = Config.USECASE.SPRINGER;
+    QueryPatternManager qm = null;
 
     //Executed before EACH test
     public void setUp() throws Exception {
         //Init SPRINGER
-        lexicon.load("./src/main/java/resources/springer_en.ttl");
-        lexicon.extractEntries();
-        dataset = new DatasetConnector("http://es.dbpedia.org/sparql",lang, usecase);
-
-        // Load query patterns
-        QueryPatternFactory_EN qf_en = new QueryPatternFactory_EN(usecase,lexicon,dataset);
-        qm.addQueryPatterns(
-            qf_en.rollout(
-                new ArrayList<String>(
-                      Arrays.asList("qpC1", // Give me all mountains.
-                                    "qpC2") // Which movies are there?
+        Config config = new Config();
+        config.init(Config.USECASE.SPRINGER,
+                Config.Language.EN,
+                new ArrayList<String>(Arrays.asList("qpC1",  // Give me all mountains.
+                                                    "qpC2") // Which movies are there?
                 )
-            )
         );
+        qm = config.getPatternManager();
     }
 
     public void testDelete1stdElement() throws Exception {
@@ -71,4 +59,38 @@ public class QueryPatternManagerTests_Springer extends TestCase {
                      new HashSet<>(avlPats3));
     }
 
+    public void testDelete1stdElementAndPutItAgain() throws Exception {
+
+        List<String> options0 = qm.getUIoptions();
+        List<String> avlPats1 = qm.getActivePatternsBasedOnUserInput("what");
+        List<String> options1 = qm.getUIoptions();
+        List<String> avlPats2 = qm.getActivePatternsBasedOnUserInput("");
+        List<String> options2 = qm.getUIoptions();
+        List<String> avlPats3 = qm.getActivePatternsBasedOnUserInput("what");
+        List<String> options3 = qm.getUIoptions();
+
+        assertEquals(new HashSet<>(avlPats1),
+                     new HashSet<>(avlPats3));
+
+        assertEquals(new HashSet<>(options1),
+                     new HashSet<>(options3));
+    }
+
+    public void testDelete2ndElementAndPutItAgain() throws Exception {
+
+        List<String> options0 = qm.getUIoptions();
+        List<String> avlPats1 = qm.getActivePatternsBasedOnUserInput("what");
+        List<String> options1 = qm.getUIoptions();
+        List<String> avlPats2 = qm.getActivePatternsBasedOnUserInput("whatconferences");
+        List<String> options2 = qm.getUIoptions();
+        List<String> avlPats3 = qm.getActivePatternsBasedOnUserInput("what");
+        List<String> options3 = qm.getUIoptions();
+        List<String> avlPats4 = qm.getActivePatternsBasedOnUserInput("whatconferences");
+        List<String> options4 = qm.getUIoptions();
+
+        assertEquals(new HashSet<>(options2),
+                     new HashSet<>(options4));
+        assertEquals(new HashSet<>(avlPats2),
+                     new HashSet<>(avlPats4));
+    }
 }
