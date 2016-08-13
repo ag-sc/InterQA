@@ -6,6 +6,7 @@ import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.Lexicon;
+import java.util.ArrayList;
 
 /**
  *
@@ -117,6 +118,7 @@ public class P_P_C extends QueryPattern{
         public P_P_C clone() {
             
             P_P_C clone = new P_P_C(lexicon,dataset);
+            clone.elements = new ArrayList<>();
             for (Element e : elements) {
                  clone.elements.add(e.clone());
             }

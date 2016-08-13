@@ -7,6 +7,7 @@ import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -124,6 +125,7 @@ public class P_P_I extends QueryPattern{
         public P_P_I clone() {
             
             P_P_I clone = new P_P_I(lexicon,dataset);
+            clone.elements = new ArrayList<>();
             for (Element e : elements) {
                  clone.elements.add(e.clone());
             }
