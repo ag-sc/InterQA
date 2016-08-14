@@ -3,6 +3,7 @@ package interQA.main;
 import interQA.Config;
 import interQA.Config.Language;
 import interQA.Config.USECASE;
+import interQA.patterns.QueryPatternManager;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.*;
@@ -88,6 +89,7 @@ public class interQACLI {
 
         Config config = new Config(); 
         config.init(usecase, language, qpNames);
+        QueryPatternManager qm = config.getPatternManager();
         
         // RUN
 
@@ -118,6 +120,7 @@ public class interQACLI {
         
         List<String> opts = null;
         List<String> queries = null;
+        List<String> avlPats = null;
         //Select interaction mode
         System.out.println("Welcome to interQACLI");
         System.out.println("You are using dataset " + usecase.name() + " and language " + language.name() + ".");
@@ -153,13 +156,13 @@ public class interQACLI {
             
             System.out.println("Current sentence: \"" + sbWholeSentenceExternal.toString() + "\"");
             
-            queries = config.getPatternManager().buildSPARQLqueries();
+            queries = qm.buildSPARQLqueries();
             System.out.println(trapSentence);
             for (String query : queries) {
                  System.out.println(query);
             } 
              
-            TreeSet<String> optsOrdered = new TreeSet<>(config.getPatternManager().getUIoptions());
+            TreeSet<String> optsOrdered = new TreeSet<>(qm.getUIoptions());
             opts = new ArrayList<>(optsOrdered);
 
             if (opts.size() >  0) { //If there are options, show them
@@ -282,11 +285,13 @@ public class interQACLI {
                 }
             }
 
-            List<String> avlPats = config.getPatternManager().getActivePatternsBasedOnUserInput(sbWholeSentenceInternal.toString());
+            avlPats = qm.getActivePatternsBasedOnUserInput(sbWholeSentenceInternal.toString());
             System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
             //Save the cache to disk after every selected option
             config.getDatasetConnector().saveCacheToDisk();
-        }while (opts.size() != 0);
+        }while (opts.size() != 0  ||
+                avlPats.size() != 0  //This allows to delete if there are no options available
+               );
 
 
     }
