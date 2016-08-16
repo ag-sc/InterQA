@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static interQA.Config.ExtractionMode.NaiveExtraction;
-import static interQA.Config.ExtractionMode.intensiveExtraction;
+import static interQA.Config.ExtractionMode.exahustiveExtraction;
 
 /**
  * Created by Mariano on 21/07/2016.
@@ -441,7 +441,7 @@ public class JenaExecutorCacheSelect{
         ResultSet           res   = qe.execSelect();
         ResultSetRewindable resok = ResultSetFactory.copyResults(res); //res is unusable from now on, use resok
 
-        if (em == intensiveExtraction && resok.size() == limit){ //We assume that this implies that this is an extractive query
+        if (em == exahustiveExtraction && resok.size() == limit){ //We assume that this implies that this is an extractive query
             ResultSet           resExtra   = null;
             ResultSetRewindable resExtraok = null;
             ResultSetMem        resSum     = null;
@@ -493,7 +493,7 @@ public class JenaExecutorCacheSelect{
         String ep = "http://dbpedia.org/sparql";
 
 
-        ResultSetRewindable rs = extractiveExecSelect(ep, qBase, 10000, 100, intensiveExtraction);
+        ResultSetRewindable rs = extractiveExecSelect(ep, qBase, 10000, 100, exahustiveExtraction);
         System.out.println("Size = " + rs.size());
 
     }

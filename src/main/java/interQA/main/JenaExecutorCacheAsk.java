@@ -1,5 +1,6 @@
 package interQA.main;
 
+import interQA.Config;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 
@@ -16,7 +17,8 @@ public class JenaExecutorCacheAsk {
 
     private Map<String, CacheAskQueryInfo> cache = null;
 
-    private Boolean isFirstTime = true;
+    private boolean isFirstTime = true;
+    private boolean useHistoricalCache = false;
     static private final String fileNameTail = "cacheAsk.ser";
 
     public Boolean executeWithCache(String endpoint, String sparqlQuery) {
@@ -26,7 +28,7 @@ public class JenaExecutorCacheAsk {
         if (isFirstTime) {
             //Checks if there is a cache serialization in the file system
             File f = new File(getCacheFileName(endpoint));
-            if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
+            if (f.isFile() && f.canRead() && useHistoricalCache) { // If there is a cache file... load it.
                 readCacheFromDisk(endpoint);
             } else {  //There is no cache file
                 //We use the static object cache
@@ -80,6 +82,9 @@ public class JenaExecutorCacheAsk {
      * Saves only if there is some data
      */
     public void saveCacheToDisk(String endpoint) {
+        if (useHistoricalCache == false){ //If we do not load the historical cache, it is better not allow to save it.
+            return;
+        }
         //Save the cache to disk
         if (cache == null) {
             return;
@@ -96,6 +101,11 @@ public class JenaExecutorCacheAsk {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setCacheMode (boolean useHistoricalCache)
+    {
+        this.useHistoricalCache = useHistoricalCache;
     }
 
     public String cacheUsageReport() {

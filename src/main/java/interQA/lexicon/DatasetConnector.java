@@ -58,6 +58,7 @@ public class DatasetConnector {
 
     public void setCacheMode(Config.ExtractionMode extractionMode, boolean useHistoricalCache){
         cacheSel.setCacheMode(extractionMode, useHistoricalCache);
+        cacheAsk.setCacheMode(useHistoricalCache);
     }
     public void cacheUsageReport(PrintStream ps){
            ps.println(cacheAsk.cacheUsageReport() + " " + cacheSel.cacheUsageReport());

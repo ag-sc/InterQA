@@ -92,8 +92,8 @@ public class interQACLI {
         Config config = new Config(); 
         config.init(usecase, language, qpNames);
         //By default uses NaiveExtraction and does not use historical cache
-        //config.setCacheMode(NaiveExtraction, //NaiveExtraction
-        //                    true);           //Uses the historical cache
+        //config.setCacheMode(exahustiveExtraction, //Exahustive extraction
+        //                    true);                //Uses the historical cache
         QueryPatternManager qm = config.getPatternManager();
         
         // RUN

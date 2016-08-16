@@ -21,7 +21,7 @@ public class Config {
     
     public enum USECASE  { SPRINGER, DBPEDIA, EXPERIMENT }
     public enum Language { EN, DE, ES }
-    public enum ExtractionMode {NaiveExtraction, intensiveExtraction}
+    public enum ExtractionMode {NaiveExtraction, exahustiveExtraction}
     
     Lexicon lexicon;
     QueryPatternFactory patternFactory;
