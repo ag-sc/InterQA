@@ -80,7 +80,7 @@ public class PatternTests_EN extends TestCase {
                         "skiers\n"  +
                         "race\n"    +
                         "for\n"     +
-                        "2006 Winter Olympics\n" +
+                        "2006 Winter Olympics\n" + // 8267 options from SELECT DISTINCT * WHERE { ?x a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> ?I OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }
                         "q\n", 
                         USECASE.DBPEDIA, Language.EN),
                     new HashSet<>(

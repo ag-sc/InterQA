@@ -20,11 +20,9 @@ public class QueryPatternManagerTests_Springer extends TestCase {
         //Init SPRINGER
         Config config = new Config();
         config.init(Config.USECASE.SPRINGER,
-                Config.Language.EN,
-                new ArrayList<String>(Arrays.asList("qpC1",  // Give me all mountains.
-                                                    "qpC2") // Which movies are there?
-                )
-        );
+                    Config.Language.EN,
+                    null); //All the patterns defined in the usecase
+
         qm = config.getPatternManager();
     }
 

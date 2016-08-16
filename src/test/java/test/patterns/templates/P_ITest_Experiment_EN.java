@@ -4,6 +4,7 @@ package test.patterns.templates;
 import interQA.Config;
 import interQA.Config.Language;
 import interQA.Config.USECASE;
+import interQA.lexicon.DatasetConnector;
 import interQA.patterns.QueryPatternManager;
 import junit.framework.TestCase;
 
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class P_ITest_Experiment_EN extends TestCase {
 
-    QueryPatternManager qm = null;
+    Config config = null;
 
     //Executed before EACH test
     public void setUp() throws Exception {
@@ -31,16 +32,22 @@ public class P_ITest_Experiment_EN extends TestCase {
                                                         "qpP_I2")  // who starred/appeared X? //1.209.398 starred
                                                         )          // who compose the music for X //201.444 ?i musicComposer ?x
                    );
-        qm = config.getPatternManager();
+        this.config = config;
 
     }
     public void testGiveMeAllMusicComposers() throws Exception {
 
+        QueryPatternManager qm = config.getPatternManager();
+        DatasetConnector conn = config.getDatasetConnector();
+
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
-                                                                    "who is the",
-                                                                    "composer",
+                                                                    "who",        //"who is the"  --> No continuation
+                                                                    "compose the music",
                                                                     "for",
                                                                     "Titanic")); //No instances!!!!
+        conn.saveCacheToDisk();
+
+        List<String> opts = qm.getUIoptions();
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(new HashSet<>(res),
@@ -51,6 +58,8 @@ public class P_ITest_Experiment_EN extends TestCase {
                      ));
     }
     public void testHowManyConferences() throws Exception {
+
+        QueryPatternManager qm = config.getPatternManager();
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("", //Separator
                                                                                 "who",

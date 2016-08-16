@@ -10,6 +10,8 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static interQA.Config.ExtractionMode.NaiveExtraction;
+
 /**
  * Created by Mariano on 02/10/2015.
  */
@@ -89,6 +91,9 @@ public class interQACLI {
 
         Config config = new Config(); 
         config.init(usecase, language, qpNames);
+        //By default uses NaiveExtraction and does not use historical cache
+        //config.setCacheMode(NaiveExtraction, //NaiveExtraction
+        //                    true);           //Uses the historical cache
         QueryPatternManager qm = config.getPatternManager();
         
         // RUN
@@ -125,6 +130,7 @@ public class interQACLI {
         System.out.println("Welcome to interQACLI");
         System.out.println("You are using dataset " + usecase.name() + " and language " + language.name() + ".");
         System.out.println("You are using these query patterns: " + (qpNames!= null? qpNames: "the ones defined in the case."));
+        System.out.println("You are using the cache in mode " + config.getExtractionMode().name() + " and " + (config.isUsingHistoricalCache()? "": "NOT ") + "using the historical cache.");
 
         int interMode = 0;
         do {

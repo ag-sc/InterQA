@@ -1,6 +1,7 @@
 package interQA.main;
 
 
+import interQA.Config;
 import org.apache.jena.query.*;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
@@ -10,20 +11,43 @@ import org.apache.jena.sparql.resultset.ResultsFormat;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
+
+import static interQA.Config.ExtractionMode.NaiveExtraction;
+import static interQA.Config.ExtractionMode.intensiveExtraction;
 
 /**
  * Created by Mariano on 21/07/2016.
  */
 public class JenaExecutorCacheSelect{
+
     private TreeMap<String, ResultSetRewindable> cache = null;
     private Boolean isFirstTime = true;
+    private Config.ExtractionMode extractionMode = NaiveExtraction;
+    private boolean useHistoricalCache = false; // The historical cache is the cache file result of previous executions
+
     static private final String fileNameTail = "cacheSelect.ser";
     static private ResultsFormat format = ResultsFormat.FMT_RS_TSV;//FMT_RS_XML;//
     static final int BLOQSIZE = 10000; //The maximum number of rows in a resultset. For Virtuoso it is 10.000
     static final int WAIT_MILLIS = 100; //Milliseconds to wait if the server is too busy. After this period tries it again.
+
+    public JenaExecutorCacheSelect (){
+        //By default, the extraction mode is NaiveExtraction
+        //By default, useCache is false
+    }
+
+    public JenaExecutorCacheSelect (Config.ExtractionMode em, boolean useHistoricalCache){
+        extractionMode = em;
+        this.useHistoricalCache = useHistoricalCache;
+    }
+    public void setCacheMode (Config.ExtractionMode em, boolean useHistoricalCache)
+    {
+        this.extractionMode = em;
+        this.useHistoricalCache = useHistoricalCache;
+    }
+    public boolean isUsingHistoricalCache(){return useHistoricalCache;}
+    public Config.ExtractionMode getCacheExtractionMode(){ return extractionMode; }
 
     public ResultSet executeWithCache(String endpoint, String sparqlQuery) {
         ResultSet res = null;
@@ -31,7 +55,7 @@ public class JenaExecutorCacheSelect{
         if (isFirstTime){
             //Checks if there is a cache serialization in the file system
             File f = new File(getCacheFileName(endpoint));
-            if (f.isFile() && f.canRead()) { // If there is a cache file... load it.
+            if (f.isFile() && f.canRead() &&  useHistoricalCache) { // If there is a cache file... load it.
                 readCacheFromDisk(endpoint);
             }else{  //There is no cache file
                 //We use the static object cache
@@ -44,7 +68,7 @@ public class JenaExecutorCacheSelect{
         if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
             res = cache.get(sparqlQuery);         //get the results from the cache
         } else {                               //the sparqlQuery is NOT in the cache
-            res = extractiveExecSelect(endpoint, sparqlQuery, BLOQSIZE, WAIT_MILLIS);
+            res = extractiveExecSelect(endpoint, sparqlQuery, BLOQSIZE, WAIT_MILLIS, extractionMode);
 
             cache.put(sparqlQuery,                        //And store the information in the cache
                     ResultSetFactory.copyResults(res)); //It is CRITICAL to make a copy in-memory or it will be destroyed
@@ -244,6 +268,9 @@ public class JenaExecutorCacheSelect{
      * Saves only if there is some data
      */
     public void saveCacheToDisk(String endpoint) {
+        if (useHistoricalCache == false){ //If we do not load the historical cache, it is better not allow to save it.
+            return;
+        }
         //Save the cache to disk
         if (cache == null) {
             return;
@@ -400,7 +427,7 @@ public class JenaExecutorCacheSelect{
 
     }
 
-    static ResultSetRewindable extractiveExecSelect(String ep, String sparqlQuery, int limit, int milis){
+    static ResultSetRewindable extractiveExecSelect(String ep, String sparqlQuery, int limit, int milis, Config.ExtractionMode em){
         //PAY ATTENTION. We need ORDER BY in order to get a predictable result by OFFSET blocks
         //WARNING!!Additionally, there is a limit or 40.000 results for a ORDER BY query. You can cross this limit with
         //something that Virtuoso people name "subquering". See http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtTipsAndTricksHowToHandleBandwidthLimitExceed
@@ -414,7 +441,7 @@ public class JenaExecutorCacheSelect{
         ResultSet           res   = qe.execSelect();
         ResultSetRewindable resok = ResultSetFactory.copyResults(res); //res is unusable from now on, use resok
 
-        if (resok.size() == limit){ //We assume that this implies that this is an extractive query
+        if (em == intensiveExtraction && resok.size() == limit){ //We assume that this implies that this is an extractive query
             ResultSet           resExtra   = null;
             ResultSetRewindable resExtraok = null;
             ResultSetMem        resSum     = null;
@@ -466,7 +493,7 @@ public class JenaExecutorCacheSelect{
         String ep = "http://dbpedia.org/sparql";
 
 
-        ResultSetRewindable rs = extractiveExecSelect(ep, qBase, 10000, 100);
+        ResultSetRewindable rs = extractiveExecSelect(ep, qBase, 10000, 100, intensiveExtraction);
         System.out.println("Size = " + rs.size());
 
     }

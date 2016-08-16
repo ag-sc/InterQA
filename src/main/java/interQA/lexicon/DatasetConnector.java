@@ -1,5 +1,6 @@
 package interQA.lexicon;
 
+import interQA.Config;
 import interQA.elements.Element;
 import interQA.Config.Language;
 import interQA.Config.USECASE;
@@ -32,7 +33,7 @@ import org.apache.jena.sparql.syntax.ElementUnion;
 public class DatasetConnector {
 
     JenaExecutorCacheAsk    cacheAsk = new JenaExecutorCacheAsk();
-    JenaExecutorCacheSelect cacheSel = new JenaExecutorCacheSelect();
+    JenaExecutorCacheSelect cacheSel = new JenaExecutorCacheSelect(); //Naive Extraction by default
 
     String endpoint;
     Vocabulary vocab;
@@ -55,6 +56,9 @@ public class DatasetConnector {
         }
     }
 
+    public void setCacheMode(Config.ExtractionMode extractionMode, boolean useHistoricalCache){
+        cacheSel.setCacheMode(extractionMode, useHistoricalCache);
+    }
     public void cacheUsageReport(PrintStream ps){
            ps.println(cacheAsk.cacheUsageReport() + " " + cacheSel.cacheUsageReport());
     }
@@ -94,7 +98,14 @@ public class DatasetConnector {
             if (!keep) element.removeFromIndex(entry);
         }
     }
-    
+
+    /**
+     * This method modifies element, adding the appropriated instances
+     * Fills instances
+     * @param element
+     * @param builder
+     * @param i_var
+     */
     public void fillInstances(Element element, QueryBuilder builder, String i_var) {
                         
         String label_var = "l";

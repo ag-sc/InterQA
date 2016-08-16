@@ -23,11 +23,9 @@ public class QueryPatternManagerTests_Experiment extends TestCase {
         //Init SPRINGER
         Config config = new Config();
         config.init(Config.USECASE.EXPERIMENT,
-                Config.Language.EN,
-                new ArrayList<String>(Arrays.asList("qpC1",  // Give me all films.
-                                                    "qpC2")  // Which movies are there?
-                )
-        );
+                    Config.Language.EN,
+                    null); //All the patterns defined in the usecase
+
         qm = config.getPatternManager();
     }
 

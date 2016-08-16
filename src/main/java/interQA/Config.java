@@ -9,6 +9,7 @@ import interQA.patterns.QueryPatternFactory_ES;
 import interQA.patterns.QueryPatternManager;
 import java.util.ArrayList;
 
+import static interQA.Config.ExtractionMode.NaiveExtraction;
 
 
 /**
@@ -20,21 +21,22 @@ public class Config {
     
     public enum USECASE  { SPRINGER, DBPEDIA, EXPERIMENT }
     public enum Language { EN, DE, ES }
-    
+    public enum ExtractionMode {NaiveExtraction, intensiveExtraction}
     
     Lexicon lexicon;
     QueryPatternFactory patternFactory;
     QueryPatternManager patternManager;
     DatasetConnector dataset;
+    ExtractionMode extractionMode = NaiveExtraction;
+    boolean useHistoricalCache = false;
     
     
     public void init(USECASE usecase, Language language) {
         
         init(usecase,language,null);
     }
-    
     public void init(USECASE usecase, Language language, ArrayList<String> patternNames) {
-        
+
         lexicon = new Lexicon(language);
         patternManager = new QueryPatternManager();
         
@@ -90,6 +92,7 @@ public class Config {
                 break;
             }
         }
+
         
         // Load query patterns
         
@@ -122,4 +125,23 @@ public class Config {
     public QueryPatternManager getPatternManager() {
         return patternManager;
     }
+
+    /**
+     * Use after init
+     * @param extractionMode
+     */
+    public void setCacheMode(ExtractionMode extractionMode, boolean useHistoricalCache){
+        this.extractionMode = extractionMode;
+        this.useHistoricalCache = useHistoricalCache;
+        dataset.setCacheMode(extractionMode, useHistoricalCache);
+    }
+
+    public boolean isUsingHistoricalCache() {
+        return useHistoricalCache;
+    }
+    public ExtractionMode getExtractionMode() {
+        return extractionMode;
+    }
+
+
 }
