@@ -66,16 +66,16 @@ public abstract class QueryPattern implements Cloneable {
             while (!input.isEmpty()) {
                 
                     if (i >= elements.size()) return false;
-                   
+          
                     String rest = elements.get(i).parse(input);
                     if (rest == null) { return false; }
                                                            
                     currentElement = i;
                     String parsed  = input.replace(rest,"");
-                    
+                                      
                     update(parsed);
                     transferFeatures(parsed);
-
+                   
 		    input = rest;
                     i++;    
                     

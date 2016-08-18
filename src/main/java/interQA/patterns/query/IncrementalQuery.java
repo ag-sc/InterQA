@@ -2,13 +2,9 @@ package interQA.patterns.query;
 
 import interQA.lexicon.Vocabulary;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -142,7 +138,7 @@ public class IncrementalQuery {
     @Override
     public IncrementalQuery clone() {
         
-        // TODO Note that this ignores the body. 
+        // Note that this ignores the body. 
         // Currently this is fine because it is only used for adding the label stuff.
         
         IncrementalQuery copy = new IncrementalQuery();
@@ -157,7 +153,7 @@ public class IncrementalQuery {
         for (Triple t : triples) {
              copy.addTriple(new Triple(t.getSubject(),t.getPredicate(),t.getObject()));
         }
-        
+                
         return copy;
     }
     

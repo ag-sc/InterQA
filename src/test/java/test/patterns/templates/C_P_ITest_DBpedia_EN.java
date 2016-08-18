@@ -4,7 +4,12 @@ package test.patterns.templates;
 import interQA.Config;
 import interQA.Config.Language;
 import interQA.Config.USECASE;
+import interQA.elements.StringElement;
+import interQA.lexicon.LexicalEntry;
+import static interQA.patterns.QueryPatternFactory.vocab;
 import interQA.patterns.QueryPatternManager;
+import interQA.patterns.templates.C_P_I;
+import interQA.patterns.templates.QueryPattern;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -18,11 +23,12 @@ import java.util.List;
  */
 public class C_P_ITest_DBpedia_EN extends TestCase {
 
+    Config config = null;
     QueryPatternManager qm = null;
 
     //Executed before EACH test
     public void setUp() throws Exception {
-        Config config = new Config();
+        config = new Config();
         config.init(USECASE.DBPEDIA,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpC_P_I1",  // what skiers
@@ -272,6 +278,35 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
                         )
                 ));
 
+    }
+    
+    public void testParse() {
+        
+        QueryPattern p = new C_P_I(config.getLexicon(), config.getDatasetConnector());
+
+        StringElement e5_0 = (StringElement) p.getElement(0);
+        e5_0.add("what");
+
+        p.getElement(1).addEntries(config.getLexicon(), LexicalEntry.POS.NOUN, null);
+        p.getElement(3).addEntries(config.getLexicon(), LexicalEntry.POS.VERB, vocab.IntransitivePPFrame, false);
+
+        p.addAgreementDependency(0,1);
+        p.addAgreementDependency(1,2);
+        p.addAgreementDependency(1,3);
+
+        boolean success;
+        
+        QueryPattern clone3 = p.clone();
+        success = clone3.parse("whatskiersraceforCanada at the 2006 Winter Olympics");
+        assertTrue(success);
+        
+        QueryPattern clone2 = p.clone();
+        success = clone2.parse("whatskiersracefor");
+        assertTrue(success);
+        
+        QueryPattern clone4 = p.clone();
+        success = clone4.parse("whatskiersraceforCanada at the 2006 Winter Olympics");
+        assertTrue(success);
     }
 
 }

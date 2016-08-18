@@ -139,14 +139,14 @@ public abstract class Element implements Cloneable {
                 
         String longestMatch = "";
         String input = string.toLowerCase();
-            
+                    
 	for (String s : index.keySet()) {
             String form = s.toLowerCase();
             if (input.startsWith(form) && form.length() > longestMatch.length()) {
                 longestMatch = s;
             }
         }
-                
+                        
         if (!longestMatch.isEmpty()) {
             
             List<LexicalEntry> entries = index.get(longestMatch);
