@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author Mariano Rico
  */
-public class C_P_P_ITest_Experiment_EN extends TestCase {
+public class P_P_ITest_DBpedia_EN extends TestCase {
 
     QueryPatternManager qm = null;
 

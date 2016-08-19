@@ -39,10 +39,9 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         plist.add("qpC_P_I3");
         plist.add("qpC_P_I_P_I1");
         plist.add("qpC_P_I_P_I2");
-        plist.add("qpC_P_I4");
         plist.add("qpP_P_I");
         plist.add("qpP_P_C");
-        plist.add("qpC_P_P");
+//        plist.add("qpC_P_P");
         //Please, add P_C implementation
         switch(usecase) {
             case SPRINGER:
