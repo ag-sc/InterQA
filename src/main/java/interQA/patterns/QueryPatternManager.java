@@ -14,7 +14,7 @@ public class QueryPatternManager {
     Set<QueryPattern> allQueryPatterns = new HashSet<>();
     Set<QueryPattern> activeQueryPatterns = new HashSet<>();
     
-    StringBuffer parsedText = new StringBuffer();
+//  StringBuffer parsedText = new StringBuffer();
 
     
     public QueryPatternManager(){
@@ -30,7 +30,6 @@ public class QueryPatternManager {
         for (QueryPattern qp : patterns){
              QueryPattern clone = qp.clone();
              allQueryPatterns.add(clone); 
-             activeQueryPatterns.add(clone);
         }
     }
     

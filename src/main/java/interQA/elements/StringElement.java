@@ -65,7 +65,6 @@ public class StringElement extends Element {
 
             if (elements.isEmpty()) return string;
            
-            
             String longestMatch = "";
 
             for (String form : elements) {
