@@ -33,10 +33,11 @@ public class P_P_ITest_Experiment_EN extends TestCase {
     public void testWhatActorsPlayinBatman() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
-                                                                    "what is the")); //no continuations
-                                                                                     // Also for "give me the" and "who is the"
+                                                                    "what is the"));
+
 
         List<String> res = qm.buildSPARQLqueries();
+        List<String> opts = qm.getUIoptions();
 
         assertEquals(new HashSet<>(res),
                      new HashSet<>(
