@@ -21,9 +21,9 @@ public class JenaExecutorCacheAsk {
     private boolean useHistoricalCache = false;
     static private final String fileNameTail = "cacheAsk.ser";
 
-    public Boolean executeWithCache(String endpoint, String sparqlQuery) {
+    public boolean executeWithCache(String endpoint, String sparqlQuery) {
         CacheAskQueryInfo qi = null;
-        Boolean satisfiesCondition;
+        boolean satisfiesCondition;
 
         if (isFirstTime) {
             //Checks if there is a cache serialization in the file system
@@ -170,19 +170,19 @@ public class JenaExecutorCacheAsk {
      * This class can not be inner: the serialization of inner classes does not work :-S
      */
     class CacheAskQueryInfo implements Serializable {
-        private Boolean res;
+        private boolean res;
         private int timesUsed;
         private long oldestTimeStamp;
         private long newestTimeStamp;
 
-        public CacheAskQueryInfo(Boolean res) {
+        public CacheAskQueryInfo(boolean res) {
             this.res = res;
             timesUsed = 0;
             oldestTimeStamp = System.currentTimeMillis();
             newestTimeStamp = oldestTimeStamp;
         }
 
-        public Boolean getRes() {
+        public boolean getRes() {
             return res;
         }
 

@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class QueryBuilderTest extends TestCase {
 
-    public void SimplestCase() throws Exception {
+    public void testSimplestCase() throws Exception {
         QueryBuilder builder = new QueryBuilder();
         builder.reset();
 

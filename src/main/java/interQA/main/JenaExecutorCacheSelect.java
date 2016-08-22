@@ -50,7 +50,7 @@ public class JenaExecutorCacheSelect{
     public Config.ExtractionMode getCacheExtractionMode(){ return extractionMode; }
 
     public ResultSet executeWithCache(String endpoint, String sparqlQuery) {
-        ResultSet res = null;
+        ResultSetRewindable res = null;
 
         if (isFirstTime){
             //Checks if there is a cache serialization in the file system
@@ -77,7 +77,7 @@ public class JenaExecutorCacheSelect{
             //Save the cache to disk
             //saveCacheToDisk(); Now it is a method
         }
-
+        res.reset(); //Avoids resulsets finished
         return res;
     }
     public void interactiveExplorer(){
