@@ -39,7 +39,8 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
                                                         )
                    );
         //By default uses NaiveExtraction and does not use historical cache
-        //config.setCacheMode(exahustiveExtraction, true);
+        //This test works for both modes
+        //config.setCacheMode(exahustiveExtraction, true); //The exhaustive with historical requires up to 8GB heap
 
         qm = config.getPatternManager();
 
@@ -88,8 +89,13 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
                                                                     "skiers",
                                                                     "race",
                                                                     "for"));
-        //"race" produces a select query: SELECT DISTINCT * WHERE { ?x ?P2 ?I2 ; a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> ?I1 OPTIONAL { ?I1 <http://www.w3.org/2000/01/rdf-schema#label> ?l } }
+        //"race" produces a select query:
+        // SELECT DISTINCT * WHERE { ?x ?P2 ?I2 ; a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> ?I1 OPTIONAL { ?I1 <http://www.w3.org/2000/01/rdf-schema#label> ?l } }
         //This is an extractive query with 1.082.256 results
+
+        //However we also make this query
+        // SELECT DISTINCT * WHERE { ?x a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> ?I OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }
+        //That only has 8267 results... why??
 
         //We get 1 active pattern (qpC_P_I1). If we run will all the patterns we get another: C_P_I_P_I
         List<String> res = qm.buildSPARQLqueries(); //Last valid partial query
@@ -113,8 +119,8 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
                                                                                 "race",
                                                                                 "for",
                                                                                 "FIS Alpine World Ski Championships 2007" ));
-        //We get 1 active pattern (qpC_P_I1)
-        List<String> res = qm.buildSPARQLqueries(); //Last valid partial query now it is the ultimate
+        //Number of patterns available: 2 [C_P_I_P_I, C_P_I]
+        List<String> res = qm.buildSPARQLqueries();
         List<String> opts = qm.getUIoptions();
 
         assertEquals(new HashSet<>(res),
@@ -221,7 +227,7 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
 
     }
 
-    public void testWholeSequenceMinimumCodeDoesNOTwork() throws Exception {
+    public void testWholeSequenceMinimumCodeDidNOTwork() throws Exception {
         qm.getActivePatternsBasedOnUserInput(String.join("",
                 "what",
                 "skiers",
@@ -256,7 +262,7 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
 
     }
 
-    public void testWholeSequenceMinimumCodeYESwork() throws Exception {
+    public void testWholeSequenceMinimumCodeDidYesWork() throws Exception {
 
         qm.getActivePatternsBasedOnUserInput(String.join("",
                 "what",
