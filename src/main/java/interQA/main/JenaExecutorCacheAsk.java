@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public class JenaExecutorCacheAsk {
 
+    private static final long serialVersionUID = 511833904222085596L;
     private Map<String, CacheAskQueryInfo> cache = null;
 
     private boolean isFirstTime = true;
