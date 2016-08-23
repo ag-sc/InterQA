@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static interQA.Config.ExtractionMode.NaiveExtraction;
+import static interQA.Config.ExtractionMode.exahustiveExtraction;
 
 /**
  * Created by Mariano on 02/10/2015.
@@ -91,10 +92,11 @@ public class interQACLI {
 
         Config config = new Config(); 
         config.init(usecase, language, qpNames);
-        //By default uses NaiveExtraction and does not use historical cache
-        //config.setCacheMode(exahustiveExtraction, //Exahustive extraction
-        //                    true);                //Uses the historical cache
+        //If not specified, it will use NaiveExtraction and will not use historical cache
+        config.setCacheMode(exahustiveExtraction, //Exahustive extraction
+                            true);                //Uses the historical cache
         QueryPatternManager qm = config.getPatternManager();
+        qm.getActivePatternsBasedOnUserInput(""); //This initializes the active patterns
         
         // RUN
 

@@ -6,6 +6,8 @@ import interQA.Config.Language;
 import interQA.Config.USECASE;
 import interQA.elements.StringElement;
 import interQA.lexicon.LexicalEntry;
+
+import static interQA.Config.ExtractionMode.exahustiveExtraction;
 import static interQA.patterns.QueryPatternFactory.vocab;
 import interQA.patterns.QueryPatternManager;
 import interQA.patterns.templates.C_P_I;
@@ -37,6 +39,8 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
                                                         )
                    );
         //By default uses NaiveExtraction and does not use historical cache
+        //config.setCacheMode(exahustiveExtraction, true);
+
         qm = config.getPatternManager();
 
     }
@@ -84,6 +88,9 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
                                                                     "skiers",
                                                                     "race",
                                                                     "for"));
+        //"race" produces a select query: SELECT DISTINCT * WHERE { ?x ?P2 ?I2 ; a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> ?I1 OPTIONAL { ?I1 <http://www.w3.org/2000/01/rdf-schema#label> ?l } }
+        //This is an extractive query with 1.082.256 results
+
         //We get 1 active pattern (qpC_P_I1). If we run will all the patterns we get another: C_P_I_P_I
         List<String> res = qm.buildSPARQLqueries(); //Last valid partial query
         List<String> opts = qm.getUIoptions();
