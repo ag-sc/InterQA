@@ -37,27 +37,28 @@ public class DatasetConnector {
 
     String endpoint;
     Vocabulary vocab;
-    List<String> labelProperties;
+    List<String> labelProperties ;
     Language lang;
-    String gYearProperty;
-
+    String gYearProperty=null;
+    USECASE usecase ;
     public DatasetConnector(String url, Language language, USECASE usecase) {
 
         endpoint = url;
         vocab = new Vocabulary();
         lang = language;
         labelProperties = new ArrayList<>();
+        this.usecase = usecase;
         
         switch (usecase) {
                 
-            default: {
+            case DBPEDIA: {
                 labelProperties.add("http://www.w3.org/2000/01/rdf-schema#label");
-            }
+            }break;
             case SPRINGER:{
                 labelProperties.add("http://lod.springer.com/data/ontology/property/confName");
                 labelProperties.add("http://lod.springer.com/data/ontology/property/confAcronym");
                 gYearProperty = "http://lod.springer.com/data/ontology/property/confYear";
-            }
+            }break;
         }
     }
 
@@ -117,7 +118,10 @@ public class DatasetConnector {
         String label_var = "l";
         String gYear_var = "y";
         
-        for (IncrementalQuery iq : builder.getQueries()) {
+        switch(usecase){
+            
+            case DBPEDIA:{
+                for (IncrementalQuery iq : builder.getQueries()) {
               
               IncrementalQuery copy = iq.clone();
               copy.getBody().addElement(label(i_var,label_var));
@@ -131,8 +135,8 @@ public class DatasetConnector {
                                   
                 QuerySolution result   = results.nextSolution();
                 RDFNode       instance = result.get(i_var);
-                RDFNode       label    = result.get(label_var);
-                RDFNode       gYear    = result.get(gYear_var);                                  
+                RDFNode       label    = result.get(label_var); 
+                
                 if (instance != null) {
                     
                     LexicalEntry entry = new LexicalEntry();
@@ -145,16 +149,7 @@ public class DatasetConnector {
                            (label.asLiteral().getLanguage() == null ||
                             label.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
                                
-                                                    
-                            String year;
-                            if(gYear!=null){
-                                year = gYear.asLiteral().getLexicalForm().substring(0,4);
-                                entry.setCanonicalForm(label.asLiteral().getString()+" "+year);
-                            }
-                            else{
-                              entry.setCanonicalForm(label.asLiteral().getString());   
-                            }
-                            
+                            entry.setCanonicalForm(label.asLiteral().getString());
                             element.addToIndex(label.asLiteral().getString(),entry);
                         }
                     }
@@ -178,13 +173,76 @@ public class DatasetConnector {
                     }
                 }
             }
-        }  
+            } 
+            }break;
+            
+            case SPRINGER:{
+                
+              for (IncrementalQuery iq : builder.getQueries()) {
+              
+              IncrementalQuery copy = iq.clone();
+              copy.getBody().addElement(label(i_var,label_var));
+              Query query = copy.assemble(vocab,false);
+              query.setQueryResultStar(true);
+              String querystring = copy.prettyPrint(query);
+                                          
+              ResultSet results = cacheSel.executeWithCache(endpoint,querystring);
+            
+              while (results.hasNext()) {
+                                  
+                QuerySolution result   = results.nextSolution();
+                RDFNode       instance = result.get(i_var);
+                RDFNode       label    = result.get(label_var); 
+                RDFNode       gYear    = result.get(gYear_var);
+                
+                if (instance != null) {
+                    
+                    LexicalEntry entry = new LexicalEntry();
+                     String full_label = null;
+                    if (instance.isURIResource()) {
+                                                
+                        entry.setReference(instance.asResource().getURI());
+                        
+                        if (label != null && label.isLiteral() &&gYear !=null &&
+                           (label.asLiteral().getLanguage() == null ||
+                            label.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
+                            
+                            full_label = label.asLiteral().getString()+" "+gYear.asLiteral().getLexicalForm().substring(0,4);
+                            entry.setCanonicalForm(full_label);
+                            element.addToIndex(full_label,entry);
+                        }
+                    }
+                    else if (instance.isLiteral()) {
+                                                                        
+                        entry.setLiteralNode(instance);
+                        entry.setAsLiteral();
+                        
+                        String form;
+                        if (instance.asLiteral().getDatatypeURI().equals(vocab.xsd_gYear)) {
+                            form = instance.asLiteral().getLexicalForm().substring(0,4);
+                        } else {
+                            form = instance.asLiteral().getLexicalForm();
+                        }
+                        entry.setCanonicalForm(form);
+                        element.addToIndex(form,entry);
+                    }
+                    
+                    if (!element.isStringElement()) {
+                         element.getContext().put(entry,iq.getTriples());
+                    }
+                }
+            }
+        } 
+            }break;
+            
+        }
+        
         
         
 
     }
     
-    private ElementGroup label(String i_var, String label_var) {
+    public ElementGroup label(String i_var, String label_var) {
         
         ElementGroup eg = new ElementGroup();
         
@@ -203,7 +261,7 @@ public class DatasetConnector {
             
             eg.addElement(new ElementOptional(union));
         }
-        if(gYearProperty!=""){
+        if(gYearProperty!=null){
                 ElementGroup u = new ElementGroup();
                 u.addTriplePattern(new Triple(toVar(i_var),toResource(gYearProperty),toVar("y")));
                 eg.addElement(new ElementOptional(u));
