@@ -39,7 +39,7 @@ public class DatasetConnector {
     Vocabulary vocab;
     List<String> labelProperties;
     Language lang;
-    String gYearProperty;
+
 
     public DatasetConnector(String url, Language language, USECASE usecase) {
 
@@ -52,11 +52,6 @@ public class DatasetConnector {
                 
             default: {
                 labelProperties.add("http://www.w3.org/2000/01/rdf-schema#label");
-            }
-            case SPRINGER:{
-                labelProperties.add("http://lod.springer.com/data/ontology/property/confName");
-                labelProperties.add("http://lod.springer.com/data/ontology/property/confAcronym");
-                gYearProperty = "http://lod.springer.com/data/ontology/property/confYear";
             }
         }
     }
@@ -115,7 +110,6 @@ public class DatasetConnector {
     public void fillInstances(Element element, QueryBuilder builder, String i_var) {
                         
         String label_var = "l";
-        String gYear_var = "y";
         
         for (IncrementalQuery iq : builder.getQueries()) {
               
@@ -132,7 +126,7 @@ public class DatasetConnector {
                 QuerySolution result   = results.nextSolution();
                 RDFNode       instance = result.get(i_var);
                 RDFNode       label    = result.get(label_var);
-                RDFNode       gYear    = result.get(gYear_var);                                  
+                                                
                 if (instance != null) {
                     
                     LexicalEntry entry = new LexicalEntry();
@@ -144,17 +138,8 @@ public class DatasetConnector {
                         if (label != null && label.isLiteral() &&
                            (label.asLiteral().getLanguage() == null ||
                             label.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
-                               
-                                                    
-                            String year;
-                            if(gYear!=null){
-                                year = gYear.asLiteral().getLexicalForm().substring(0,4);
-                                entry.setCanonicalForm(label.asLiteral().getString()+" "+year);
-                            }
-                            else{
-                              entry.setCanonicalForm(label.asLiteral().getString());   
-                            }
-                            
+                                                        
+                            entry.setCanonicalForm(label.asLiteral().getString());
                             element.addToIndex(label.asLiteral().getString(),entry);
                         }
                     }
@@ -180,18 +165,16 @@ public class DatasetConnector {
             }
         }  
         
-        
+        // TODO if SPRINGER, then additonally get confName/Acronym + confYear
 
     }
     
-    private ElementGroup label(String i_var, String label_var) {
-        
-        ElementGroup eg = new ElementGroup();
+    private ElementOptional label(String i_var, String label_var) {
         
         if (labelProperties.size() == 1) {
             ElementGroup u = new ElementGroup();
             u.addTriplePattern(new Triple(toVar(i_var),toResource(labelProperties.get(0)),toVar(label_var)));
-            eg.addElement(new ElementOptional(u));
+            return new ElementOptional(u);
         }
         else {
             ElementUnion union = new ElementUnion();
@@ -200,16 +183,8 @@ public class DatasetConnector {
                  u.addTriplePattern(new Triple(toVar(i_var),toResource(p),toVar(label_var)));
                  union.addElement(u);
             }
-            
-            eg.addElement(new ElementOptional(union));
+            return new ElementOptional(union);
         }
-        if(gYearProperty!=""){
-                ElementGroup u = new ElementGroup();
-                u.addTriplePattern(new Triple(toVar(i_var),toResource(gYearProperty),toVar("y")));
-                eg.addElement(new ElementOptional(u));
-            }
-        
-        return eg;
     }
 
     

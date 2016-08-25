@@ -30,13 +30,13 @@ public class P_P_ITest_DBpedia_EN extends TestCase {
         qm = config.getPatternManager();
 
     }
-    public void testWhatIsTheLanguageAndGenre() throws Exception {
+    public void testWhatIsTheLanguageAndPopulation() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
                                                                     "what is the",
                                                                     "language",
                                                                     "and",
-                                                                    "genre")); //No continuation
+                                                                    "population"));
 
 
         List<String> res = qm.buildSPARQLqueries();
@@ -44,9 +44,53 @@ public class P_P_ITest_DBpedia_EN extends TestCase {
         assertEquals(new HashSet<>(res),
                      new HashSet<>(
                             Arrays.asList(
-                                    "" //??????????????????????????
+                                    "SELECT DISTINCT ?x ?y WHERE { ?I <http://dbpedia.org/ontology/spokenIn> ?x ; <http://dbpedia.org/ontology/totalPopulation> ?y }"
                             )
                      ));
+    }
+
+    public void testWhatIsTheLanguageAndPopulationOfTaiBueng() throws Exception {
+
+        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
+                                                                    "what is the",
+                                                                    "language",
+                                                                    "and",
+                                                                    "population",
+                                                                    "of",
+                                                                    "Tai Bueng"));
+
+
+        List<String> res = qm.buildSPARQLqueries();
+        List<String> opts = qm.getUIoptions();
+        assertEquals(new HashSet<>(res),
+                new HashSet<>(
+                        Arrays.asList(
+                                "SELECT DISTINCT ?x ?y WHERE {" +
+                                " <http://dbpedia.org/resource/Tai_Bueng> <http://dbpedia.org/ontology/totalPopulation> ?y" +
+                                " ; <http://dbpedia.org/ontology/spokenIn> ?x " +
+                                "}"
+                        )
+                ));
+    }
+
+    public void testWhatIsTheArea() throws Exception {
+
+        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
+                                                                    "what is the",
+                                                                    "area"));
+
+
+        List<String> res = qm.buildSPARQLqueries();   //4 querys!!
+        List<String> opts = qm.getUIoptions();        //0 opts!!
+        assertEquals(new HashSet<>(res),
+                new HashSet<>(
+                        Arrays.asList(
+                                "SELECT DISTINCT ?x ?y WHERE {"+
+                                        " <http://dbpedia.org/resource/Bangkok> <http://dbpedia.org/ontology/areaMetro> ?x"+
+                                        " ; <http://dbpedia.org/ontology/populationTotal> ?y"+
+                                        " }"
+                        )
+                ));
     }
 
     public void testWhatIsTheAreaAndPopulationOfBangkok() throws Exception {

@@ -438,7 +438,7 @@ public class JenaExecutorCacheSelect{
         String qOrderBy = sparqlQuery + " ORDER BY ?" + var1;
 
         QueryExecution qe = QueryExecutionFactory.sparqlService(ep, qOrderBy);
-        ResultSet           res   = qe.execSelect();
+        ResultSet           res   = qe.execSelect(); //We get a 500 error if the estimated execution time exceeds the limit of the EP
         ResultSetRewindable resok = ResultSetFactory.copyResults(res); //res is unusable from now on, use resok
 
         if (em == exahustiveExtraction && resok.size() == limit){ //We assume that this implies that this is an extractive query

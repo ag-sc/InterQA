@@ -265,18 +265,18 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
     public void testWholeSequenceMinimumCodeDidYesWork() throws Exception {
 
         qm.getActivePatternsBasedOnUserInput(String.join("",
-                "what",
-                "skiers",
-                "race",
-                "for"));
+                                            "what",
+                                            "skiers",
+                                            "race",
+                                            "for"));
 
         List<String> avlPats =
                 qm.getActivePatternsBasedOnUserInput(String.join("",
-                        "what",
-                        "skiers",
-                        "race",
-                        "for",
-                        "FIS Alpine World Ski Championships 2007" ));
+                                                    "what",
+                                                    "skiers",
+                                                    "race",
+                                                    "for",
+                                                    "FIS Alpine World Ski Championships 2007" ));
         List<String> res = qm.buildSPARQLqueries();
         List<String> opts = qm.getUIoptions();
 

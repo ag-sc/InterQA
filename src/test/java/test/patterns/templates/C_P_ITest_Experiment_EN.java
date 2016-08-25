@@ -27,42 +27,69 @@ public class C_P_ITest_Experiment_EN extends TestCase {
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpC_P_I1",  // What actors play in Batman?
                                                         "qpC_P_I2",  // Give me all actors that play in Batman.
-                                                        "qpC_P_I2")  // Which movie/actor is NO CONTINUATION
+                                                        "qpC_P_I2")  // Which movie/actor is ...
                                                         )
                    );
         qm = config.getPatternManager();
 
     }
-    public void testWhatActorsPlayinBatman() throws Exception {
+    public void testWhatPersonAppear() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
                                                                     "what",
-                                                                    "person",   //language has no continuation
-                                                                    "appears"));// starred/appeared/"compose the music" has no continuation
-                                                                   //No continuations!!!
+                                                                    "person",   //language is the ... weird query with City
+                                                                    "appear"));
+
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(new HashSet<>(res),
                      new HashSet<>(
                             Arrays.asList(
-                                    "" //??????????????????????????
+                                    "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/Person> . ?I <http://dbpedia.org/ontology/starring> ?x }"
                             )
                      ));
     }
-    public void testGiveMeAllActorsThatPlayInBatman() throws Exception {
+
+    public void testWhatPersonAppearInSpecific() throws Exception {
+
+        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
+                                                                    "what",
+                                                                    "person",
+                                                                    "appear",
+                                                                    "in",
+                                                                    "Adimakkachavadam"));
+        List<String> res = qm.buildSPARQLqueries();
+
+        assertEquals(new HashSet<>(res),
+                     new HashSet<>(
+                        Arrays.asList(
+                                "SELECT DISTINCT ?x WHERE {"+
+                                " ?x a <http://dbpedia.org/ontology/Person> ."+
+                                " <http://dbpedia.org/resource/Adimakkachavadam> <http://dbpedia.org/ontology/starring> ?x "+
+                                "}"
+                        )
+                ));
+    }
+
+
+    public void testGiveMeAllActorsThatAppearInSpecific() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("", //Separator
                                                                     "give me all",
                                                                     "actors",
                                                                     "that",
                                                                     "appear",
-                                                                    "in")); //There are no further options :-S
+                                                                    "in",
+                                                                    "Acción mutante"));
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(new HashSet<>(res),
                      new HashSet<>(
                             Arrays.asList(
-                                    "" //?????????????????????
+                                    "SELECT DISTINCT ?x WHERE {"+
+                                    " ?x a <http://dbpedia.org/ontology/Actor> ."+
+                                    " <http://dbpedia.org/resource/Acción_mutante> <http://dbpedia.org/ontology/starring> ?x "+
+                                    "}"
                             )
                      ));
     }

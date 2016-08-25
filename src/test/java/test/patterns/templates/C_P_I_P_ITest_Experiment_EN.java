@@ -94,4 +94,24 @@ public class C_P_I_P_ITest_Experiment_EN extends TestCase {
                             )
                      ));
     }
+    public void testWhatMoviesComposeTheMusicForSpecific() throws Exception {
+
+        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("", //Separator
+                                                                    "what",
+                                                                    "movies",
+                                                                    "compose the music",
+                                                                    "for",
+                                                                    "A Dog's Life"));
+        List<String> res = qm.buildSPARQLqueries();
+
+        assertEquals(new HashSet<>(res),
+                new HashSet<>(
+                        Arrays.asList(
+                                "SELECT DISTINCT ?x WHERE {"+
+                                " ?x a <http://dbpedia.org/ontology/Film> ."+
+                                " <http://dbpedia.org/resource/A_Dog's_Life> <http://dbpedia.org/ontology/musicComposer> ?x "+
+                                "}"
+                        )
+                ));
+    }
 }

@@ -35,44 +35,45 @@ public class P_ITest_Experiment_EN extends TestCase {
         this.config = config;
 
     }
-    public void testGiveMeAllMusicComposers() throws Exception {
+
+    public void testWhoComposeTheMusicFor() throws Exception {
 
         QueryPatternManager qm = config.getPatternManager();
-        DatasetConnector conn = config.getDatasetConnector();
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
-                                                                    "who",        //"who is the"  --> No continuation
+                                                                    "who",        //"give me the", "who is the" or "who was the" or "who are the" --> No continuation
+                                                                    "compose the music",
+                                                                    "for"));
+
+        List<String> opts = qm.getUIoptions();
+        List<String> res = qm.buildSPARQLqueries();
+
+        assertEquals(new HashSet<>(res),
+                new HashSet<>(
+                        Arrays.asList(
+                                "SELECT DISTINCT ?x WHERE { ?I <http://dbpedia.org/ontology/musicComposer> ?x }"
+                        )
+                ));
+    }
+
+    public void testWhoComposeTheMusicForABerlinRomance() throws Exception {
+
+        QueryPatternManager qm = config.getPatternManager();
+
+        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
+                                                                    "who",        //"give me the", "who is the" or "who was the" or "who are the" --> No continuation
                                                                     "compose the music",
                                                                     "for",
-                                                                    "Titanic")); //No instances!!!!
-        conn.saveCacheToDisk();
-
+                                                                    "A Berlin Romance"));
         List<String> opts = qm.getUIoptions();
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(new HashSet<>(res),
                      new HashSet<>(
                             Arrays.asList(
-                                    "" //???????
+                                    "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/A_Berlin_Romance> <http://dbpedia.org/ontology/musicComposer> ?x }"
                             )
                      ));
     }
-    public void testHowManyConferences() throws Exception {
 
-        QueryPatternManager qm = config.getPatternManager();
-
-        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("", //Separator
-                                                                                "who",
-                                                                                "compose the music",
-                                                                                "for",
-                                                                                "Titanic")); //No instances!!!!
-        List<String> res = qm.buildSPARQLqueries();
-
-        assertEquals(new HashSet<>(res),
-                     new HashSet<String>(
-                            Arrays.asList(
-                                    "" //???????
-                            )
-                     ));
-    }
 }

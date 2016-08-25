@@ -33,7 +33,24 @@ public class P_ITest_Springer_EN extends TestCase {
         qm = config.getPatternManager();
 
     }
-    public void testGiveMeAllconferences() throws Exception {
+
+    public void testGiveMeTheStartDatesOf() throws Exception {
+
+        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
+                                                                    "give me the",
+                                                                    "start dates",
+                                                                    "of")); //No more options!!
+        List<String> res = qm.buildSPARQLqueries();
+
+        assertEquals(new HashSet<>(res),
+                new HashSet<>(
+                        Arrays.asList(
+                                "SELECT DISTINCT ?x WHERE { ?I <http://lod.springer.com/data/ontology/property/confStartDate> ?x }"
+                        )
+                ));
+    }
+
+    public void testGiveMeTheStartDatesOfISWC() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
                                                                     "give me the",
@@ -49,12 +66,12 @@ public class P_ITest_Springer_EN extends TestCase {
                             )
                      ));
     }
-    public void testHowManyConferences() throws Exception {
+    public void testListAllStartsOf() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("", //Separator
-                                                                    "how many",
-                                                                    "conferences",
-                                                                    "are there")); //No instances!!!!
+                                                                    "list all",
+                                                                    "starts",
+                                                                    "of")); //No instances!!!!
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(new HashSet<>(res),
@@ -63,5 +80,22 @@ public class P_ITest_Springer_EN extends TestCase {
                                     "" //???????
                             )
                      ));
+    }
+
+    public void testWhoTakesPlaceInYucatan() throws Exception { //It is a possible sentence with no sense :-O
+
+        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("", //Separator
+                                                                    "who",
+                                                                    "take place",
+                                                                    "in",
+                                                                    "Yucatan"));
+        List<String> res = qm.buildSPARQLqueries();
+
+        assertEquals(new HashSet<>(res),
+                new HashSet<String>(
+                        Arrays.asList(
+                                "SELECT DISTINCT ?x WHERE { ?x <http://lod.springer.com/data/ontology/property/confCity> \"Yucatan\"@en }"
+                        )
+                ));
     }
 }
