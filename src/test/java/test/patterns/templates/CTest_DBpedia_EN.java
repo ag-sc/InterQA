@@ -3,7 +3,7 @@ package test.patterns.templates;
 
 import interQA.Config;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.patterns.QueryPatternManager;
 import junit.framework.TestCase;
 
@@ -24,7 +24,7 @@ public class CTest_DBpedia_EN extends TestCase {
     public void setUp() throws Exception {
         //Init SPRINGER
         Config config = new Config();
-        config.init(USECASE.DBPEDIA,
+        config.init(Usecase.DBPEDIA,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpC1",  // Give me all languages.
                                                         "qpC2")  // Which movies are there?

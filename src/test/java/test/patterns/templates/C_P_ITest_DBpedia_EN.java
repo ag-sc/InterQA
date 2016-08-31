@@ -3,11 +3,11 @@ package test.patterns.templates;
 
 import interQA.Config;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.elements.StringElement;
 import interQA.lexicon.LexicalEntry;
 
-import static interQA.Config.ExtractionMode.exahustiveExtraction;
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
 import static interQA.patterns.QueryPatternFactory.vocab;
 import interQA.patterns.QueryPatternManager;
 import interQA.patterns.templates.C_P_I;
@@ -31,7 +31,7 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
     //Executed before EACH test
     public void setUp() throws Exception {
         config = new Config();
-        config.init(USECASE.DBPEDIA,
+        config.init(Usecase.DBPEDIA,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpC_P_I1",  // what skiers
                                                         "qpC_P_I2",  // give me all skiers
@@ -40,7 +40,7 @@ public class C_P_ITest_DBpedia_EN extends TestCase {
                    );
         //By default uses NaiveExtraction and does not use historical cache
         //This test works for both modes
-        //config.setCacheMode(exahustiveExtraction, true); //The exhaustive with historical requires up to 8GB heap
+        //config.setCacheMode(ExhaustiveExtraction, true); //The exhaustive with historical requires up to 8GB heap
 
         qm = config.getPatternManager();
 

@@ -8,7 +8,7 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.patterns.QueryPatternManager;
 import interQA.patterns.templates.C;
 import interQA.patterns.templates.QueryPattern;
@@ -31,7 +31,7 @@ public class CTest_Springer_EN extends TestCase {
     public void setUp() throws Exception {
         //Init SPRINGER
         Config config = new Config();
-        config.init(USECASE.SPRINGER,
+        config.init(Usecase.SPRINGER,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpC1",  // Give me all mountains.
                                                         "qpC2")  // Which movies are there?

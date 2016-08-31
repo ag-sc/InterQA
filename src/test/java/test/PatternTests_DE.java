@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import junit.framework.TestCase;
 import static interQA.main.interQACLI.checkSequenceByStrings;
 
@@ -20,12 +20,10 @@ public class PatternTests_DE extends TestCase {
         public void test_C() throws Exception {
           // Give me all conferences  
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
-            assertEquals(
-                 checkSequenceByStrings(
-                        "zeig mir alle\n" +
+            assertEquals(checkSequenceByStrings("zeig mir alle\n" +
                         "Konferenzen\n" +
                         "q\n",
-                         USECASE.SPRINGER, Language.DE),
+                         Usecase.SPRINGER, Language.DE),
                   new ArrayList<String>(
                          Arrays.asList(
                             "SELECT DISTINCT ?x WHERE {  ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lod.springer.com/data/ontology/class/Conference> . }"
@@ -60,7 +58,7 @@ public class PatternTests_DE extends TestCase {
 //                        "creator\n"       +
 //                        "Power Rangers Zeo\n" +
 //                        "q\n",
-//                        interQACLI.USECASE.DBPEDIA,  LexicalEntry.Language.EN),
+//                        interQACLI.Usecase.DBPEDIA,  LexicalEntry.Language.EN),
 //                   new ArrayList<String>(
 //                            Arrays.asList(
 //                            "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/Power_Rangers_Zeo> <http://dbpedia.org/ontology/creator> ?x . }"
@@ -79,7 +77,7 @@ public class PatternTests_DE extends TestCase {
 //                        "race\n"   +
 //                        "FIS Alpine World Ski Championships 2013\n" +
 //                        "q\n",
-//                        interQACLI.USECASE.SPRINGER,  LexicalEntry.Language.EN),
+//                        interQACLI.Usecase.SPRINGER,  LexicalEntry.Language.EN),
 //                    new ArrayList<String>(
 //                        Arrays.asList(
 //                          "SELECT DISTINCT ?a { ?a  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://dbpedia.org/ontology/Skier> . ?a  <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/FIS_Alpine_World_Ski_Championships_2013> . }"

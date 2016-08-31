@@ -6,7 +6,7 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,12 +15,12 @@ import java.util.Set;
 
 public class QueryPatternFactory_DE implements QueryPatternFactory {    
     
-    USECASE usecase;
+    Usecase usecase;
     Lexicon lexicon;
     DatasetConnector instances;   
     
     
-    public QueryPatternFactory_DE(USECASE u, Lexicon l, DatasetConnector is) {
+    public QueryPatternFactory_DE(Usecase u, Lexicon l, DatasetConnector is) {
     
         usecase = u;
         lexicon = l;

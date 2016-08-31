@@ -3,7 +3,7 @@ package test.patterns.templates;
 
 import interQA.Config;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.patterns.QueryPatternManager;
 import junit.framework.TestCase;
 
@@ -24,7 +24,7 @@ public class P_ITest_Springer_EN extends TestCase {
     public void setUp() throws Exception {
         //Init SPRINGER
         Config config = new Config();
-        config.init(USECASE.SPRINGER,
+        config.init(Usecase.SPRINGER,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpP_I1",  // give me the start dates of ISWC
                                                         "qpP_I2")  // how many conferences are there?

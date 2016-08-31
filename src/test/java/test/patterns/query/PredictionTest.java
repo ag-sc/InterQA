@@ -16,7 +16,7 @@ public class PredictionTest {
     public static void main(String[] args) {
         
         Config config = new Config();
-        config.init(Config.USECASE.EXPERIMENT,
+        config.init(Config.Usecase.EXPERIMENT,
                     Config.Language.EN,
                     null); //All the patterns defined in the usecase
                

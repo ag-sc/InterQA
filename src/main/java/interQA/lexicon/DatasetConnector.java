@@ -3,7 +3,7 @@ package interQA.lexicon;
 import interQA.Config;
 import interQA.elements.Element;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.main.JenaExecutorCacheSelect;
 import interQA.main.JenaExecutorCacheAsk;
 import interQA.patterns.query.IncrementalQuery;
@@ -40,8 +40,8 @@ public class DatasetConnector {
     List<String> labelProperties ;
     Language lang;
     String gYearProperty=null;
-    USECASE usecase ;
-    public DatasetConnector(String url, Language language, USECASE usecase) {
+    Usecase usecase ;
+    public DatasetConnector(String url, Language language, Usecase usecase) {
 
         endpoint = url;
         vocab = new Vocabulary();

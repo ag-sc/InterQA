@@ -17,7 +17,7 @@ public class QueryPredictionTest extends TestCase {
     
     public void test_C() throws Exception {
         
-        config.init(Config.USECASE.SPRINGER,Config.Language.EN);
+        config.init(Config.Usecase.SPRINGER,Config.Language.EN);
         
         for (QueryPattern pattern : config.getPatternManager().getPatterns()) {
              if (pattern.getClass().getCanonicalName().equals("C")) {

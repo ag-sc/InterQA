@@ -3,7 +3,7 @@ package test.patterns.templates;
 
 import interQA.Config;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.patterns.QueryPatternManager;
 import junit.framework.TestCase;
 
@@ -23,7 +23,7 @@ public class P_P_ITest_DBpedia_EN extends TestCase {
     //Executed before EACH test
     public void setUp() throws Exception {
         Config config = new Config();
-        config.init(USECASE.DBPEDIA,
+        config.init(Usecase.DBPEDIA,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpP_P_I"))  //What is the height and weight of Michael Jordan?
                    );

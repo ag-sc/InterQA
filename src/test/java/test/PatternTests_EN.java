@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import junit.framework.TestCase;
 import static interQA.main.interQACLI.checkSequenceByStrings;
 
@@ -20,12 +20,11 @@ public class PatternTests_EN extends TestCase {
         public void test_C() throws Exception {
           // Give me all wrestlers
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
-            assertEquals(
-                 checkSequenceByStrings(    //OK. This case does not make any Select query to the EP
+            assertEquals(checkSequenceByStrings(//OK. This case does not make any Select query to the EP
                         "give me all\n" +
                         "wrestlers\n" +
                         "q\n",
-                        USECASE.DBPEDIA,  Language.EN),
+                        Usecase.DBPEDIA,  Language.EN),
                   new HashSet<>(
                          Arrays.asList(
                             "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/Wrestler> }"
@@ -37,13 +36,11 @@ public class PatternTests_EN extends TestCase {
         public void test_C_HowMany() throws Exception {
           // How many wrestlers are there
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
-            assertEquals(
-                 checkSequenceByStrings(
-                        "how many\n"    +
+            assertEquals(checkSequenceByStrings("how many\n"    +
                         "wrestlers\n" +
                         "are there\n"   +
                         "q\n",
-                         USECASE.DBPEDIA,  Language.EN),
+                         Usecase.DBPEDIA,  Language.EN),
                   new HashSet<>(
                             Arrays.asList(
                                 "SELECT DISTINCT (COUNT(?x) AS ?x_count) WHERE { ?x a <http://dbpedia.org/ontology/Wrestler> }"
@@ -55,14 +52,13 @@ public class PatternTests_EN extends TestCase {
         public void test_P_I() throws Exception{
           // who was the creator Next Top Model Romania  
          //SELECT DISTINCT ?x WHERE {  ?x <rdf:type>  <Class:Noun> . }
-            assertEquals(
-                   checkSequenceByStrings(     //We have more than 10.000 creators, and the one for this seems to be further
+            assertEquals(checkSequenceByStrings(//We have more than 10.000 creators, and the one for this seems to be further
                         "who was the\n" +      //But this depends on the EP (does not returns always the same data subset)
                         "creator\n" +
                         "of\n" +
                         "Zorro\n" +
                         "q\n",
-                        USECASE.DBPEDIA,  Language.EN),
+                        Usecase.DBPEDIA,  Language.EN),
                    new HashSet<>(
                             Arrays.asList(
                                 "SELECT DISTINCT ?x WHERE { <http://dbpedia.org/resource/Zorro> <http://dbpedia.org/ontology/creator> ?x }"
@@ -74,15 +70,14 @@ public class PatternTests_EN extends TestCase {
         public void test_C_P_I() throws Exception{
             // SELECT DISTINCT ?x {?x <rdf:Type> <Class:Noun>. ?x <Property:Verb> <Instance> }
             // what skier race FIS Alpine World Ski Championships 2013 ?
-            assertEquals(
-                    checkSequenceByStrings( // no query is built
+            assertEquals(checkSequenceByStrings(// no query is built
                         "what\n"    +
                         "skiers\n"  +
                         "race\n"    +
                         "for\n"     +
                         "2006 Winter Olympics\n" + // 8267 options from SELECT DISTINCT * WHERE { ?x a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> ?I OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }
                         "q\n", 
-                        USECASE.DBPEDIA, Language.EN),
+                        Usecase.DBPEDIA, Language.EN),
                     new HashSet<>(
                         Arrays.asList(
                           "SELECT DISTINCT ?x WHERE { ?x a <http://dbpedia.org/ontology/Skier> ; <http://dbpedia.org/ontology/team> <http://dbpedia.org/resource/2006_Winter_Olympics> }"
@@ -194,16 +189,14 @@ public class PatternTests_EN extends TestCase {
         }
         
         public void test_P_P_I() throws Exception {
-            assertEquals(
-                    checkSequenceByStrings(  
-                          "what is the\n" +
+            assertEquals(checkSequenceByStrings("what is the\n" +
                           "area\n" +  
                           "and\n" +  
                           "population\n" +
                           "of\n" +
                           "Aarhus\n" +       //The list of options does not have individuals only things like town, location, etc...
                           "q\n",
-                          USECASE.DBPEDIA, Language.EN),
+                          Usecase.DBPEDIA, Language.EN),
                     new HashSet<>(
                             Arrays.asList(  
                               "SELECT DISTINCT ?x ?y WHERE { <http://dbpedia.org/resource/Aarhus> <http://dbpedia.org/ontology/populationUrban> ?y ; <http://dbpedia.org/ontology/areaUrban> ?x }"
@@ -213,16 +206,14 @@ public class PatternTests_EN extends TestCase {
         }
         
         public void test_P_P_C() throws Exception {
-            assertEquals(
-                    checkSequenceByStrings(   
-                          "give me the\n" +
+            assertEquals(checkSequenceByStrings("give me the\n" +
                           "area\n" +  
                           "and\n" +  
                           "population\n" +
                           "of\n" +  
                           "cities\n" +       
                           "q\n",
-                          USECASE.DBPEDIA, Language.EN),
+                          Usecase.DBPEDIA, Language.EN),
                     new HashSet<>(
                             Arrays.asList(
                                     "SELECT DISTINCT ?x ?y WHERE { ?i <http://dbpedia.org/ontology/areaMetro> ?x ; <http://dbpedia.org/ontology/populationUrban> ?y ; a <http://dbpedia.org/ontology/City> }",
