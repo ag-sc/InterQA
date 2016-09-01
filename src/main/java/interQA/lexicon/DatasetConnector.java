@@ -50,7 +50,10 @@ public class DatasetConnector {
         lang = language;
         labelProperties = new ArrayList<>();
         this.usecase = usecase;
-        cacheLabels = new URILabelCache(language.toString().toLowerCase()); //This load the cache from disk... takes time.
+
+        cacheLabels = new URILabelCache(language.toString().toLowerCase());
+        //This load the cache from disk... takes time.
+        cacheLabels.readSerializationFile("urilabels.cache.ser"); //For 'DBpedia Nov 2015' it is a 861.226 KB file. Needs 5.3GB RAM
 
         switch (usecase) {
             
