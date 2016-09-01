@@ -22,7 +22,7 @@ public class QueryPatternManagerTests_Experiment extends TestCase {
     public void setUp() throws Exception {
         //Init SPRINGER
         Config config = new Config();
-        config.init(Config.USECASE.EXPERIMENT,
+        config.init(Config.Usecase.EXPERIMENT,
                     Config.Language.EN,
                     null); //All the patterns defined in the usecase
 

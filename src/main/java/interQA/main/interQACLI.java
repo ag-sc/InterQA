@@ -2,7 +2,7 @@ package interQA.main;
 
 import interQA.Config;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.patterns.QueryPatternManager;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static interQA.Config.ExtractionMode.NaiveExtraction;
-import static interQA.Config.ExtractionMode.exahustiveExtraction;
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
 
 /**
  * Created by Mariano on 02/10/2015.
@@ -30,18 +30,18 @@ public class interQACLI {
      */
     public static void  main(String args[]){
         if (args.length == 0) {  //No args
-            mainProcess(args, USECASE.DBPEDIA, Language.EN);
+            mainProcess(args, Usecase.DBPEDIA, Language.EN);
         }else{                  //We provide args
             if (args.length == 2) { //2 params mean in and out file names
-                mainProcess(args, USECASE.SPRINGER, Language.EN);
+                mainProcess(args, Usecase.SPRINGER, Language.EN);
             }else{                 //1, 3, 4, 5 params...
-                if (args.length == 4) { //4 params mean in and out file names, USECASE and Lang
-                    USECASE usecase = USECASE.valueOf(args[2]);    //The arg can be String SPRINGER or DBPEDIA
+                if (args.length == 4) { //4 params mean in and out file names, Usecase and Lang
+                    Usecase usecase = Usecase.valueOf(args[2]);    //The arg can be String SPRINGER or DBPEDIA
                     Language lang = Language.valueOf(args[3]); //The arg can be String EN or DE
                     mainProcess(args, usecase, lang);
                 }else {
-                    if (args.length > 4) { //more than 4 params mean in and out file names, USECASE, Lang and a serie of query-pattern names
-                        USECASE usecase = USECASE.valueOf(args[2]);    //The arg can be String SPRINGER or DBPEDIA
+                    if (args.length > 4) { //more than 4 params mean in and out file names, Usecase, Lang and a serie of query-pattern names
+                        Usecase usecase = Usecase.valueOf(args[2]);    //The arg can be String SPRINGER or DBPEDIA
                         Language lang = Language.valueOf(args[3]); //The arg can be String EN or DE
                         ArrayList<String> qpNames= new ArrayList<>();
                         for (int i =4; i < args.length; i++){
@@ -64,7 +64,7 @@ public class interQACLI {
      * @param args
      */
     public static void  mainProcess(String args[]){
-        mainProcess(args, USECASE.SPRINGER,  Language.EN);
+        mainProcess(args, Usecase.SPRINGER,  Language.EN);
     }
 
 
@@ -74,7 +74,7 @@ public class interQACLI {
      * @param usecase
      * @param language
      */
-    public static void  mainProcess(String args[], USECASE usecase, Language language ) {
+    public static void  mainProcess(String args[], Usecase usecase, Language language ) {
         mainProcess(args, usecase, language, null );
     }
 
@@ -86,14 +86,14 @@ public class interQACLI {
      * @param language
      * @param qpNames
      */
-    public static void  mainProcess(String args[], USECASE usecase, Language language, ArrayList<String> qpNames ){
+    public static void  mainProcess(String args[], Usecase usecase, Language language, ArrayList<String> qpNames ){
 
         // INIT
 
         Config config = new Config(); 
         config.init(usecase, language, qpNames);
         //If not specified, it will use NaiveExtraction and will not use historical cache
-        //config.setCacheMode(exahustiveExtraction, //Exahustive extraction
+        //config.setCacheMode(ExhaustiveExtraction, //Exahustive extraction
         //                    true);                //Uses the historical cache
         QueryPatternManager qm = config.getPatternManager();
         qm.getActivePatternsBasedOnUserInput(""); //This initializes the active patterns
@@ -349,7 +349,7 @@ public class interQACLI {
      * @throws Exception
      */
     public static Set<String> checkSequenceByStrings(String sequence) throws Exception {
-        return (checkSequenceByStrings(sequence,USECASE.SPRINGER,  Language.EN));
+        return (checkSequenceByStrings(sequence,Usecase.SPRINGER,  Language.EN));
     }
 
     /**
@@ -358,7 +358,7 @@ public class interQACLI {
      * @param sequence is the sequence of tokens typed by the user
      * @throws Exception
      */
-    public static Set<String> checkSequenceByStrings(String sequence, USECASE usecase, Language language) throws Exception {
+    public static Set<String> checkSequenceByStrings(String sequence, Usecase usecase, Language language) throws Exception {
         return checkSequenceByStrings(sequence, usecase, language, null);
     }
 
@@ -368,7 +368,7 @@ public class interQACLI {
      * @param sequence is the sequence of tokens typed by the user
      * @throws Exception
      */
-    public static Set<String> checkSequenceByStrings(String sequence, USECASE usecase, Language language, String[] qpNames) throws Exception {
+    public static Set<String> checkSequenceByStrings(String sequence, Usecase usecase, Language language, String[] qpNames) throws Exception {
         interQACLI cli = new interQACLI();
         String fileNameIn  = "test1.cli";
         String fileNameOut = "test1.out";

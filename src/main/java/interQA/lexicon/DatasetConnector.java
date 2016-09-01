@@ -3,7 +3,7 @@ package interQA.lexicon;
 import interQA.Config;
 import interQA.elements.Element;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.main.JenaExecutorCacheSelect;
 import interQA.main.JenaExecutorCacheAsk;
 import interQA.patterns.query.IncrementalQuery;
@@ -40,8 +40,8 @@ public class DatasetConnector {
     List<String> labelProperties ;
     Language lang;
     String gYearProperty=null;
-    USECASE usecase ;
-    public DatasetConnector(String url, Language language, USECASE usecase) {
+    Usecase usecase ;
+    public DatasetConnector(String url, Language language, Usecase usecase) {
 
         endpoint = url;
         vocab = new Vocabulary();
@@ -50,15 +50,17 @@ public class DatasetConnector {
         this.usecase = usecase;
         
         switch (usecase) {
-                
-            case DBPEDIA: {
-                labelProperties.add("http://www.w3.org/2000/01/rdf-schema#label");
-            }break;
-            case SPRINGER:{
+            
+            case SPRINGER: {
                 labelProperties.add("http://lod.springer.com/data/ontology/property/confName");
                 labelProperties.add("http://lod.springer.com/data/ontology/property/confAcronym");
                 gYearProperty = "http://lod.springer.com/data/ontology/property/confYear";
-            }break;
+                break;
+            }
+            default: {
+                labelProperties.add("http://www.w3.org/2000/01/rdf-schema#label");
+                break;
+            }
         }
     }
 
@@ -119,63 +121,7 @@ public class DatasetConnector {
         String gYear_var = "y";
         
         switch(usecase){
-            
-            case DBPEDIA:{
-                for (IncrementalQuery iq : builder.getQueries()) {
-              
-              IncrementalQuery copy = iq.clone();
-              copy.getBody().addElement(label(i_var,label_var));
-              Query query = copy.assemble(vocab,false);
-              query.setQueryResultStar(true);
-              String querystring = copy.prettyPrint(query);
-                                          
-              ResultSet results = cacheSel.executeWithCache(endpoint,querystring);
-            
-              while (results.hasNext()) {
-                                  
-                QuerySolution result   = results.nextSolution();
-                RDFNode       instance = result.get(i_var);
-                RDFNode       label    = result.get(label_var); 
-                
-                if (instance != null) {
-                    
-                    LexicalEntry entry = new LexicalEntry();
-
-                    if (instance.isURIResource()) {
-                                                
-                        entry.setReference(instance.asResource().getURI());
                         
-                        if (label != null && label.isLiteral() &&
-                           (label.asLiteral().getLanguage() == null ||
-                            label.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
-                               
-                            entry.setCanonicalForm(label.asLiteral().getString());
-                            element.addToIndex(label.asLiteral().getString(),entry);
-                        }
-                    }
-                    else if (instance.isLiteral()) {
-                                                                        
-                        entry.setLiteralNode(instance);
-                        entry.setAsLiteral();
-                        
-                        String form;
-                        if (instance.asLiteral().getDatatypeURI().equals(vocab.xsd_gYear)) {
-                            form = instance.asLiteral().getLexicalForm().substring(0,4);
-                        } else {
-                            form = instance.asLiteral().getLexicalForm();
-                        }
-                        entry.setCanonicalForm(form);
-                        element.addToIndex(form,entry);
-                    }
-                    
-                    if (!element.isStringElement()) {
-                         element.getContext().put(entry,iq.getTriples());
-                    }
-                }
-            }
-            } 
-            }break;
-            
             case SPRINGER:{
                 
               for (IncrementalQuery iq : builder.getQueries()) {
@@ -233,7 +179,65 @@ public class DatasetConnector {
                 }
             }
         } 
-            }break;
+        break;
+        }
+            
+        default: {
+                for (IncrementalQuery iq : builder.getQueries()) {
+              
+                    IncrementalQuery copy = iq.clone();
+                    copy.getBody().addElement(label(i_var,label_var));
+                    Query query = copy.assemble(vocab,false);
+                    query.setQueryResultStar(true);
+                    String querystring = copy.prettyPrint(query);
+                    
+                    ResultSet results = cacheSel.executeWithCache(endpoint,querystring);
+
+                    while (results.hasNext()) {
+
+                      QuerySolution result   = results.nextSolution();
+                      RDFNode       instance = result.get(i_var);
+                      RDFNode       label    = result.get(label_var); 
+
+                      if (instance != null) {
+
+                          LexicalEntry entry = new LexicalEntry();
+
+                          if (instance.isURIResource()) {
+
+                              entry.setReference(instance.asResource().getURI());
+
+                              if (label != null && label.isLiteral() &&
+                                 (label.asLiteral().getLanguage() == null ||
+                                  label.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
+
+                                  entry.setCanonicalForm(label.asLiteral().getString());
+                                  element.addToIndex(label.asLiteral().getString(),entry);
+                              }
+                          }
+                          else if (instance.isLiteral()) {
+
+                              entry.setLiteralNode(instance);
+                              entry.setAsLiteral();
+
+                              String form;
+                              if (instance.asLiteral().getDatatypeURI().equals(vocab.xsd_gYear)) {
+                                  form = instance.asLiteral().getLexicalForm().substring(0,4);
+                              } else {
+                                  form = instance.asLiteral().getLexicalForm();
+                              }
+                              entry.setCanonicalForm(form);
+                              element.addToIndex(form,entry);
+                          }
+
+                          if (!element.isStringElement()) {
+                               element.getContext().put(entry,iq.getTriples());
+                          }
+                      }
+                    }
+                }
+                break;
+            }
             
         }
         

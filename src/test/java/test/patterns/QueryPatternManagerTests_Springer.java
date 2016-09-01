@@ -19,7 +19,7 @@ public class QueryPatternManagerTests_Springer extends TestCase {
     public void setUp() throws Exception {
         //Init SPRINGER
         Config config = new Config();
-        config.init(Config.USECASE.SPRINGER,
+        config.init(Config.Usecase.SPRINGER,
                     Config.Language.EN,
                     null); //All the patterns defined in the usecase
 

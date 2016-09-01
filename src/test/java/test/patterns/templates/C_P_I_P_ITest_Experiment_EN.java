@@ -3,7 +3,7 @@ package test.patterns.templates;
 
 import interQA.Config;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.patterns.QueryPatternManager;
 import junit.framework.TestCase;
 
@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static interQA.Config.ExtractionMode.NaiveExtraction;
-import static interQA.Config.ExtractionMode.exahustiveExtraction;
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
 
 
 /**
@@ -27,14 +27,14 @@ public class C_P_I_P_ITest_Experiment_EN extends TestCase {
     //Executed before EACH test
     public void setUp() throws Exception {
         config = new Config();
-        config.init(USECASE.EXPERIMENT,
+        config.init(Usecase.EXPERIMENT,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpC_P_I_P_I1",  //Show me all conferences that took place in Berlin in 2015.
                                                         "qpC_P_I_P_I2")  //Which conferences took place in Berlin in 2015?
                                                         )
                    );
         //By default uses NaiveExtraction and does not use historical cache
-        //config.setCacheMode(exahustiveExtraction, true); //This test runs OK for both modes, but in exhaustive+Historical mode...
+        //config.setCacheMode(ExhaustiveExtraction, true); //This test runs OK for both modes, but in exhaustive+Historical mode...
                                                          //each method requires 8GB and 16GB Heap space respectively.
 
         qm = config.getPatternManager();
@@ -62,7 +62,7 @@ public class C_P_I_P_ITest_Experiment_EN extends TestCase {
         if (config.getExtractionMode() == NaiveExtraction){
             assertEquals(opts.size(), 33);
         }else{
-            if (config.getExtractionMode() == exahustiveExtraction){
+            if (config.getExtractionMode() == ExhaustiveExtraction){
                 assertEquals(opts.size(), 220);
             }
         }

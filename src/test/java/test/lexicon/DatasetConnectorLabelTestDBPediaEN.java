@@ -5,7 +5,7 @@
  */
 package test.lexicon;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.lexicon.DatasetConnector;
 import junit.framework.TestCase;
 /**
@@ -18,7 +18,7 @@ public class DatasetConnectorLabelTestDBPediaEN extends TestCase{
     
     public void setUp() throws Exception {
         
-        t = new DatasetConnector("http://dbpedia.org/sparql",Language.EN,USECASE.DBPEDIA);
+        t = new DatasetConnector("http://dbpedia.org/sparql",Language.EN,Usecase.DBPEDIA);
     
     }
     

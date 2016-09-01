@@ -5,14 +5,18 @@ import interQA.elements.Element;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
+import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import interQA.patterns.query.IncrementalQuery;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author mirtik, cunger
  */
-public class P_P_C extends QueryPattern{
+public class P_P_C extends QueryPattern {
 	
     
         // SELECT DISTINCT ?x ?y WHERE 
@@ -23,7 +27,7 @@ public class P_P_C extends QueryPattern{
         // }
     
 	
-	public P_P_C(Lexicon lexicon,DatasetConnector instances){
+	public P_P_C(Lexicon lexicon,DatasetConnector instances) {
 				            
             this.lexicon = lexicon;
             this.dataset = instances; 
@@ -126,6 +130,64 @@ public class P_P_C extends QueryPattern{
             clone.builder = builder.clone();
             
             return clone;
+        }
+
+        @Override 
+        public Set<String> predictASKqueries() {
+            
+            Set<String> queries = new HashSet<>();
+            
+            // Init queries
+            
+            builder.reset();
+            String mainVar1 = "x";
+            String mainVar2 = "y";
+            String iVar     = "I";
+            builder.addProjVar(mainVar1);
+            builder.addProjVar(mainVar2);         
+            builder.addUninstantiatedTypeTriple(iVar,builder.placeholder("C"));
+            builder.addUninstantiatedTriple(iVar,builder.placeholder("P1"),mainVar1);
+            builder.addUninstantiatedTriple(iVar,builder.placeholder("P2"),mainVar2);
+
+            // Build ASK queries
+            
+            Set<IncrementalQuery> iqueries = new HashSet<>();
+            Set<IncrementalQuery> intermed = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : builder.getQueries()) {
+                      IncrementalQuery j = builder.instantiate("P1",entry,i);
+                      intermed.add(j);
+                 }
+            }
+            
+            iqueries.addAll(intermed);
+            intermed = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : iqueries) {
+                      IncrementalQuery j = builder.instantiate("P2",entry,i);
+                      intermed.add(j);
+                 }
+            }
+            
+            iqueries.addAll(intermed);
+            intermed = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getClassEntries()) {
+                 for (IncrementalQuery i : iqueries) {
+                      IncrementalQuery j = builder.instantiate("C",entry,i);
+                      intermed.add(j);
+                 }
+            }
+                        
+            iqueries.addAll(intermed);
+            
+            for (IncrementalQuery iquery : iqueries) {
+                 queries.add(iquery.prettyPrint(iquery.assembleAsAsk(vocab,false)));
+            }
+            
+            return queries;
         }
 
 }

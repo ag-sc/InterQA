@@ -93,6 +93,14 @@ public class C extends QueryPattern {
             
             Set<String> queries = new HashSet<>();
             
+            // Init queries
+            
+            builder.reset();
+            String mainVar = "x";
+            builder.addUninstantiatedTypeTriple(mainVar,builder.placeholder("C"));
+            
+            // Predict ASK
+            
             for (LexicalEntry entry : lexicon.getClassEntries()) {
                  for (IncrementalQuery query : builder.getQueries()) {
                       IncrementalQuery instq = builder.instantiate("C",entry,query);

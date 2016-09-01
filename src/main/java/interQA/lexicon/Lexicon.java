@@ -54,6 +54,8 @@ public class Lexicon {
         }
         
         public void extractEntries() {
+            
+            boolean verbose = true;
                         
             collectCommonNouns();
             collectTransitiveVerbs();
@@ -67,7 +69,15 @@ public class Lexicon {
                 index.put(key,removeDuplicates(index.get(key)));
             }
             
-            System.out.println("Lexicon: " + index.keySet()); 
+            if (verbose) {
+            System.out.println("\n-------- Lexicon ---------\n"); 
+            for (String s : index.keySet()) {
+                for (LexicalEntry entry : index.get(s)) {
+                    System.out.println(s + " -> " + entry);
+                }
+            }
+            System.out.println("\n--------------------------\n");
+            }
         }
         
         public HashMap<String,List<LexicalEntry>> getSubindex(LexicalEntry.POS pos, String frame, boolean withMarker) {
@@ -267,15 +277,14 @@ public class Lexicon {
             
             String queryString = "PREFIX lemon:   <" + vocab.lemon + "> "
                                + "PREFIX lexinfo: <" + vocab.lexinfo + "> "
-                               + "SELECT DISTINCT ?canonicalForm ?pres ?past ?sg ?pl ?reference ?subjOfProp ?objOfProp ?subject ?prepositionalObject ?marker WHERE {"
+                               + "SELECT DISTINCT ?canonicalForm ?pres_sg ?pres_pl ?past ?reference ?subjOfProp ?objOfProp ?subject ?prepositionalObject ?marker WHERE {"
                                + " ?lexicon lemon:entry ?entry . "
                                + " ?entry   lexinfo:partOfSpeech lexinfo:verb . "
                                + " ?entry   lemon:canonicalForm ?form . " 
                                + " ?form    lemon:writtenRep ?canonicalForm ."
-                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f1 . } UNION { ?entry lemon:otherForm ?f1 . } ?f1 lemon:writtenRep ?pres . ?f1 lexinfo:tense  lexinfo:present . } "
-                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f2 . } UNION { ?entry lemon:otherForm ?f2 . } ?f2 lemon:writtenRep ?past . ?f2 lexinfo:tense  lexinfo:past . } "
-                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f3 . } UNION { ?entry lemon:otherForm ?f3 . } ?f3 lemon:writtenRep ?sg   . ?f3 lexinfo:number lexinfo:singular . } "
-                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f4 . } UNION { ?entry lemon:otherForm ?f4 . } ?f4 lemon:writtenRep ?pl   . ?f4 lexinfo:number lexinfo:plural . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f1 . } UNION { ?entry lemon:otherForm ?f1 . } ?f1 lemon:writtenRep ?pres_sg . ?f1 lexinfo:tense  lexinfo:present . ?f1 lexinfo:number lexinfo:singular . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f2 . } UNION { ?entry lemon:otherForm ?f2 . } ?f2 lemon:writtenRep ?pres_pl . ?f2 lexinfo:tense  lexinfo:present . ?f2 lexinfo:number lexinfo:plural . } "
+                               + " OPTIONAL { { ?entry lemon:canonicalForm ?f3 . } UNION { ?entry lemon:otherForm ?f3 . } ?f3 lemon:writtenRep ?past .    ?f3 lexinfo:tense  lexinfo:past . } "
                                + " ?entry   lemon:sense ?sense . "
                                + " ?sense   lemon:reference ?reference ."
                                + " ?sense   lemon:subjOfProp ?subjOfProp ."
@@ -300,7 +309,7 @@ public class Lexicon {
                 for ( ; results.hasNext() ; ) {
                     
                     QuerySolution sol = results.nextSolution() ;
-                                        
+                                                            
                     String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
                     String reference     = sol.get("reference").toString(); 
                     String subjOfProp    = sol.get("subjOfProp").toString();
@@ -311,41 +320,35 @@ public class Lexicon {
                     
                     try {      
                         LexicalEntry entry = new LexicalEntry(); 
-                        entry.setCanonicalForm(canonicalForm + " " + marker);
+                        entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.VERB);
                         entry.setFrame(vocab.lexinfo + "IntransitivePPFrame");
                         entry.setMarker(marker);
                         
-                        String pres; String past; 
+                        String pres_sg; String pres_pl; String past; 
                         
-                        if (sol.contains("pres")) pres = sol.get("pres").asLiteral().getValue().toString();
-                        else                      pres = canonicalForm;
-                        if (sol.contains("past")) past = sol.get("past").asLiteral().getValue().toString();
-                        else                      past = inflector.getPast(canonicalForm,3);
+                        if (sol.contains("pres_sg")) pres_sg = sol.get("pres_sg").asLiteral().getValue().toString();
+                        else                         pres_sg = inflector.getPresent(canonicalForm,3);
+                        if (sol.contains("pres_pl")) pres_pl = sol.get("pres_pl").asLiteral().getValue().toString();
+                        else                         pres_pl = canonicalForm;
+                        if (sol.contains("past"))    past = sol.get("past").asLiteral().getValue().toString();
+                        else                         past = inflector.getPast(canonicalForm,3);
                                                
-                        entry.addForm(LexicalEntry.Feature.PRESENT,pres);
+                        entry.addForm(LexicalEntry.Feature.PRESENT,pres_sg);
+                        entry.addForm(LexicalEntry.Feature.SINGULAR,pres_sg);
+                        entry.addForm(LexicalEntry.Feature.PRESENT,pres_pl);
+                        entry.addForm(LexicalEntry.Feature.PLURAL,pres_pl);
                         entry.addForm(LexicalEntry.Feature.PAST,past);
                         
-                        if (!index.containsKey(pres)) index.put(pres,new ArrayList<>());
-                        index.get(pres).add(entry);
+                        if (!index.containsKey(pres_sg)) index.put(pres_sg,new ArrayList<>());
+                        index.get(pres_sg).add(entry);
+                        if (!index.containsKey(pres_pl)) index.put(pres_pl,new ArrayList<>());
+                        index.get(pres_pl).add(entry);
                         if (!index.containsKey(past)) index.put(past,new ArrayList<>());
                         index.get(past).add(entry);
                         
                         propertyEntries.add(entry);
-                        
-                        if (sol.contains("sg")) {
-                            String sg = sol.get("sg").asLiteral().getValue().toString();
-                            entry.addForm(LexicalEntry.Feature.SINGULAR,sg);
-                            if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
-                            index.get(sg).add(entry);
-                        }
-                        if (sol.contains("pl")) {
-                            String pl = sol.get("pl").asLiteral().getValue().toString();
-                            entry.addForm(LexicalEntry.Feature.PLURAL,pl);
-                            if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
-                            index.get(pl).add(entry);
-                        }
                         
                         if (subject.equals(subjOfProp) && prepObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
@@ -450,7 +453,7 @@ public class Lexicon {
                         index.get(sg).add(entry);
                         if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
                         index.get(pl).add(entry);   
-                        
+                                                
                         propertyEntries.add(entry);
                     }
                     catch (NullPointerException npe) {

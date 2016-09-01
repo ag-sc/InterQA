@@ -19,9 +19,9 @@ import static interQA.Config.ExtractionMode.NaiveExtraction;
 public class Config {
 
     
-    public enum USECASE  { SPRINGER, DBPEDIA, EXPERIMENT }
+    public enum Usecase  { SPRINGER, DBPEDIA, EXPERIMENT }
     public enum Language { EN, DE, ES }
-    public enum ExtractionMode {NaiveExtraction, exahustiveExtraction}
+    public enum ExtractionMode { NaiveExtraction, ExhaustiveExtraction }
     
     Lexicon lexicon;
     QueryPatternFactory patternFactory;
@@ -31,11 +31,11 @@ public class Config {
     boolean useHistoricalCache = false;
     
     
-    public void init(USECASE usecase, Language language) {
+    public void init(Usecase usecase, Language language) {
         
         init(usecase,language,null);
     }
-    public void init(USECASE usecase, Language language, ArrayList<String> patternNames) {
+    public void init(Usecase usecase, Language language, ArrayList<String> patternNames) {
 
         lexicon = new Lexicon(language);
         patternManager = new QueryPatternManager();
@@ -82,7 +82,7 @@ public class Config {
                 // Load lexicon
 
                 lexicon.load("./src/main/java/resources/dbpedia_movies_en.ttl");
-                lexicon.load("./src/main/java/resources/dbpedia_countries_en.ttl");
+                lexicon.load("./src/main/java/resources/dbpedia_geography_en.ttl");
                 lexicon.extractEntries();
                     
                 // Set endpoint

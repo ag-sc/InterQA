@@ -21,7 +21,7 @@ Person
 Country
 
 
-COUNTRIES
+GEOGRAPHY
 
 Properties:
 
@@ -29,19 +29,19 @@ capital
 population
 language
 currency
-
-foundingYear
-governmentType
-foundingDate
-longName
-leader?
-dissolutionYear
-
+elevation
+mayor
+timeZone
+averageDepth
+archipelago
 
 Classes:
 
 Country
 City
-Company
+Mountain
 Currency
 Language
+Lake 
+River
+Island

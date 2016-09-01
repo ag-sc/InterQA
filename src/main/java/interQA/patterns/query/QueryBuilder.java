@@ -45,6 +45,11 @@ public class QueryBuilder {
         return queries;
     }
     
+    public void setQueries(Set<IncrementalQuery> qs) {
+        
+        queries = qs;
+    }
+    
     public void addProjVar(String var) {
         
         for (IncrementalQuery q : queries) {

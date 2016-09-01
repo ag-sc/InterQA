@@ -7,9 +7,11 @@ import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import interQA.patterns.query.IncrementalQuery;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.jena.query.Query;
 
 /**
  *
@@ -133,6 +135,99 @@ public class P_P_I extends QueryPattern{
             clone.builder = builder.clone();
             
             return clone;
+        }
+        
+        @Override 
+        public Set<String> predictASKqueries() {
+            
+            Set<String> queries = new HashSet<>();
+            
+            // Init queries
+            
+            builder.reset();
+            String mainVar1 = "x";
+            String mainVar2 = "y";
+            builder.addProjVar(mainVar1);
+            builder.addProjVar(mainVar2);
+            builder.addUninstantiatedTriple(builder.placeholder("I"),builder.placeholder("P1"),mainVar1);
+            builder.addUninstantiatedTriple(builder.placeholder("I"),builder.placeholder("P2"),mainVar2);
+
+            // Build ASK queries
+            
+            Set<IncrementalQuery> iqueries = new HashSet<>();
+            Set<IncrementalQuery> intermed = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : builder.getQueries()) {
+                      IncrementalQuery j = builder.instantiate("P1",entry,i);
+                      intermed.add(j);
+                 }
+            }
+            
+            iqueries.addAll(intermed);
+            intermed = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : iqueries) {
+                      IncrementalQuery j = builder.instantiate("P2",entry,i);
+                      intermed.add(j);
+                 }
+            }
+            
+            iqueries.addAll(intermed);
+            
+            for (IncrementalQuery iquery : iqueries) {
+                 queries.add(iquery.prettyPrint(iquery.assembleAsAsk(vocab,false)));
+            }
+            
+            return queries;
+        }
+        
+        @Override 
+        public Set<String> predictSELECTqueries() {
+            
+            Set<String> queries = new HashSet<>();
+            
+            // Init queries
+            
+            builder.reset();
+            String mainVar1 = "x";
+            String mainVar2 = "y";
+            builder.addProjVar(mainVar1);
+            builder.addProjVar(mainVar2);
+            builder.addUninstantiatedTriple(builder.placeholder("I"),builder.placeholder("P1"),mainVar1);
+            builder.addUninstantiatedTriple(builder.placeholder("I"),builder.placeholder("P2"),mainVar2);
+
+            // Instantiate P1 and P2
+            
+            Set<IncrementalQuery> iqueries1 = new HashSet<>();
+            Set<IncrementalQuery> iqueries2 = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : builder.getQueries()) {
+                      IncrementalQuery j = builder.instantiate("P1",entry,i);
+                      iqueries1.add(j);
+                 }
+            }
+            
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : iqueries1) {
+                      IncrementalQuery j = builder.instantiate("P2",entry,i);
+                      iqueries2.add(j);
+                 }
+            }
+            
+            // Build SELECT queries
+            
+            for (IncrementalQuery iquery : iqueries2) {
+                
+                iquery.getBody().addElement(dataset.label("I","l"));
+                Query query = iquery.assemble(vocab,false);
+                query.setQueryResultStar(true);
+                queries.add(iquery.prettyPrint(query)); 
+            }
+            
+            return queries;
         }
 
 }

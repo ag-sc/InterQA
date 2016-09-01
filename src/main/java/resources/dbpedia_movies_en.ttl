@@ -2,7 +2,7 @@
 @prefix lemon: <http://lemon-model.net/lemon#> .
 @prefix lexinfo: <http://www.lexinfo.net/ontology/2.0/lexinfo#> .
 
-@prefix : <http://github.com/cimiano/lemon.dbpedia/target/movies#> .
+@prefix : <http://inter.qa/lexicon/movies#> .
 
 
 :lexicon a lemon:Lexicon ;
@@ -29,6 +29,7 @@
               :direct,
               :produce,
               :play,
+              :portray,
 
               :released_in,
 
@@ -74,10 +75,14 @@
 
 :director_of a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:noun ;
-    lemon:canonicalForm :director_of_form ;
+    lemon:canonicalForm :director_of_sg ;
+    lemon:otherForm     :director_of_pl ;
     lemon:synBehavior   :director_of_frame ;
     lemon:sense         :director_of_sense .
-:director_of_form lemon:writtenRep "director"@en .
+:director_of_sg lemon:writtenRep "director"@en ;
+    lexinfo:number lexinfo:singular .
+:director_of_pl lemon:writtenRep "directors"@en ;
+    lexinfo:number lexinfo:plural .
 :director_of_frame a lexinfo:NounPPFrame ;
     lexinfo:copulativeArg       :director_of_arg1 ;
     lexinfo:prepositionalObject :director_of_arg2 .
@@ -91,7 +96,7 @@
     lemon:canonicalForm :producer_of_form ;
     lemon:synBehavior   :producer_of_frame ;
     lemon:sense         :producer_of_sense .
-:producer_of_form lemon:writtenRep "director"@en .
+:producer_of_form lemon:writtenRep "producer"@en .
 :producer_of_frame a lexinfo:NounPPFrame ;
     lexinfo:copulativeArg       :producer_of_arg1 ;
     lexinfo:prepositionalObject :producer_of_arg2 .
@@ -229,6 +234,19 @@
     lemon:subjOfProp :play_arg2 ;
     lemon:objOfProp  :play_arg1 .
 
+:portray a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :portray_form ;
+    lemon:synBehavior   :portray_frame ;
+    lemon:sense         :portray_sense .
+:portray_form lemon:writtenRep "portray"@en .
+:portray_frame a lexinfo:TransitiveFrame ;
+    lexinfo:subject      :portray_arg1 ;
+    lexinfo:directObject :portray_arg2 .
+:portray_sense lemon:reference <http://dbpedia.org/ontology/portrayer> ;
+    lemon:subjOfProp :portray_arg2 ;
+    lemon:objOfProp  :portray_arg1 .
+
 
 #### Verbs: IntransitivePP ####
 
@@ -262,18 +280,18 @@
 
 :compose_the_music_for a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:verb ;
-    lemon:canonicalForm :compose_the_music_for_form ;
-    lemon:otherForm     :compose_the_music_for_form_3sg ;
+    lemon:canonicalForm :compose_the_music_for_form_pres_pl ;
+    lemon:otherForm     :compose_the_music_for_form_pres_sg ;
     lemon:otherForm     :compose_the_music_for_form_past ;
     lemon:synBehavior   :compose_the_music_for_frame ;
     lemon:sense         :compose_the_music_for_sense .
-:compose_the_music_for_form lemon:writtenRep "compose the music"@en ;
+:compose_the_music_for_form_pres_pl lemon:writtenRep "compose the music"@en ;
     lexinfo:tense  lexinfo:present ;
     lexinfo:number lexinfo:plural .
-:compose_the_music_for_2sg lemon:writtenRep "composes the music"@en ;
+:compose_the_music_for_form_pres_sg lemon:writtenRep "composes the music"@en ;
     lexinfo:tense  lexinfo:present ;
     lexinfo:number lexinfo:singular .
-:compose_the_music_for_past lemon:writtenRep "composed the music"@en ;
+:compose_the_music_for_form_past lemon:writtenRep "composed the music"@en ;
     lexinfo:tense  lexinfo:past .
 :compose_the_music_for_frame a lexinfo:IntransitivePPFrame ;
     lexinfo:subject             :compose_the_music_for_arg1 ;
@@ -285,18 +303,18 @@
 
 :compose_the_soundtrack_of a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:verb ;
-    lemon:canonicalForm :compose_the_soundtrack_of_form ;
-    lemon:otherForm     :compose_the_soundtrack_of_form_3sg ;
+    lemon:canonicalForm :compose_the_soundtrack_of_form_pres_pl ;
+    lemon:otherForm     :compose_the_soundtrack_of_form_pres_sg ;
     lemon:otherForm     :compose_the_soundtrack_of_form_past ;
     lemon:synBehavior   :compose_the_soundtrack_of_frame ;
     lemon:sense         :compose_the_soundtrack_of_sense .
-:compose_the_soundtrack_of_form lemon:writtenRep "compose the soundtrack"@en ;
+:compose_the_soundtrack_of_form_pres_pl lemon:writtenRep "compose the soundtrack"@en ;
     lexinfo:tense  lexinfo:present ;
     lexinfo:number lexinfo:plural .
-:compose_the_soundtrack_of_2sg lemon:writtenRep "composes the soundtrack"@en ;
+:compose_the_soundtrack_of_form_pres_sg lemon:writtenRep "composes the soundtrack"@en ;
     lexinfo:tense  lexinfo:present ;
     lexinfo:number lexinfo:singular .
-:compose_the_soundtrack_of_past lemon:writtenRep "composed the soundtrack"@en ;
+:compose_the_soundtrack_of_form_past lemon:writtenRep "composed the soundtrack"@en ;
     lexinfo:tense  lexinfo:past .
 :compose_the_soundtrack_of_frame a lexinfo:IntransitivePPFrame ;
     lexinfo:subject             :compose_the_soundtrack_of_arg1 ;

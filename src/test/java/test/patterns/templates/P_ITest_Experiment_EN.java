@@ -3,7 +3,7 @@ package test.patterns.templates;
 
 import interQA.Config;
 import interQA.Config.Language;
-import interQA.Config.USECASE;
+import interQA.Config.Usecase;
 import interQA.lexicon.DatasetConnector;
 import interQA.patterns.QueryPatternManager;
 import junit.framework.TestCase;
@@ -25,7 +25,7 @@ public class P_ITest_Experiment_EN extends TestCase {
     public void setUp() throws Exception {
         //Init SPRINGER
         Config config = new Config();
-        config.init(USECASE.EXPERIMENT,
+        config.init(Usecase.EXPERIMENT,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpP_I1",  // who is the composer for X
                                                                    // who were....

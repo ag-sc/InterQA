@@ -5,8 +5,12 @@ import interQA.elements.Element;
 import interQA.elements.PropertyElement;
 import interQA.elements.StringElement;
 import interQA.lexicon.DatasetConnector;
+import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
+import interQA.patterns.query.IncrementalQuery;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -121,5 +125,60 @@ public class C_P_P extends QueryPattern{
             
             return clone;
         }
-	
+        
+        @Override 
+        public Set<String> predictASKqueries() {
+            
+            Set<String> queries = new HashSet<>();
+            
+            // Init queries
+            
+            builder.reset();
+            String mainVar = "x";
+            builder.addProjVar(mainVar);
+            builder.addUninstantiatedTypeTriple(mainVar,builder.placeholder("C"));
+            builder.addUninstantiatedTriple(mainVar,builder.placeholder("P1"),"y");
+            builder.addUninstantiatedTriple(mainVar,builder.placeholder("P2"),"z");
+
+            // Build ASK queries
+            
+            Set<IncrementalQuery> iqueries = new HashSet<>();
+            Set<IncrementalQuery> intermed = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getClassEntries()) {
+                 for (IncrementalQuery i : builder.getQueries()) {
+                      IncrementalQuery j = builder.instantiate("C",entry,i);
+                      intermed.add(j);
+                 }
+            }
+            
+            iqueries.addAll(intermed);
+            intermed = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : iqueries) {
+                      IncrementalQuery j = builder.instantiate("P1",entry,i);
+                      intermed.add(j);
+                 }
+            }
+            
+            iqueries.addAll(intermed);
+            intermed = new HashSet<>();
+            
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : iqueries) {
+                      IncrementalQuery j = builder.instantiate("P2",entry,i);
+                      intermed.add(j);
+                 }
+            }
+            
+            iqueries.addAll(intermed);
+            
+            for (IncrementalQuery iquery : iqueries) {
+                 queries.add(iquery.prettyPrint(iquery.assembleAsAsk(vocab,false)));
+            }
+            
+            return queries;
+        }
+
 }
