@@ -23,11 +23,11 @@ public class URILabelCache implements Serializable{
      * For a given language like "es", but also include label with lang ""
      * @param language
      */
-    URILabelCache(String language){
+    public URILabelCache(String language){
         cache = new TreeMap<>();
         lang = language;
     }
-    int getSize(){
+    public int getSize(){
         return cache.size();
     }
 
@@ -36,13 +36,13 @@ public class URILabelCache implements Serializable{
      * @param uri
      * @return
      */
-    String getLabel (String uri){
+    public String getLabel (String uri){
 
         return(cache.containsKey(uri)? cache.get(uri) : null);
 
     }
 
-    ArrayList<String> getLabels (String[] uris){
+    public ArrayList<String> getLabels (String[] uris){
         ArrayList<String> list = new ArrayList<>();
         for (String uri: uris){
             list.add(this.getLabel(uri));
@@ -55,7 +55,7 @@ public class URILabelCache implements Serializable{
      * (2) each row has the form <URI>\t"label"\t"lang"
      * @param fileName
      */
-    void readTSVDataFile(String fileName){
+    public void readTSVDataFile(String fileName){
 
         BufferedReader TSVFile = null;
 
@@ -109,7 +109,7 @@ public class URILabelCache implements Serializable{
      *  select distinct ?res ?label ?lang where { ?res <http://www.w3.org/2000/01/rdf-schema#label> ?label BIND(lang(?label) as ?lang)}
      * @param fileName
      */
-    void readXMLDataFile(String fileName){
+    public void readXMLDataFile(String fileName){
 
         FileInputStream fis = null;
         ResultSet res = null;
@@ -163,7 +163,7 @@ public class URILabelCache implements Serializable{
     }
 
 
-    static void fromXMLFileToTSVFile(String xmlFileName, String tsvFileName) {
+    public static void fromXMLFileToTSVFile(String xmlFileName, String tsvFileName) {
 
         FileInputStream fis = null;
         ResultSet res = null;
@@ -187,7 +187,7 @@ public class URILabelCache implements Serializable{
         }
     }
 
-    void serializeToFile(String fileName){
+    public void serializeToFile(String fileName){
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
@@ -206,7 +206,7 @@ public class URILabelCache implements Serializable{
      * Reads the serialized file. Removes the previous (if any) data and places the file data
      * @param fileName
      */
-    void readSerializationFile(String fileName){
+    public void readSerializationFile(String fileName){
         FileInputStream fis = null;
         ObjectInputStream ois = null;
 

@@ -6,6 +6,7 @@ import interQA.Config.Language;
 import interQA.Config.Usecase;
 import interQA.main.JenaExecutorCacheSelect;
 import interQA.main.JenaExecutorCacheAsk;
+import interQA.main.URILabelCache;
 import interQA.patterns.query.IncrementalQuery;
 import interQA.patterns.query.QueryBuilder;
 
@@ -34,6 +35,7 @@ public class DatasetConnector {
 
     JenaExecutorCacheAsk    cacheAsk = new JenaExecutorCacheAsk();
     JenaExecutorCacheSelect cacheSel = new JenaExecutorCacheSelect(); //Naive Extraction by default
+    URILabelCache           cacheLabels = null;
 
     String endpoint;
     Vocabulary vocab;
@@ -48,7 +50,8 @@ public class DatasetConnector {
         lang = language;
         labelProperties = new ArrayList<>();
         this.usecase = usecase;
-        
+        cacheLabels = new URILabelCache(language.toString().toLowerCase()); //This load the cache from disk... takes time.
+
         switch (usecase) {
             
             case SPRINGER: {
