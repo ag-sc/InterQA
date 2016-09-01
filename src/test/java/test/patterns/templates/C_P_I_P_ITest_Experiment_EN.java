@@ -104,7 +104,7 @@ public class C_P_I_P_ITest_Experiment_EN extends TestCase {
                                                                     "A Dog's Life"));
         List<String> res = qm.buildSPARQLqueries();
 
-        assertEquals(new HashSet<>(res),
+        assertEquals(new HashSet<String>(res),
                 new HashSet<>(
                         Arrays.asList(
                                 "SELECT DISTINCT ?x WHERE {"+

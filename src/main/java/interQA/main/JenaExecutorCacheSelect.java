@@ -12,6 +12,7 @@ import org.apache.jena.sparql.resultset.ResultsFormat;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static interQA.Config.ExtractionMode.NaiveExtraction;
@@ -438,6 +439,7 @@ public class JenaExecutorCacheSelect{
         String qOrderBy = sparqlQuery + " ORDER BY ?" + var1;
 
         QueryExecution qe = QueryExecutionFactory.sparqlService(ep, qOrderBy);
+        //qe.setTimeout(90000); //Does not work :-(
         ResultSet res = null;
         try {
             res = qe.execSelect(); //We get a 500 error if the estimated execution time exceeds the limit of the EP
@@ -494,6 +496,25 @@ public class JenaExecutorCacheSelect{
     }
 
 
+
+    static public void main (String[] args) {
+
+        //There are not so much, "only" 4.28M URIs have a (at least a) label
+        String ep = "http://dbpedia.org/sparql";
+        String query = "SELECT ?I ?l WHERE {SELECT DISTINCT ?I ?l WHERE {?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } ORDER BY ?I} OFFSET 0 LIMIT 1000";
+        QueryExecution qe = QueryExecutionFactory.sparqlService(ep, query);
+        //Set timeouts on the query execution;
+        // the first timeout refers to time to first result,
+        // the second refers to overall query execution after the first result.
+        // Processing will be aborted if a timeout expires.
+        qe.setTimeout(1000, TimeUnit.SECONDS,
+                      2000, TimeUnit.SECONDS);
+        ResultSet res = qe.execSelect();
+        ResultSetRewindable resok = ResultSetFactory.copyResults(res);
+        System.out.println("Size (number of elements) = " + resok.size());
+
+    }
+
     static public void main4 (String[] args) {
         String qBase = "SELECT DISTINCT * WHERE { ?I <http://dbpedia.org/ontology/creator> ?x OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }";
         String ep = "http://dbpedia.org/sparql";
@@ -504,7 +525,7 @@ public class JenaExecutorCacheSelect{
 
     }
 
-    static public void main (String[] args) {
+    static public void main9 (String[] args) {
         String fileName =    "dbpedia.org.cacheSelect.ser";
         interactiveExplorerForCacheinDiskSpecificFile(fileName);
     }
