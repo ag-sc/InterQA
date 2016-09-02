@@ -4,6 +4,7 @@ import org.apache.jena.query.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.resultset.ResultsFormat;
@@ -14,7 +15,7 @@ import org.apache.jena.sparql.resultset.ResultsFormat;
  */
 public class URILabelCache implements Serializable{
 
-    private TreeMap<String, String> cache = null;
+    private TreeMap<String, String[]> cache = null;
     private String labelslang = null;
 
     /**
@@ -34,7 +35,7 @@ public class URILabelCache implements Serializable{
      * @param uri
      * @return
      */
-    public String getLabel (String uri){
+    public String[] getLabel (String uri){
 
         return(cache.containsKey(uri)? cache.get(uri) : null);
 
@@ -43,7 +44,7 @@ public class URILabelCache implements Serializable{
     public ArrayList<String> getLabels (String[] uris){
         ArrayList<String> list = new ArrayList<>(uris.length); //Provide the initial size to speed up
         for (String uri: uris){
-            list.add(this.getLabel(uri));
+            list.addAll(Arrays.asList(this.getLabel(uri)));
         }
         return(list);
     }
@@ -114,7 +115,7 @@ public class URILabelCache implements Serializable{
                 }
 
                 if (lg.equals(labelslang) || lg.equals("")) {
-                    cache.put(URI, labelok);
+                    cache.put(URI, new String[]{labelok});
                 }
                 dataRow = TSVFile.readLine();
             }
@@ -134,7 +135,7 @@ public class URILabelCache implements Serializable{
      * @param fileName
      */
     public void readXMLDataFile(String fileName){
-        readSpecificDataFile(fileName, ResultsFormat.FMT_RS_XML);
+        readSpecificResultSetFile(fileName, ResultsFormat.FMT_RS_XML);
     }
 
     /**
@@ -144,48 +145,119 @@ public class URILabelCache implements Serializable{
      * @param fileName
      */
     public void readTTLDataFile(String fileName){
-        //readSpecificDataFile(fileName, ResultsFormat.FMT_RDF_TTL); //There is also a FMT_RDF_TURTLE
+        //readSpecificResultSetFile(fileName, ResultsFormat.FMT_RDF_TTL); //There is also a FMT_RDF_TURTLE
         //TTL is NOT a Resultset format (is NOT a RS format). RS formats are FMT_RS_XML, FMT_RS_CSV, FMT_RS_TSV....
 
     }
 
+
     /**
-     * Force brute: JENA reads the ttl and creates a MODEL. Then, fills the cache.
-     * Horrible in terms of memory. Provisional solution. Can be used for testing in future implementations (parsing)
+     * Generic way to support "the Spriger effect", that is, to get several labels for a given uri using several properties.
+     * For example, for the case of Springer we have labelProperties = {confName, confAcronym, confYear} and
+     * strPatters = {"[1] [3]", "[2] [3]"}. If I look for conference with uri iswc2014 I will get 2 labels: "ISWC 2014" and
+     * "International Semantic Web Conference 2014".
      * @param fileName
+     * @param labelProperties
+     * @param strPatterns
      */
-    public void readTTLDataFileForceBrute(String fileName) {
+    public void readTTLDataFileForceBrute(String fileName, List<String> labelProperties, String[] strPatterns) {
         Model model = ModelFactory.createDefaultModel();
         model.read(fileName);
         System.out.println("... model created with "+ model.size()+ " statements. Creating cache...");
-
-        StmtIterator iter = model.listStatements();
-        Statement subj = null;
-        Resource  res = null;
         String uri = null;
-        RDFNode node = null;
-        Literal lit = null;
-        String lang = null;
-        String label = null;
-        while (iter.hasNext()){
-            subj = iter.next();
-            res = subj.getSubject();
-            node = subj.getObject();
-            lit = node.asLiteral();
-            label = (String)(lit.getValue());
-            lang = lit.getLanguage(); //when no lang, this returns ""
-            uri = res.getURI();
-            if (uri != null && label!= null && (lang.equals(labelslang) ||lang.equals(""))) {
-                cache.put(uri, label);
+        try {
+            int propID = 0;
+            Statement subj = null;
+            Resource res = null;
+            RDFNode node = null;
+            Literal lit = null;
+            String lang = null;
+            String label = null;
+            String[] labels = null;
+            for (String prop : labelProperties) {
+                //StmtIterator iter = model.listStatements(); Valid for DBpedia dumps but not in general
+                propID++;
+                StmtIterator iter = model.listStatements(null, ResourceFactory.createProperty(prop), (RDFNode) null); //get only <r, rdfs:label, o>
+                while (iter.hasNext()) {
+                    subj = iter.next();
+                    res = subj.getSubject();
+                    node = subj.getObject();
+                    lit = node.asLiteral();
+                    label = lit.getString(); //This supports XSDDatatype.XSDgYear
+                    lang = lit.getLanguage(); //when no lang, this returns ""
+                    uri = res.getURI();
+                    if (uri != null && label != null && (lang.equals(labelslang) || lang.equals(""))) {
+                        if (cache.containsKey(uri)) {  //Update
+                            labels = cache.get(uri);
+                            cache.put(uri,
+                                    replaceTokens(label, propID, labels));
+                        } else {                      //Create
+                            cache.put(uri,
+                                    replaceTokens(label, propID, strPatterns));
+                        }
+                    }
+                }
             }
+
+        }catch (Exception e){
+               System.out.println("Problem at uri: " + uri);
+               e.printStackTrace();
         }
+        //Remove all the labels containing the "property label containers". That is, labels like "[2] 2015"
+        //E.g. For Springer (with property labels confName, confAcronym, and year) we can have a conference
+        //     with confName but not confAcronym. This would produce labels like "[2] 2015"
+        Set<String> uris = cache.keySet();
+        String[] labels = null;
+        ArrayList<String> al = null;
+        Iterator<String> iter = null;
+        String candidate = null;
+        String[] chekedLabels = null;
+        for (String theuri : uris){
+            labels = cache.get(theuri);
+            al = new ArrayList<String>(Arrays.asList(labels));
+            for (iter = al.iterator(); iter.hasNext(); ){
+                candidate = iter.next();
+                if (candidate.contains("[")){           //First trap
+                    int pos = candidate.indexOf("[");
+                    if (candidate.length() > (pos + 2)) { //Additional checks
+                        if (candidate.charAt(pos + 2) == ']' &&
+                            Character.isDigit(candidate.charAt(pos + 1))){  //A number between [], ONLY ONE!!!
+                            iter.remove();  //Remove this element form the list
+                        }
+                    }
+                }
+            }
+            chekedLabels = al.toArray(new String[al.size()]);
+            cache.put(theuri, chekedLabels); //Overwrites (modify) the entry
+        }
+    }
+
+    /**
+     * Eg: strPattern = {"[1] [2]", "[2] [3]"}
+     *     propID = 2
+     *     proplabel = "ISWC"
+     *  returns: {"[1] ISWC",  "ISWC [3]"}
+     *  Returns new memory
+     * @param propLabel
+     * @param propID
+     * @param strPatterns
+     * @return
+     */
+    private String[] replaceTokens(String propLabel, int propID, String[]strPatterns){
+          ArrayList<String> reslist = new ArrayList<String>();
+          for (String pat : strPatterns){
+              String res = pat.replace("["+ propID + "]", //replaces ALL with no regex. replaceAll uses regex
+                                          propLabel);
+              reslist.add(res);
+          }
+          return (reslist.toArray(new String[reslist.size()]));
     }
 
     /**
      * Read a file in the specified format, creates a Jena ResultSet and fills the cache with the data
      * @param fileName
      */
-    public void readSpecificDataFile(String fileName, ResultsFormat format ){
+    public void readSpecificResultSetFile(String fileName, ResultsFormat format ){
 
         FileInputStream fis = null;
         ResultSet res = null;
@@ -226,12 +298,14 @@ public class URILabelCache implements Serializable{
             l = qs.getLiteral(varlang).toString();
             if (l.equals(labelslang)) { //If the label labelslang in the file is the one we are interested in
                 cache.put(uri,
-                        label.substring(0, label.length() - (1 + l.length()))); //removes the @xx
+                          new String[]{label.substring(0, label.length() - (1 + l.length()))} //removes the @xx
+                          );
                 k++;
             } else{
                 if (l.equals("")) { //In this case (no labelslang tag) we also are interested
                     cache.put(uri,
-                            label);
+                              new String[]{label}
+                             );
                     p++;
                 }
             }
@@ -289,7 +363,7 @@ public class URILabelCache implements Serializable{
         try {
             fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);
-            cache = (TreeMap<String, String>) ois.readObject();
+            cache = (TreeMap<String, String[]>) ois.readObject();
         } catch (FileNotFoundException fnfe) {
          fnfe.printStackTrace();
         } catch (IOException ioe){
@@ -318,27 +392,66 @@ public class URILabelCache implements Serializable{
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
     }
 
-    static public void main1(String[] args){
+    static public void main11(String[] args){
         URILabelCache ulc = new URILabelCache("en");
 
         //Time required to load the TTL file
         System.out.print("Loading the ttl file...");
         long start = System.currentTimeMillis();
-        ulc.readTTLDataFileForceBrute("urilabels.ttl");
+        List<String> labelproperties= new ArrayList<String>();
+        labelproperties.add("http://lod.springer.com/data/ontology/property/confName");       // [1]
+        labelproperties.add("http://lod.springer.com/data/ontology/property/confAcronym");    // [2]
+        labelproperties.add("http://lod.springer.com/data/ontology/property/confYear");       // [3]
+
+        ulc.readTTLDataFileForceBrute("conferences.ttl",
+                                      labelproperties,
+                                      new String[] {
+                                                    "[1] [3]",
+                                                    "[2] [3]"
+                                                }
+                                     );
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
         //Time required to serialize the cache
         System.out.print("Serializing cache with " + ulc.getSize() + " elements...");
         start = System.currentTimeMillis();
-        ulc.serializeToFile("urilabels.cache.ser");
+        ulc.serializeToFile("springer.urilabels.cache.ser");
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
         //Time required to read the serialized cache
         System.out.print("Reading the serialized cache...");
         start = System.currentTimeMillis();
-        ulc.readSerializationFile("urilabels.cache.ser");
+        ulc.readSerializationFile("springer.urilabels.cache.ser");
+        System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
+    }
+    static public void main12(String[] args){
+        URILabelCache ulc = new URILabelCache("en");
+
+        //Time required to load the TTL file
+        System.out.print("Loading the ttl file...");
+        long start = System.currentTimeMillis();
+        List<String> labelproperties= new ArrayList<String>();
+        labelproperties.add("http://www.w3.org/2000/01/rdf-schema#label");       // [1]
+
+        ulc.readTTLDataFileForceBrute("urilabels.ttl",
+                                      labelproperties,
+                                      new String[] {
+                                                    "[1]"     //DBpedia style
+                                      }
+                                     );
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
+        //Time required to serialize the cache
+        System.out.print("Serializing cache with " + ulc.getSize() + " elements...");
+        start = System.currentTimeMillis();
+        ulc.serializeToFile("dbpedia.urilabels.cache.ser");
+        System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
+
+        //Time required to read the serialized cache
+        System.out.print("Reading the serialized cache...");
+        start = System.currentTimeMillis();
+        ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
+        System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
     }
 
     static public void main2(String[] args){
@@ -348,16 +461,31 @@ public class URILabelCache implements Serializable{
     static public void main(String[] args){
         URILabelCache ulc = new URILabelCache("en"); //Reads labels with labelslang "en" or ""
 
-        ulc.readSerializationFile("urilabels.cache.ser");
+        ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
 
-        String res = ulc.getLabel("http://dbpedia.org/resource/Madrid");
-        System.out.println(res);
+        String []res = ulc.getLabel("http://dbpedia.org/resource/Madrid");
+        System.out.println("{" + String.join(", ", res) + "}");
 
         String[] reslist = {"http://dbpedia.org/resource/Madrid",
                             "http://dbpedia.org/resource/Barcelona"
                            };
         ArrayList<String> list = ulc.getLabels(reslist);
-        System.out.println(list);
+        System.out.println(list.toString());
+
+    }
+    static public void main32(String[] args){
+        URILabelCache ulc = new URILabelCache("en"); //Reads labels with labelslang "en" or ""
+
+        ulc.readSerializationFile("springer.urilabels.cache.ser");
+
+        String []res = ulc.getLabel("http://lod.springer.com/data/conference/aacc2004");
+        System.out.println("{" + String.join(", ", res) + "}");
+
+        String[] reslist = {"http://lod.springer.com/data/conference/3dph2009",    //This one has confAcronym
+                            "http://lod.springer.com/data/conference/socinfo2015"  //This one NO !!
+        };
+        ArrayList<String> list = ulc.getLabels(reslist);
+        System.out.println(list.toString());
 
     }
 
@@ -391,7 +519,7 @@ public class URILabelCache implements Serializable{
         //Time required to read the serialized cache
         System.out.print("Reading the serialized cache...");
         start = System.currentTimeMillis();
-        ulc.readSerializationFile("urilabels.cache.ser");
+        ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
         //Select many random elements from the cache
@@ -400,9 +528,18 @@ public class URILabelCache implements Serializable{
                                           666);   //random seed
 
         //Time required to retrieve the URIs
-        System.out.print("Retrieving "+ num + "...");
+        System.out.print("Retrieving "+ num + " in 1 call ...");
         start = System.currentTimeMillis();
         ArrayList<String> labels = ulc.getLabels(uris);
+        System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
+
+        //Time required to retrieve the URIs
+        System.out.print("Retrieving "+ num + " one by one...");
+        start = System.currentTimeMillis();
+        Iterator<String> iter = labels.iterator();
+        while(iter.hasNext()){
+            ulc.getLabel(iter.next());
+        }
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
     }
@@ -413,7 +550,7 @@ public class URILabelCache implements Serializable{
         //Read the serialized cache
         System.out.print("Reading the serialized cache...");
         start = System.currentTimeMillis();
-        ulc.readSerializationFile("urilabels.cache.ser");
+        ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
         System.out.println("done!. " + ulc.getSize() + " uris+labels loaded in " + (System.currentTimeMillis() - start) + " millis.");
 
         int ms = 5000;
@@ -426,10 +563,6 @@ public class URILabelCache implements Serializable{
             Thread.currentThread().interrupt();
         }
         System.out.print("...done?");
-    }
-    static public void main7(String[] args) {
-        URILabelCache ulc = new URILabelCache("en");
-        ulc.readTTLDataFileForceBrute("urilabels.ttl");
     }
 
 }

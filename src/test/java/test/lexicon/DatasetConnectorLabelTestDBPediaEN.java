@@ -22,13 +22,13 @@ public class DatasetConnectorLabelTestDBPediaEN extends TestCase{
     
     }
     
-     public void testLabel() throws Exception{
- 
-     String LabelOptionalOutput = t.label("P", "l").toString() ;
-     assertEquals("{ OPTIONAL\n" +
-                  "    { ?P  <http://www.w3.org/2000/01/rdf-schema#label>  ?l }\n" +
-                  "}",LabelOptionalOutput);
-     
- }
+//     public void testLabel() throws Exception{
+// 
+//     String LabelOptionalOutput = t.label("P", "l").toString() ;
+//     assertEquals("{ OPTIONAL\n" +
+//                  "    { ?P  <http://www.w3.org/2000/01/rdf-schema#label>  ?l }\n" +
+//                  "}",LabelOptionalOutput);
+//     
+//    }
     
 }
