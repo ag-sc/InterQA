@@ -15,16 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.jena.graph.Node;
 
-import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.Var;
-import org.apache.jena.sparql.syntax.ElementGroup;
-import org.apache.jena.sparql.syntax.ElementOptional;
-import org.apache.jena.sparql.syntax.ElementUnion;
 
 /**
  *
@@ -43,6 +39,7 @@ public class DatasetConnector {
     Language lang;
     String gYearProperty=null;
     Usecase usecase ;
+    
     public DatasetConnector(String url, Language language, Usecase usecase) {
 
         endpoint = url;
@@ -120,76 +117,9 @@ public class DatasetConnector {
      */
     public void fillInstances(Element element, QueryBuilder builder, String i_var) {
                         
-        String label_var = "l";
-        String gYear_var = "y";
-        
-        switch(usecase){
-                        
-            case SPRINGER:{
-                
-              for (IncrementalQuery iq : builder.getQueries()) {
-              
-              IncrementalQuery copy = iq.clone();
-              copy.getBody().addElement(label(i_var,label_var));
-              Query query = copy.assemble(vocab,false);
-              query.setQueryResultStar(true);
-              String querystring = copy.prettyPrint(query);
-                                          
-              ResultSet results = cacheSel.executeWithCache(endpoint,querystring);
-            
-              while (results.hasNext()) {
-                                  
-                QuerySolution result   = results.nextSolution();
-                RDFNode       instance = result.get(i_var);
-                RDFNode       label    = result.get(label_var); 
-                RDFNode       gYear    = result.get(gYear_var);
-                
-                if (instance != null) {
-                    
-                    LexicalEntry entry = new LexicalEntry();
-                     String full_label = null;
-                    if (instance.isURIResource()) {
-                                                
-                        entry.setReference(instance.asResource().getURI());
-                        
-                        if (label != null && label.isLiteral() &&gYear !=null &&
-                           (label.asLiteral().getLanguage() == null ||
-                            label.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
-                            
-                            full_label = label.asLiteral().getString()+" "+gYear.asLiteral().getLexicalForm().substring(0,4);
-                            entry.setCanonicalForm(full_label);
-                            element.addToIndex(full_label,entry);
-                        }
-                    }
-                    else if (instance.isLiteral()) {
-                                                                        
-                        entry.setLiteralNode(instance);
-                        entry.setAsLiteral();
-                        
-                        String form;
-                        if (instance.asLiteral().getDatatypeURI().equals(vocab.xsd_gYear)) {
-                            form = instance.asLiteral().getLexicalForm().substring(0,4);
-                        } else {
-                            form = instance.asLiteral().getLexicalForm();
-                        }
-                        entry.setCanonicalForm(form);
-                        element.addToIndex(form,entry);
-                    }
-                    
-                    if (!element.isStringElement()) {
-                         element.getContext().put(entry,iq.getTriples());
-                    }
-                }
-            }
-        } 
-        break;
-        }
-            
-        default: {
                 for (IncrementalQuery iq : builder.getQueries()) {
               
                     IncrementalQuery copy = iq.clone();
-                    copy.getBody().addElement(label(i_var,label_var));
                     Query query = copy.assemble(vocab,false);
                     query.setQueryResultStar(true);
                     String querystring = copy.prettyPrint(query);
@@ -200,7 +130,6 @@ public class DatasetConnector {
 
                       QuerySolution result   = results.nextSolution();
                       RDFNode       instance = result.get(i_var);
-                      RDFNode       label    = result.get(label_var); 
 
                       if (instance != null) {
 
@@ -208,15 +137,11 @@ public class DatasetConnector {
 
                           if (instance.isURIResource()) {
 
-                              entry.setReference(instance.asResource().getURI());
-
-                              if (label != null && label.isLiteral() &&
-                                 (label.asLiteral().getLanguage() == null ||
-                                  label.asLiteral().getLanguage().equals(lang.toString().toLowerCase()))) {
-
-                                  entry.setCanonicalForm(label.asLiteral().getString());
-                                  element.addToIndex(label.asLiteral().getString(),entry);
-                              }
+                              String uri   = instance.asResource().getURI();
+                              String label = cacheLabels.getLabel(uri);
+                              entry.setReference(uri);
+                              entry.setCanonicalForm(label);
+                              element.addToIndex(label,entry);
                           }
                           else if (instance.isLiteral()) {
 
@@ -239,42 +164,6 @@ public class DatasetConnector {
                       }
                     }
                 }
-                break;
-            }
-            
-        }
-        
-        
-        
-
-    }
-    
-    public ElementGroup label(String i_var, String label_var) {
-        
-        ElementGroup eg = new ElementGroup();
-        
-        if (labelProperties.size() == 1) {
-            ElementGroup u = new ElementGroup();
-            u.addTriplePattern(new Triple(toVar(i_var),toResource(labelProperties.get(0)),toVar(label_var)));
-            eg.addElement(new ElementOptional(u));
-        }
-        else {
-            ElementUnion union = new ElementUnion();
-            for (String p : labelProperties) { 
-                 ElementGroup u = new ElementGroup(); 
-                 u.addTriplePattern(new Triple(toVar(i_var),toResource(p),toVar(label_var)));
-                 union.addElement(u);
-            }
-            
-            eg.addElement(new ElementOptional(union));
-        }
-        if(gYearProperty!=null){
-                ElementGroup u = new ElementGroup();
-                u.addTriplePattern(new Triple(toVar(i_var),toResource(gYearProperty),toVar("y")));
-                eg.addElement(new ElementOptional(u));
-            }
-        
-        return eg;
     }
 
     

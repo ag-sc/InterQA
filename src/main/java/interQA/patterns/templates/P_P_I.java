@@ -221,7 +221,6 @@ public class P_P_I extends QueryPattern{
             
             for (IncrementalQuery iquery : iqueries2) {
                 
-                iquery.getBody().addElement(dataset.label("I","l"));
                 Query query = iquery.assemble(vocab,false);
                 query.setQueryResultStar(true);
                 queries.add(iquery.prettyPrint(query)); 

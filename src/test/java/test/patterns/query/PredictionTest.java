@@ -2,7 +2,6 @@ package test.patterns.query;
 
 import interQA.Config;
 import interQA.patterns.templates.*;
-import java.util.Set;
 
 /**
  *

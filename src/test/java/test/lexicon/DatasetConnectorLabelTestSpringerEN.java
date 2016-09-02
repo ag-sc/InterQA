@@ -25,19 +25,19 @@ public class DatasetConnectorLabelTestSpringerEN extends TestCase{
     
     
     
-    
- public void testLabel() throws Exception{
- 
-     String LabelOptionalOutput = t.label("P", "l").toString() ;
-     assertEquals("{ OPTIONAL\n" +
-"    {   { ?P  <http://lod.springer.com/data/ontology/property/confName>  ?l }\n" +
-"      UNION\n" +
-"        { ?P  <http://lod.springer.com/data/ontology/property/confAcronym>  ?l }}\n" +
-"  OPTIONAL\n" +
-"    { ?P  <http://lod.springer.com/data/ontology/property/confYear>  ?y }\n" +
-"}",LabelOptionalOutput);
-     
- }
+//    
+// public void testLabel() throws Exception{
+// 
+//     String LabelOptionalOutput = t.label("P", "l").toString() ;
+//     assertEquals("{ OPTIONAL\n" +
+//"    {   { ?P  <http://lod.springer.com/data/ontology/property/confName>  ?l }\n" +
+//"      UNION\n" +
+//"        { ?P  <http://lod.springer.com/data/ontology/property/confAcronym>  ?l }}\n" +
+//"  OPTIONAL\n" +
+//"    { ?P  <http://lod.springer.com/data/ontology/property/confYear>  ?y }\n" +
+//"}",LabelOptionalOutput);
+//     
+// }
      
     
      
