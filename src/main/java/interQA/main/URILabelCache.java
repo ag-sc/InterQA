@@ -322,20 +322,6 @@ public class URILabelCache implements Serializable{
         URILabelCache ulc = new URILabelCache("en");
 
         //Time required to load the TTL file
-//        System.out.print("Loading the ttl file...");
-//        long start = System.currentTimeMillis();
-//        ulc.readTTLDataFile("urilabels.ttl");
-//        System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
-
-
-
-        //Time required to load the TSV file
-//        System.out.print("Loading the tsv file...");
-//        start = System.currentTimeMillis();
-//        ulc.readTSVDataFile("urilabels.tsv");
-//        System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
-
-        //Time required to load the TTL file
         System.out.print("Loading the ttl file...");
         long start = System.currentTimeMillis();
         ulc.readTTLDataFileForceBrute("urilabels.ttl");
@@ -353,18 +339,13 @@ public class URILabelCache implements Serializable{
         ulc.readSerializationFile("urilabels.cache.ser");
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
-        //Time required to read the XML file
-//        System.out.print("Reading the XML file...");
-//        start = System.currentTimeMillis();
-//        ulc.readXMLDataFile("urilabels.xml");
-//        System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
     }
 
     static public void main2(String[] args){
         URILabelCache.fromXMLFileToTSVFile("urilabels.xml", "urilabels.tsv");
     }
 
-    static public void main3(String[] args){
+    static public void main(String[] args){
         URILabelCache ulc = new URILabelCache("en"); //Reads labels with labelslang "en" or ""
 
         ulc.readSerializationFile("urilabels.cache.ser");
@@ -383,9 +364,15 @@ public class URILabelCache implements Serializable{
     static public void main4(String[] args){
         URILabelCache ulc = new URILabelCache("en");
 
+        //Time required to load the TTL file
+        System.out.print("Loading the ttl file...");
+        long start = System.currentTimeMillis();
+        ulc.readTTLDataFile("urilabels.ttl");
+        System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
+
         //Time required to load the XML file
         System.out.print("Loading the xml file...");
-        long start = System.currentTimeMillis();
+        start = System.currentTimeMillis();
         ulc.readXMLDataFile("urilabels.xml");
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
@@ -419,7 +406,7 @@ public class URILabelCache implements Serializable{
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
     }
-    static public void main(String[] args) {
+    static public void main6(String[] args) {
         URILabelCache ulc = new URILabelCache("en");
         long start = 0;
 
