@@ -87,6 +87,24 @@ public class QueryPatternManager {
         return getQAPatternNames();
     }
 
+    public String[] getPredictedASKqueries(){
+        HashSet<String> res = new HashSet<>();
+        for (QueryPattern pat : allQueryPatterns){
+            res.addAll(pat.predictASKqueries());
+        }
+
+        return(res.toArray(new String[res.size()]));
+    }
+
+    public String[] getPredictedSELECTqueries(){
+        HashSet<String> res = new HashSet<>();
+        for (QueryPattern pat : allQueryPatterns){
+            res.addAll(pat.predictSELECTqueries());
+        }
+
+        return(res.toArray(new String[res.size()]));
+    }
+
     private List<String> getQAPatternNames() {
         
         List<String> names = new ArrayList<>();

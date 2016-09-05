@@ -1,6 +1,6 @@
 package test.main;
 
-import interQA.main.JenaExecutorCacheAsk;
+import interQA.cache.JenaExecutorCacheAsk;
 import junit.framework.TestCase;
 
 

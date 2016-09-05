@@ -1,4 +1,4 @@
-package test.patterns.templates;
+package test.patterns.templates.ExperimentSept2016;
 
 
 import interQA.Config;
@@ -34,7 +34,7 @@ public class C_P_I_P_ITest_Experiment_EN extends TestCase {
                                                         )
                    );
         //By default uses NaiveExtraction and does not use historical cache
-        //config.setCacheMode(ExhaustiveExtraction, true); //This test runs OK for both modes, but in exhaustive+Historical mode...
+        config.setCacheMode(ExhaustiveExtraction, true); //This test runs OK for both modes, but in exhaustive+Historical mode...
                                                          //each method requires 8GB and 16GB Heap space respectively.
 
         qm = config.getPatternManager();

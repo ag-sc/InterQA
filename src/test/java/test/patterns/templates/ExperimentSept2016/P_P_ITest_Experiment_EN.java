@@ -1,4 +1,4 @@
-package test.patterns.templates;
+package test.patterns.templates.ExperimentSept2016;
 
 
 import interQA.Config;
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
 
 
 /**
@@ -25,12 +27,19 @@ public class P_P_ITest_Experiment_EN extends TestCase {
         Config config = new Config();
         config.init(Usecase.EXPERIMENT,
                     Language.EN,
-                    new ArrayList<String>(Arrays.asList("qpP_P_I"))  //What is the height and weight of Michael Jordan?
-                   );
+                    new ArrayList<String>(Arrays.asList("qpP_P_I")) //What is the height and weight of Michael Jordan?
+                   );                                               // SELECT DISTINCT ?x ?y WHERE
+                                                                    // {
+                                                                    //   <I> <P1> ?x .
+                                                                    //   <I> <P2> ?y .
+                                                                    // }
+        //By default uses NaiveExtraction and does not use historical cache
+        config.setCacheMode(ExhaustiveExtraction, true);
+
         qm = config.getPatternManager();
 
     }
-    public void testWhatActorsPlayinBatman() throws Exception {
+    public void testWhatIsThe() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
                                                                     "what is the")); //No continuation

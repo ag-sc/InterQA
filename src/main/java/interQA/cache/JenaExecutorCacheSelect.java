@@ -1,4 +1,4 @@
-package interQA.main;
+package interQA.cache;
 
 
 import interQA.Config;
@@ -27,6 +27,7 @@ public class JenaExecutorCacheSelect{
     private Boolean isFirstTime = true;
     private Config.ExtractionMode extractionMode = NaiveExtraction;
     private boolean useHistoricalCache = false; // The historical cache is the cache file result of previous executions
+    boolean lastExecutionCameFromCache = false;
 
     static private final String fileNameTail = "cacheSelect.ser";
     static private ResultsFormat format = ResultsFormat.FMT_RS_TSV;//FMT_RS_XML;//
@@ -55,7 +56,7 @@ public class JenaExecutorCacheSelect{
 
         if (isFirstTime){
             //Checks if there is a cache serialization in the file system
-            File f = new File(getCacheFileName(endpoint));
+            File f = new File(getFileNameFromEndpointName(endpoint));
             if (f.isFile() && f.canRead() &&  useHistoricalCache) { // If there is a cache file... load it.
                 readCacheFromDisk(endpoint);
             }else{  //There is no cache file
@@ -68,18 +69,21 @@ public class JenaExecutorCacheSelect{
         //We use the cache
         if (cache.containsKey(sparqlQuery)) { //the sparqlQuery is in the cache
             res = cache.get(sparqlQuery);         //get the results from the cache
+            lastExecutionCameFromCache = true;
         } else {                               //the sparqlQuery is NOT in the cache
             res = extractiveExecSelect(endpoint, sparqlQuery, BLOQSIZE, WAIT_MILLIS, extractionMode);
 
             cache.put(sparqlQuery,                        //And store the information in the cache
                     ResultSetFactory.copyResults(res)); //It is CRITICAL to make a copy in-memory or it will be destroyed
             //The cache stores ResultSetRewindable objects
+            lastExecutionCameFromCache = false;
             System.out.println("New element stored in CacheSelect (in memory). Now it has " + cache.size() + " elements.");
-            //Save the cache to disk
-            //saveCacheToDisk(); Now it is a method
         }
         res.reset(); //Avoids resulsets finished
         return res;
+    }
+    public boolean lastExecutionCameFromCache(){
+        return lastExecutionCameFromCache;
     }
     public void interactiveExplorer(){
         PrintStream ps = System.out;
@@ -214,20 +218,25 @@ public class JenaExecutorCacheSelect{
 
 
 
-    private static String getCacheFileName(String endpoint){
+    private static String getFileNameFromEndpointName(String endpoint){
         String epPart = endpoint.substring("http://".length(),
                 endpoint.length() - "/sparql".length()); //Error prone (https or /sparql/)
+        //We can have something like machine:8890
+        int badCharPos = epPart.indexOf(":");
+        if (badCharPos != -1){ //Found a ":"
+            epPart = epPart.substring(0, badCharPos);
+        }
         return (epPart + "." + fileNameTail);
     }
 
-    private void readCacheFromDisk(String endpoint) {
-        readCacheFromDiskSpecificFile(getCacheFileName(endpoint));
+    public void readCacheFromDisk(String endpoint) {
+        readCacheFromDiskSpecificFile(getFileNameFromEndpointName(endpoint));
     }
 
-    private void readCacheFromDiskSpecificFile(String fileName) {
+    public void readCacheFromDiskSpecificFile(String fileName) {
         FileInputStream fis = null;
         ObjectInputStream ois = null;
-        System.out.print("Loading Select cache from disk...");
+        System.out.print("Loading Select cache " + fileName + " from disk...");
         try {
             fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);
@@ -265,10 +274,14 @@ public class JenaExecutorCacheSelect{
 
         }
     }
+
+    public void saveCacheToDisk(String endpoint) {
+        saveCacheToDisk("", endpoint);
+    }
     /**
      * Saves only if there is some data
      */
-    public void saveCacheToDisk(String endpoint) {
+    public void saveCacheToDisk(String prefix, String endpoint) {
         if (useHistoricalCache == false){ //If we do not load the historical cache, it is better not allow to save it.
             return;
         }
@@ -278,7 +291,7 @@ public class JenaExecutorCacheSelect{
         }
         if (cache.size() > 0) {
             try {
-                FileOutputStream fos = new FileOutputStream(getCacheFileName(endpoint));
+                FileOutputStream fos = new FileOutputStream(prefix + getFileNameFromEndpointName(endpoint));
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 //Writes a serialized version of the ResultSet
                 boolean hasOOMError = false;
@@ -352,7 +365,7 @@ public class JenaExecutorCacheSelect{
      * Reads the DEFAULT cache fileName and dumps information in System.out
      */
     static public void dumpCacheinDisk(String endpoint) {
-        dumpCacheinDiskSpecificFile(getCacheFileName(endpoint));
+        dumpCacheinDiskSpecificFile(getFileNameFromEndpointName(endpoint));
     }
 
     /**
@@ -394,40 +407,6 @@ public class JenaExecutorCacheSelect{
     }
 
 
-
-    static public void main8 (String[] args) {
-        JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
-        String ep =    "http://es.dbpedia.org/sparql";
-        ResultSet res1 = cacheSelect.executeWithCache(ep,
-                "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
-        );
-        ResultSet res2 = cacheSelect.executeWithCache(ep,
-                "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
-        );
-        cacheSelect.dump(System.out);
-        cacheSelect.saveCacheToDisk(ep);
-    }
-    static public void main1 (String[] args) {
-        dumpCacheinDiskSpecificFile("cacheSelect.20160804.v2.ser");
-    }
-    static public void main2 (String[] args) {
-        String ep =    "http://es.dbpedia.org/sparql";
-        dumpCacheinDisk(ep);
-    }
-    static public void main3 (String[] args) {
-        JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
-        String ep =    "http://es.dbpedia.org/sparql";
-        ResultSet res1 = cacheSelect.executeWithCache(ep,
-                "SELECT DISTINCT * WHERE { ?x ?P2 ?I2 ; a <http://lod.springer.com/data/ontology/class/Conference> ; <http://lod.springer.com/data/ontology/property/confCity> ?I1 OPTIONAL { { ?I1 <http://www.w3.org/2000/01/rdf-schema#label> ?l } UNION { ?I1 <http://lod.springer.com/data/ontology/property/confName> ?l } UNION { ?I1 <http://lod.springer.com/data/ontology/property/confAcronym> ?l }} }"
-        );
-
-        cacheSelect.interactiveExplorer();
-        cacheSelect.saveCacheToDisk(ep);
-        String fileName =    "es.dbpedia.org.cacheSelect.ser";
-        interactiveExplorerForCacheinDiskSpecificFile(fileName);
-
-    }
-
     static ResultSetRewindable extractiveExecSelect(String ep, String sparqlQuery, int limit, int milis, Config.ExtractionMode em){
         //PAY ATTENTION. We need ORDER BY in order to get a predictable result by OFFSET blocks
         //WARNING!!Additionally, there is a limit or 40.000 results for a ORDER BY query. You can cross this limit with
@@ -435,7 +414,13 @@ public class JenaExecutorCacheSelect{
         //Perhaps this is a virtuoso SPECIFIC solution and perhaps it is NOT generic for other EPs.
 
         Query qjena = QueryFactory.create(sparqlQuery);
-        String var1 = qjena.getResultVars().get(0); //We get the first result var. We could think about which would be the better
+        String var1 = null;
+        try {
+            var1 = qjena.getResultVars().get(0); //We get the first result var. We could think about which would be the better
+        }catch (Exception e){
+            System.out.println("Uch... query = " + sparqlQuery);
+            e.printStackTrace();
+        }
         String qOrderBy = sparqlQuery + " ORDER BY ?" + var1;
 
         QueryExecution qe = QueryExecutionFactory.sparqlService(ep, qOrderBy);
@@ -496,8 +481,40 @@ public class JenaExecutorCacheSelect{
     }
 
 
+    static public void main1 (String[] args) {
+        JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
+        String ep =    "http://es.dbpedia.org/sparql";
+        ResultSet res1 = cacheSelect.executeWithCache(ep,
+                "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
+        );
+        ResultSet res2 = cacheSelect.executeWithCache(ep,
+                "SELECT DISTINCT ?x{  ?subject <http://lod.springer.com/data/ontology/property/confCountry> ?x . }"
+        );
+        cacheSelect.dump(System.out);
+        cacheSelect.saveCacheToDisk("test", ep);
+    }
+    static public void main2 (String[] args) {
+        dumpCacheinDiskSpecificFile("cacheSelect.20160804.v2.ser");
+    }
+    static public void main3 (String[] args) {
+        String ep =    "http://es.dbpedia.org/sparql";
+        dumpCacheinDisk(ep);
+    }
+    static public void main4 (String[] args) {
+        JenaExecutorCacheSelect cacheSelect = new JenaExecutorCacheSelect();
+        String ep =    "http://es.dbpedia.org/sparql";
+        ResultSet res1 = cacheSelect.executeWithCache(ep,
+                "SELECT DISTINCT * WHERE { ?x ?P2 ?I2 ; a <http://lod.springer.com/data/ontology/class/Conference> ; <http://lod.springer.com/data/ontology/property/confCity> ?I1 OPTIONAL { { ?I1 <http://www.w3.org/2000/01/rdf-schema#label> ?l } UNION { ?I1 <http://lod.springer.com/data/ontology/property/confName> ?l } UNION { ?I1 <http://lod.springer.com/data/ontology/property/confAcronym> ?l }} }"
+        );
 
-    static public void main (String[] args) {
+        cacheSelect.interactiveExplorer();
+        cacheSelect.saveCacheToDisk("test", ep);
+        String fileName =    "es.dbpedia.org.cacheSelect.ser";
+        interactiveExplorerForCacheinDiskSpecificFile(fileName);
+
+    }
+
+    static public void main5 (String[] args) {
 
         //There are not so much, "only" 4.28M URIs have a (at least a) label
         String ep = "http://dbpedia.org/sparql";
@@ -515,7 +532,7 @@ public class JenaExecutorCacheSelect{
 
     }
 
-    static public void main4 (String[] args) {
+    static public void main6 (String[] args) {
         String qBase = "SELECT DISTINCT * WHERE { ?I <http://dbpedia.org/ontology/creator> ?x OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }";
         String ep = "http://dbpedia.org/sparql";
 
@@ -525,12 +542,12 @@ public class JenaExecutorCacheSelect{
 
     }
 
-    static public void main9 (String[] args) {
+    static public void main (String[] args) {
         String fileName =    "dbpedia.org.cacheSelect.ser";
         interactiveExplorerForCacheinDiskSpecificFile(fileName);
     }
 
-    static public void main5 (String[] args){
+    static public void main8 (String[] args){
         String qBase = "SELECT DISTINCT * WHERE { ?I <http://dbpedia.org/ontology/creator> ?x OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }";
         String ep = "http://dbpedia.org/sparql";
         //We need ORDER BY in order to get a predictable result by OFFSET blocks
@@ -547,7 +564,7 @@ public class JenaExecutorCacheSelect{
         ResultSetMem rs = new ResultSetMem(res1, res2);
     }
 
-    static public void main6 (String[] args){
+    static public void main9 (String[] args){
         String qBase = "SELECT DISTINCT * WHERE { ?I <http://dbpedia.org/ontology/creator> ?x OPTIONAL { ?I <http://www.w3.org/2000/01/rdf-schema#label> ?l } }";
         String ep = "http://dbpedia.org/sparql";
         //We need ORDER BY in order to get a predictable result by OFFSET blocks
@@ -566,10 +583,6 @@ public class JenaExecutorCacheSelect{
         ResultSetMem rs = new ResultSetMem(res1, res2);
         ResultSetMem rsok = new ResultSetMem(res1ok, res2ok);
     }
-    static public void main7 (String[] args) throws Exception {
-        FileOutputStream fos = new FileOutputStream("test");
-        fos.write("test text".getBytes());
-        fos.close();
-    }
+
 
 }

@@ -1,10 +1,9 @@
-package interQA.main;
+package interQA.cache;
 
 import org.apache.jena.query.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.resultset.ResultsFormat;
@@ -36,9 +35,12 @@ public class URILabelCache implements Serializable{
      * @return
      */
     public String[] getLabel (String uri){
-
+//        String[] res = null;
+//        if (cache.containsKey(uri)){
+//            cache.get(uri);
+//        }
+//        return(res);
         return(cache.containsKey(uri)? cache.get(uri) : null);
-
     }
 
     public ArrayList<String> getLabels (String[] uris){
@@ -158,9 +160,9 @@ public class URILabelCache implements Serializable{
      * "International Semantic Web Conference 2014".
      * @param fileName
      * @param labelProperties
-     * @param strPatterns
+     * @param strTemplates
      */
-    public void readTTLDataFileForceBrute(String fileName, List<String> labelProperties, String[] strPatterns) {
+    public void readTTLDataFileForceBrute(String fileName, List<String> labelProperties, String[] strTemplates) {
         Model model = ModelFactory.createDefaultModel();
         model.read(fileName);
         System.out.println("... model created with "+ model.size()+ " statements. Creating cache...");
@@ -193,7 +195,7 @@ public class URILabelCache implements Serializable{
                                     replaceTokens(label, propID, labels));
                         } else {                      //Create
                             cache.put(uri,
-                                    replaceTokens(label, propID, strPatterns));
+                                    replaceTokens(label, propID, strTemplates));
                         }
                     }
                 }
@@ -222,7 +224,7 @@ public class URILabelCache implements Serializable{
                     if (candidate.length() > (pos + 2)) { //Additional checks
                         if (candidate.charAt(pos + 2) == ']' &&
                             Character.isDigit(candidate.charAt(pos + 1))){  //A number between [], ONLY ONE!!!
-                            iter.remove();  //Remove this element form the list
+                            iter.remove();  //Remove this element from the list
                         }
                     }
                 }
@@ -233,24 +235,87 @@ public class URILabelCache implements Serializable{
     }
 
     /**
-     * Eg: strPattern = {"[1] [2]", "[2] [3]"}
+     * Eg: strTemplates = {"[1] [2]",
+     *                     "[2] [3]"
+     *                    }
      *     propID = 2
      *     proplabel = "ISWC"
-     *  returns: {"[1] ISWC",  "ISWC [3]"}
+     *  returns: {"[1] ISWC",
+     *            "ISWC [3]"
+     *           }
      *  Returns new memory
      * @param propLabel
      * @param propID
-     * @param strPatterns
+     * @param strTemplates
      * @return
      */
-    private String[] replaceTokens(String propLabel, int propID, String[]strPatterns){
+    private String[] replaceTokens(String propLabel, int propID, String[]strTemplates){
           ArrayList<String> reslist = new ArrayList<String>();
-          for (String pat : strPatterns){
+          for (String pat : strTemplates){
               String res = pat.replace("["+ propID + "]", //replaces ALL with no regex. replaceAll uses regex
                                           propLabel);
               reslist.add(res);
           }
           return (reslist.toArray(new String[reslist.size()]));
+    }
+
+    /**
+     * Returns new memory
+     * @param uriPart
+     * @return
+     */
+    public String[] getURIcontaining(String uriPart){
+        ArrayList<String> res = new ArrayList<>();
+        Set<String> uris = cache.keySet();
+        for (String uri: uris){
+           if (uri.contains(uriPart)){
+               res.add(uri);
+           }
+        }
+        return (res.toArray(new String[res.size()]));
+    }
+
+    public String[] getLabelContaining(String labelPart){
+        ArrayList<String> res = new ArrayList<>();
+        Set<String> uris = cache.keySet();
+        String[] labels = null;
+        for (String uri: uris){
+            labels = cache.get(uri);
+            for (String label: labels){
+                if (label.contains(labelPart)){
+                    res.add(label);
+                }
+            }
+        }
+        return (res.toArray(new String[res.size()]));
+    }
+
+    /**
+     * Uses System.out to show a report on null uris or labels
+     */
+    public void reportNulls(){
+        Set<String> uris = cache.keySet();
+        int nUriNULL    = 0;
+        int nLabelsNULL = 0;
+        int nlabelNULL  = 0;
+        String[] labels = null;
+        for (String uri : uris) {
+            if (uri == null){
+                nUriNULL++;
+                continue;
+            }
+            labels = cache.get(uri);
+            if (labels == null){
+                nLabelsNULL++;
+                continue;
+            }
+            for (String label : labels){
+                if (label == null){
+                    nlabelNULL++;
+                }
+            }
+        }
+        System.out.println("#URIs null: " + nUriNULL + ", #labels null: " + nLabelsNULL + ", #label null:" + nlabelNULL);
     }
 
     /**
@@ -360,6 +425,7 @@ public class URILabelCache implements Serializable{
         FileInputStream fis = null;
         ObjectInputStream ois = null;
 
+        System.out.print("Reading the urilabel cache file " + fileName + "...");
         try {
             fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);
@@ -375,11 +441,12 @@ public class URILabelCache implements Serializable{
                 ois.close();
                 fis.close();
             }catch (IOException ioe){
-                System.out.println("Sorry, I can not close the cache file. Stack trace:");
+                System.out.println("Sorry, I can not close the urilabel cache file. Stack trace:");
                 ioe.printStackTrace();
             }
 
         }
+        System.out.println("...done.");
     }
 
     static public void main0(String[] args) {
@@ -458,7 +525,7 @@ public class URILabelCache implements Serializable{
         URILabelCache.fromXMLFileToTSVFile("urilabels.xml", "urilabels.tsv");
     }
 
-    static public void main(String[] args){
+    static public void main31(String[] args){
         URILabelCache ulc = new URILabelCache("en"); //Reads labels with labelslang "en" or ""
 
         ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
@@ -482,7 +549,7 @@ public class URILabelCache implements Serializable{
         System.out.println("{" + String.join(", ", res) + "}");
 
         String[] reslist = {"http://lod.springer.com/data/conference/3dph2009",    //This one has confAcronym
-                            "http://lod.springer.com/data/conference/socinfo2015"  //This one NO !!
+                            "http://lod.springer.com/data/conference/semweb2015"  //This one NO !!
         };
         ArrayList<String> list = ulc.getLabels(reslist);
         System.out.println(list.toString());
@@ -563,6 +630,23 @@ public class URILabelCache implements Serializable{
             Thread.currentThread().interrupt();
         }
         System.out.print("...done?");
+    }
+
+    /**
+     * Looks for null labels
+     * @param args
+     */
+    static public void main7(String[] args) {
+        URILabelCache ulc = new URILabelCache("en");
+        ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
+        ulc.reportNulls();
+    }
+
+    static public void main(String[] args) {
+        URILabelCache ulc = new URILabelCache("en");
+        ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
+        String[] res = ulc.getURIcontaining("Trevor's_World_of_Sport");
+        System.out.println("{" + String.join(", ", res) + "}");
     }
 
 }

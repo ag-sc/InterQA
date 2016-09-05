@@ -1,4 +1,4 @@
-package test.patterns.templates;
+package test.patterns.templates.ExperimentSept2016;
 
 
 import interQA.Config;
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
 
 
 /**
@@ -30,6 +32,9 @@ public class C_P_ITest_Experiment_EN extends TestCase {
                                                         "qpC_P_I2")  // Which movie/actor is ...
                                                         )
                    );
+        //By default uses NaiveExtraction and does not use historical cache
+        config.setCacheMode(ExhaustiveExtraction, true);
+
         qm = config.getPatternManager();
 
     }

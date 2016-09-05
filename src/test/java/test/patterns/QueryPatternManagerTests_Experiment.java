@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
+
 
 /**
  * @author Mariano Rico
@@ -17,11 +19,12 @@ import java.util.List;
 public class QueryPatternManagerTests_Experiment extends TestCase {
 
     QueryPatternManager qm = null;
+    Config config = null;
 
     //Executed before EACH test
     public void setUp() throws Exception {
         //Init SPRINGER
-        Config config = new Config();
+        config = new Config();
         config.init(Config.Usecase.EXPERIMENT,
                     Config.Language.EN,
                     null); //All the patterns defined in the usecase
@@ -56,5 +59,4 @@ public class QueryPatternManagerTests_Experiment extends TestCase {
         assertEquals(new HashSet<>(avlPats1),
                      new HashSet<>(avlPats3));
     }
-
 }

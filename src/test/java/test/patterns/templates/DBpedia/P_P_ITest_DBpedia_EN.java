@@ -1,4 +1,4 @@
-package test.patterns.templates;
+package test.patterns.templates.DBpedia;
 
 
 import interQA.Config;
@@ -85,10 +85,10 @@ public class P_P_ITest_DBpedia_EN extends TestCase {
         assertEquals(new HashSet<>(res),
                 new HashSet<>(
                         Arrays.asList(
-                                "SELECT DISTINCT ?x ?y WHERE {"+
-                                        " <http://dbpedia.org/resource/Bangkok> <http://dbpedia.org/ontology/areaMetro> ?x"+
-                                        " ; <http://dbpedia.org/ontology/populationTotal> ?y"+
-                                        " }"
+                            "SELECT DISTINCT ?x WHERE { ?I <http://dbpedia.org/ontology/areaTotal> ?x }",
+                            "SELECT DISTINCT ?x WHERE { ?I <http://dbpedia.org/ontology/area> ?x }",
+                            "SELECT DISTINCT ?x WHERE { ?I <http://dbpedia.org/ontology/areaUrban> ?x }",
+                            "SELECT DISTINCT ?x WHERE { ?I <http://dbpedia.org/ontology/areaMetro> ?x }"
                         )
                 ));
     }

@@ -1,4 +1,4 @@
-package test.patterns.templates;
+package test.patterns.templates.ExperimentSept2016;
 
 
 import interQA.Config;
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
 
 
 /**
@@ -25,8 +27,16 @@ public class P_P_CTest_Experiment_EN extends TestCase {
         Config config = new Config();
         config.init(Usecase.EXPERIMENT,
                     Language.EN,
-                    new ArrayList<String>(Arrays.asList("qpP_P_C"))  //What is the height and weight of NBA players?
-                   );
+                    new ArrayList<String>(Arrays.asList("qpP_P_C")) //What is the height and weight of NBA players?
+                   );                                               // SELECT DISTINCT ?x ?y WHERE
+                                                                    // {
+                                                                    //   ?I rdf:type <C> .
+                                                                    //   ?I <P1> ?x .
+                                                                    //   ?I <P2> ?y .
+                                                                    // }
+        //By default uses NaiveExtraction and does not use historical cache
+        config.setCacheMode(ExhaustiveExtraction, true);
+
         qm = config.getPatternManager();
 
     }

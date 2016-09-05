@@ -4,9 +4,9 @@ import interQA.Config;
 import interQA.elements.Element;
 import interQA.Config.Language;
 import interQA.Config.Usecase;
-import interQA.main.JenaExecutorCacheSelect;
-import interQA.main.JenaExecutorCacheAsk;
-import interQA.main.URILabelCache;
+import interQA.cache.JenaExecutorCacheSelect;
+import interQA.cache.JenaExecutorCacheAsk;
+import interQA.cache.URILabelCache;
 import interQA.patterns.query.IncrementalQuery;
 import interQA.patterns.query.QueryBuilder;
 
@@ -49,8 +49,15 @@ public class DatasetConnector {
         this.usecase = usecase;
 
         cacheLabels = new URILabelCache(language.toString().toLowerCase());
-        //This load the cache from disk... takes time.
-        cacheLabels.readSerializationFile("urilabels.cache.ser"); //For 'DBpedia Nov 2015' it is a 861.226 KB file. Needs 5.3GB RAM
+        switch (usecase) {
+            case SPRINGER:
+                cacheLabels.readSerializationFile("springer.urilabels.cache.ser");
+                break;
+            case DBPEDIA: case EXPERIMENT:
+                //For 'DBpedia Nov 2015' it is a 978.395 KB file. Needs 5.3GB RAM
+                cacheLabels.readSerializationFile("dbpedia.urilabels.cache.ser");
+                break;
+        }
 
         switch (usecase) {
             
@@ -85,6 +92,13 @@ public class DatasetConnector {
     }
     public void interactiveExplorer(){
         cacheSel.interactiveExplorer();
+    }
+
+    public JenaExecutorCacheAsk getJenaExecutorCacheAsk(){
+        return (cacheAsk);
+    }
+    public JenaExecutorCacheSelect getJenaExecutorCacheSelect(){
+        return (cacheSel);
     }
 
     public String getEndpoint(){
@@ -141,10 +155,21 @@ public class DatasetConnector {
                           if (instance.isURIResource()) {
 
                               String uri   = instance.asResource().getURI();
-                              String label = cacheLabels.getLabel(uri);
-                              entry.setReference(uri);
-                              entry.setCanonicalForm(label);
-                              element.addToIndex(label,entry);
+                              String[] labels = cacheLabels.getLabel(uri); //labels could be null?
+                              if (labels != null) {
+                                  String label = labels[0];
+                                  entry.setReference(uri);
+                                  entry.setCanonicalForm(label);
+                                  element.addToIndex(label, entry);
+                                  if (labels.length > 1) {
+                                      for (int i = 1; i < labels.length; i++) {
+                                          LexicalEntry otherentry = new LexicalEntry();
+                                          otherentry.setReference(uri);
+                                          otherentry.setCanonicalForm(labels[i]);
+                                          element.addToIndex(label, otherentry);
+                                      }
+                                  }
+                              }
                           }
                           else if (instance.isLiteral()) {
 

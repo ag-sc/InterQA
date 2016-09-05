@@ -1,11 +1,9 @@
-package interQA.main;
+package interQA.cache;
 
-import interQA.Config;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,10 +77,13 @@ public class JenaExecutorCacheAsk {
         return (epPart + "." + fileNameTail);
     }
 
+    public void saveCacheToDisk(String endpoint) {
+        saveCacheToDisk("", endpoint);
+    }
     /**
      * Saves only if there is some data
      */
-    public void saveCacheToDisk(String endpoint) {
+    public void saveCacheToDisk(String prefix, String endpoint) {
         if (useHistoricalCache == false){ //If we do not load the historical cache, it is better not allow to save it.
             return;
         }

@@ -1,4 +1,4 @@
-package test.patterns.templates;
+package test.patterns.templates.Springer;
 
 
 import interQA.Config;
@@ -50,34 +50,59 @@ public class P_ITest_Springer_EN extends TestCase {
                 ));
     }
 
-    public void testGiveMeTheStartDatesOfISWC() throws Exception {
+    public void testGiveMeTheStartDatesOfInternationaBlahBlah2015() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
                                                                     "give me the",
                                                                     "start dates",
                                                                     "of",
-                                                                    "ISWC")); //No instances!!!!
+                                                                    "International Semantic Web Conference 2015"));
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(new HashSet<>(res),
                      new HashSet<>(
                             Arrays.asList(
-                                    "" //???????
+                                    "SELECT DISTINCT ?x WHERE {"+
+                                    " <http://lod.springer.com/data/conference/semweb2015> <http://lod.springer.com/data/ontology/property/confStartDate> ?x "+
+                                    "}"
                             )
                      ));
     }
-    public void testListAllStartsOf() throws Exception {
+
+    public void testGiveMeTheStartDatesOfISWC2015() throws Exception {
+
+        List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
+                "give me the",
+                "start dates",
+                "of",
+                "ISWC 2015"));
+        List<String> res = qm.buildSPARQLqueries();
+
+        assertEquals(new HashSet<>(res),
+                new HashSet<>(
+                        Arrays.asList(
+                                "SELECT DISTINCT ?x WHERE {"+
+                                " <http://lod.springer.com/data/conference/semweb2015> <http://lod.springer.com/data/ontology/property/confStartDate> ?x "+
+                                "}"
+                        )
+                ));
+    }
+
+    public void testListAllStartsOfISWC2015() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("", //Separator
                                                                     "list all",
                                                                     "starts",
-                                                                    "of")); //No instances!!!!
+                                                                    "of",
+                                                                    "ISWC 2015"));
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(new HashSet<>(res),
                      new HashSet<String>(
                             Arrays.asList(
-                                    "" //???????
+                                    "SELECT DISTINCT ?x WHERE {"+
+                                    " <http://lod.springer.com/data/conference/semweb2015> <http://lod.springer.com/data/ontology/property/confStartDate> ?x "+
+                                    "}"
                             )
                      ));
     }

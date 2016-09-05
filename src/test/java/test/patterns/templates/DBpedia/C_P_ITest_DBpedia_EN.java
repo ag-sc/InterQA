@@ -1,4 +1,4 @@
-package test.patterns.templates;
+package test.patterns.templates.DBpedia;
 
 
 import interQA.Config;

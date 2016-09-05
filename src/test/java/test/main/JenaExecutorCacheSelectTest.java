@@ -1,9 +1,7 @@
 package test.main;
 
-import interQA.main.JenaExecutorCacheAsk;
-import interQA.main.JenaExecutorCacheSelect;
+import interQA.cache.JenaExecutorCacheSelect;
 import junit.framework.TestCase;
-import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetRewindable;
 
 

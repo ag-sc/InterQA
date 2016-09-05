@@ -1,4 +1,4 @@
-package test.patterns.templates;
+package test.patterns.templates.ExperimentSept2016;
 
 
 import interQA.Config;
@@ -12,24 +12,30 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
+
 
 /**
  * @author Mariano Rico
  */
-public class CTest_DBpedia_EN extends TestCase {
+public class CTest_Experiment_EN extends TestCase {
 
     QueryPatternManager qm = null;
 
     //Executed before EACH test
     public void setUp() throws Exception {
-        //Init SPRINGER
+
         Config config = new Config();
-        config.init(Usecase.DBPEDIA,
+        config.init(Usecase.EXPERIMENT,
                     Language.EN,
                     new ArrayList<String>(Arrays.asList("qpC1",  // Give me all languages.
                                                         "qpC2")  // Which movies are there?
                                                         )
                    );
+        //By default uses NaiveExtraction and does not use historical cache
+        config.setCacheMode(ExhaustiveExtraction, true);
+
+
         qm = config.getPatternManager();
 
     }
