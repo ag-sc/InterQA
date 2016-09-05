@@ -138,6 +138,7 @@ public class DatasetConnector {
               
                     IncrementalQuery copy = iq.clone();
                     Query query = copy.assemble(vocab,false);
+                    query.setQuerySelectType();
                     query.setQueryResultStar(true);
                     String querystring = copy.prettyPrint(query);
                     
@@ -154,21 +155,12 @@ public class DatasetConnector {
 
                           if (instance.isURIResource()) {
 
-                              String uri   = instance.asResource().getURI();
-                              String[] labels = cacheLabels.getLabel(uri); //labels could be null?
-                              if (labels != null) {
-                                  String label = labels[0];
-                                  entry.setReference(uri);
-                                  entry.setCanonicalForm(label);
-                                  element.addToIndex(label, entry);
-                                  if (labels.length > 1) {
-                                      for (int i = 1; i < labels.length; i++) {
-                                          LexicalEntry otherentry = new LexicalEntry();
-                                          otherentry.setReference(uri);
-                                          otherentry.setCanonicalForm(labels[i]);
-                                          element.addToIndex(label, otherentry);
-                                      }
-                                  }
+                              String uri = instance.asResource().getURI();
+                              String[] labels = cacheLabels.getLabel(uri);
+                              entry.setReference(uri);
+                              entry.setCanonicalForm(labels[0]);
+                              for (String label : labels) {
+                                   element.addToIndex(label,entry);
                               }
                           }
                           else if (instance.isLiteral()) {
