@@ -124,6 +124,7 @@ public class DatasetConnector {
               
                     IncrementalQuery copy = iq.clone();
                     Query query = copy.assemble(vocab,false);
+                    query.setQuerySelectType();
                     query.setQueryResultStar(true);
                     String querystring = copy.prettyPrint(query);
                     
@@ -140,11 +141,13 @@ public class DatasetConnector {
 
                           if (instance.isURIResource()) {
 
-                              String uri   = instance.asResource().getURI();
-                              String label = cacheLabels.getLabel(uri);
+                              String uri = instance.asResource().getURI();
+                              String[] labels = cacheLabels.getLabel(uri);
                               entry.setReference(uri);
-                              entry.setCanonicalForm(label);
-                              element.addToIndex(label,entry);
+                              entry.setCanonicalForm(labels[0]);
+                              for (String label : labels) {
+                                   element.addToIndex(label,entry);
+                              }
                           }
                           else if (instance.isLiteral()) {
 
