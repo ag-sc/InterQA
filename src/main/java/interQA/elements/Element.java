@@ -32,10 +32,18 @@ public abstract class Element implements Cloneable {
     }
 
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
-        this.index = lexicon.getSubindex(pos,frame,true);
+        
+        addEntries(lexicon,pos,frame,true);
     }
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame, boolean withMarker) {
-        this.index = lexicon.getSubindex(pos,frame,withMarker);
+        
+        HashMap<String,List<LexicalEntry>> subindex = lexicon.getSubindex(pos,frame,withMarker);
+        for (String s : subindex.keySet()) {
+             if (!this.index.containsKey(s)) {
+                  this.index.put(s,new ArrayList<>());
+             }
+             this.index.get(s).addAll(subindex.get(s));
+        }
     }
 
     public Map<LexicalEntry,List<Triple>> getContext() {
@@ -162,7 +170,7 @@ public abstract class Element implements Cloneable {
     public List<String> getOptions() {
             
         List<String> options = new ArrayList<>();
-                
+                        
         if (agrFeatures.isEmpty()) options.addAll(index.keySet());
         else {
             for (String key : index.keySet()) {

@@ -158,7 +158,6 @@ public class DatasetConnector {
                               String uri = instance.asResource().getURI();
                               String[] labels = cacheLabels.getLabel(uri);
                               entry.setReference(uri);
-                              entry.setCanonicalForm(labels[0]);
                               for (String label : labels) {
                                    element.addToIndex(label,entry);
                               }
