@@ -74,7 +74,7 @@ public class P_I extends QueryPattern {
                     checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
                     else       builder.addProjVar(mainVar);
-
+                    
                     break;
                 }
             
