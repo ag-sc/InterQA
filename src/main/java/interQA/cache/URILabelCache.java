@@ -491,7 +491,7 @@ public class URILabelCache implements Serializable{
         ulc.readSerializationFile("springer.urilabels.cache.ser");
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
     }
-    static public void main12(String[] args){
+    static public void main(String[] args){
         URILabelCache ulc = new URILabelCache("en");
 
         //Time required to load the TTL file
@@ -500,7 +500,7 @@ public class URILabelCache implements Serializable{
         List<String> labelproperties= new ArrayList<String>();
         labelproperties.add("http://www.w3.org/2000/01/rdf-schema#label");       // [1]
 
-        ulc.readTTLDataFileForceBrute("urilabels.ttl",
+        ulc.readTTLDataFileForceBrute("labels_en.rand100K.ttl", //"urilabels.ttl",
                                       labelproperties,
                                       new String[] {
                                                     "[1]"     //DBpedia style
@@ -511,13 +511,13 @@ public class URILabelCache implements Serializable{
         //Time required to serialize the cache
         System.out.print("Serializing cache with " + ulc.getSize() + " elements...");
         start = System.currentTimeMillis();
-        ulc.serializeToFile("dbpedia.urilabels.cache.ser");
+        ulc.serializeToFile("dbpedia.micro100K.urilabels.cache.ser");
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
 
         //Time required to read the serialized cache
         System.out.print("Reading the serialized cache...");
         start = System.currentTimeMillis();
-        ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
+        ulc.readSerializationFile("dbpedia.micro100K.urilabels.cache.ser");
         System.out.println("done (" + (System.currentTimeMillis() - start) + ") millis.");
     }
 
@@ -642,7 +642,7 @@ public class URILabelCache implements Serializable{
         ulc.reportNulls();
     }
 
-    static public void main(String[] args) {
+    static public void main8(String[] args) {
         URILabelCache ulc = new URILabelCache("en");
         ulc.readSerializationFile("dbpedia.urilabels.cache.ser");
         String[] res = ulc.getURIcontaining("Trevor's_World_of_Sport");

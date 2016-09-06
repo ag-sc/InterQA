@@ -90,7 +90,9 @@ public class QueryPatternManager {
     public String[] getPredictedASKqueries(){
         HashSet<String> res = new HashSet<>();
         for (QueryPattern pat : allQueryPatterns){
+            System.out.print("Predicting for QP " + pat.getClass().getCanonicalName() + "...");
             res.addAll(pat.predictASKqueries());
+            System.out.println("..." + res.size() + "queries.");
         }
 
         return(res.toArray(new String[res.size()]));

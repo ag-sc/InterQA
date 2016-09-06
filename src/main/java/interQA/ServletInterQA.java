@@ -16,6 +16,8 @@ import java.util.List;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
+
 public class ServletInterQA extends HttpServlet {
 
     QueryPatternManager qm = null;
@@ -75,26 +77,18 @@ public class ServletInterQA extends HttpServlet {
         doGet(request, response);
     }
 
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig servconfig) throws ServletException {
 
-        super.init(config);
+        super.init(servconfig);
         
         log("Loading started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
 
-        // Load lexicon
-        
-        Lexicon lexicon = new Lexicon(Language.EN);
-        lexicon.load("resources/springer_en.ttl");
-        lexicon.extractEntries();
-        DatasetConnector dataset = new DatasetConnector("http://es.dbpedia.org/sparql",Language.EN,Usecase.SPRINGER);
-
-        // Load query patterns
-        
-        qm = new QueryPatternManager();
-
-        QueryPatternFactory_EN qf = new QueryPatternFactory_EN(Usecase.SPRINGER,lexicon,dataset);
-        
-        qm.addQueryPatterns(qf.rollout());
+        Config config = new Config();
+        config.init(Usecase.DBPEDIA, Language.EN, null);
+        config.setCacheMode(ExhaustiveExtraction, //Exahustive extraction
+                            true);                //Uses the historical cache
+        QueryPatternManager qm = config.getPatternManager();
+        qm.getActivePatternsBasedOnUserInput(""); //This initializes the active patterns
 
         log("Loading finished at " + LocalDateTime.now());  //LocalDateTime requires Java 8
     }

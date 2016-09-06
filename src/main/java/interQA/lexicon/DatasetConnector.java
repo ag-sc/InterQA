@@ -55,7 +55,7 @@ public class DatasetConnector {
                 break;
             case DBPEDIA: case EXPERIMENT:
                 //For 'DBpedia Nov 2015' it is a 978.395 KB file. Needs 5.3GB RAM
-                cacheLabels.readSerializationFile("dbpedia.urilabels.cache.ser");
+                cacheLabels.readSerializationFile("dbpedia.micro100K.urilabels.cache.ser");//"dbpedia.urilabels.cache.ser");
                 break;
         }
 
@@ -158,9 +158,8 @@ public class DatasetConnector {
                               String uri = instance.asResource().getURI();
                               String[] labels = cacheLabels.getLabel(uri);
                               entry.setReference(uri);
-                              entry.setCanonicalForm(labels[0]);
                               for (String label : labels) {
-                                   element.addToIndex(label,entry);
+                                  element.addToIndex(label,entry);
                               }
                           }
                           else if (instance.isLiteral()) {

@@ -56,11 +56,14 @@ public class JenaExecutorCacheSelect{
 
         if (isFirstTime){
             //Checks if there is a cache serialization in the file system
-            File f = new File(getFileNameFromEndpointName(endpoint));
+            String cacheSelfileName = getFileNameFromEndpointName(endpoint);
+            File f = new File(cacheSelfileName);
             if (f.isFile() && f.canRead() &&  useHistoricalCache) { // If there is a cache file... load it.
+                System.out.println("Reading cache select file: " + cacheSelfileName);
                 readCacheFromDisk(endpoint);
             }else{  //There is no cache file
                 //We use the static object cache
+                System.out.println("There is NO cache select file");
                 cache = new TreeMap<>();
             }
             isFirstTime = false;
@@ -77,7 +80,8 @@ public class JenaExecutorCacheSelect{
                     ResultSetFactory.copyResults(res)); //It is CRITICAL to make a copy in-memory or it will be destroyed
             //The cache stores ResultSetRewindable objects
             lastExecutionCameFromCache = false;
-            System.out.println("New element stored in CacheSelect (in memory). Now it has " + cache.size() + " elements.");
+            System.out.println("New element stored in CacheSelect (in memory): "+ sparqlQuery);
+            System.out.println("Now it has " + cache.size() + " elements.");
         }
         res.reset(); //Avoids resulsets finished
         return res;
@@ -417,7 +421,7 @@ public class JenaExecutorCacheSelect{
         String var1 = null;
         try {
             var1 = qjena.getResultVars().get(0); //We get the first result var. We could think about which would be the better
-        }catch (Exception e){
+        }catch (Throwable e){
             System.out.println("Uch... query = " + sparqlQuery);
             e.printStackTrace();
         }

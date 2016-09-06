@@ -38,8 +38,18 @@ public class CachesCreator {
     }
 
     public void writePredictedASKqueriesToFile(String fileName){
-        QueryPatternManager qm = config.getPatternManager();
-        String[] asks = qm.getPredictedASKqueries();
+        String[] asks = null;
+        try {
+            QueryPatternManager qm = config.getPatternManager();
+            asks = qm.getPredictedASKqueries();
+        }catch (Throwable e){
+            e.printStackTrace();
+            throw (e); //I can not solve it
+        }finally {
+            //Save results before die
+            writeQueriesToFile(asks, fileName);
+            System.out.println("Error computing ASK queries. Data previous to the error has been saved.");
+        }
         writeQueriesToFile(asks, fileName);
     }
     private void writeQueriesToFile(String[] queries, String fileName){
@@ -76,7 +86,7 @@ public class CachesCreator {
                 System.out.println("Getting results for query #" + i++ + ": " + selQuery);
                 try {
                     selExec.executeWithCache(ep, selQuery);
-                }catch (Exception e){
+                }catch (Throwable e){
                     System.out.println("Error in Sel query: " + selQuery);
                     //Save in case of error (including out ot memory)
                     selExec.saveCacheToDisk(serFileNamePrefix!= null? serFileNamePrefix : "error", ep);
@@ -140,19 +150,38 @@ public class CachesCreator {
                                             "part22");
     }
     static public void main(String[] args) {
+        System.out.print("Reading the serialized cache...");
+        long start = System.currentTimeMillis();
+
         CachesCreator cc = new CachesCreator(EXPERIMENT, EN);
-        cc.writePredictedASKqueriesToFile("EXPERIMENT.ASKqueries.txt");
+        JenaExecutorCacheSelect jeSel = cc.getConfig().getDatasetConnector().getJenaExecutorCacheSelect();
+        jeSel.readCacheFromDiskSpecificFile("4v.dia.fi.upm.es.cacheSelect.ser");
+        try {
+            //Saves the file in case of Out of Memory
+            cc.writePredictedASKqueriesToFile("EXPERIMENT.ASKqueries.txt");
+        }catch (Throwable e){ //Catches also Out of memory error
+            e.printStackTrace();
+        }finally {
+            //Saves the select cache in case of Out of Memory
+            jeSel.saveCacheToDisk("error", "http://4v.dia.fi.upm.es:8890/sparql");
+            System.out.println("done (" + (System.currentTimeMillis() - start)/1000 + ") seconds.");
+        }
+        //Saves the select cache if all right
+        jeSel.saveCacheToDisk("error", "http://4v.dia.fi.upm.es:8890/sparql");
+
+        System.out.println("done (" + (System.currentTimeMillis() - start)/1000 + ") seconds.");
+
     }
 
     static public void main4(String[] args) {
         CachesCreator cc = new CachesCreator(EXPERIMENT, EN);
 
-        JenaExecutorCacheSelect jeSel = cc.getConfig().getDatasetConnector().getJenaExecutorCacheSelect();
-        jeSel.readCacheFromDiskSpecificFile("part1.4v.dia.fi.upm.es.cacheSelect.ser");
+        JenaExecutorCacheAsk jeAsk = cc.getConfig().getDatasetConnector().getJenaExecutorCacheAsk();
+        //jeAsk.readCacheFromDiskSpecificFile("part1.4v.dia.fi.upm.es.cacheAsk.ser");
         //Attention! it will read a ser file named "like the EP", if it does not exists, will create a new one
         //For this example the file shoud be 4v.dia.fi.upm.es.cacheSelect.ser
-        cc.writesCacheFilefromSELECTqueries("EXPERIMENT.SELECTqueries.txt",
-                                            "http://4v.dia.fi.upm.es:8890/sparql",
-                                            "part22");
+//        cc.writesCacheFilefromASKqueries("EXPERIMENT.ASKqueries.txt",
+//                                            "http://4v.dia.fi.upm.es:8890/sparql",
+//                                            "part22");
     }
 }

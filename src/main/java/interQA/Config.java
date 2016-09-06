@@ -87,7 +87,8 @@ public class Config {
                     
                 // Set endpoint
                 
-                dataset = new DatasetConnector("http://4v.dia.fi.upm.es:8890/sparql",language,usecase);
+                //dataset = new DatasetConnector("http://4v.dia.fi.upm.es:8890/sparql",language,usecase);
+                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,usecase);
 
                 break;
             }
