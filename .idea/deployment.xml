@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData">
+  <component name="PublishConfigData" serverName="infra2">
     <serverData>
       <paths name="infra2">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$/web" web="/interQAWebApp" />
+            <mapping deploy="/WEB-INF/classes" local="$PROJECT_DIR$/target/classes/interQA" web="/" />
+            <mapping local="" />
           </mappings>
         </serverdata>
       </paths>

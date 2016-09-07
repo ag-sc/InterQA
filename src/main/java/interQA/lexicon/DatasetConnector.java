@@ -55,7 +55,7 @@ public class DatasetConnector {
                 break;
             case DBPEDIA: case EXPERIMENT:
                 //For 'DBpedia Nov 2015' it is a 978.395 KB file. Needs 5.3GB RAM
-                cacheLabels.readSerializationFile("dbpedia.micro100K.urilabels.cache.ser");//"dbpedia.urilabels.cache.ser");
+                cacheLabels.readSerializationFile("dbpedia.urilabels.cache.ser");//""dbpedia.micro100K.urilabels.cache.ser"
                 break;
         }
 

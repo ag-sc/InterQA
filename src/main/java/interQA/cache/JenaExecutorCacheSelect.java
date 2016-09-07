@@ -24,7 +24,6 @@ import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
 public class JenaExecutorCacheSelect{
 
     private TreeMap<String, ResultSetRewindable> cache = null;
-    private Boolean isFirstTime = true;
     private Config.ExtractionMode extractionMode = NaiveExtraction;
     private boolean useHistoricalCache = false; // The historical cache is the cache file result of previous executions
     boolean lastExecutionCameFromCache = false;
@@ -54,7 +53,7 @@ public class JenaExecutorCacheSelect{
     public ResultSet executeWithCache(String endpoint, String sparqlQuery) {
         ResultSetRewindable res = null;
 
-        if (isFirstTime){
+        if (cache == null){  //No previous load of data
             //Checks if there is a cache serialization in the file system
             String cacheSelfileName = getFileNameFromEndpointName(endpoint);
             File f = new File(cacheSelfileName);
@@ -66,7 +65,6 @@ public class JenaExecutorCacheSelect{
                 System.out.println("There is NO cache select file");
                 cache = new TreeMap<>();
             }
-            isFirstTime = false;
         }
 
         //We use the cache

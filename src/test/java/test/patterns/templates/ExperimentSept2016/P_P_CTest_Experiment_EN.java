@@ -43,15 +43,23 @@ public class P_P_CTest_Experiment_EN extends TestCase {
     public void testWhatActorsPlayinBatman() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
-                                                                    "what is the")); //no continuations
-                                                                                     // Also for "give me the" and "who is the"
+                                                                    "what is the",
+                                                                    "capital",
+                                                                    "and",
+                                                                    "currency",
+                                                                    "of",
+                                                                    "countries"));
 
         List<String> res = qm.buildSPARQLqueries();
 
         assertEquals(new HashSet<>(res),
                      new HashSet<>(
                             Arrays.asList(
-                                    "" //??????????????????????????
+                                    "SELECT DISTINCT ?x ?y WHERE {"+
+                                    " ?I <http://dbpedia.org/ontology/capital> ?x"+
+                                    " ; <http://dbpedia.org/ontology/currency> ?y"+
+                                    " ; a <http://dbpedia.org/ontology/Country> "+
+                                    "}"
                             )
                      ));
     }

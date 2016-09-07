@@ -3,6 +3,7 @@ package interQA.main;
 import interQA.Config;
 import interQA.Config.Language;
 import interQA.Config.Usecase;
+import interQA.cache.JenaExecutorCacheSelect;
 import interQA.patterns.QueryPatternManager;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
@@ -95,6 +96,9 @@ public class interQACLI {
         //If not specified, it will use NaiveExtraction and will not use historical cache
         config.setCacheMode(ExhaustiveExtraction, //Exahustive extraction
                             true);                //Uses the historical cache
+        JenaExecutorCacheSelect jeSel = config.getDatasetConnector().getJenaExecutorCacheSelect();
+        jeSel.readCacheFromDiskSpecificFile("dbpedia.org.cacheSelect.ser");
+
         QueryPatternManager qm = config.getPatternManager();
         qm.getActivePatternsBasedOnUserInput(""); //This initializes the active patterns
         
@@ -296,7 +300,7 @@ public class interQACLI {
             avlPats = qm.getActivePatternsBasedOnUserInput(sbWholeSentenceInternal.toString());
             System.out.println("Number of patterns available: " + avlPats.size() + " " + avlPats.toString());
             //Save the cache to disk after every selected option
-            config.getDatasetConnector().saveCacheToDisk();
+            //config.getDatasetConnector().saveCacheToDisk();
         }while (opts.size() != 0  ||
                 avlPats.size() != 0  //This allows to delete if there are no options available
                );

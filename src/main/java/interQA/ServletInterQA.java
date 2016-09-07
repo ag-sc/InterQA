@@ -1,6 +1,7 @@
 
 package interQA;
 
+import interQA.cache.JenaExecutorCacheSelect;
 import interQA.patterns.QueryPatternManager;
 import com.google.gson.Gson;
 import interQA.lexicon.DatasetConnector;
@@ -26,26 +27,26 @@ public class ServletInterQA extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws ServletException, IOException {
-        //Warning! set response header/statuts BEFORE sending any content to the client
+        //Warning! set response header/status BEFORE sending any content to the client
         response.setContentType("application/json"); //We always return JSON
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Access-Control-Allow-Origin", "*"); // "*" May be too much. Anyone could use this as a service.
         PrintWriter out = response.getWriter();
-        //log("The URL is " + request.getQueryString());
-        //log("The page encoding is "+ request.getCharacterEncoding());
+        log("The URL is " + request.getQueryString());
+        log("The page encoding is "+ request.getCharacterEncoding());
         String command = request.getParameter("command"); ///ServletInterQA?command=whatever
-        List<String> options = qm.getUIoptions();
-        if (options.isEmpty()){
-            out.write("No options");
-            return;
-        }
+
         switch (command){
             //Warning! set response header/status BEFORE sending any content to the client
             case "getOptions":  //command=getOptions  server returns a list of option
                 response.setStatus(response.SC_OK); //Code 200
-                //log("getOptions command with options: " + options);
+                List<String> options = qm.getUIoptions();
+                log("getOptions command with options: " + options);
+                if (options != null && options.isEmpty()){
+                    log("No options. The client will receive an array[0], which has length = 0.");
+                }
                 out.write(gson.toJson(options));
                 break;
             case "selected":    //command=selected&selection=text   server is informed. Nothing in returned
@@ -54,18 +55,18 @@ public class ServletInterQA extends HttpServlet {
                 //log("decoded as ISO-8859-1): " + URLDecoder.decode(encoded, "ISO-8859-1"));
                 String text = new String(encoded.getBytes("iso-8859-1"), "UTF-8"); //Valid only for Tomcat default conf?
                 List<String> availableQPNames = qm.getActivePatternsBasedOnUserInput(text);
-                //log("selected command with text: " + text + " and with availableQPNames: " + availableQPNames);
+                log("selected command with text: " + text + " and with availableQPNames: " + availableQPNames);
                 out.write(gson.toJson(availableQPNames));
                 break;
             case "getQueries":    //command=getQueries server returns a list of SPARQL queries
                 response.setStatus(response.SC_OK);
                 List<String> queries = qm.buildSPARQLqueries();
-                //log("getQueries command with queries: " + queries);
+                log("getQueries command with queries: " + queries);
                 out.write(gson.toJson(queries));
                 break;
             default:           // unsupported command
                 response.setStatus(response.SC_BAD_REQUEST); //code 400
-                //log("unsupported command. Error! ");
+                log("unsupported command. Error! ");
                 break;
         }
     }
@@ -84,10 +85,13 @@ public class ServletInterQA extends HttpServlet {
         log("Loading started at " + LocalDateTime.now()); //LocalDateTime requires Java 8
 
         Config config = new Config();
-        config.init(Usecase.DBPEDIA, Language.EN, null);
+        config.init(Usecase.EXPERIMENT, Language.EN, null); //This load the cache urilabels dbpedia.urilabels.cache.ser (without org!!)
         config.setCacheMode(ExhaustiveExtraction, //Exahustive extraction
                             true);                //Uses the historical cache
-        QueryPatternManager qm = config.getPatternManager();
+        JenaExecutorCacheSelect jeSel = config.getDatasetConnector().getJenaExecutorCacheSelect();
+        jeSel.readCacheFromDiskSpecificFile("dbpedia.org.cacheSelect.ser");
+
+        qm = config.getPatternManager();
         qm.getActivePatternsBasedOnUserInput(""); //This initializes the active patterns
 
         log("Loading finished at " + LocalDateTime.now());  //LocalDateTime requires Java 8

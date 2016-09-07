@@ -40,7 +40,7 @@ public class URILabelCache implements Serializable{
 //            cache.get(uri);
 //        }
 //        return(res);
-        return(cache.containsKey(uri)? cache.get(uri) : null);
+        return(cache.containsKey(uri)? cache.get(uri) : new String[0]);
     }
 
     public ArrayList<String> getLabels (String[] uris){
@@ -425,7 +425,7 @@ public class URILabelCache implements Serializable{
         FileInputStream fis = null;
         ObjectInputStream ois = null;
 
-        System.out.print("Reading the urilabel cache file " + fileName + "...");
+        System.out.print("Reading the urilabel cache file " + fileName + "... Value of user.dir = " + System.getProperty("user.dir"));
         try {
             fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);

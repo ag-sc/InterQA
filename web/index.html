@@ -22,9 +22,9 @@
 </head>
 <body>
 <div id="wrapper">
-  <h1>InterQA Springer Demo</h1>
+  <h1  style="text-shadow:#ddd 0.2em 0.2em 0.2em">InterQA demo</h1>
   <div class="demo">
-    <p>Type (or select from the list) to create a guided natural language query about Springer conferences.</p>
+    <p>Type (or select from the list) to create a guided natural language query about 2 topics: movies and geography.</p>
     <p>Shortcuts while typing:
        <ul>
         <li><b>Space</b>: autocomplete (only if there is one word in the options list). <b>Ctrl+Space</b> avoids autocomplete.</li>
@@ -47,7 +47,7 @@
       var lastQueryString="";
       //Function sendToEP
       function sendToEP(){
-        var ep = "http://es.dbpedia.org/sparql";
+        var ep = "http://dbpedia.org/sparql";
         var iframe = jQuery(document.createElement("IFRAME"));
         iframe.attr("src" , ep+"?query="+encodeURIComponent(lastQueryString)); //Do not use encodeURI
         iframe.css("width", "100%"); //Relative to parent
@@ -69,54 +69,53 @@
       var optionsGlobal = [];
 
       var get_options_success = function get_options_success(e) {
-
-        if (e.length == 0) {
-          // No more options means finished -> Show/Execute the SPARQL query
-          var getqueries_url = "/interQAWebApp/ServletInterQA?command=getQueries";
-          execute_ajax(getqueries_url,
-                  function(e){ //server OK. e contains the result of the server call
-                      var msg = "";
-                      for (var i in e){
-                          msg += e[i] + "\n";
-                      }
-                    lastQueryString =msg;
-                      $("#sparql").html(encodeSparqlQueryForShow(msg)); //escape is deprecated :-(
-                      jQuery("#execButton").css("display", "inline");
-                  },
-                  function(e){  //Server error
-                     console.log("Error at get queries");
-                  });
-        }
-	currentCallback = null;
-        mySelectize.cancelLoading();
-	mySelectize.setSelectizeStates(e);
+            if (e.length == 0) {
+                  // No more options means finished -> Show/Execute the SPARQL query
+                  var getqueries_url = "/interQAWebApp/ServletInterQA?command=getQueries";
+                  execute_ajax(getqueries_url,
+                          function(e){ //server OK. e contains the result of the server call
+                              var msg = "";
+                              for (var i in e){
+                                  msg += e[i] + "\n";
+                              }
+                              lastQueryString =msg;
+                              $("#sparql").html(encodeSparqlQueryForShow(msg)); //escape is deprecated :-(
+                              jQuery("#execButton").css("display", "inline");
+                          },
+                          function(e){  //Server error
+                             console.log("Error at get queries");
+                          });
+            }
+            currentCallback = null;
+            mySelectize.cancelLoading();
+            mySelectize.setSelectizeStates(e);
       }
-	var currentCallback = null;
+	  var currentCallback = null;
       var initSelect = function initSelect () {
-        if(currentCallback != null){
-          currentCallback.abort();
-          currentCallback = null;
-        }
-        $("#sparql").html("");
-        jQuery("#execButton").css("display", "none");
-        jQuery("#executor").empty();
-        mySelectize.setSelectizeStates([]);
-        mySelectize.startLoading();
+            if(currentCallback != null){
+                currentCallback.abort();
+                currentCallback = null;
+            }
+            $("#sparql").html("");
+            jQuery("#execButton").css("display", "none");
+            jQuery("#executor").empty();
+            mySelectize.setSelectizeStates([]);
+            mySelectize.startLoading();
 
-        optionsGlobal = mySelectize.getSelectizedItems();
-        var getoptions_url = "/interQAWebApp/ServletInterQA?command=getOptions";
-        var selected_url = "/interQAWebApp/ServletInterQA?command=selected&selection=";
-        for (var i in optionsGlobal) {
-          selected_url += '' + encodeURIComponent(optionsGlobal[i]); //Converts UTF-8 to a valid URLable string (avoids Cáceres-> CÃ¡ceres)
-        }
+            optionsGlobal = mySelectize.getSelectizedItems();
+            var getoptions_url = "/interQAWebApp/ServletInterQA?command=getOptions";
+            var selected_url = "/interQAWebApp/ServletInterQA?command=selected&selection=";
+            for (var i in optionsGlobal) {
+              selected_url += '' + encodeURIComponent(optionsGlobal[i]); //Converts UTF-8 to a valid URLable string (avoids Cáceres-> CÃ¡ceres)
+            }
 
-        currentCallback = execute_ajax(selected_url, function (e) {
-          currentCallback = execute_ajax(getoptions_url, get_options_success, function(e){
-            console.log("Error at get options (after selected)");
-          });
-        }, function (e) {
-          console.log("Error at selected_url");
-        });
+            execute_ajax(selected_url, function (e) {
+                currentCallback = execute_ajax(getoptions_url, get_options_success, function(e){
+                    console.log("Error at get options (after selected). Value for argument:" + e.toString());
+                });
+            }, function (e) {
+                console.log("Error at selected_url");
+            });
       };
       //Manage change event
       mySelectize.onChange(initSelect);
@@ -136,7 +135,7 @@
         request.fail(function( jqXHR, textStatus ) { //Returned 500
           func_fail("error 500");
         });
-	return request;
+	    return request;
       };
     </script>
   </div>

@@ -42,7 +42,12 @@ public class P_P_ITest_Experiment_EN extends TestCase {
     public void testWhatIsThe() throws Exception {
 
         List<String> avlPats = qm.getActivePatternsBasedOnUserInput(String.join("",
-                                                                    "what is the")); //No continuation
+                                                                    "what is the",
+                                                                    "capital",
+                                                                    "and",
+                                                                    "currency",
+                                                                    "of",
+                                                                    "Algeria"));
 
 
         List<String> res = qm.buildSPARQLqueries();
@@ -51,7 +56,10 @@ public class P_P_ITest_Experiment_EN extends TestCase {
         assertEquals(new HashSet<>(res),
                      new HashSet<>(
                             Arrays.asList(
-                                    "" //??????????????????????????
+                                    "SELECT DISTINCT ?x ?y WHERE {"+
+                                    " <http://dbpedia.org/resource/Algeria> <http://dbpedia.org/ontology/capital> ?x"+
+                                    " ; <http://dbpedia.org/ontology/currency> ?y "+
+                                    "}"
                             )
                      ));
     }
