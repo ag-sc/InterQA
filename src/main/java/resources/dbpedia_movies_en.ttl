@@ -16,14 +16,17 @@
               :producer_of,
               :cinematographer_of,
               :cameraman_for,
+              :screenwriter_of,
               :cast_of,
               :budget_of,
               :composer_for,
 
               :star_in,
               :appear_in,
+              :feature,
               :compose_the_music_for,
-              :compose_the_soundtrack_of,
+              :write_the_soundtrack_for,
+              :write_the_script_of,
 
               :cost,
               :direct,
@@ -147,6 +150,20 @@
     lemon:objOfProp  :composer_for_arg1 .
 :composer_for_arg2 lemon:marker :for .
 
+:screenwriter_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :screenwriter_of_form ;
+    lemon:synBehavior   :screenwriter_of_frame ;
+    lemon:sense         :screenwriter_of_sense .
+:screenwriter_of_form lemon:writtenRep "screenwriter"@en .
+:screenwriter_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :screenwriter_of_arg1 ;
+    lexinfo:prepositionalObject :screenwriter_of_arg2 .
+:screenwriter_of_sense lemon:reference <http://dbpedia.org/ontology/writer> ;
+    lemon:subjOfProp :screenwriter_of_arg2 ;
+    lemon:objOfProp  :screenwriter_of_arg1 .
+:screenwriter_of_arg2 lemon:marker :of .
+
 :budget_of a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:noun ;
     lemon:canonicalForm :budget_of_form ;
@@ -247,6 +264,19 @@
     lemon:subjOfProp :portray_arg2 ;
     lemon:objOfProp  :portray_arg1 .
 
+:feature a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :feature_form ;
+    lemon:synBehavior   :feature_frame ;
+    lemon:sense         :feature_sense .
+:feature_form lemon:writtenRep "feature"@en .
+:feature_frame a lexinfo:TransitiveFrame ;
+    lexinfo:subject      :feature_arg1 ;
+    lexinfo:directObject :feature_arg2 .
+:feature_sense lemon:reference <http://dbpedia.org/ontology/starring> ;
+    lemon:subjOfProp :feature_arg1 ;
+    lemon:objOfProp  :feature_arg2 .
+
 
 #### Verbs: IntransitivePP ####
 
@@ -301,28 +331,51 @@
     lemon:objOfProp  :compose_the_music_for_arg1 .
 :compose_the_music_for_arg2 lemon:marker :for .
 
-:compose_the_soundtrack_of a lemon:LexicalEntry ;
+:write_the_soundtrack_for a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:verb ;
-    lemon:canonicalForm :compose_the_soundtrack_of_form_pres_pl ;
-    lemon:otherForm     :compose_the_soundtrack_of_form_pres_sg ;
-    lemon:otherForm     :compose_the_soundtrack_of_form_past ;
-    lemon:synBehavior   :compose_the_soundtrack_of_frame ;
-    lemon:sense         :compose_the_soundtrack_of_sense .
-:compose_the_soundtrack_of_form_pres_pl lemon:writtenRep "compose the soundtrack"@en ;
+    lemon:canonicalForm :write_the_soundtrack_for_form_pres_pl ;
+    lemon:otherForm     :write_the_soundtrack_for_form_pres_sg ;
+    lemon:otherForm     :write_the_soundtrack_for_form_past ;
+    lemon:synBehavior   :write_the_soundtrack_for_frame ;
+    lemon:sense         :write_the_soundtrack_for_sense .
+:write_the_soundtrack_for_form_pres_pl lemon:writtenRep "write the soundtrack"@en ;
     lexinfo:tense  lexinfo:present ;
     lexinfo:number lexinfo:plural .
-:compose_the_soundtrack_of_form_pres_sg lemon:writtenRep "composes the soundtrack"@en ;
+:write_the_soundtrack_for_form_pres_sg lemon:writtenRep "writes the soundtrack"@en ;
     lexinfo:tense  lexinfo:present ;
     lexinfo:number lexinfo:singular .
-:compose_the_soundtrack_of_form_past lemon:writtenRep "composed the soundtrack"@en ;
+:write_the_soundtrack_for_form_past lemon:writtenRep "wrote the soundtrack"@en ;
     lexinfo:tense  lexinfo:past .
-:compose_the_soundtrack_of_frame a lexinfo:IntransitivePPFrame ;
-    lexinfo:subject             :compose_the_soundtrack_of_arg1 ;
-    lexinfo:prepositionalObject :compose_the_soundtrack_of_arg2 .
-:compose_the_soundtrack_of_sense lemon:reference <http://dbpedia.org/ontology/musicComposer> ;
-    lemon:subjOfProp :compose_the_soundtrack_of_arg2 ;
-    lemon:objOfProp  :compose_the_soundtrack_of_arg1 .
-:compose_the_soundtrack_of_arg2 lemon:marker :of .
+:write_the_soundtrack_for_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject             :write_the_soundtrack_for_arg1 ;
+    lexinfo:prepositionalObject :write_the_soundtrack_for_arg2 .
+:write_the_soundtrack_for_sense lemon:reference <http://dbpedia.org/ontology/musicComposer> ;
+    lemon:subjOfProp :write_the_soundtrack_for_arg2 ;
+    lemon:objOfProp  :write_the_soundtrack_for_arg1 .
+:write_the_soundtrack_for_arg2 lemon:marker :for .
+
+:write_the_script_for a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :write_the_script_for_form_pres_pl ;
+    lemon:otherForm     :write_the_script_for_form_pres_sg ;
+    lemon:otherForm     :write_the_script_for_form_past ;
+    lemon:synBehavior   :write_the_script_for_frame ;
+    lemon:sense         :write_the_script_for_sense .
+:write_the_script_for_form_pres_pl lemon:writtenRep "write the script"@en ;
+    lexinfo:tense  lexinfo:present ;
+    lexinfo:number lexinfo:plural .
+:write_the_script_for_form_pres_sg lemon:writtenRep "writes the script"@en ;
+    lexinfo:tense  lexinfo:present ;
+    lexinfo:number lexinfo:singular .
+:write_the_script_for_form_past lemon:writtenRep "wrote the script"@en ;
+    lexinfo:tense  lexinfo:past .
+:write_the_script_for_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject             :write_the_script_for_arg1 ;
+    lexinfo:prepositionalObject :write_the_script_for_arg2 .
+:write_the_script_for_sense lemon:reference <http://dbpedia.org/ontology/writer> ;
+    lemon:subjOfProp :write_the_script_for_arg2 ;
+    lemon:objOfProp  :write_the_script_for_arg1 .
+:write_the_script_for_arg2 lemon:marker :for .
 
 
 #### Relational adjectives ####

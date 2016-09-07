@@ -14,7 +14,7 @@ public class LexicalEntry {
     
     public enum SemArg  { SUBJOFPROP, OBJOFPROP };
     public enum SynArg  { SUBJECT, OBJECT };
-    public enum POS     { NOUN, VERB, ADJECTIVE, PREPOSITION };
+    public enum POS     { NOUN, VERB, ADJECTIVE, PREPOSITION, PARTICIPLE };
     public enum Feature { SINGULAR, PLURAL, PRESENT, PAST, FEMININE, MASCULINE, NEUTER, COMPARATIVE, SUPERLATIVE };
     
     String canonicalForm;  

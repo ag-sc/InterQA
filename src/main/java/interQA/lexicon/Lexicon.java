@@ -234,7 +234,7 @@ public class Lexicon {
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.VERB);
                         entry.setFrame(vocab.lexinfo + "TransitiveFrame");
-                        
+                                                
                         String pres; String past; 
                         
                         if (sol.contains("pres")) pres = sol.get("pres").asLiteral().getValue().toString();
@@ -242,29 +242,62 @@ public class Lexicon {
                         if (sol.contains("past")) past = sol.get("past").asLiteral().getValue().toString();
                         else                      past = inflector.getPast(canonicalForm,3);
                         
+                        LexicalEntry participle_entry = new LexicalEntry(); 
+                        participle_entry.setCanonicalForm(past);
+                        participle_entry.setReference(reference);
+                        participle_entry.setPOS(LexicalEntry.POS.PARTICIPLE);
+                        
                         entry.addForm(LexicalEntry.Feature.PRESENT,pres);
                         entry.addForm(LexicalEntry.Feature.PAST,past);
-                        if (sol.contains("sg")) entry.addForm(LexicalEntry.Feature.SINGULAR,sol.get("sg").asLiteral().getValue().toString());
-                        if (sol.contains("pl")) entry.addForm(LexicalEntry.Feature.PLURAL,sol.get("pl").asLiteral().getValue().toString());
+                        participle_entry.addForm(LexicalEntry.Feature.PRESENT,past);
+                        participle_entry.addForm(LexicalEntry.Feature.PAST,past);
+                        participle_entry.addForm(LexicalEntry.Feature.SINGULAR,past);
+                        participle_entry.addForm(LexicalEntry.Feature.PLURAL,past);
+                        participle_entry.setMarker("by");
+                        
+                        String sg = null; String pl = null;
+                        
+                        if (sol.contains("sg")) { 
+                            sg = sol.get("sg").asLiteral().getValue().toString();
+                            entry.addForm(LexicalEntry.Feature.SINGULAR,sg);
+                        }
+                        if (sol.contains("pl")) {
+                            pl = sol.get("pl").asLiteral().getValue().toString();
+                            entry.addForm(LexicalEntry.Feature.PLURAL,pl);
+                        }
                         
                         if (subject.equals(subjOfProp) && directObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                             entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else if (subject.equals(objOfProp) && directObject.equals(subjOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
                             entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else {
                             continue;
                         }
                         
-                        if (!index.containsKey(pres)) index.put(pres ,new ArrayList<>());
+                        if (!index.containsKey(pres)) index.put(pres,new ArrayList<>());
                         index.get(pres).add(entry);
-                        if (!index.containsKey(past)) index.put(past ,new ArrayList<>());
+                        if (!index.containsKey(past)) index.put(past,new ArrayList<>());
                         index.get(past).add(entry);
+                        index.get(past).add(participle_entry);
+                        if (sg != null) { 
+                            if (!index.containsKey(sg)) index.put(sg,new ArrayList<>());
+                            index.get(sg).add(entry);
+                        }
+                        if (pl != null) {
+                            if (!index.containsKey(pl)) index.put(pl,new ArrayList<>());
+                            index.get(pl).add(entry);
+                        }
                         
                         propertyEntries.add(entry);
+                        propertyEntries.add(participle_entry);
                     }
                     catch (NullPointerException npe) {
                         npe.printStackTrace();

@@ -112,6 +112,7 @@ public class C_P_I_P_I extends QueryPattern{
  
                     builder.instantiate("C",c);
                     dataset.filter(elements.get(3),builder,"P1");
+                    elements.get(3).addCopula((StringElement) elements.get(2));
                     break;
                 } 
 		
