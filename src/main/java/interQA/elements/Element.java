@@ -3,6 +3,7 @@ package interQA.elements;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.LexicalEntry.Feature;
 import interQA.lexicon.Lexicon;
+import interQA.lexicon.Vocabulary;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,6 +90,25 @@ public abstract class Element implements Cloneable {
         }
         
         return markers;
+    }
+    
+    public void addCopula(StringElement element) {
+        
+        boolean hasRelationalAdjective = false;
+        check: for (String form : index.keySet()) {
+          for (LexicalEntry entry : index.get(form)) {
+               if (entry.getFrame() != null && entry.getFrame().equals(Vocabulary.AdjectivePPFrame)) {
+                   hasRelationalAdjective = true;
+                   break check;
+               }
+          }
+        }
+        if (hasRelationalAdjective) {
+            element.add("is",Feature.PRESENT,Feature.SINGULAR);
+            element.add("are",Feature.PRESENT,Feature.PLURAL);
+            element.add("was",Feature.PAST,Feature.SINGULAR);
+            element.add("were",Feature.PAST,Feature.PLURAL);
+        }
     }
     
     public List<Feature> getAgrFeatures() {

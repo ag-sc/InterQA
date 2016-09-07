@@ -29,29 +29,28 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
     @Override
     public Set<QueryPattern> rollout() {
+        
         ArrayList<String> plist = new ArrayList<>();
+        
         plist.add("qpC1");
         plist.add("qpC2");
         plist.add("qpP_I1");
         plist.add("qpP_I2");
+        plist.add("qpP_I3");
         plist.add("qpC_P_I1");
         plist.add("qpC_P_I2");
         plist.add("qpC_P_I3");
+        plist.add("qpC_P_I4");
+        plist.add("qpC_P_I5");
+        plist.add("qp_C_I_P");
+        plist.add("qpP_C_P_I1");
+        plist.add("qpP_C_P_I2");
         plist.add("qpC_P_I_P_I1");
         plist.add("qpC_P_I_P_I2");
         plist.add("qpP_P_I");
         plist.add("qpP_P_C");
-//        plist.add("qpC_P_P");
         //Please, add P_C implementation
 
-//        switch(usecase) {
-//            case SPRINGER:
-//                plist.add("qpSpringer1");
-//                plist.add("qpSpringer2");
-//                plist.add("qpSpringerC_P_I");
-//                plist.add("qpSpringer3");
-//                break;
-//        }
         return(rollout(plist));
     }
 
@@ -126,6 +125,21 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             patterns.add(qpP_I2);
         }
+        
+        // What was created by Walt Disney?
+        if (plist.contains("qpP_I3")) {
+            QueryPattern qpP_I3 = new P_I(lexicon, instances);
+
+            StringElement e15_0 = (StringElement) qpP_I3.getElement(0);
+            e15_0.add("who is", Feature.PRESENT, Feature.SINGULAR);
+            e15_0.add("who was", Feature.PAST, Feature.SINGULAR);
+            e15_0.add("what is", Feature.PRESENT, Feature.SINGULAR);
+            e15_0.add("what was", Feature.PAST, Feature.SINGULAR);
+
+            addParticiples(qpP_I3.getElement(1));
+
+            patterns.add(qpP_I3);
+        }
       
 //        // What actors play in Batman?
         if (plist.contains("qpC_P_I1")) {
@@ -194,6 +208,116 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             patterns.add(qpC_P_I3);
         }
         
+        // Give me all movies directed by Steven Spielberg.
+        if (plist.contains("qpC_P_I4")) {
+            QueryPattern qpC_P_I4 = new C_P_I(lexicon, instances);
+
+            StringElement e8_0 = (StringElement) qpC_P_I4.getElement(0);
+            addDefGiveMePrefixes(e8_0);
+            addIndefGiveMePrefixes(e8_0);
+
+            addNouns(qpC_P_I4.getElement(1));
+            addParticiples(qpC_P_I4.getElement(3));
+            addPrepositions(qpC_P_I4.getElement(3));
+
+            qpC_P_I4.addAgreementDependency(0,1);
+
+            patterns.add(qpC_P_I4);
+        }
+        
+        // Give me all movies that were directed by Steven Spielberg.
+        if (plist.contains("qpC_P_I5")) {
+            QueryPattern qpC_P_I5 = new C_P_I(lexicon, instances);
+
+            StringElement e14_0 = (StringElement) qpC_P_I5.getElement(0);
+            addDefGiveMePrefixes(e14_0);
+            addIndefGiveMePrefixes(e14_0);
+
+            addNouns(qpC_P_I5.getElement(1));
+            
+            StringElement e14_2 = (StringElement) qpC_P_I5.getElement(2);
+            e14_2.add("that is", Feature.PRESENT, Feature.SINGULAR);
+            e14_2.add("that was", Feature.PAST, Feature.SINGULAR);
+            e14_2.add("that are", Feature.PRESENT, Feature.PLURAL);
+            e14_2.add("that were", Feature.PAST, Feature.PLURAL);
+            e14_2.add("which is", Feature.PRESENT, Feature.SINGULAR);
+            e14_2.add("which was", Feature.PAST, Feature.SINGULAR);
+            e14_2.add("which are", Feature.PRESENT, Feature.PLURAL);
+            e14_2.add("which were", Feature.PAST, Feature.PLURAL);     
+            e14_2.add("who is", Feature.PRESENT, Feature.SINGULAR);
+            e14_2.add("who was", Feature.PAST, Feature.SINGULAR);
+            e14_2.add("who are", Feature.PRESENT, Feature.PLURAL);
+            e14_2.add("who were", Feature.PAST, Feature.PLURAL);
+            
+            addParticiples(qpC_P_I5.getElement(3));
+
+            qpC_P_I5.addAgreementDependency(0,1);
+            qpC_P_I5.addAgreementDependency(1,2);
+
+            patterns.add(qpC_P_I5);
+        }
+        
+        // Which countries have the Euro as currency?
+        if (plist.contains("qpC_I_P")) {
+            QueryPattern qpC_I_P = new C_I_P(lexicon, instances);
+
+            StringElement e10_0 = (StringElement) qpC_I_P.getElement(0);
+            addWhichPrefixes(e10_0);
+            
+            addNouns(qpC_I_P.getElement(1));
+            
+            StringElement e10_2 = (StringElement) qpC_I_P.getElement(2);
+            e10_2.add("has", Feature.PRESENT, Feature.SINGULAR);
+            e10_2.add("have", Feature.PRESENT, Feature.PLURAL);
+            e10_2.add("had", Feature.PAST);
+
+            addRelationalNouns(qpC_I_P.getElement(5));
+
+            qpC_I_P.addAgreementDependency(0,1);
+            qpC_I_P.addAgreementDependency(1,2);
+            qpC_I_P.addAgreementDependency(2,3);
+
+            patterns.add(qpC_I_P);
+        }
+        
+        // Give me the cinematographers of movies directed by Truffaut.
+        if (plist.contains("qpP_C_P_I1")) {
+            QueryPattern qpP_C_P_I1 = new P_C_P_I(lexicon, instances);
+
+            StringElement e11_0 = (StringElement) qpP_C_P_I1.getElement(0);
+            addDefGiveMePrefixes(e11_0);
+            addIndefGiveMePrefixes(e11_0);
+
+            addRelationalNouns(qpP_C_P_I1.getElement(1));
+            addNouns(qpP_C_P_I1.getElement(3));
+            addPrepositions(qpP_C_P_I1.getElement(5));
+            addParticiples(qpP_C_P_I1.getElement(5));
+            
+            qpP_C_P_I1.addAgreementDependency(0,1);
+
+            patterns.add(qpP_C_P_I1);
+        }
+        
+        // Who appeared in movies by Truffaut?
+        if (plist.contains("qpP_C_P_I2")) {
+            QueryPattern qpP_C_P_I2 = new P_C_P_I(lexicon, instances);
+
+            StringElement e12_0 = (StringElement) qpP_C_P_I2.getElement(0);
+            e12_0.add("who");
+            e12_0.add("what");
+
+            addVerbs(qpP_C_P_I2.getElement(1));
+            addNouns(qpP_C_P_I2.getElement(3));
+            addPrepositions(qpP_C_P_I2.getElement(5));
+            addParticiples(qpP_C_P_I2.getElement(5));
+            
+            qpP_C_P_I2.addAgreementDependency(0,1);
+
+            patterns.add(qpP_C_P_I2);
+        }
+        
+        // Which actors appeared in movies by Truffaut?
+        // TODO C_P_C_P_I
         
 //        //Show me all conferences that took place in Berlin in 2015.
         if (plist.contains("qpC_P_I_P_I1")) {
@@ -399,6 +523,10 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
     
     private void addPrepositions(Element e) {
         e.addEntries(lexicon,LexicalEntry.POS.PREPOSITION, vocab.PrepositionalFrame, false);
+    }
+    
+    private void addParticiples(Element e) {
+        e.addEntries(lexicon, LexicalEntry.POS.PARTICIPLE, null);
     }
     
     static public void addDefGiveMePrefixes(StringElement e) {

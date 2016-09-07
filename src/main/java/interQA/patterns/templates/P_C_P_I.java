@@ -16,17 +16,18 @@ import java.util.Set;
 import org.apache.jena.query.Query;
 
 
-public class C_P_I extends QueryPattern{
+public class P_C_P_I extends QueryPattern{
 
     
 	// SELECT DISTINCT ?x WHERE 
         // {
-        //   ?x rdf:type <C> .
-        //   ?x <P> <I> .
+        //   ?x <P1> ?y .
+        //   ?y rdf:type <C> .
+        //   ?y <P2> <I> .
         // }
         
     
-	public C_P_I(Lexicon lexicon,DatasetConnector dataset) {
+	public P_C_P_I(Lexicon lexicon,DatasetConnector dataset) {
 		
             this.lexicon = lexicon;
             this.dataset = dataset;
@@ -41,31 +42,38 @@ public class C_P_I extends QueryPattern{
             StringElement element0 = new StringElement();
             elements.add(element0);
 		
-            ClassElement element1 =  new ClassElement();
+            PropertyElement element1 =  new PropertyElement();
             elements.add(element1);
 		
             StringElement element2 = new StringElement();
             elements.add(element2);
 		
-            PropertyElement element3 = new PropertyElement();
+            ClassElement element3 = new ClassElement();
             elements.add(element3);
             
             StringElement element4 = new StringElement();
             elements.add(element4);
-		
-            InstanceElement element5 = new InstanceElement();
-            elements.add(element5);    
             
+            PropertyElement element5 =  new PropertyElement();
+            elements.add(element5);
+		
             StringElement element6 = new StringElement();
             elements.add(element6);
+		
+            InstanceElement element7 = new InstanceElement();
+            elements.add(element7);    
+            
+            StringElement element8 = new StringElement();
+            elements.add(element8);
 	}
 	
 	@Override
 	public void update(String s) {
 
-            ClassElement    c = (ClassElement)    elements.get(1);
-            PropertyElement p = (PropertyElement) elements.get(3);
-            InstanceElement i = (InstanceElement) elements.get(5);
+            PropertyElement p1 = (PropertyElement) elements.get(1);
+            ClassElement    c  = (ClassElement)    elements.get(3);
+            PropertyElement p2 = (PropertyElement) elements.get(5);
+            InstanceElement i  = (InstanceElement) elements.get(7);
 		
             switch (currentElement) {
                 
@@ -75,10 +83,12 @@ public class C_P_I extends QueryPattern{
                     
                     builder.reset();
                     
-                    String mainVar = "x";
+                    String mainVar  = "x";
+                    String otherVar = "y";  
                     
-                    builder.addUninstantiatedTypeTriple(mainVar,builder.placeholder("C"));
-                    builder.addUninstantiatedTriple(mainVar,builder.placeholder("P"),builder.placeholder("I"));
+                    builder.addUninstantiatedTriple(mainVar,builder.placeholder("P1"),otherVar);
+                    builder.addUninstantiatedTypeTriple(otherVar,builder.placeholder("C"));
+                    builder.addUninstantiatedTriple(otherVar,builder.placeholder("P2"),builder.placeholder("I"));
                     
                     checkHowMany(s);
                     if (count) builder.addCountVar(mainVar); 
@@ -89,24 +99,34 @@ public class C_P_I extends QueryPattern{
                 
                 case 1: {
                                     
-                    builder.instantiate("C",c);
-                    dataset.filter(elements.get(3),builder,"P");
-                    elements.get(3).addCopula((StringElement) elements.get(2));
+                    builder.instantiate("P1",p1);
+                    for (String m : elements.get(1).getMarkers()) {
+                        ((StringElement) elements.get(2)).add(m);
+                    }
+                    
+                    dataset.filter(elements.get(3),builder,"C");
                     break;
                 }
                     
                 case 3: {
                     
-                    for (String m : elements.get(3).getMarkers()) {
-                        ((StringElement) elements.get(4)).add(m);
-                    }
-                    
-                    builder.instantiate("P",p);
-                    dataset.fillInstances(elements.get(5),builder,"I");
+                    builder.instantiate("C",c);
+                    dataset.filter(elements.get(5),builder,"P2");
                     break;
                 }
                 
-                case 5: { 
+                case 5: {
+                    
+                    builder.instantiate("P2",p2);
+                    for (String m : elements.get(5).getMarkers()) {
+                        ((StringElement) elements.get(6)).add(m);
+                    }
+                    
+                    dataset.fillInstances(elements.get(7),builder,"I");
+                    break;
+                }
+                
+                case 7: { 
                                         
                     builder.instantiate("I",i);
                     break;
@@ -115,9 +135,9 @@ public class C_P_I extends QueryPattern{
 	}
         
         @Override
-        public C_P_I clone() {
+        public P_C_P_I clone() {
             
-            C_P_I clone = new C_P_I(lexicon,dataset);
+            P_C_P_I clone = new P_C_P_I(lexicon,dataset);
             clone.elements = new ArrayList<>();
             for (Element e : elements) {
                  clone.elements.add(e.clone());
@@ -136,15 +156,27 @@ public class C_P_I extends QueryPattern{
             // Init queries
             
             builder.reset();
-            String mainVar = "x";
-            builder.addUninstantiatedTypeTriple(mainVar,builder.placeholder("C"));
-            builder.addUninstantiatedTriple(mainVar,builder.placeholder("P"),builder.placeholder("I"));
+            String mainVar  = "x";
+            String otherVar = "y";  
+            builder.addUninstantiatedTriple(mainVar,builder.placeholder("P1"),otherVar);
+            builder.addUninstantiatedTypeTriple(otherVar,builder.placeholder("C"));
+            builder.addUninstantiatedTriple(otherVar,builder.placeholder("P2"),builder.placeholder("I"));
 
             // Build ASK queries
             
             Set<IncrementalQuery> iqueries = new HashSet<>();
             Set<IncrementalQuery> intermed = new HashSet<>();
+
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : iqueries) {
+                      IncrementalQuery j = builder.instantiate("P1",entry,i);
+                      intermed.add(j);
+                 }
+            }
             
+            iqueries.addAll(intermed);
+            intermed = new HashSet<>();
+
             for (LexicalEntry entry : lexicon.getClassEntries()) {
                  for (IncrementalQuery i : builder.getQueries()) {
                       IncrementalQuery j = builder.instantiate("C",entry,i);
@@ -157,7 +189,7 @@ public class C_P_I extends QueryPattern{
             
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
                  for (IncrementalQuery i : iqueries) {
-                      IncrementalQuery j = builder.instantiate("P",entry,i);
+                      IncrementalQuery j = builder.instantiate("P2",entry,i);
                       intermed.add(j);
                  }
             }
@@ -189,6 +221,13 @@ public class C_P_I extends QueryPattern{
             Set<IncrementalQuery> iqueries = new HashSet<>();
             Set<IncrementalQuery> intermed = new HashSet<>();
             
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                 for (IncrementalQuery i : iqueries) {
+                      IncrementalQuery j = builder.instantiate("P1",entry,i);
+                      intermed.add(j);
+                 }
+            }
+            
             for (LexicalEntry entry : lexicon.getClassEntries()) {
                  for (IncrementalQuery i : builder.getQueries()) {
                       IncrementalQuery j = builder.instantiate("C",entry,i);
@@ -198,7 +237,7 @@ public class C_P_I extends QueryPattern{
             
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
                  for (IncrementalQuery i : iqueries) {
-                      IncrementalQuery j = builder.instantiate("P",entry,i);
+                      IncrementalQuery j = builder.instantiate("P2",entry,i);
                       intermed.add(j);
                  }
             }

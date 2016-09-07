@@ -16,7 +16,7 @@ import java.util.Set;
 import org.apache.jena.query.Query;
 
 
-public class C_P_I extends QueryPattern{
+public class C_I_P extends QueryPattern{
 
     
 	// SELECT DISTINCT ?x WHERE 
@@ -26,7 +26,7 @@ public class C_P_I extends QueryPattern{
         // }
         
     
-	public C_P_I(Lexicon lexicon,DatasetConnector dataset) {
+	public C_I_P(Lexicon lexicon,DatasetConnector dataset) {
 		
             this.lexicon = lexicon;
             this.dataset = dataset;
@@ -47,13 +47,13 @@ public class C_P_I extends QueryPattern{
             StringElement element2 = new StringElement();
             elements.add(element2);
 		
-            PropertyElement element3 = new PropertyElement();
+            InstanceElement element3 = new InstanceElement();
             elements.add(element3);
             
             StringElement element4 = new StringElement();
             elements.add(element4);
 		
-            InstanceElement element5 = new InstanceElement();
+            PropertyElement element5 = new PropertyElement();
             elements.add(element5);    
             
             StringElement element6 = new StringElement();
@@ -64,8 +64,8 @@ public class C_P_I extends QueryPattern{
 	public void update(String s) {
 
             ClassElement    c = (ClassElement)    elements.get(1);
-            PropertyElement p = (PropertyElement) elements.get(3);
-            InstanceElement i = (InstanceElement) elements.get(5);
+            InstanceElement i = (InstanceElement) elements.get(3);
+            PropertyElement p = (PropertyElement) elements.get(5);
 		
             switch (currentElement) {
                 
@@ -90,34 +90,30 @@ public class C_P_I extends QueryPattern{
                 case 1: {
                                     
                     builder.instantiate("C",c);
-                    dataset.filter(elements.get(3),builder,"P");
-                    elements.get(3).addCopula((StringElement) elements.get(2));
+                    dataset.filter(elements.get(5),builder,"P"); 
+                    dataset.fillInstances(elements.get(3),builder,"I");
                     break;
                 }
                     
                 case 3: {
                     
-                    for (String m : elements.get(3).getMarkers()) {
-                        ((StringElement) elements.get(4)).add(m);
-                    }
-                    
-                    builder.instantiate("P",p);
-                    dataset.fillInstances(elements.get(5),builder,"I");
+                    builder.instantiate("I",i);
+                    dataset.filter(elements.get(5),builder,"P");
                     break;
                 }
                 
                 case 5: { 
                                         
-                    builder.instantiate("I",i);
+                    builder.instantiate("P",p);
                     break;
                 } 
             }
 	}
         
         @Override
-        public C_P_I clone() {
+        public C_I_P clone() {
             
-            C_P_I clone = new C_P_I(lexicon,dataset);
+            C_I_P clone = new C_I_P(lexicon,dataset);
             clone.elements = new ArrayList<>();
             for (Element e : elements) {
                  clone.elements.add(e.clone());
@@ -142,27 +138,50 @@ public class C_P_I extends QueryPattern{
 
             // Build ASK queries
             
-            Set<IncrementalQuery> iqueries = new HashSet<>();
-            Set<IncrementalQuery> intermed = new HashSet<>();
+            Set<IncrementalQuery> initialqueries = builder.getQueries();
+            Set<IncrementalQuery> iqueries  = new HashSet<>();
+            Set<IncrementalQuery> intermed1 = new HashSet<>();
+            Set<IncrementalQuery> intermed2 = new HashSet<>();
             
             for (LexicalEntry entry : lexicon.getClassEntries()) {
                  for (IncrementalQuery i : builder.getQueries()) {
                       IncrementalQuery j = builder.instantiate("C",entry,i);
-                      intermed.add(j);
+                      intermed1.add(j);
                  }
             }
             
-            iqueries.addAll(intermed);
-            intermed = new HashSet<>();
+            iqueries.addAll(intermed1);
             
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
                  for (IncrementalQuery i : iqueries) {
                       IncrementalQuery j = builder.instantiate("P",entry,i);
-                      intermed.add(j);
+                      intermed2.add(j);
                  }
             }
             
-            iqueries.addAll(intermed);
+            iqueries.addAll(intermed2);
+            intermed2 = new HashSet<>();
+            
+            // fill instances in element
+            builder.setQueries(intermed1);
+            dataset.fillInstances(elements.get(3),builder,"I");
+            // create ASK query
+            for (LexicalEntry entry : elements.get(3).getActiveEntries()) {
+                for (IncrementalQuery i : intermed1) {
+                      IncrementalQuery j = builder.instantiate("I",entry,i);
+                      intermed2.add(j);
+                 }
+            }
+            // reset 
+            builder.setQueries(initialqueries);
+            elements.set(3,new InstanceElement());
+                        
+            for (LexicalEntry entry : lexicon.getPropertyEntries()) {
+                for (IncrementalQuery i : intermed2) {
+                     IncrementalQuery j = builder.instantiate("P",entry,i);
+                     iqueries.add(j);
+                 }
+            }
             
             for (IncrementalQuery iquery : iqueries) {
                  queries.add(iquery.prettyPrint(iquery.assembleAsAsk(vocab,false)));

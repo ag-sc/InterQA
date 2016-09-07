@@ -95,7 +95,7 @@
 :population_of_frame a lexinfo:NounPPFrame ;
     lexinfo:copulativeArg       :population_of_arg1 ;
     lexinfo:prepositionalObject :population_of_arg2 .
-:population_of_sense lemon:reference <http://dbpedia.org/ontology/population> ;
+:population_of_sense lemon:reference <http://dbpedia.org/ontology/populationTotal> ;
     lemon:subjOfProp :population_of_arg2 ;
     lemon:objOfProp  :population_of_arg1 .
 :population_of_arg2 lemon:marker :of .
@@ -224,6 +224,7 @@
     lemon:canonicalForm :spoken_in_form ;
     lemon:synBehavior   :spoken_in_frame ;
     lemon:sense         :spoken_in_sense .
+:spoken_in_form lemon:writtenRep "spoken"@en .
 :spoken_in_frame a lexinfo:AdjectivePPFrame ;
     lexinfo:subject             :spoken_in_arg1 ;
     lexinfo:prepositionalObject :spoken_in_arg2 .
