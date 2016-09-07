@@ -16,7 +16,7 @@ Finde:
 * alle Filme mit Steve McQueen
 * die Kameramänner von allen Truffaut-Filmen 
 * wer die Filmmusik von Forrest Gump geschrieben hat 
-* wie hoch das Budget von Titanic war 
+* wie hoch das Budget von Fargo war 
 * alle dänischen Filme 
 * wer das Drehbuch zu Casablanca geschrieben hat
 * welche Schauspieler James Bond gespielt haben
