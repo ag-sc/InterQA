@@ -425,7 +425,7 @@ public class URILabelCache implements Serializable{
         FileInputStream fis = null;
         ObjectInputStream ois = null;
 
-        System.out.print("Reading the urilabel cache file " + fileName + "... Value of user.dir = " + System.getProperty("user.dir"));
+        System.out.println("Reading the urilabel cache file " + fileName + "... Value of user.dir = " + System.getProperty("user.dir"));
         try {
             fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);
