@@ -26,7 +26,7 @@
               :feature,
               :compose_the_music_for,
               :write_the_soundtrack_for,
-              :write_the_script_of,
+              :write_the_script_for,
 
               :cost,
               :direct,
