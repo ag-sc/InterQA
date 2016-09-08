@@ -92,8 +92,11 @@ public abstract class QueryPattern implements Cloneable {
                 if (options.isEmpty() && elements.get(currentElement+1).isStringElement()) {
                     currentElement += 1;
                     return getNext();
-                }                 
-                else return options;
+                }
+                else {
+//                  System.out.println(this.getClass() + ": " + options.toString());
+                    return options;
+                }
      
             } else {
                 return new ArrayList<>();

@@ -10,6 +10,7 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.patterns.query.IncrementalQuery;
+import interQA.patterns.query.QueryBuilder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -90,21 +91,25 @@ public class C_I_P extends QueryPattern{
                 case 1: {
                                     
                     builder.instantiate("C",c);
-                    dataset.filter(elements.get(5),builder,"P"); 
-                    dataset.fillInstances(elements.get(3),builder,"I");
+                    dataset.filter(p,builder,"P"); 
+                    QueryBuilder b = builder.copyAndInstantiate("P",p);
+                    dataset.fillInstances(i,b,"I");
                     break;
                 }
                     
                 case 3: {
                     
                     builder.instantiate("I",i);
-                    dataset.filter(elements.get(5),builder,"P");
+                    dataset.filter(p,builder,"P"); 
                     break;
                 }
                 
                 case 5: { 
                                         
                     builder.instantiate("P",p);
+                    for (String m : p.getMarkers()) {
+                        ((StringElement) elements.get(6)).add(m);
+                    }
                     break;
                 } 
             }

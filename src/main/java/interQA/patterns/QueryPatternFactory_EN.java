@@ -42,7 +42,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         plist.add("qpC_P_I3");
         plist.add("qpC_P_I4");
         plist.add("qpC_P_I5");
-        plist.add("qp_C_I_P");
+        plist.add("qpC_I_P1");
+        plist.add("qpC_I_P2");
         plist.add("qpP_C_P_I1");
         plist.add("qpP_C_P_I2");
         plist.add("qpC_P_I_P_I1");
@@ -72,7 +73,6 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             
             patterns.add(qpC1);
         }
-
         
         // Which movies are there?
         if (plist.contains("qpC2")) {
@@ -92,9 +92,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             patterns.add(qpC2);
         }
         
-        
-//        // Give me the mayor of Paris. 
-//        // Who is the president of Cameroon?
+        // Give me the mayor of Paris. 
+        // Who is the president of Cameroon?
         if (plist.contains("qpP_I1")) {
             QueryPattern qpP_I1 = new P_I(lexicon,instances);
 
@@ -110,8 +109,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             patterns.add(qpP_I1);
         }
         
-//        // Who created Miffy? 
-//        // Who died in Berlin?
+        // Who created Miffy? 
+        // Who died in Berlin?
         if (plist.contains("qpP_I2")) {
             QueryPattern qpP_I2 = new P_I(lexicon, instances);
 
@@ -258,26 +257,48 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         }
  
         // Which countries have the Euro as currency?
-        if (plist.contains("qpC_I_P")) {
-            QueryPattern qpC_I_P = new C_I_P(lexicon, instances);
+        if (plist.contains("qpC_I_P1")) {
+            QueryPattern qpC_I_P1 = new C_I_P(lexicon, instances);
 
-            StringElement e10_0 = (StringElement) qpC_I_P.getElement(0);
+            StringElement e10_0 = (StringElement) qpC_I_P1.getElement(0);
             addWhichPrefixes(e10_0);
             
-            addNouns(qpC_I_P.getElement(1));
+            addNouns(qpC_I_P1.getElement(1));
             
-            StringElement e10_2 = (StringElement) qpC_I_P.getElement(2);
+            StringElement e10_2 = (StringElement) qpC_I_P1.getElement(2);
             e10_2.add("has", Feature.PRESENT, Feature.SINGULAR);
             e10_2.add("have", Feature.PRESENT, Feature.PLURAL);
             e10_2.add("had", Feature.PAST);
 
-            addRelationalNouns(qpC_I_P.getElement(5));
+            addRelationalNouns(qpC_I_P1.getElement(5));
 
-            qpC_I_P.addAgreementDependency(0,1);
-            qpC_I_P.addAgreementDependency(1,2);
-            qpC_I_P.addAgreementDependency(2,3);
+            qpC_I_P1.addAgreementDependency(0,1);
+            qpC_I_P1.addAgreementDependency(1,2);
+            qpC_I_P1.addAgreementDependency(2,3);
 
-            patterns.add(qpC_I_P);
+            patterns.add(qpC_I_P1);
+        }
+        
+        // Which countries does the Rhine flow through?
+        // Which movies did Kurosawa direct?
+        if (plist.contains("qpC_I_P2")) {
+            QueryPattern qpC_I_P2 = new C_I_P(lexicon, instances);
+
+            addWhichPrefixes((StringElement) qpC_I_P2.getElement(0));
+            
+            addNouns(qpC_I_P2.getElement(1));
+            
+            ((StringElement) qpC_I_P2.getElement(2)).add("does", Feature.PRESENT, Feature.SINGULAR);
+            ((StringElement) qpC_I_P2.getElement(2)).add("do", Feature.PRESENT, Feature.PLURAL);
+            ((StringElement) qpC_I_P2.getElement(2)).add("did", Feature.PAST);
+
+            addVerbs(qpC_I_P2.getElement(5));
+            
+            qpC_I_P2.getElement(5).addAgrFeature(Feature.PLURAL);
+
+            qpC_I_P2.addAgreementDependency(0,1);
+
+            patterns.add(qpC_I_P2);
         }
         
         // Give me the cinematographers of movies directed by Truffaut.
@@ -402,96 +423,11 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             qp.addAgreementDependency(0,3);
             
             patterns.add(qp);
-        } 
+        }
         
-////        //what are the BMW cars models and their prizes ?
-//        if (plist.contains("qpC_P_P")) {
-//            QueryPattern qp = new C_P_P(lexicon, instances);
-//
-//            StringElement e14_0 = (StringElement) qp.getElement(0);
-//            addWhoWhatPrefixes(e14_0);
-//            addDefGiveMePrefixes(e14_0);
-//
-//            addNouns(qp.getElement(1));
-//
-//            addRelationalNouns(qp.getElement(2));
-//
-//            StringElement e14_3 = (StringElement) qp.getElement(3);
-//            e14_3.add("and");
-//
-//            StringElement e14_4 = (StringElement) qp.getElement(4);
-//            e14_4.add("its", Feature.SINGULAR, Feature.NEUTER);
-//            e14_4.add("his", Feature.SINGULAR, Feature.MASCULINE);
-//            e14_4.add("her", Feature.SINGULAR, Feature.FEMININE);
-//            e14_4.add("their", Feature.PLURAL);
-//
-//            addRelationalNouns(qp.getElement(5));
-//
-//            patterns.add(qp);
-//        }
-          
+//        System.out.println("Loaded patterns:"); 
+//        for (QueryPattern p : patterns) System.out.println("* " + p.getClass()); 
         
-//        // USE-CASE SPECIFIC PATTERNS
-//
-//        switch (usecase) {
-//        
-//            case SPRINGER: {
-//                
-//        //        //Give me the proceedings of ISWC 2015.
-//                if (plist.contains("qpSpringer1")) {
-//                    QueryPattern qp = new SpringerQueryPattern4(lexicon, instances);
-//
-//                    StringElement e15_0 = (StringElement) qp.getElement(0);
-//                    addDefGiveMePrefixes(e15_0);
-//
-//                    addRelationalNouns(qp.getElement(1));
-//
-//                    patterns.add(qp);
-//                }
-//
-////                   proceedings of ISWC 2015
-//               if (plist.contains("qpSpringer2")) {
-//                   QueryPattern qp = new SpringerQueryPattern4(lexicon, instances);
-//
-//                   addRelationalNouns(qp.getElement(1));
-//
-//                   patterns.add(qp);
-//               }
-//
-////                conferences in Spain/2015
-//                if (plist.contains("qpSpringerC_P_I")) {
-//                    QueryPattern qp = new C_P_I(lexicon, instances);
-//
-//                    addNouns(qp.getElement(1));
-//
-//                    addPrepositions(qp.getElement(3));
-//
-//                    patterns.add(qp);
-//                }
-//
-////                Give me the start and end date of ISWC 2015.
-//                if (plist.contains("qpSpringer3")) {
-//                    QueryPattern qp = new SpringerQueryPattern5(lexicon, instances);
-//
-//                    StringElement e16_0 = (StringElement) qp.getElement(0);
-//                    addDefGiveMePrefixes(e16_0);
-//
-//                    addRelationalNouns(qp.getElement(1));
-//
-//                    StringElement e16_2 = (StringElement) qp.getElement(2);
-//                    e16_2.add("and");
-//
-//                    addRelationalNouns(qp.getElement(3));
-//
-//                    patterns.add(qp);
-//                }
-//                
-//                break;
-//            }
-//        } //End switch(usecase)
-        
-        
-        // Done. (Yay!)
         return patterns;
     
     }

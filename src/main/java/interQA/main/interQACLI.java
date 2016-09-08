@@ -96,8 +96,8 @@ public class interQACLI {
         //If not specified, it will use NaiveExtraction and will not use historical cache
         config.setCacheMode(ExhaustiveExtraction, //Exahustive extraction
                             true);                //Uses the historical cache
-        JenaExecutorCacheSelect jeSel = config.getDatasetConnector().getJenaExecutorCacheSelect();
-        jeSel.readCacheFromDiskSpecificFile("dbpedia.org.cacheSelect.ser");
+//        JenaExecutorCacheSelect jeSel = config.getDatasetConnector().getJenaExecutorCacheSelect();
+//        jeSel.readCacheFromDiskSpecificFile("dbpedia.org.cacheSelect.ser");
 
         QueryPatternManager qm = config.getPatternManager();
         qm.getActivePatternsBasedOnUserInput(""); //This initializes the active patterns
