@@ -674,9 +674,9 @@ public class Lexicon {
                                + " ?sense   lemon:subjOfProp ?subjOfProp ."
                                + " ?sense   lemon:objOfProp  ?objOfProp ."
                                + " ?entry   lemon:synBehavior ?frame ."
-                               + " ?frame   <" + vocab.rdfType + "> lexinfo:PrepositionalFrame ."
-                               + " ?frame   lexinfo:attributiveArg ?subject ."
-                               + " ?frame   lexinfo:prepositionalAdjunct ?object ."
+                               + " ?frame   <" + vocab.rdfType + "> lexinfo:PrepositionalPhraseFrame ."
+                               + " ?frame   lexinfo:copulativeSubject ?subject ."
+                               + " ?frame   lexinfo:complement ?object . "
                                + "}";
             
             Query query = QueryFactory.create(queryString) ;
@@ -686,7 +686,7 @@ public class Lexicon {
                 ResultSet results = qexec.execSelect() ;
                                 
                 for ( ; results.hasNext() ; ) {
-                    
+                                        
                     QuerySolution sol = results.nextSolution() ;
                                         
                     String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
@@ -701,7 +701,7 @@ public class Lexicon {
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.PREPOSITION);
-                        entry.setFrame(vocab.lexinfo + "PrepositionalFrame");
+                        entry.setFrame(vocab.lexinfo + "PrepositionalPhraseFrame");
                         
                         if (subject.equals(subjOfProp) && object.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);

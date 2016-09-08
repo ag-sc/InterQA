@@ -141,7 +141,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             patterns.add(qpP_I3);
         }
       
-//        // What actors play in Batman?
+        // What actors play in Batman?
         if (plist.contains("qpC_P_I1")) {
             QueryPattern qpC_P_I1 = new C_P_I(lexicon, instances);
 
@@ -157,8 +157,8 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             patterns.add(qpC_P_I1);
         }
-        
-//        // Give me all actors that play in Batman.
+            
+        // Give me all actors that play in Batman.
         if (plist.contains("qpC_P_I2")) {
             QueryPattern qpC_P_I2 = new C_P_I(lexicon, instances);
 
@@ -256,7 +256,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             patterns.add(qpC_P_I5);
         }
-        
+ 
         // Which countries have the Euro as currency?
         if (plist.contains("qpC_I_P")) {
             QueryPattern qpC_I_P = new C_I_P(lexicon, instances);
@@ -522,7 +522,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
     }
     
     private void addPrepositions(Element e) {
-        e.addEntries(lexicon,LexicalEntry.POS.PREPOSITION, vocab.PrepositionalFrame, false);
+        e.addEntries(lexicon,LexicalEntry.POS.PREPOSITION, vocab.PrepositionalPhraseFrame, false);
     }
     
     private void addParticiples(Element e) {

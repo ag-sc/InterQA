@@ -399,7 +399,7 @@
 :with a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:preposition ;
     lemon:canonicalForm :with_form ;
-    lemon:synBehaviour  :with_frame ;
+    lemon:synBehavior   :with_frame ;
     lemon:sense         :with_sense .
 :with_form lemon:writtenRep "with"@en .
 :with_frame a lexinfo:PrepositionalPhraseFrame ;
@@ -412,7 +412,7 @@
 :from a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:preposition ;
     lemon:canonicalForm :from_form ;
-    lemon:synBehaviour  :from_frame ;
+    lemon:synBehavior   :from_frame ;
     lemon:sense         :from_sense .
 :from_form lemon:writtenRep "from"@en .
 :from_frame a lexinfo:PrepositionalPhraseFrame ;
@@ -425,7 +425,7 @@
 :by a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:preposition ;
     lemon:canonicalForm :by_form ;
-    lemon:synBehaviour  :by_frame ;
+    lemon:synBehaviur   :by_frame ;
     lemon:sense         :by_sense .
 :by_form lemon:writtenRep "by"@en .
 :by_frame a lexinfo:PrepositionalPhraseFrame ;
