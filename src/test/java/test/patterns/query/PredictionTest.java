@@ -107,6 +107,19 @@ public class PredictionTest {
              System.out.println(" " + q);
         }
         
+        // P_C_P_I
+        
+        QueryPattern pcpi = new P_C_P_I(config.getLexicon(),config.getDatasetConnector());
+        
+        System.out.println("\n---------- P_C_P_I ----------\n");
+        for (String q : pcpi.predictASKqueries()) { 
+             System.out.println(" " + q);
+        }
+        System.out.println("");
+        for (String q : pcpi.predictSELECTqueries()) { 
+             System.out.println(" " + q);
+        }
+        
         // C_I_P
         
         QueryPattern cip = new C_I_P(config.getLexicon(),config.getDatasetConnector());

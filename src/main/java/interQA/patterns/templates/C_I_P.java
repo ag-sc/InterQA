@@ -143,7 +143,6 @@ public class C_I_P extends QueryPattern{
 
             // Build ASK queries
             
-            Set<IncrementalQuery> initialqueries = builder.getQueries();
             Set<IncrementalQuery> iqueries  = new HashSet<>();
             Set<IncrementalQuery> intermed1 = new HashSet<>();
             Set<IncrementalQuery> intermed2 = new HashSet<>();
@@ -156,33 +155,29 @@ public class C_I_P extends QueryPattern{
             }
             
             iqueries.addAll(intermed1);
+            intermed1 = new HashSet<>();
             
+            QueryBuilder buildercopy = builder.clone();
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
                  for (IncrementalQuery i : iqueries) {
-                      IncrementalQuery j = builder.instantiate("P",entry,i);
+                      IncrementalQuery j = buildercopy.instantiate("P",entry,i);
                       intermed2.add(j);
                  }
-            }
-            
-            iqueries.addAll(intermed2);
-            intermed2 = new HashSet<>();
-            
+            }           
             // fill instances in element
-            builder.setQueries(intermed1);
-            dataset.fillInstances(elements.get(3),builder,"I");
+            dataset.fillInstances(elements.get(3),buildercopy,"I");
             // create ASK query
             for (LexicalEntry entry : elements.get(3).getActiveEntries()) {
-                for (IncrementalQuery i : intermed1) {
-                      IncrementalQuery j = builder.instantiate("I",entry,i);
-                      intermed2.add(j);
+                for (IncrementalQuery i : intermed2) {
+                     IncrementalQuery j = builder.instantiate("I",entry,i);
+                     intermed1.add(j);
                  }
             }
             // reset 
-            builder.setQueries(initialqueries);
             elements.set(3,new InstanceElement());
                         
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
-                for (IncrementalQuery i : intermed2) {
+                for (IncrementalQuery i : intermed1) {
                      IncrementalQuery j = builder.instantiate("P",entry,i);
                      iqueries.add(j);
                  }
