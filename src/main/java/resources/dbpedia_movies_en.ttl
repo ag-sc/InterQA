@@ -228,9 +228,9 @@
     lemon:synBehavior   :cost_frame ;
     lemon:sense         :cost_sense .
 :cost_form lemon:writtenRep "cost"@en ;
-    lexinfo:tense :present .
+    lexinfo:tense lexinfo:present .
 :cost_past lemon:writtenRep "cost"@en ;
-    lexinfo:tense :past .
+    lexinfo:tense lexinfo:past .
 :cost_frame a lexinfo:TransitiveFrame ;
     lexinfo:subject      :cost_arg1 ;
     lexinfo:directObject :cost_arg2 .

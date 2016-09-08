@@ -34,7 +34,7 @@ public abstract class Element implements Cloneable {
 
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
         
-        addEntries(lexicon,pos,frame,true);
+        addEntries(lexicon,pos,frame,false);
     }
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame, boolean withMarker) {
         
@@ -190,7 +190,7 @@ public abstract class Element implements Cloneable {
     public List<String> getOptions() {
             
         List<String> options = new ArrayList<>();
-                        
+                                
         if (agrFeatures.isEmpty()) options.addAll(index.keySet());
         else {
             for (String key : index.keySet()) {

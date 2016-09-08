@@ -97,7 +97,7 @@ public class Lexicon {
                             
                             String marker  = entry.getMarker();
                             if (withMarker && marker != null) {
-                                key += entry.getMarker();
+                                key += " " + entry.getMarker();
                             }
                             
                             if (!subindex.containsKey(key)) {
@@ -283,7 +283,7 @@ public class Lexicon {
                         else {
                             continue;
                         }
-                        
+                                                
                         if (!index.containsKey(pres)) index.put(pres,new ArrayList<>());
                         index.get(pres).add(entry);
                         if (!index.containsKey(past)) index.put(past,new ArrayList<>());
