@@ -373,7 +373,7 @@ public class QueryPatternFactory_DE implements QueryPatternFactory {
     }
     
     private void addPrepositionalVerbs(Element e){
-        e.addEntries(lexicon,LexicalEntry.POS.PREPOSITION,vocab.PrepositionalFrame);
+        e.addEntries(lexicon,LexicalEntry.POS.PREPOSITION,vocab.PrepositionalPhraseFrame);
     }
     
     private void addGiveMePrefixes(StringElement e) {

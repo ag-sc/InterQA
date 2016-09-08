@@ -81,6 +81,13 @@ public class QueryBuilder {
         addTriple(new Triple(Var.alloc(s_var),toResource(vocab.sortal_predicate),Var.alloc(o_var)));
     }
     
+    public QueryBuilder copyAndInstantiate(String var, Element element) {
+    
+        QueryBuilder copy = this.clone();
+        copy.instantiate(var,element);
+        return copy;
+    }
+    
     public void instantiate(String var, Element element) {
     
         Set<IncrementalQuery> copies = new HashSet<>();

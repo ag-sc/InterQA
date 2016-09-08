@@ -19,7 +19,7 @@ public class Vocabulary {
     public static String NounPPFrame = lexinfo + "NounPPFrame";
     public static String NounPossessiveFrame = lexinfo + "NounPossessiveFrame";
     public static String AdjectivePPFrame = lexinfo + "AdjectivePPFrame";
-    public static String PrepositionalFrame = lexinfo + "PrepositionalFrame";
+    public static String PrepositionalPhraseFrame = lexinfo + "PrepositionalPhraseFrame";
     
     public String sortal_predicate = rdfType;
     

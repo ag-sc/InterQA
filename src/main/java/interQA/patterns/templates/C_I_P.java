@@ -10,6 +10,7 @@ import interQA.lexicon.DatasetConnector;
 import interQA.lexicon.LexicalEntry;
 import interQA.lexicon.Lexicon;
 import interQA.patterns.query.IncrementalQuery;
+import interQA.patterns.query.QueryBuilder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -90,21 +91,25 @@ public class C_I_P extends QueryPattern{
                 case 1: {
                                     
                     builder.instantiate("C",c);
-                    dataset.filter(elements.get(5),builder,"P"); 
-                    dataset.fillInstances(elements.get(3),builder,"I");
+                    dataset.filter(p,builder,"P"); 
+                    QueryBuilder b = builder.copyAndInstantiate("P",p);
+                    dataset.fillInstances(i,b,"I");
                     break;
                 }
                     
                 case 3: {
                     
                     builder.instantiate("I",i);
-                    dataset.filter(elements.get(5),builder,"P");
+                    dataset.filter(p,builder,"P"); 
                     break;
                 }
                 
                 case 5: { 
                                         
                     builder.instantiate("P",p);
+                    for (String m : p.getMarkers()) {
+                        ((StringElement) elements.get(6)).add(m);
+                    }
                     break;
                 } 
             }
@@ -138,7 +143,6 @@ public class C_I_P extends QueryPattern{
 
             // Build ASK queries
             
-            Set<IncrementalQuery> initialqueries = builder.getQueries();
             Set<IncrementalQuery> iqueries  = new HashSet<>();
             Set<IncrementalQuery> intermed1 = new HashSet<>();
             Set<IncrementalQuery> intermed2 = new HashSet<>();
@@ -151,33 +155,29 @@ public class C_I_P extends QueryPattern{
             }
             
             iqueries.addAll(intermed1);
+            intermed1 = new HashSet<>();
             
+            QueryBuilder buildercopy = builder.clone();
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
                  for (IncrementalQuery i : iqueries) {
-                      IncrementalQuery j = builder.instantiate("P",entry,i);
+                      IncrementalQuery j = buildercopy.instantiate("P",entry,i);
                       intermed2.add(j);
                  }
-            }
-            
-            iqueries.addAll(intermed2);
-            intermed2 = new HashSet<>();
-            
+            }           
             // fill instances in element
-            builder.setQueries(intermed1);
-            dataset.fillInstances(elements.get(3),builder,"I");
+            dataset.fillInstances(elements.get(3),buildercopy,"I");
             // create ASK query
             for (LexicalEntry entry : elements.get(3).getActiveEntries()) {
-                for (IncrementalQuery i : intermed1) {
-                      IncrementalQuery j = builder.instantiate("I",entry,i);
-                      intermed2.add(j);
+                for (IncrementalQuery i : intermed2) {
+                     IncrementalQuery j = builder.instantiate("I",entry,i);
+                     intermed1.add(j);
                  }
             }
             // reset 
-            builder.setQueries(initialqueries);
             elements.set(3,new InstanceElement());
                         
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
-                for (IncrementalQuery i : intermed2) {
+                for (IncrementalQuery i : intermed1) {
                      IncrementalQuery j = builder.instantiate("P",entry,i);
                      iqueries.add(j);
                  }

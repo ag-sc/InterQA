@@ -242,6 +242,8 @@ public class Lexicon {
                         if (sol.contains("past")) past = sol.get("past").asLiteral().getValue().toString();
                         else                      past = inflector.getPast(canonicalForm,3);
                         
+                        String participle = inflector.getPastParticiple(canonicalForm);
+                        
                         LexicalEntry participle_entry = new LexicalEntry(); 
                         participle_entry.setCanonicalForm(past);
                         participle_entry.setReference(reference);
@@ -249,10 +251,10 @@ public class Lexicon {
                         
                         entry.addForm(LexicalEntry.Feature.PRESENT,pres);
                         entry.addForm(LexicalEntry.Feature.PAST,past);
-                        participle_entry.addForm(LexicalEntry.Feature.PRESENT,past);
-                        participle_entry.addForm(LexicalEntry.Feature.PAST,past);
-                        participle_entry.addForm(LexicalEntry.Feature.SINGULAR,past);
-                        participle_entry.addForm(LexicalEntry.Feature.PLURAL,past);
+                        participle_entry.addForm(LexicalEntry.Feature.PRESENT,participle);
+                        participle_entry.addForm(LexicalEntry.Feature.PAST,participle);
+                        participle_entry.addForm(LexicalEntry.Feature.SINGULAR,participle);
+                        participle_entry.addForm(LexicalEntry.Feature.PLURAL,participle);
                         participle_entry.setMarker("by");
                         
                         String sg = null; String pl = null;
@@ -674,9 +676,9 @@ public class Lexicon {
                                + " ?sense   lemon:subjOfProp ?subjOfProp ."
                                + " ?sense   lemon:objOfProp  ?objOfProp ."
                                + " ?entry   lemon:synBehavior ?frame ."
-                               + " ?frame   <" + vocab.rdfType + "> lexinfo:PrepositionalFrame ."
-                               + " ?frame   lexinfo:attributiveArg ?subject ."
-                               + " ?frame   lexinfo:prepositionalAdjunct ?object ."
+                               + " ?frame   <" + vocab.rdfType + "> lexinfo:PrepositionalPhraseFrame ."
+                               + " ?frame   lexinfo:copulativeSubject ?subject ."
+                               + " ?frame   lexinfo:complement ?object . "
                                + "}";
             
             Query query = QueryFactory.create(queryString) ;
@@ -686,7 +688,7 @@ public class Lexicon {
                 ResultSet results = qexec.execSelect() ;
                                 
                 for ( ; results.hasNext() ; ) {
-                    
+                                        
                     QuerySolution sol = results.nextSolution() ;
                                         
                     String canonicalForm = sol.get("canonicalForm").asLiteral().getValue().toString(); 
@@ -701,7 +703,7 @@ public class Lexicon {
                         entry.setCanonicalForm(canonicalForm);
                         entry.setReference(reference);
                         entry.setPOS(LexicalEntry.POS.PREPOSITION);
-                        entry.setFrame(vocab.lexinfo + "PrepositionalFrame");
+                        entry.setFrame(vocab.lexinfo + "PrepositionalPhraseFrame");
                         
                         if (subject.equals(subjOfProp) && object.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
