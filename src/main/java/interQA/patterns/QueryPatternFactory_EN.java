@@ -42,6 +42,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         plist.add("qpC_P_I3");
         plist.add("qpC_P_I4");
         plist.add("qpC_P_I5");
+        plist.add("qpC_P_I6");
         plist.add("qpC_I_P1");
         plist.add("qpC_I_P2");
         plist.add("qpP_C_P_I1");
@@ -255,6 +256,28 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
 
             patterns.add(qpC_P_I5);
         }
+        
+        // Which languages are spoken in Switzerland? 
+        if (plist.contains("qpC_P_I6")) {
+            QueryPattern qpC_P_I6 = new C_P_I(lexicon, instances);
+
+            addWhichPrefixes((StringElement) qpC_P_I6.getElement(0));
+
+            addNouns(qpC_P_I6.getElement(1));
+
+            StringElement cpi6_2 = (StringElement) qpC_P_I6.getElement(2);
+            cpi6_2.add("is", Feature.SINGULAR, Feature.PRESENT);
+            cpi6_2.add("are", Feature.PLURAL, Feature.PRESENT);
+            cpi6_2.add("was", Feature.SINGULAR, Feature.PAST);
+            cpi6_2.add("were", Feature.PLURAL, Feature.PAST);
+
+            addRelationalAdjectives(qpC_P_I6.getElement(3));
+
+            qpC_P_I6.addAgreementDependency(0,1);
+            qpC_P_I6.addAgreementDependency(1,2);
+
+            patterns.add(qpC_P_I6);
+        }
  
         // Which countries have the Euro as currency?
         if (plist.contains("qpC_I_P1")) {
@@ -269,6 +292,9 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             e10_2.add("has", Feature.PRESENT, Feature.SINGULAR);
             e10_2.add("have", Feature.PRESENT, Feature.PLURAL);
             e10_2.add("had", Feature.PAST);
+            
+            StringElement e10_4 = (StringElement) qpC_I_P1.getElement(4);
+            e10_4.add("as");
 
             addRelationalNouns(qpC_I_P1.getElement(5));
 
@@ -444,9 +470,15 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
         addRelationalNouns(e,false);
     }    
     private void addRelationalNouns(Element e, boolean withMarker) {
-        
         e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPPFrame, withMarker);
         e.addEntries(lexicon, LexicalEntry.POS.NOUN, vocab.NounPossessiveFrame, withMarker);
+    }
+
+    private void addRelationalAdjectives(Element e) {
+        addRelationalAdjectives(e,false);
+    }    
+    private void addRelationalAdjectives(Element e, boolean withMarker) {        
+        e.addEntries(lexicon, LexicalEntry.POS.ADJECTIVE, vocab.AdjectivePPFrame, withMarker);
     }
     
     private void addVerbs(Element e) {

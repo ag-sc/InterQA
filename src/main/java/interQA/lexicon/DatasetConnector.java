@@ -173,7 +173,6 @@ public class DatasetConnector {
                               } else {
                                   form = instance.asLiteral().getLexicalForm();
                               }
-                              entry.setCanonicalForm(form);
                               element.addToIndex(form,entry);
                           }
 

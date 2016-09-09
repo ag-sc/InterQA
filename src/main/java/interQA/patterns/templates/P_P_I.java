@@ -78,8 +78,8 @@ public class P_P_I extends QueryPattern{
                     String mainVar1 = "x";
                     String mainVar2 = "y";
                             
-                    builder.addUninstantiatedTriple(builder.placeholder("I"),builder.placeholder("P1"),mainVar1);
-                    builder.addUninstantiatedTriple(builder.placeholder("I"),builder.placeholder("P2"),mainVar2);
+                    builder.addUninstantiatedTriple(mainVar1,builder.placeholder("P1"),builder.placeholder("I"));
+                    builder.addUninstantiatedTriple(mainVar2,builder.placeholder("P2"),builder.placeholder("I"));
 
                     checkHowMany(s); // TODO not used in this pattern
                     builder.addProjVar(mainVar1);

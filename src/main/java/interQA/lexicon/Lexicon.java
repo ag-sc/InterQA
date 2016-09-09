@@ -271,14 +271,14 @@ public class Lexicon {
                         if (subject.equals(subjOfProp) && directObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                             entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
-                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
-                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else if (subject.equals(objOfProp) && directObject.equals(subjOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
                             entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
-                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
-                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else {
                             continue;
