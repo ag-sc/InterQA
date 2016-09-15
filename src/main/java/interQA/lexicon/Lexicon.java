@@ -97,7 +97,7 @@ public class Lexicon {
                             
                             String marker  = entry.getMarker();
                             if (withMarker && marker != null) {
-                                key += entry.getMarker();
+                                key += " " + entry.getMarker();
                             }
                             
                             if (!subindex.containsKey(key)) {
@@ -271,19 +271,19 @@ public class Lexicon {
                         if (subject.equals(subjOfProp) && directObject.equals(objOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                             entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
-                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
-                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
                         }
                         else if (subject.equals(objOfProp) && directObject.equals(subjOfProp)) {
                             entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
                             entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
-                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.SUBJOFPROP);
-                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.SUBJECT,LexicalEntry.SemArg.OBJOFPROP);
+                            participle_entry.addArgumentMapping(LexicalEntry.SynArg.OBJECT,LexicalEntry.SemArg.SUBJOFPROP);
                         }
                         else {
                             continue;
                         }
-                        
+                                                
                         if (!index.containsKey(pres)) index.put(pres,new ArrayList<>());
                         index.get(pres).add(entry);
                         if (!index.containsKey(past)) index.put(past,new ArrayList<>());

@@ -6,7 +6,7 @@ TRAIN:
 
 Finde:
 
-* alle Schauspieler, die in Evita mitgespielt haben 
+* alle Schauspieler, die in 12 Monkeys mitgespielt haben 
 * den Regisseur von Matrix 
 
 TEST: 
@@ -17,7 +17,7 @@ Finde:
 * die Kameramänner von allen Truffaut-Filmen 
 * wer die Filmmusik von Forrest Gump geschrieben hat 
 * wie hoch das Budget von Fargo war 
-* alle dänischen Filme 
+* alle Filme aus Spanien
 * wer das Drehbuch zu Casablanca geschrieben hat
 * welche Schauspieler James Bond gespielt haben
 

@@ -93,8 +93,7 @@ public class QueryBuilder {
         Set<IncrementalQuery> copies = new HashSet<>();
         
         for (LexicalEntry entry : element.getActiveEntries()) {
-        for (IncrementalQuery q : queries) {
-            
+        for (IncrementalQuery q : queries) {           
             if (!element.isStringElement() && 
                  element.getContext().containsKey(entry) &&
                 !element.getContext().get(entry).equals(q.getTriples())) {
@@ -102,7 +101,7 @@ public class QueryBuilder {
             }
             
             IncrementalQuery copy = instantiate(var,entry,q);
-            
+                        
             copies.add(copy);
         }}
          
@@ -125,7 +124,7 @@ public class QueryBuilder {
                  if (t.getPredicate().matches(Var.alloc(var))) {
                      del.add(t);
                      LexicalEntry.SemArg sem = entry.getSemArg(LexicalEntry.SynArg.SUBJECT);
-                     if (sem != null && sem == LexicalEntry.SemArg.OBJOFPROP && isorwillbeURI(t.getObject())) {
+                     if (sem == LexicalEntry.SemArg.OBJOFPROP && isorwillbeURI(t.getObject())) {
                          add.add(new Triple(t.getObject(),toResource(entry.getReference()),t.getSubject()));
                      } else {
                          add.add(new Triple(t.getSubject(),toResource(entry.getReference()),t.getObject()));
@@ -143,7 +142,7 @@ public class QueryBuilder {
             
             for (Triple t : del) copy.removeTriple(t);
             for (Triple t : add) copy.addTriple(t);
-            
+
             return copy;
     }
         
@@ -151,7 +150,7 @@ public class QueryBuilder {
     public Set<String> returnQueries(boolean onlyInstantiatedTriples) {
         
         Set<String> out = new HashSet<>();
-        
+                
         for (IncrementalQuery query : queries) { 
             
              Query q = query.assemble(vocab,onlyInstantiatedTriples);
@@ -160,7 +159,7 @@ public class QueryBuilder {
                  out.add(query.prettyPrint(q));
              }
         }
-        
+                
         return out;
     }
     

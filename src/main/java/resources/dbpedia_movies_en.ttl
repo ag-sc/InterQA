@@ -124,10 +124,14 @@
 
 :cameraman_for a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:noun ;
-    lemon:canonicalForm :cameraman_for_form ;
+    lemon:canonicalForm :cameraman_for_form1 ;
+    lemon:otherForm     :cameraman_for_form3 ;
     lemon:synBehavior   :cameraman_for_frame ;
     lemon:sense         :cameraman_for_sense .
-:cameraman_for_form lemon:writtenRep "cameraman"@en .
+:cameraman_for_form1 lemon:writtenRep "cameraman"@en ; 
+    lexinfo:number lexinfo:singular .
+:cameraman_for_form2 lemon:writtenRep "cameramen"@en ; 
+    lexinfo:number lexinfo:plural .
 :cameraman_for_frame a lexinfo:NounPPFrame ;
     lexinfo:copulativeArg       :cameraman_for_arg1 ;
     lexinfo:prepositionalObject :cameraman_for_arg2 .
@@ -228,9 +232,9 @@
     lemon:synBehavior   :cost_frame ;
     lemon:sense         :cost_sense .
 :cost_form lemon:writtenRep "cost"@en ;
-    lexinfo:tense :present .
+    lexinfo:tense lexinfo:present .
 :cost_past lemon:writtenRep "cost"@en ;
-    lexinfo:tense :past .
+    lexinfo:tense lexinfo:past .
 :cost_frame a lexinfo:TransitiveFrame ;
     lexinfo:subject      :cost_arg1 ;
     lexinfo:directObject :cost_arg2 .

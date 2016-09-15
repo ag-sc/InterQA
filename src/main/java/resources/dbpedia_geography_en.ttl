@@ -21,6 +21,7 @@
               :height_of,
               :depth_of,
               :timezone_of,
+              :language_of,
 
               :spoken_in,
 
@@ -51,7 +52,7 @@
 :language a lemon:LexicalEntry ;
     lexinfo:partOfSpeech lexinfo:commonNoun ;
     lemon:canonicalForm :language_form ;
-    lemon:sense :city_sense .
+    lemon:sense :language_sense .
 :language_form  lemon:writtenRep "language"@en .
 :language_sense lemon:reference <http://dbpedia.org/ontology/Language> .
 
@@ -184,6 +185,20 @@
     lemon:objOfProp  :depth_of_arg1 .
 :depth_of_arg2 lemon:marker :of .
 
+:language_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :language_of_form ;
+    lemon:synBehavior   :language_of_frame ;
+    lemon:sense         :language_of_sense .
+:language_of_form lemon:writtenRep "language"@en .
+:language_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :language_of_arg1 ;
+    lexinfo:prepositionalObject :language_of_arg2 .
+:language_of_sense lemon:reference <http://dbpedia.org/ontology/language> ;
+    lemon:subjOfProp :language_of_arg2 ;
+    lemon:objOfProp  :language_of_arg1 .
+:language_of_arg2 lemon:marker :of .
+
 
 #### Verbs #### 
 
@@ -194,11 +209,11 @@
     lemon:sense         :belong_to_sense .
 :belong_to_form lemon:writtenRep "belong"@en .
 :belong_to_frame a lexinfo:IntransitivePPFrame ;
-    lexinfo:subject      :belong_to_arg1 ;
-    lexinfo:directObject :belong_to_arg2 .
+    lexinfo:subject             :belong_to_arg1 ;
+    lexinfo:prepositionalObject :belong_to_arg2 .
 :belong_to_sense lemon:reference <http://dbpedia.org/ontology/archipelago> ;
-    lemon:subjOfProp :belong_to_arg2 ;
-    lemon:objOfProp  :belong_to_arg1 .
+    lemon:subjOfProp :belong_to_arg1 ;
+    lemon:objOfProp  :belong_to_arg2 .
 :belong_to_arg2 lemon:marker :to .
 
 :flow_through a lemon:LexicalEntry ;
@@ -208,8 +223,8 @@
     lemon:sense         :flow_through_sense .
 :flow_through_form lemon:writtenRep "flow"@en .
 :flow_through_frame a lexinfo:IntransitivePPFrame ;
-    lexinfo:subject      :flow_through_arg1 ;
-    lexinfo:directObject :flow_through_arg2 .
+    lexinfo:subject             :flow_through_arg1 ;
+    lexinfo:prepositionalObject :flow_through_arg2 .
 :flow_through_sense lemon:reference <http://dbpedia.org/ontology/country> ;
     lemon:subjOfProp :flow_through_arg1 ;
     lemon:objOfProp  :flow_through_arg2 .

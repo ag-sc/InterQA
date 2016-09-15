@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import org.apache.jena.graph.Triple;
 
 
@@ -34,7 +35,7 @@ public abstract class Element implements Cloneable {
 
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame) {
         
-        addEntries(lexicon,pos,frame,true);
+        addEntries(lexicon,pos,frame,false);
     }
     public void addEntries(Lexicon lexicon, LexicalEntry.POS pos, String frame, boolean withMarker) {
         
@@ -181,7 +182,7 @@ public abstract class Element implements Cloneable {
             index = new HashMap<>();
             index.put(longestMatch,entries);
             
-            return string.replaceFirst(longestMatch,"").trim();
+            return string.replaceFirst(Pattern.quote(longestMatch),"").trim();
         }
         
 	return null;
@@ -190,7 +191,7 @@ public abstract class Element implements Cloneable {
     public List<String> getOptions() {
             
         List<String> options = new ArrayList<>();
-                        
+                                
         if (agrFeatures.isEmpty()) options.addAll(index.keySet());
         else {
             for (String key : index.keySet()) {
