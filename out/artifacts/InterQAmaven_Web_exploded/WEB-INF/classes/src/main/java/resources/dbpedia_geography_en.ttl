@@ -1,0 +1,265 @@
+
+@prefix lemon: <http://lemon-model.net/lemon#> .
+@prefix lexinfo: <http://www.lexinfo.net/ontology/2.0/lexinfo#> .
+
+@prefix : <http://inter.qa/lexicon/geography#> .
+
+
+:lexicon a lemon:Lexicon ;
+  lemon:entry
+              :country,
+              :city,
+              :language,
+              :river,
+              :island,
+
+              :capital_of,
+              :population_of,
+              :currency_of,
+              :mayor_of,
+              :elevation_of,
+              :height_of,
+              :depth_of,
+              :timezone_of,
+
+              :spoken_in,
+
+              :belong_to,
+              :flow_through,
+
+              :in .
+
+
+
+
+#### Common nouns ####
+
+:country a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :country_form ;
+    lemon:sense :country_sense .
+:country_form  lemon:writtenRep "country"@en .
+:country_sense lemon:reference <http://dbpedia.org/ontology/Country> .
+
+:city a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :city_form ;
+    lemon:sense :city_sense .
+:city_form  lemon:writtenRep "city"@en .
+:city_sense lemon:reference <http://dbpedia.org/ontology/City> .
+
+:language a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :language_form ;
+    lemon:sense :city_sense .
+:language_form  lemon:writtenRep "language"@en .
+:language_sense lemon:reference <http://dbpedia.org/ontology/Language> .
+
+:river a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :river_form ;
+    lemon:sense :river_sense .
+:river_form  lemon:writtenRep "river"@en .
+:river_sense lemon:reference <http://dbpedia.org/ontology/River> .
+
+:island a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :island_form ;
+    lemon:sense :island_sense .
+:island_form  lemon:writtenRep "island"@en .
+:island_sense lemon:reference <http://dbpedia.org/ontology/Island> .
+
+
+#### RelationalNouns ####
+
+:capital_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :capital_of_form ;
+    lemon:synBehavior   :capital_of_frame ;
+    lemon:sense         :capital_of_sense .
+:capital_of_form lemon:writtenRep "capital"@en .
+:capital_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :capital_of_arg1 ;
+    lexinfo:prepositionalObject :capital_of_arg2 .
+:capital_of_sense lemon:reference <http://dbpedia.org/ontology/capital> ;
+    lemon:subjOfProp :capital_of_arg2 ;
+    lemon:objOfProp  :capital_of_arg1 .
+:capital_of_arg2 lemon:marker :of .
+
+:population_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :population_of_form ;
+    lemon:synBehavior   :population_of_frame ;
+    lemon:sense         :population_of_sense .
+:population_of_form lemon:writtenRep "population"@en .
+:population_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :population_of_arg1 ;
+    lexinfo:prepositionalObject :population_of_arg2 .
+:population_of_sense lemon:reference <http://dbpedia.org/ontology/populationTotal> ;
+    lemon:subjOfProp :population_of_arg2 ;
+    lemon:objOfProp  :population_of_arg1 .
+:population_of_arg2 lemon:marker :of .
+
+:currency_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :currency_of_form ;
+    lemon:synBehavior   :currency_of_frame ;
+    lemon:sense         :currency_of_sense .
+:currency_of_form lemon:writtenRep "currency"@en .
+:currency_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :currency_of_arg1 ;
+    lexinfo:prepositionalObject :currency_of_arg2 .
+:currency_of_sense lemon:reference <http://dbpedia.org/ontology/currency> ;
+    lemon:subjOfProp :currency_of_arg2 ;
+    lemon:objOfProp  :currency_of_arg1 .
+:currency_of_arg2 lemon:marker :of .
+
+:mayor_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :mayor_of_form ;
+    lemon:synBehavior   :mayor_of_frame ;
+    lemon:sense         :mayor_of_sense .
+:mayor_of_form lemon:writtenRep "mayor"@en .
+:mayor_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :mayor_of_arg1 ;
+    lexinfo:prepositionalObject :mayor_of_arg2 .
+:mayor_of_sense lemon:reference <http://dbpedia.org/ontology/mayor> ;
+    lemon:subjOfProp :mayor_of_arg2 ;
+    lemon:objOfProp  :mayor_of_arg1 .
+:mayor_of_arg2 lemon:marker :of .
+
+:elevation_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :elevation_of_form ;
+    lemon:synBehavior   :elevation_of_frame ;
+    lemon:sense         :elevation_of_sense .
+:elevation_of_form lemon:writtenRep "elevation"@en .
+:elevation_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :elevation_of_arg1 ;
+    lexinfo:prepositionalObject :elevation_of_arg2 .
+:elevation_of_sense lemon:reference <http://dbpedia.org/ontology/elevation> ;
+    lemon:subjOfProp :elevation_of_arg2 ;
+    lemon:objOfProp  :elevation_of_arg1 .
+:elevation_of_arg2 lemon:marker :of .
+
+:height_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :height_of_form ;
+    lemon:synBehavior   :height_of_frame ;
+    lemon:sense         :height_of_sense .
+:height_of_form lemon:writtenRep "height"@en .
+:height_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :height_of_arg1 ;
+    lexinfo:prepositionalObject :height_of_arg2 .
+:height_of_sense lemon:reference <http://dbpedia.org/ontology/elevation> ;
+    lemon:subjOfProp :height_of_arg2 ;
+    lemon:objOfProp  :height_of_arg1 .
+:height_of_arg2 lemon:marker :of .
+
+:timezone_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :timezone_of_form ;
+    lemon:synBehavior   :timezone_of_frame ;
+    lemon:sense         :timezone_of_sense .
+:timezone_of_form lemon:writtenRep "time zone"@en .
+:timezone_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :timezone_of_arg1 ;
+    lexinfo:prepositionalObject :timezone_of_arg2 .
+:timezone_of_sense lemon:reference <http://dbpedia.org/ontology/timeZone> ;
+    lemon:subjOfProp :timezone_of_arg2 ;
+    lemon:objOfProp  :timezone_of_arg1 .
+:timezone_of_arg2 lemon:marker :of .
+
+:depth_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :depth_of_form ;
+    lemon:synBehavior   :depth_of_frame ;
+    lemon:sense         :depth_of_sense .
+:depth_of_form lemon:writtenRep "average depth"@en .
+:depth_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :depth_of_arg1 ;
+    lexinfo:prepositionalObject :depth_of_arg2 .
+:depth_of_sense lemon:reference <http://dbpedia.org/ontology/avgDepth> ;
+    lemon:subjOfProp :depth_of_arg2 ;
+    lemon:objOfProp  :depth_of_arg1 .
+:depth_of_arg2 lemon:marker :of .
+
+
+#### Verbs #### 
+
+:belong_to a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :belong_to_form ;
+    lemon:synBehavior   :belong_to_frame ;
+    lemon:sense         :belong_to_sense .
+:belong_to_form lemon:writtenRep "belong"@en .
+:belong_to_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject      :belong_to_arg1 ;
+    lexinfo:directObject :belong_to_arg2 .
+:belong_to_sense lemon:reference <http://dbpedia.org/ontology/archipelago> ;
+    lemon:subjOfProp :belong_to_arg2 ;
+    lemon:objOfProp  :belong_to_arg1 .
+:belong_to_arg2 lemon:marker :to .
+
+:flow_through a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :flow_through_form ;
+    lemon:synBehavior   :flow_through_frame ;
+    lemon:sense         :flow_through_sense .
+:flow_through_form lemon:writtenRep "flow"@en .
+:flow_through_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject      :flow_through_arg1 ;
+    lexinfo:directObject :flow_through_arg2 .
+:flow_through_sense lemon:reference <http://dbpedia.org/ontology/country> ;
+    lemon:subjOfProp :flow_through_arg1 ;
+    lemon:objOfProp  :flow_through_arg2 .
+:flow_through_arg2 lemon:marker :through .
+
+
+
+#### Relational adjectives ####
+
+:spoken_in a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:adjective ;
+    lemon:canonicalForm :spoken_in_form ;
+    lemon:synBehavior   :spoken_in_frame ;
+    lemon:sense         :spoken_in_sense .
+:spoken_in_form lemon:writtenRep "spoken"@en .
+:spoken_in_frame a lexinfo:AdjectivePPFrame ;
+    lexinfo:subject             :spoken_in_arg1 ;
+    lexinfo:prepositionalObject :spoken_in_arg2 .
+:spoken_in_sense lemon:reference <http://dbpedia.org/ontology/language> ;
+    lemon:subjOfProp :spoken_in_arg2 ;
+    lemon:objOfProp  :spoken_in_arg1 .
+:spoken_in_arg2 lemon:marker :in .
+
+
+#### Prepositions ####
+
+:in a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:preposition ;
+    lemon:canonicalForm :in_form ;
+    lemon:synBehaviour  :in_frame ;
+    lemon:sense         :in_sense1 , :in_sense2 .
+:in_form lemon:writtenRep "in"@en .
+:in_frame a lexinfo:PrepositionalPhraseFrame ;
+    lexinfo:copulativeSubject :in_arg1 ;
+    lexinfo:complement :in_arg2 .
+:in_sense1 lemon:reference <http://dbpedia.org/ontology/country> ;
+    lemon:subjOfProp :in_arg1 ;
+    lemon:objOfProp  :in_arg2 .
+:in_sense2 lemon:reference <http://dbpedia.org/ontology/location> ;
+    lemon:subjOfProp :in_arg1 ;
+    lemon:objOfProp  :in_arg2 .
+
+
+#### Markers ####
+
+:of lemon:canonicalForm :of_form .
+:of_form lemon:writtenRep "of"@en .
+
+:to lemon:canonicalForm :to_form .
+:to_form lemon:writtenRep "to"@en .
+
+:through lemon:canonicalForm :through_form .
+:through_form lemon:writtenRep "through"@en .

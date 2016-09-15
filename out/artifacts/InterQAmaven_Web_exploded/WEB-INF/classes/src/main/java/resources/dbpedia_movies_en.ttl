@@ -1,0 +1,448 @@
+
+@prefix lemon: <http://lemon-model.net/lemon#> .
+@prefix lexinfo: <http://www.lexinfo.net/ontology/2.0/lexinfo#> .
+
+@prefix : <http://inter.qa/lexicon/movies#> .
+
+
+:lexicon a lemon:Lexicon ;
+  lemon:entry
+              :film ,
+              :movie,
+              :actor,
+              :person,
+
+              :director_of,
+              :producer_of,
+              :cinematographer_of,
+              :cameraman_for,
+              :screenwriter_of,
+              :cast_of,
+              :budget_of,
+              :composer_for,
+
+              :star_in,
+              :appear_in,
+              :feature,
+              :compose_the_music_for,
+              :write_the_soundtrack_for,
+              :write_the_script_for,
+
+              :cost,
+              :direct,
+              :produce,
+              :play,
+              :portray,
+
+              :released_in,
+
+              :with,
+              :from,
+              :by .
+
+
+
+#### Common nouns ####
+
+
+:film a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :film_form ;
+    lemon:sense :film_sense .
+:film_form  lemon:writtenRep "film"@en .
+:film_sense lemon:reference <http://dbpedia.org/ontology/Film> .
+
+:movie a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :movie_form ;
+    lemon:sense :movie_sense .
+:movie_form  lemon:writtenRep "movie"@en .
+:movie_sense lemon:reference <http://dbpedia.org/ontology/Film> .
+
+:actor a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :actor_form ;
+    lemon:sense :actor_sense .
+:actor_form  lemon:writtenRep "actor"@en .
+:actor_sense lemon:reference <http://dbpedia.org/ontology/Actor> .
+
+:person a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:commonNoun ;
+    lemon:canonicalForm :person_form ;
+    lemon:sense :person_sense .
+:person_form  lemon:writtenRep "person"@en .
+:person_sense lemon:reference <http://dbpedia.org/ontology/Person> .
+
+
+#### RelationalNouns ####
+
+:director_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :director_of_sg ;
+    lemon:otherForm     :director_of_pl ;
+    lemon:synBehavior   :director_of_frame ;
+    lemon:sense         :director_of_sense .
+:director_of_sg lemon:writtenRep "director"@en ;
+    lexinfo:number lexinfo:singular .
+:director_of_pl lemon:writtenRep "directors"@en ;
+    lexinfo:number lexinfo:plural .
+:director_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :director_of_arg1 ;
+    lexinfo:prepositionalObject :director_of_arg2 .
+:director_of_sense lemon:reference <http://dbpedia.org/ontology/director> ;
+    lemon:subjOfProp :director_of_arg2 ;
+    lemon:objOfProp  :director_of_arg1 .
+:director_of_arg2 lemon:marker :of .
+
+:producer_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :producer_of_form ;
+    lemon:synBehavior   :producer_of_frame ;
+    lemon:sense         :producer_of_sense .
+:producer_of_form lemon:writtenRep "producer"@en .
+:producer_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :producer_of_arg1 ;
+    lexinfo:prepositionalObject :producer_of_arg2 .
+:producer_of_sense lemon:reference <http://dbpedia.org/ontology/producer> ;
+    lemon:subjOfProp :producer_of_arg2 ;
+    lemon:objOfProp  :producer_of_arg1 .
+:producer_of_arg2 lemon:marker :of .
+
+:cinematographer_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :cinematographer_of_form ;
+    lemon:synBehavior   :cinematographer_of_frame ;
+    lemon:sense         :cinematographer_of_sense .
+:cinematographer_of_form lemon:writtenRep "cinematographer"@en .
+:cinematographer_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :cinematographer_of_arg1 ;
+    lexinfo:prepositionalObject :cinematographer_of_arg2 .
+:cinematographer_of_sense lemon:reference <http://dbpedia.org/ontology/cinematographer> ;
+    lemon:subjOfProp :cinematographer_of_arg2 ;
+    lemon:objOfProp  :cinematographer_of_arg1 .
+:cinematographer_of_arg2 lemon:marker :of .
+
+:cameraman_for a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :cameraman_for_form ;
+    lemon:synBehavior   :cameraman_for_frame ;
+    lemon:sense         :cameraman_for_sense .
+:cameraman_for_form lemon:writtenRep "cameraman"@en .
+:cameraman_for_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :cameraman_for_arg1 ;
+    lexinfo:prepositionalObject :cameraman_for_arg2 .
+:cameraman_for_sense lemon:reference <http://dbpedia.org/ontology/cinematographer> ;
+    lemon:subjOfProp :cameraman_for_arg2 ;
+    lemon:objOfProp  :cameraman_for_arg1 .
+:cameraman_for_arg2 lemon:marker :for .
+
+:composer_for a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :composer_for_form ;
+    lemon:synBehavior   :composer_for_frame ;
+    lemon:sense         :composer_for_sense .
+:composer_for_form lemon:writtenRep "composer"@en .
+:composer_for_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :composer_for_arg1 ;
+    lexinfo:prepositionalObject :composer_for_arg2 .
+:composer_for_sense lemon:reference <http://dbpedia.org/ontology/musicComposer> ;
+    lemon:subjOfProp :composer_for_arg2 ;
+    lemon:objOfProp  :composer_for_arg1 .
+:composer_for_arg2 lemon:marker :for .
+
+:screenwriter_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :screenwriter_of_form ;
+    lemon:synBehavior   :screenwriter_of_frame ;
+    lemon:sense         :screenwriter_of_sense .
+:screenwriter_of_form lemon:writtenRep "screenwriter"@en .
+:screenwriter_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :screenwriter_of_arg1 ;
+    lexinfo:prepositionalObject :screenwriter_of_arg2 .
+:screenwriter_of_sense lemon:reference <http://dbpedia.org/ontology/writer> ;
+    lemon:subjOfProp :screenwriter_of_arg2 ;
+    lemon:objOfProp  :screenwriter_of_arg1 .
+:screenwriter_of_arg2 lemon:marker :of .
+
+:budget_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :budget_of_form ;
+    lemon:synBehavior   :budget_of_frame ;
+    lemon:sense         :budget_of_sense .
+:budget_of_form lemon:writtenRep "budget"@en .
+:budget_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :budget_of_arg1 ;
+    lexinfo:prepositionalObject :budget_of_arg2 .
+:budget_of_sense lemon:reference <http://dbpedia.org/ontology/budget> ;
+    lemon:subjOfProp :budget_of_arg2 ;
+    lemon:objOfProp  :budget_of_arg1 .
+:budget_of_arg2 lemon:marker :of .
+
+:cast_of a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:noun ;
+    lemon:canonicalForm :cast_of_form ;
+    lemon:synBehavior   :cast_of_frame ;
+    lemon:sense         :cast_of_sense .
+:cast_of_form lemon:writtenRep "cast"@en .
+:cast_of_frame a lexinfo:NounPPFrame ;
+    lexinfo:copulativeArg       :cast_of_arg1 ;
+    lexinfo:prepositionalObject :cast_of_arg2 .
+:cast_of_sense lemon:reference <http://dbpedia.org/ontology/starring> ;
+    lemon:subjOfProp :cast_of_arg2 ;
+    lemon:objOfProp  :cast_of_arg1 .
+:cast_of_arg2 lemon:marker :of .
+
+
+#### Verbs: Transitive ####
+
+:direct a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :direct_form ;
+    lemon:synBehavior   :direct_frame ;
+    lemon:sense         :direct_sense .
+:direct_form lemon:writtenRep "direct"@en .
+:direct_frame a lexinfo:TransitiveFrame ;
+    lexinfo:subject      :direct_arg1 ;
+    lexinfo:directObject :direct_arg2 .
+:direct_sense lemon:reference <http://dbpedia.org/ontology/director> ;
+    lemon:subjOfProp :direct_arg2 ;
+    lemon:objOfProp  :direct_arg1 .
+
+:produce a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :produce_form ;
+    lemon:synBehavior   :produce_frame ;
+    lemon:sense         :produce_sense .
+:produce_form lemon:writtenRep "produce"@en .
+:produce_frame a lexinfo:TransitiveFrame ;
+    lexinfo:subject      :produce_arg1 ;
+    lexinfo:directObject :produce_arg2 .
+:produce_sense lemon:reference <http://dbpedia.org/ontology/producer> ;
+    lemon:subjOfProp :produce_arg2 ;
+    lemon:objOfProp  :produce_arg1 .
+
+:cost a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :cost_form ;
+    lemon:otherForm     :cost_past ;
+    lemon:synBehavior   :cost_frame ;
+    lemon:sense         :cost_sense .
+:cost_form lemon:writtenRep "cost"@en ;
+    lexinfo:tense :present .
+:cost_past lemon:writtenRep "cost"@en ;
+    lexinfo:tense :past .
+:cost_frame a lexinfo:TransitiveFrame ;
+    lexinfo:subject      :cost_arg1 ;
+    lexinfo:directObject :cost_arg2 .
+:cost_sense lemon:reference <http://dbpedia.org/ontology/budget> ;
+    lemon:subjOfProp :cost_arg1 ;
+    lemon:objOfProp  :cost_arg2 .
+
+:play a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :play_form ;
+    lemon:synBehavior   :play_frame ;
+    lemon:sense         :play_sense .
+:play_form lemon:writtenRep "play"@en .
+:play_frame a lexinfo:TransitiveFrame ;
+    lexinfo:subject      :play_arg1 ;
+    lexinfo:directObject :play_arg2 .
+:play_sense lemon:reference <http://dbpedia.org/ontology/portrayer> ;
+    lemon:subjOfProp :play_arg2 ;
+    lemon:objOfProp  :play_arg1 .
+
+:portray a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :portray_form ;
+    lemon:synBehavior   :portray_frame ;
+    lemon:sense         :portray_sense .
+:portray_form lemon:writtenRep "portray"@en .
+:portray_frame a lexinfo:TransitiveFrame ;
+    lexinfo:subject      :portray_arg1 ;
+    lexinfo:directObject :portray_arg2 .
+:portray_sense lemon:reference <http://dbpedia.org/ontology/portrayer> ;
+    lemon:subjOfProp :portray_arg2 ;
+    lemon:objOfProp  :portray_arg1 .
+
+:feature a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :feature_form ;
+    lemon:synBehavior   :feature_frame ;
+    lemon:sense         :feature_sense .
+:feature_form lemon:writtenRep "feature"@en .
+:feature_frame a lexinfo:TransitiveFrame ;
+    lexinfo:subject      :feature_arg1 ;
+    lexinfo:directObject :feature_arg2 .
+:feature_sense lemon:reference <http://dbpedia.org/ontology/starring> ;
+    lemon:subjOfProp :feature_arg1 ;
+    lemon:objOfProp  :feature_arg2 .
+
+
+#### Verbs: IntransitivePP ####
+
+:star_in a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :star_in_form ;
+    lemon:synBehavior   :star_in_frame ;
+    lemon:sense         :star_in_sense .
+:star_in_form lemon:writtenRep "star"@en .
+:star_in_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject             :star_in_arg1 ;
+    lexinfo:prepositionalObject :star_in_arg2 .
+:star_in_sense lemon:reference <http://dbpedia.org/ontology/starring> ;
+    lemon:subjOfProp :star_in_arg2 ;
+    lemon:objOfProp  :star_in_arg1 .
+:star_in_arg2 lemon:marker :in .
+
+:appear_in a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :appear_in_form ;
+    lemon:synBehavior   :appear_in_frame ;
+    lemon:sense         :appear_in_sense .
+:appear_in_form lemon:writtenRep "appear"@en .
+:appear_in_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject             :appear_in_arg1 ;
+    lexinfo:prepositionalObject :appear_in_arg2 .
+:appear_in_sense lemon:reference <http://dbpedia.org/ontology/starring> ;
+    lemon:subjOfProp :appear_in_arg2 ;
+    lemon:objOfProp  :appear_in_arg1 .
+:appear_in_arg2 lemon:marker :in .
+
+:compose_the_music_for a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :compose_the_music_for_form_pres_pl ;
+    lemon:otherForm     :compose_the_music_for_form_pres_sg ;
+    lemon:otherForm     :compose_the_music_for_form_past ;
+    lemon:synBehavior   :compose_the_music_for_frame ;
+    lemon:sense         :compose_the_music_for_sense .
+:compose_the_music_for_form_pres_pl lemon:writtenRep "compose the music"@en ;
+    lexinfo:tense  lexinfo:present ;
+    lexinfo:number lexinfo:plural .
+:compose_the_music_for_form_pres_sg lemon:writtenRep "composes the music"@en ;
+    lexinfo:tense  lexinfo:present ;
+    lexinfo:number lexinfo:singular .
+:compose_the_music_for_form_past lemon:writtenRep "composed the music"@en ;
+    lexinfo:tense  lexinfo:past .
+:compose_the_music_for_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject             :compose_the_music_for_arg1 ;
+    lexinfo:prepositionalObject :compose_the_music_for_arg2 .
+:compose_the_music_for_sense lemon:reference <http://dbpedia.org/ontology/musicComposer> ;
+    lemon:subjOfProp :compose_the_music_for_arg2 ;
+    lemon:objOfProp  :compose_the_music_for_arg1 .
+:compose_the_music_for_arg2 lemon:marker :for .
+
+:write_the_soundtrack_for a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :write_the_soundtrack_for_form_pres_pl ;
+    lemon:otherForm     :write_the_soundtrack_for_form_pres_sg ;
+    lemon:otherForm     :write_the_soundtrack_for_form_past ;
+    lemon:synBehavior   :write_the_soundtrack_for_frame ;
+    lemon:sense         :write_the_soundtrack_for_sense .
+:write_the_soundtrack_for_form_pres_pl lemon:writtenRep "write the soundtrack"@en ;
+    lexinfo:tense  lexinfo:present ;
+    lexinfo:number lexinfo:plural .
+:write_the_soundtrack_for_form_pres_sg lemon:writtenRep "writes the soundtrack"@en ;
+    lexinfo:tense  lexinfo:present ;
+    lexinfo:number lexinfo:singular .
+:write_the_soundtrack_for_form_past lemon:writtenRep "wrote the soundtrack"@en ;
+    lexinfo:tense  lexinfo:past .
+:write_the_soundtrack_for_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject             :write_the_soundtrack_for_arg1 ;
+    lexinfo:prepositionalObject :write_the_soundtrack_for_arg2 .
+:write_the_soundtrack_for_sense lemon:reference <http://dbpedia.org/ontology/musicComposer> ;
+    lemon:subjOfProp :write_the_soundtrack_for_arg2 ;
+    lemon:objOfProp  :write_the_soundtrack_for_arg1 .
+:write_the_soundtrack_for_arg2 lemon:marker :for .
+
+:write_the_script_for a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:verb ;
+    lemon:canonicalForm :write_the_script_for_form_pres_pl ;
+    lemon:otherForm     :write_the_script_for_form_pres_sg ;
+    lemon:otherForm     :write_the_script_for_form_past ;
+    lemon:synBehavior   :write_the_script_for_frame ;
+    lemon:sense         :write_the_script_for_sense .
+:write_the_script_for_form_pres_pl lemon:writtenRep "write the script"@en ;
+    lexinfo:tense  lexinfo:present ;
+    lexinfo:number lexinfo:plural .
+:write_the_script_for_form_pres_sg lemon:writtenRep "writes the script"@en ;
+    lexinfo:tense  lexinfo:present ;
+    lexinfo:number lexinfo:singular .
+:write_the_script_for_form_past lemon:writtenRep "wrote the script"@en ;
+    lexinfo:tense  lexinfo:past .
+:write_the_script_for_frame a lexinfo:IntransitivePPFrame ;
+    lexinfo:subject             :write_the_script_for_arg1 ;
+    lexinfo:prepositionalObject :write_the_script_for_arg2 .
+:write_the_script_for_sense lemon:reference <http://dbpedia.org/ontology/writer> ;
+    lemon:subjOfProp :write_the_script_for_arg2 ;
+    lemon:objOfProp  :write_the_script_for_arg1 .
+:write_the_script_for_arg2 lemon:marker :for .
+
+
+#### Relational adjectives ####
+
+:released_in a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:adjective ;
+    lemon:canonicalForm :released_in_form ;
+    lemon:synBehavior   :released_in_frame ;
+    lemon:sense         :released_in_sense .
+:released_in_frame a lexinfo:AdjectivePPFrame ;
+    lexinfo:subject             :released_in_arg1 ;
+    lexinfo:prepositionalObject :released_in_arg2 .
+:released_in_sense lemon:reference <http://dbpedia.org/ontology/release> ;
+    lemon:subjOfProp :released_in_arg1 ;
+    lemon:objOfProp  :released_in_arg2 .
+:released_in_arg2 lemon:marker :in .
+
+
+#### Prepositions ####
+
+:with a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:preposition ;
+    lemon:canonicalForm :with_form ;
+    lemon:synBehavior   :with_frame ;
+    lemon:sense         :with_sense .
+:with_form lemon:writtenRep "with"@en .
+:with_frame a lexinfo:PrepositionalPhraseFrame ;
+    lexinfo:copulativeSubject :with_arg1 ;
+    lexinfo:complement :with_arg2 .
+:with_sense lemon:reference <http://dbpedia.org/ontology/starring> ;
+    lemon:subjOfProp :with_arg1 ;
+    lemon:objOfProp  :with_arg2 .
+
+:from a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:preposition ;
+    lemon:canonicalForm :from_form ;
+    lemon:synBehavior   :from_frame ;
+    lemon:sense         :from_sense .
+:from_form lemon:writtenRep "from"@en .
+:from_frame a lexinfo:PrepositionalPhraseFrame ;
+    lexinfo:copulativeSubject :from_arg1 ;
+    lexinfo:complement :from_arg2 .
+:from_sense lemon:reference <http://dbpedia.org/ontology/country> ;
+    lemon:subjOfProp :from_arg1 ;
+    lemon:objOfProp  :from_arg2 .
+
+:by a lemon:LexicalEntry ;
+    lexinfo:partOfSpeech lexinfo:preposition ;
+    lemon:canonicalForm :by_form ;
+    lemon:synBehaviur   :by_frame ;
+    lemon:sense         :by_sense .
+:by_form lemon:writtenRep "by"@en .
+:by_frame a lexinfo:PrepositionalPhraseFrame ;
+    lexinfo:copulativeSubject :by_arg1 ;
+    lexinfo:complement :by_arg2 .
+:by_sense lemon:reference <http://dbpedia.org/ontology/director> ;
+    lemon:subjOfProp :by_arg1 ;
+    lemon:objOfProp  :by_arg2 .
+
+
+#### Markers ####
+
+:in lemon:canonicalForm :in_form .
+:in_form lemon:writtenRep "in"@en .
+
+:of lemon:canonicalForm :of_form .
+:of_form lemon:writtenRep "of"@en .
+
+:for lemon:canonicalForm :for_form .
+:for_form lemon:writtenRep "for"@en .
