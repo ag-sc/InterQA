@@ -67,7 +67,7 @@ public class C_I_P extends QueryPattern{
             ClassElement    c = (ClassElement)    elements.get(1);
             InstanceElement i = (InstanceElement) elements.get(3);
             PropertyElement p = (PropertyElement) elements.get(5);
-		
+            
             switch (currentElement) {
                 
                 case 0: { 
@@ -92,23 +92,24 @@ public class C_I_P extends QueryPattern{
                                     
                     builder.instantiate("C",c);
                     dataset.filter(p,builder,"P"); 
-                    QueryBuilder b = builder.copyAndInstantiate("P",p);
+                    QueryBuilder b = builder.clone();
+                    b.instantiate("P",p);
                     dataset.fillInstances(i,b,"I");
                     break;
                 }
                     
                 case 3: {
                     
-                    builder.instantiate("I",i);
+                    builder.instantiate("I",i,true);
                     dataset.filter(p,builder,"P"); 
                     break;
                 }
                 
                 case 5: { 
-                                        
+
                     builder.instantiate("P",p);
                     for (String m : p.getMarkers()) {
-                        ((StringElement) elements.get(6)).add(m);
+                       ((StringElement) elements.get(6)).add(m);
                     }
                     break;
                 } 

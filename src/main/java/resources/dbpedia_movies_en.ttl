@@ -117,7 +117,7 @@
 :cinematographer_of_frame a lexinfo:NounPPFrame ;
     lexinfo:copulativeArg       :cinematographer_of_arg1 ;
     lexinfo:prepositionalObject :cinematographer_of_arg2 .
-:cinematographer_of_sense lemon:reference <http://dbpedia.org/ontology/cinematographer> ;
+:cinematographer_of_sense lemon:reference <http://dbpedia.org/ontology/cinematography> ;
     lemon:subjOfProp :cinematographer_of_arg2 ;
     lemon:objOfProp  :cinematographer_of_arg1 .
 :cinematographer_of_arg2 lemon:marker :of .

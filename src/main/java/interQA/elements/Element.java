@@ -27,6 +27,8 @@ public abstract class Element implements Cloneable {
 
     // Context to keep track of which instantiation can fill which query
     Map<LexicalEntry,List<Triple>> context;
+    
+    boolean useMarkers = true;
 
         
     public boolean isStringElement() {
@@ -56,9 +58,9 @@ public abstract class Element implements Cloneable {
         return index;
     }  
     
-    public List<LexicalEntry> getActiveEntries() {
+    public Set<LexicalEntry> getActiveEntries() {
         
-        List<LexicalEntry> active = new ArrayList<>();
+        Set<LexicalEntry> active = new HashSet<>();
         
         for (String form : index.keySet()) {
              active.addAll(index.get(form));
@@ -80,6 +82,8 @@ public abstract class Element implements Cloneable {
     
     public List<String> getMarkers() {
         
+        if (!useMarkers) return new ArrayList<>(); 
+        
         List<String> markers = new ArrayList<>(); 
         
         for (String k : index.keySet()) {
@@ -92,7 +96,11 @@ public abstract class Element implements Cloneable {
         
         return markers;
     }
-    
+
+    public void dontuseMarkers() {
+        useMarkers = false;
+    }
+        
     public void addCopula(StringElement element) {
         
         boolean hasRelationalAdjective = false;

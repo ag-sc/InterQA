@@ -101,7 +101,19 @@ public class LexicalEntry {
     
     public void addArgumentMapping(SynArg syn, SemArg sem) {
         argumentMapping.put(syn,sem);
-    }   
+    }
+    
+    public void reverseArgumentMapping() {
+        
+        if (argumentMapping.containsKey(SynArg.SUBJECT) && argumentMapping.containsKey(SynArg.OBJECT)) {
+            
+            SemArg subj = argumentMapping.get(SynArg.SUBJECT);
+            SemArg obj  = argumentMapping.get(SynArg.OBJECT);
+            argumentMapping = new HashMap<>();
+            argumentMapping.put(SynArg.SUBJECT,obj);
+            argumentMapping.put(SynArg.OBJECT,subj);
+        }
+    }
     
     public String getCanonicalForm() {
         return canonicalForm;
