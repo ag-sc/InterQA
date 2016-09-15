@@ -93,8 +93,7 @@ public class QueryBuilder {
         Set<IncrementalQuery> copies = new HashSet<>();
         
         for (LexicalEntry entry : element.getActiveEntries()) {
-        for (IncrementalQuery q : queries) {
-            
+        for (IncrementalQuery q : queries) {           
             if (!element.isStringElement() && 
                  element.getContext().containsKey(entry) &&
                 !element.getContext().get(entry).equals(q.getTriples())) {
@@ -102,7 +101,7 @@ public class QueryBuilder {
             }
             
             IncrementalQuery copy = instantiate(var,entry,q);
-            
+                        
             copies.add(copy);
         }}
          
@@ -151,7 +150,7 @@ public class QueryBuilder {
     public Set<String> returnQueries(boolean onlyInstantiatedTriples) {
         
         Set<String> out = new HashSet<>();
-        
+                
         for (IncrementalQuery query : queries) { 
             
              Query q = query.assemble(vocab,onlyInstantiatedTriples);
