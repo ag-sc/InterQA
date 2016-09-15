@@ -138,18 +138,21 @@ public class CachesCreator {
         cc.writePredictedSELECTqueriesToFile("EXPERIMENT.SELECTqueries.txt");
     }
 
-    static public void main2(String[] args) {
+    static public void main(String[] args) {
         CachesCreator cc = new CachesCreator(EXPERIMENT, EN);
 
         JenaExecutorCacheSelect jeSel = cc.getConfig().getDatasetConnector().getJenaExecutorCacheSelect();
-        jeSel.readCacheFromDiskSpecificFile("part1.4v.dia.fi.upm.es.cacheSelect.ser");
+        //If you have a partial result, reload it here
+        jeSel.readCacheFromDiskSpecificFile("part14v.dia.fi.upm.es.cacheSelect.ser");
+
         //Attention! it will read a ser file named "like the EP", if it does not exists, will create a new one
         //For this example the file shoud be 4v.dia.fi.upm.es.cacheSelect.ser
+        //It will also read the urilabel cache file dbpedia.urilabels.cache.ser
         cc.writesCacheFilefromSELECTqueries("EXPERIMENT.SELECTqueries.txt",
                                             "http://4v.dia.fi.upm.es:8890/sparql",
-                                            "part22");
+                                            "part2");
     }
-    static public void main(String[] args) {
+    static public void main3(String[] args) {
         System.out.print("Reading the serialized cache...");
         long start = System.currentTimeMillis();
 

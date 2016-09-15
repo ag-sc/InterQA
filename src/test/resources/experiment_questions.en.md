@@ -9,7 +9,7 @@ Find:
 * the cinematographers of all Truffaut movies
 * who wrote the soundtrack of Forrest Gump
 * the budget of Titanic
-* all danish movies
+* all german movies
 * how wrote the script of Casablanca
 * which actors played James Bond
 
@@ -25,6 +25,6 @@ Find:
 * all countries, where people speak Italian
 * through which countries does the Rhine flow
 * which countries have the euro as currency
-* how many inhabitants has Copenhagen
+* how many inhabitants has Paris
 * who is the mayor of Paris
 * all islands that belong to Philippines

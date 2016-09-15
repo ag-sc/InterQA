@@ -544,7 +544,7 @@ public class JenaExecutorCacheSelect{
 
     }
 
-    static public void main (String[] args) {
+    static public void main7 (String[] args) {
         String fileName =    "dbpedia.org.cacheSelect.ser";
         interactiveExplorerForCacheinDiskSpecificFile(fileName);
     }
