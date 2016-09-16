@@ -109,7 +109,10 @@ public class StringElement extends Element {
         for (String k : featureMap.keySet()) {
              clone.featureMap.put(k,featureMap.get(k));
         }
-            
+        for (Feature f : agrFeatures) {
+             clone.agrFeatures.add(f);
+        }   
+    
         return clone;
     }
 }

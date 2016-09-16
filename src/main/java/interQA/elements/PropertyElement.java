@@ -27,6 +27,10 @@ public class PropertyElement extends Element {
                 clone.index.get(k).add(e);
             }
         }
+        for (LexicalEntry.Feature f : agrFeatures) {
+             clone.agrFeatures.add(f);
+        }   
+        clone.useMarkers = this.useMarkers;
             
         return clone;
     }

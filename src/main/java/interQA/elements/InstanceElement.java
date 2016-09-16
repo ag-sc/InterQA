@@ -29,7 +29,11 @@ public class InstanceElement extends Element {
                  clone.index.get(k).add(e);
             }
         }
-            
+        for (LexicalEntry.Feature f : agrFeatures) {
+             clone.agrFeatures.add(f);
+        }
+        clone.useMarkers = useMarkers;
+   
         return clone;
     }
 

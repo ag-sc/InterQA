@@ -81,20 +81,19 @@ public class QueryBuilder {
         addTriple(new Triple(Var.alloc(s_var),toResource(vocab.sortal_predicate),Var.alloc(o_var)));
     }
     
-    public QueryBuilder copyAndInstantiate(String var, Element element) {
-    
-        QueryBuilder copy = this.clone();
-        copy.instantiate(var,element);
-        return copy;
-    }
-    
     public void instantiate(String var, Element element) {
+        
+        instantiate(var,element,false);
+    }
+
+    public void instantiate(String var, Element element, boolean ignoreContext) {
     
         Set<IncrementalQuery> copies = new HashSet<>();
         
         for (LexicalEntry entry : element.getActiveEntries()) {
-        for (IncrementalQuery q : queries) {           
-            if (!element.isStringElement() && 
+        for (IncrementalQuery q : queries) {     
+            if (!ignoreContext && 
+                !element.isStringElement() && 
                  element.getContext().containsKey(entry) &&
                 !element.getContext().get(entry).equals(q.getTriples())) {
                  continue;
@@ -102,7 +101,7 @@ public class QueryBuilder {
             
             IncrementalQuery copy = instantiate(var,entry,q);
                         
-            copies.add(copy);
+            copies.add(copy);            
         }}
          
         queries = copies;
