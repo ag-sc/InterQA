@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -36,6 +37,17 @@ public class ServletInterQA extends HttpServlet {
         PrintWriter out = response.getWriter();
         log("The URL is " + request.getQueryString());
         log("The page encoding is "+ request.getCharacterEncoding());
+        HttpSession session = request.getSession();
+        Date date = (Date) session.getAttribute("date");
+        if (date == null) {
+            date = new Date();
+            session.setAttribute("date", date);
+        }
+        log("Session new? "+ session.isNew() + ". Session date: " + date + ". Session id: " + session.getId());
+        log("Servlet container specification: " + session.getServletContext().getEffectiveMajorVersion() + "." +
+                                                  session.getServletContext().getEffectiveMinorVersion());
+        log("Servlet context path:" + session.getServletContext().getContextPath());
+
         String command = request.getParameter("command"); ///ServletInterQA?command=whatever
 
         switch (command){
@@ -69,7 +81,7 @@ public class ServletInterQA extends HttpServlet {
                 log("unsupported command. Error! ");
                 break;
         }
-    }
+     }
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
