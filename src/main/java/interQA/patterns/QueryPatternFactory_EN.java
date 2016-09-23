@@ -297,9 +297,7 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             e10_4.add("as");
 
             addRelationalNouns(qpC_I_P1.getElement(5));
-            for (LexicalEntry entry : qpC_I_P1.getElement(5).getActiveEntries()) {
-                 entry.reverseArgumentMapping();
-            }
+
             qpC_I_P1.getElement(5).addAgrFeature(Feature.SINGULAR);
             qpC_I_P1.getElement(5).dontuseMarkers();      
 
@@ -324,9 +322,6 @@ public class QueryPatternFactory_EN implements QueryPatternFactory {
             ((StringElement) qpC_I_P2.getElement(2)).add("did", Feature.PAST);
 
             addVerbs(qpC_I_P2.getElement(5));
-            for (LexicalEntry entry : qpC_I_P2.getElement(5).getActiveEntries()) {
-                 entry.reverseArgumentMapping();
-            }
             
             qpC_I_P2.getElement(5).addAgrFeature(Feature.PLURAL);
             qpC_I_P2.getElement(5).addAgrFeature(Feature.PRESENT);

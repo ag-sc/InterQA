@@ -123,7 +123,10 @@ public class QueryBuilder {
                  if (t.getPredicate().matches(Var.alloc(var))) {
                      del.add(t);
                      LexicalEntry.SemArg sem = entry.getSemArg(LexicalEntry.SynArg.SUBJECT);
-                     if (sem == LexicalEntry.SemArg.OBJOFPROP && isorwillbeURI(t.getObject())) {
+                     
+                     System.out.println(entry.toString()); // DEBUG
+                     
+                     if (sem.equals(LexicalEntry.SemArg.OBJOFPROP) && isorwillbeURI(t.getObject())) {
                          add.add(new Triple(t.getObject(),toResource(entry.getReference()),t.getSubject()));
                      } else {
                          add.add(new Triple(t.getSubject(),toResource(entry.getReference()),t.getObject()));
@@ -139,8 +142,8 @@ public class QueryBuilder {
                  }
             }
             
-            for (Triple t : del) copy.removeTriple(t);
-            for (Triple t : add) copy.addTriple(t);
+            for (Triple t : del) copy.removeTriple(t); 
+            for (Triple t : add) copy.addTriple(t); 
 
             return copy;
     }
