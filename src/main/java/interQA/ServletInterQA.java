@@ -47,6 +47,7 @@ public class ServletInterQA extends HttpServlet {
         log("Servlet container specification: " + session.getServletContext().getEffectiveMajorVersion() + "." +
                                                   session.getServletContext().getEffectiveMinorVersion());
         log("Servlet context path:" + session.getServletContext().getContextPath());
+        log("Physical path to webapps:" + System.getProperty( "catalina.base" ) + "/webapps");
 
         String command = request.getParameter("command"); ///ServletInterQA?command=whatever
 
@@ -55,7 +56,7 @@ public class ServletInterQA extends HttpServlet {
             case "getOptions":  //command=getOptions  server returns a list of option
                 response.setStatus(response.SC_OK); //Code 200
                 List<String> options = qm.getUIoptions();
-                log("getOptions command with options: " + options);
+                log("getOptions command with options: " + (options.size() > 100? options.subList(0,99).toString() + "...up to " + options.size() + " options." : options));
                 if (options != null && options.isEmpty()){
                     log("No options. The client will receive an array[0], which has length = 0.");
                 }

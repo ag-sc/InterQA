@@ -35,7 +35,20 @@ public class Config {
         
         init(usecase,language,null);
     }
+
     public void init(Usecase usecase, Language language, ArrayList<String> patternNames) {
+        init(usecase, language, patternNames, null);
+    }
+
+    /**
+     * patternNames can be null. In this case all the patterns registered are used
+     * ep can be null.  In this case are used default ep's for each usecase
+     * @param usecase
+     * @param language
+     * @param patternNames
+     * @param ep The endpoint
+     */
+    public void init(Usecase usecase, Language language, ArrayList<String> patternNames, String ep) {
 
         lexicon = new Lexicon(language);
         patternManager = new QueryPatternManager();
@@ -55,7 +68,8 @@ public class Config {
                  
                 // Set endpoint
                 
-                dataset = new DatasetConnector("http://es.dbpedia.org/sparql",language,usecase);
+                dataset = new DatasetConnector(ep == null? "http://es.dbpedia.org/sparql": ep,
+                                               language,usecase);
 
                 break;
             }
@@ -72,7 +86,8 @@ public class Config {
                                 
                 // Set endpoint
                 
-                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,usecase);
+                dataset = new DatasetConnector(ep == null? "http://dbpedia.org/sparql" : ep,
+                                               language,usecase);
 
                 break;
             }
@@ -88,7 +103,8 @@ public class Config {
                 // Set endpoint
                 
                 //dataset = new DatasetConnector("http://4v.dia.fi.upm.es:8890/sparql",language,usecase);
-                dataset = new DatasetConnector("http://dbpedia.org/sparql",language,usecase);
+                dataset = new DatasetConnector(ep == null? "http://dbpedia.org/sparql" : ep,
+                                               language,usecase);
 
                 break;
             }

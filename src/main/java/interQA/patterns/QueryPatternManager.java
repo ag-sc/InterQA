@@ -90,9 +90,9 @@ public class QueryPatternManager {
     public String[] getPredictedASKqueries(){
         HashSet<String> res = new HashSet<>();
         for (QueryPattern pat : allQueryPatterns){
-            System.out.print("Predicting for QP " + pat.getClass().getCanonicalName() + "...");
+            System.out.print("Predicting ASK queries for QP " + pat.getClass().getCanonicalName() + "...");
             res.addAll(pat.predictASKqueries());
-            System.out.println("..." + res.size() + "queries.");
+            System.out.println("..." + res.size() + " queries.");
         }
 
         return(res.toArray(new String[res.size()]));
@@ -101,7 +101,9 @@ public class QueryPatternManager {
     public String[] getPredictedSELECTqueries(){
         HashSet<String> res = new HashSet<>();
         for (QueryPattern pat : allQueryPatterns){
+            System.out.print("Predicting SELECT queries for QP " + pat.getClass().getCanonicalName() + "...");
             res.addAll(pat.predictSELECTqueries());
+            System.out.println("..." + res.size() + " queries.");
         }
 
         return(res.toArray(new String[res.size()]));

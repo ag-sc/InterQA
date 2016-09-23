@@ -26,8 +26,13 @@ public class CachesCreator {
     Config getConfig(){return config;}
 
     private CachesCreator(Config.Usecase usecase, Config.Language lang){
+        new CachesCreator(usecase, lang, null);
+    }
+    private CachesCreator(Config.Usecase usecase, Config.Language lang, String ep){
         config = new Config();
-        config.init(usecase, lang, null); //All the patterns defined in the usecase
+        config.init(usecase, lang,
+                    null, //All the patterns defined in the usecase
+                    ep);
         config.setCacheMode(ExhaustiveExtraction,
                             true); //Uses (reads/writes) historical cache
     }
@@ -119,7 +124,7 @@ public class CachesCreator {
                 try {
                     askExec.executeWithCache(ep, selQuery);
                 }catch (Exception e){
-                    System.out.println("Errror in Sel query: " + selQuery);
+                    System.out.println("Error in Sel query: " + selQuery);
                     e.printStackTrace();
                 }
                 System.out.print("Saving cache to disk...");
@@ -133,12 +138,15 @@ public class CachesCreator {
 
     }
 
-    static public void main1(String[] args) {
-        CachesCreator cc = new CachesCreator(EXPERIMENT, EN);
-        cc.writePredictedSELECTqueriesToFile("EXPERIMENT.SELECTqueries.txt");
+    static public void main(String[] args) {
+        //CachesCreator cc = new CachesCreator(EXPERIMENT, EN);
+        CachesCreator cc = new CachesCreator(EXPERIMENT, EN,
+                                             "http://4v.dia.fi.upm.es:8890/sparql"); //We do not use the default ep for this case (dbpedia.org/sparql)
+        cc.writePredictedSELECTqueriesToFile("EXPERIMENT.SELECTqueries.v2.txt");
+        cc.writePredictedASKqueriesToFile("EXPERIMENT.ASKqueries.v2.txt");
     }
 
-    static public void main(String[] args) {
+    static public void main2(String[] args) {
         CachesCreator cc = new CachesCreator(EXPERIMENT, EN);
 
         JenaExecutorCacheSelect jeSel = cc.getConfig().getDatasetConnector().getJenaExecutorCacheSelect();
