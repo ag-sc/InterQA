@@ -380,7 +380,7 @@ public class Lexicon {
                         index.get(pres_sg).add(entry);
                         if (!index.containsKey(pres_pl)) index.put(pres_pl,new ArrayList<>());
                         index.get(pres_pl).add(entry);
-                        if (!index.containsKey(past)) index.put(past,new ArrayList<>());
+                        if (!index.containsKey(past))    index.put(past,new ArrayList<>());
                         index.get(past).add(entry);
                         
                         propertyEntries.add(entry);
