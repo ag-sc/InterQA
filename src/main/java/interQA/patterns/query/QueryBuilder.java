@@ -122,14 +122,12 @@ public class QueryBuilder {
                  }
                  if (t.getPredicate().matches(Var.alloc(var))) {
                      del.add(t);
-                     LexicalEntry.SemArg sem = entry.getSemArg(LexicalEntry.SynArg.SUBJECT);
-                     
-                     System.out.println(entry.toString()); // DEBUG
-                     
-                     if (sem.equals(LexicalEntry.SemArg.OBJOFPROP) && isorwillbeURI(t.getObject())) {
+                     if (orderAlright(t,entry)) {
+                         add.add(new Triple(t.getSubject(),toResource(entry.getReference()),t.getObject()));
+                     } else if (isorwillbeURI(t.getObject())) {
                          add.add(new Triple(t.getObject(),toResource(entry.getReference()),t.getSubject()));
                      } else {
-                         add.add(new Triple(t.getSubject(),toResource(entry.getReference()),t.getObject()));
+                         del.remove(t);
                      }
                  }
                  if (t.getObject().matches(Var.alloc(var))) {
@@ -146,6 +144,23 @@ public class QueryBuilder {
             for (Triple t : add) copy.addTriple(t); 
 
             return copy;
+    }
+    
+    private boolean orderAlright(Triple t, LexicalEntry entry) {
+        
+        // If the object is or will be a resource or literal, and the entry has a linear argument mapping, then the order is alright.
+        if ((!t.getObject().isVariable() || placeholders.contains(t.getObject().getName())) 
+            & entry.getArgumentMapping() == LexicalEntry.ArgumentMapping.LINEAR) 
+            return true;
+        
+        // Analogously, 
+        // If the subject is or will be a resource or literal, and the entry has a reverse argument mapping, then the order is alright.
+        if ((!t.getSubject().isVariable() || placeholders.contains(t.getSubject().getName())) 
+            & entry.getArgumentMapping() == LexicalEntry.ArgumentMapping.REVERSE) 
+            return true;
+        
+        // In all other cases, the order is not alright (and should be reversed).
+        return false;
     }
         
         
