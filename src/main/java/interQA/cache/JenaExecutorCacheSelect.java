@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import static interQA.Config.ExtractionMode.NaiveExtraction;
 import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
+import static interQA.cache.JenaExecutorCacheSelect.interactiveExplorerForCacheinDiskSpecificFile;
 
 /**
  * Created by Mariano on 21/07/2016.
@@ -588,3 +589,4 @@ public class JenaExecutorCacheSelect{
 
 
 }
+
