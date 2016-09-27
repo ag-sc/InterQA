@@ -225,7 +225,7 @@ public class C_P_I_P_I extends QueryPattern{
             // fill instances in element
             System.out.println("predictASKqueries. fill instances in element");
             builder.setQueries(intermed1);
-            dataset.fillInstances(elements.get(5),builder,"I1");
+            dataset.fillInstances(elements.get(5),builder,"I1",true);
             // create ASK query
             System.out.println("predictASKqueries.create ASK query");
             for (LexicalEntry entry : elements.get(5).getActiveEntries()) {

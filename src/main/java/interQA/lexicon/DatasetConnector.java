@@ -124,7 +124,7 @@ public class DatasetConnector {
             if (!keep) element.removeFromIndex(entry);
         }
     }
-
+    
     /**
      * This method modifies element, adding the appropriated instances
      * Fills instances
@@ -133,11 +133,16 @@ public class DatasetConnector {
      * @param i_var
      */
     public void fillInstances(Element element, QueryBuilder builder, String i_var) {
+     
+        fillInstances(element, builder, i_var, false);
+    }
+
+    public void fillInstances(Element element, QueryBuilder builder, String i_var, boolean onlyInstantiatedTriples) {
                         
                 for (IncrementalQuery iq : builder.getQueries()) {
               
                     IncrementalQuery copy = iq.clone();
-                    Query query = copy.assemble(vocab,false);
+                    Query query = copy.assemble(vocab,onlyInstantiatedTriples);
                     query.setQuerySelectType();
                     query.setQueryResultStar(true);
                     String querystring = copy.prettyPrint(query);
