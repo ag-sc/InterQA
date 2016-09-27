@@ -27,11 +27,7 @@ public class C_P_I_P_I extends QueryPattern{
     //   ?x rdf:type <C> .
     //   ?x <P1> <I1> .
     //   ?x <P2> <I2> . 
-    // }
-    
-    
-    boolean flag = false;
-    
+    // }    
     
     public C_P_I_P_I(Lexicon lexicon,DatasetConnector dataset){
         	
@@ -241,7 +237,7 @@ public class C_P_I_P_I extends QueryPattern{
             }
                         
             for (IncrementalQuery iquery : iqueries) {
-                 queries.add(iquery.prettyPrint(iquery.assembleAsAsk(vocab,false)));
+                 queries.add(iquery.prettyPrint(iquery.assembleAsAsk(vocab,true)));
             }
             
             return queries;
@@ -296,7 +292,7 @@ public class C_P_I_P_I extends QueryPattern{
             
             // fill instances in element
             builder.setQueries(intermed2);
-            dataset.fillInstances(elements.get(5),builder,"I1");
+            dataset.fillInstances(elements.get(5),builder,"I1",true);
             // create ASK query
             for (LexicalEntry entry : elements.get(5).getActiveEntries()) {
                 for (IncrementalQuery i : intermed2) {
