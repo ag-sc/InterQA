@@ -12,10 +12,10 @@ import org.apache.jena.rdf.model.RDFNode;
  */
 public class LexicalEntry {
     
-    public enum SemArg  { SUBJOFPROP, OBJOFPROP };
-    public enum SynArg  { SUBJECT, OBJECT };
     public enum POS     { NOUN, VERB, ADJECTIVE, PREPOSITION, PARTICIPLE };
     public enum Feature { SINGULAR, PLURAL, PRESENT, PAST, FEMININE, MASCULINE, NEUTER, COMPARATIVE, SUPERLATIVE };
+    
+    public enum ArgumentMapping { LINEAR, REVERSE };
     
     String canonicalForm;  
     String particle;
@@ -33,7 +33,7 @@ public class LexicalEntry {
     HashMap<Feature,String> forms;
     HashMap<String,List<Feature>> features;
     
-    HashMap<SynArg,SemArg> argumentMapping; 
+    ArgumentMapping argumentMapping; 
     
     
     public LexicalEntry() {
@@ -41,9 +41,10 @@ public class LexicalEntry {
         forms = new HashMap<>();
         features = new HashMap<>();
         inherentFeatures = new ArrayList<>();
-        argumentMapping = new HashMap<>();
-        
-        literal = false; // default
+       
+        // Defaults
+        argumentMapping = ArgumentMapping.LINEAR;
+        literal = false; 
     }
     
     public void setCanonicalForm(String form) {
@@ -99,8 +100,20 @@ public class LexicalEntry {
         inherentFeatures.add(f);
     }
     
-    public void addArgumentMapping(SynArg syn, SemArg sem) {
-        argumentMapping.put(syn,sem);
+    public void setArgumentMapping(ArgumentMapping mapping) {
+        argumentMapping = mapping;
+    }
+    
+    public void reverseArgumentMapping() {
+        if (argumentMapping.equals(ArgumentMapping.LINEAR)) {
+            argumentMapping = ArgumentMapping.REVERSE;
+        } else {
+            argumentMapping = ArgumentMapping.LINEAR;
+        }
+    }
+    
+    public ArgumentMapping getArgumentMapping() {
+        return argumentMapping;
     }
     
     public String getCanonicalForm() {
@@ -156,10 +169,6 @@ public class LexicalEntry {
     
     public POS getPOS() {
         return pos;
-    }
-    
-    public SemArg getSemArg(SynArg syn) {
-        return argumentMapping.get(syn);
     }
        
     @Override 
