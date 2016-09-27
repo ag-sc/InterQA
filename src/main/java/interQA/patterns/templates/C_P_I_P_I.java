@@ -287,7 +287,7 @@ public class C_P_I_P_I extends QueryPattern{
             
             for (IncrementalQuery iquery : intermed2) {
                 
-                Query query = iquery.assemble(vocab,false);
+                Query query = iquery.assemble(vocab,true);
                 query.setQueryResultStar(true);
                 queries.add(iquery.prettyPrint(query)); 
             }
@@ -319,7 +319,7 @@ public class C_P_I_P_I extends QueryPattern{
             
             for (IncrementalQuery iquery : iqueries) {
                 
-                Query query = iquery.assemble(vocab,false);
+                Query query = iquery.assemble(vocab,true);
                 query.setQueryResultStar(true);
                 queries.add(iquery.prettyPrint(query)); 
             }
