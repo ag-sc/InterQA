@@ -133,6 +133,11 @@ public class C_I_P extends QueryPattern{
         @Override 
         public Set<String> predictASKqueries() {
             
+            return predictASKqueries(false);
+        }
+            
+        public Set<String> predictASKqueries(boolean all) {
+
             Set<String> queries = new HashSet<>();
             
             // Init queries
@@ -164,18 +169,23 @@ public class C_I_P extends QueryPattern{
                       IncrementalQuery j = buildercopy.instantiate("P",entry,i);
                       intermed2.add(j);
                  }
-            }           
-            // fill instances in element
-            dataset.fillInstances(elements.get(3),buildercopy,"I");
-            // create ASK query
-            for (LexicalEntry entry : elements.get(3).getActiveEntries()) {
-                for (IncrementalQuery i : intermed2) {
-                     IncrementalQuery j = builder.instantiate("I",entry,i);
-                     intermed1.add(j);
-                 }
+            }        
+            
+            if (all) {
+                // fill instances in element
+                dataset.fillInstances(elements.get(3),buildercopy,"I");
+                // create ASK query
+                for (LexicalEntry entry : elements.get(3).getActiveEntries()) {
+                    for (IncrementalQuery i : intermed2) {
+                         IncrementalQuery j = builder.instantiate("I",entry,i);
+                         intermed1.add(j);
+                     }
+                }
+                // reset 
+                elements.set(3,new InstanceElement());
+            } else {
+                intermed1 = intermed2;
             }
-            // reset 
-            elements.set(3,new InstanceElement());
                         
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
                 for (IncrementalQuery i : intermed1) {
