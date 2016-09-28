@@ -1,21 +1,13 @@
-package interQA.main;
+package interQA.cache;
 
 import interQA.Config;
-import interQA.cache.JenaExecutorCacheAsk;
-import interQA.cache.JenaExecutorCacheSelect;
-import interQA.lexicon.DatasetConnector;
 import interQA.patterns.QueryPatternManager;
-import interQA.patterns.templates.QueryPattern;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 
 import static interQA.Config.ExtractionMode.ExhaustiveExtraction;
 import static interQA.Config.Language.EN;
 import static interQA.Config.Usecase.EXPERIMENT;
-import static interQA.Config.Usecase.SPRINGER;
 
 /**
  * Created by Mariano on 04/09/2016.
@@ -28,7 +20,7 @@ public class CachesCreator {
     private CachesCreator(Config.Usecase usecase, Config.Language lang){
         new CachesCreator(usecase, lang, null);
     }
-    private CachesCreator(Config.Usecase usecase, Config.Language lang, String ep){
+    public CachesCreator(Config.Usecase usecase, Config.Language lang, String ep){
         config = new Config();
         config.init(usecase, lang,
                     null, //All the patterns defined in the usecase
@@ -142,8 +134,9 @@ public class CachesCreator {
         //CachesCreator cc = new CachesCreator(EXPERIMENT, EN);
         CachesCreator cc = new CachesCreator(EXPERIMENT, EN,
                                              "http://4v.dia.fi.upm.es:8890/sparql"); //We do not use the default ep for this case (dbpedia.org/sparql)
-        cc.writePredictedSELECTqueriesToFile("EXPERIMENT.SELECTqueries.v2.txt");
         cc.writePredictedASKqueriesToFile("EXPERIMENT.ASKqueries.v2.txt");
+        cc.writePredictedSELECTqueriesToFile("EXPERIMENT.SELECTqueries.v2.txt");
+
     }
 
     static public void main2(String[] args) {
