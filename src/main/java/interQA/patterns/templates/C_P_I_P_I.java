@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.jena.query.Query;
-import org.apache.jena.query.Syntax;
 
 
 /**
@@ -180,10 +179,14 @@ public class C_P_I_P_I extends QueryPattern{
         @Override 
         public Set<String> predictASKqueries() {
             
+            return predictASKqueries(false);
+        }
+        
+        public Set<String> predictASKqueries(boolean all) {
+            
             Set<String> queries = new HashSet<>();
             
             // Init queries
-            System.out.println("predictASKqueries. Init queries");
             
             builder.reset();
             String mainVar = "x";
@@ -192,7 +195,6 @@ public class C_P_I_P_I extends QueryPattern{
             builder.addUninstantiatedTriple(mainVar,builder.placeholder("P2"),builder.placeholder("I2"));
 
             // Build ASK queries
-            System.out.println("predictASKqueries. Build ASK queries");
             
             Set<IncrementalQuery> initialqueries = builder.getQueries();
             Set<IncrementalQuery> iqueries  = new HashSet<>();
@@ -218,27 +220,30 @@ public class C_P_I_P_I extends QueryPattern{
             
             iqueries.addAll(intermed1);
             
-            // fill instances in element
-            System.out.println("predictASKqueries. fill instances in element");
-            builder.setQueries(intermed1);
-            dataset.fillInstances(elements.get(5),builder,"I1",true);
-            // create ASK query
-            System.out.println("predictASKqueries.create ASK query");
-            for (LexicalEntry entry : elements.get(5).getActiveEntries()) {
-                for (IncrementalQuery i : intermed1) {
-                      IncrementalQuery j = builder.instantiate("I1",entry,i);
-                      intermed2.add(j);
-                 }
+            if (all) {
+            
+                // fill instances in element
+                builder.setQueries(intermed1);
+                dataset.fillInstances(elements.get(5),builder,"I1",true);
+                // create ASK query
+                for (LexicalEntry entry : elements.get(5).getActiveEntries()) {
+                    for (IncrementalQuery i : intermed1) {
+                          IncrementalQuery j = builder.instantiate("I1",entry,i);
+                          intermed2.add(j);
+                     }
+                }
+                // reset
+                builder.setQueries(initialqueries);
+                elements.set(5,new InstanceElement());
+            } 
+            else {
+                intermed2 = intermed1;
             }
-            // reset
-            System.out.println("predictASKqueries.reset");
-            builder.setQueries(initialqueries);
-            elements.set(5,new InstanceElement());
-                        
+            
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
                 for (IncrementalQuery i : intermed2) {
-                      IncrementalQuery j = builder.instantiate("P2",entry,i);
-                      iqueries.add(j);
+                     IncrementalQuery j = builder.instantiate("P2",entry,i);
+                     iqueries.add(j);
                  }
             }
                         
@@ -248,14 +253,18 @@ public class C_P_I_P_I extends QueryPattern{
             
             return queries;
         }
-
-        @Override 
+        
+        @Override
         public Set<String> predictSELECTqueries() {
+            
+            return predictSELECTqueries(false);
+        }
+         
+        public Set<String> predictSELECTqueries(boolean all) {
             
             Set<String> queries = new HashSet<>();
             
             // Init queries
-            System.out.println("predictSELECTqueries. Init queries");
             
             builder.reset();
             String mainVar = "x";
@@ -265,7 +274,6 @@ public class C_P_I_P_I extends QueryPattern{
             builder.addUninstantiatedTriple(mainVar,builder.placeholder("P2"),builder.placeholder("I2"));
 
             // Instantiate C and P1
-            System.out.println("predictSELECTqueries. Instantiate C and P1");
 
             Set<IncrementalQuery> initialqueries = builder.getQueries();
             Set<IncrementalQuery> iqueries  = new HashSet<>();
@@ -288,7 +296,6 @@ public class C_P_I_P_I extends QueryPattern{
             }
             
             // Build SELECT queries for I1
-            System.out.println("predictSELECTqueries. Build SELECT queries for I1");
 
             for (IncrementalQuery iquery : intermed2) {
                 
@@ -298,25 +305,26 @@ public class C_P_I_P_I extends QueryPattern{
             }
             
             // Instantiate I1 and P2
-            System.out.println("predictSELECTqueries. Instantiate I1 and P2");
 
-            // fill instances in element
-            System.out.println("predictSELECTqueries. fill instances in element");
-
-            builder.setQueries(intermed2);
-            dataset.fillInstances(elements.get(5),builder,"I1",true);
-            // create ASK query
-            for (LexicalEntry entry : elements.get(5).getActiveEntries()) {
-                for (IncrementalQuery i : intermed2) {
-                     IncrementalQuery j = builder.instantiate("I1",entry,i);
-                     intermed3.add(j);
-                 }
+            if (all) {
+                
+                // fill instances in element
+                builder.setQueries(intermed2);
+                dataset.fillInstances(elements.get(5),builder,"I1",true);
+                // create ASK query
+                for (LexicalEntry entry : elements.get(5).getActiveEntries()) {
+                    for (IncrementalQuery i : intermed2) {
+                         IncrementalQuery j = builder.instantiate("I1",entry,i);
+                         intermed3.add(j);
+                     }
+                }
+                // reset
+                builder.setQueries(initialqueries);
+                elements.set(5,new InstanceElement());
             }
-            // reset
-            System.out.println("predictSELECTqueries. reset");
-
-            builder.setQueries(initialqueries);
-            elements.set(5,new InstanceElement());
+            else {
+                intermed3 = intermed2;
+            }
             
             for (LexicalEntry entry : lexicon.getPropertyEntries()) {
                  for (IncrementalQuery i : intermed3) {
@@ -326,7 +334,6 @@ public class C_P_I_P_I extends QueryPattern{
             }
             
             // Build SELECT queries for I2
-            System.out.println("predictSELECTqueries. Build SELECT queries for I2");
             
             for (IncrementalQuery iquery : iqueries) {
                 
