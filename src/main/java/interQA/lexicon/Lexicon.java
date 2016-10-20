@@ -270,11 +270,11 @@ public class Lexicon {
                         
                         if (subject.equals(subjOfProp) && directObject.equals(objOfProp)) {
                             entry.setArgumentMapping(LexicalEntry.ArgumentMapping.LINEAR);
-                            participle_entry.setArgumentMapping(LexicalEntry.ArgumentMapping.LINEAR);
+                            participle_entry.setArgumentMapping(LexicalEntry.ArgumentMapping.REVERSE);
                         }
                         else if (subject.equals(objOfProp) && directObject.equals(subjOfProp)) {
                             entry.setArgumentMapping(LexicalEntry.ArgumentMapping.REVERSE);
-                            participle_entry.setArgumentMapping(LexicalEntry.ArgumentMapping.REVERSE);
+                            participle_entry.setArgumentMapping(LexicalEntry.ArgumentMapping.LINEAR);
                         }
                         else {
                             continue;
